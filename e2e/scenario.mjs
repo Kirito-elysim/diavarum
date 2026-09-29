@@ -24,6 +24,13 @@ const consoleErrors = [];
 page.on('console', (m) => m.type() === 'error' && consoleErrors.push(m.text()));
 const shot = (name) => page.screenshot({ path: `${SHOTS}${name}.png`, fullPage: false });
 
+/** Déconnexion via le bouton de profil du menu latéral */
+async function logout() {
+  await page.locator('aside button').last().click();
+  await page.getByText('Se déconnecter').click();
+  await page.waitForURL('**/login');
+}
+
 async function login(email, password = 'Diaverum2026!') {
   await page.goto(`${BASE}/login`);
   await page.fill('#email', email);
@@ -247,14 +254,15 @@ await step('IDE : pas d\'accès à l\'administration', async () => {
   if (await page.getByRole('link', { name: /Équipe IDE|Centres et comptes/ }).count()) throw new Error('menu admin visible');
   await page.goto(`${BASE}/admin`);
   await page.waitForURL('**/dashboard');
-  await page.getByText('Bonjour Claire').or(page.getByText('Bonsoir Claire')).waitFor();
+  await page.getByRole('heading', { name: 'Tableau de bord' }).waitFor();
+  await page.getByText('Progression des séances').waitFor();
+  await page.getByText('Éligibilité à statuer').waitFor();
+  await page.waitForTimeout(800); // animation des graphiques
   await shot('07-dashboard-ide');
 });
 
 await step('Déconnexion', async () => {
-  await page.getByText('Claire Dubois').click();
-  await page.getByText('Se déconnecter').click();
-  await page.waitForURL('**/login');
+  await logout();
   await page.goto(`${BASE}/dashboard`);
   await page.waitForURL('**/login');
 });
@@ -273,10 +281,7 @@ await step('Cadre : crée une IDE dans son centre', async () => {
   await page.getByRole('button', { name: 'Créer le compte' }).click();
   await page.getByText('Compte créé pour Recrue Nouvelle').waitFor();
   await shot('08-equipe-cadre');
-  await page.getByText('Claire Dubois').or(page.getByText('Isabelle Blanc')).first().waitFor();
-  await page.getByText('Isabelle Blanc').first().click();
-  await page.getByText('Se déconnecter').click();
-  await page.waitForURL('**/login');
+  await logout();
 });
 
 await step('Nouvelle IDE : code de sécurité exigé à la première connexion', async () => {
@@ -289,8 +294,7 @@ await step('Nouvelle IDE : code de sécurité exigé à la première connexion',
   await page.getByRole('button', { name: 'Enregistrer mon code' }).click();
   await page.getByText('Code de sécurité enregistré').waitFor();
   await page.getByText('Choisissez votre code de sécurité').waitFor({ state: 'hidden' });
-  await page.getByText('Recrue Nouvelle').click();
-  await page.getByText('Se déconnecter').click();
+  await logout();
 });
 
 await step('Administrateur national : centres, comptes et code national', async () => {
@@ -321,8 +325,7 @@ await step('Administrateur national : contenus des séances (33, dont S4 intégr
 });
 
 await step('Cadre : valide le programme, qui devient non modifiable', async () => {
-  await page.getByText('Sophie Martin').click();
-  await page.getByText('Se déconnecter').click();
+  await logout();
   await login('cadre@diaverum.test');
   await page.waitForURL('**/dashboard');
   await page.goto(patientUrl);

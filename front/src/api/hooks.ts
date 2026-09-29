@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, type Collection } from '../lib/api';
 import type {
   AccessLogEntry,
+  Dashboard,
   ModuleContent,
   Center,
   CodexTestResult,
@@ -348,5 +349,16 @@ export function useImportModuleContent() {
       client.invalidateQueries({ queryKey: ['module'] });
       return content;
     },
+  });
+}
+
+/* ─── Tableau de bord ──────────────────────────────────────────────────── */
+
+export function useDashboard() {
+  return useQuery({
+    queryKey: ['dashboard'],
+    queryFn: () => api<Dashboard>('/dashboard'),
+    // Les séances en cours bougent : rafraîchissement régulier
+    refetchInterval: 60_000,
   });
 }

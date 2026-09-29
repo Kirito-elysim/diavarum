@@ -234,3 +234,23 @@ export interface AccessLogEntry {
   statusCode: number;
   ip?: string | null;
 }
+
+/* ─── Tableau de bord (GET /api/dashboard) ─────────────────────────────── */
+
+export interface Dashboard {
+  kpis: {
+    activeSessions: number;
+    sessionsStartedToday: number;
+    patients: number;
+    patientsThisWeek: number;
+    eligible: number;
+    validatedSessions: number;
+    validatedThisMonth: number;
+    averageScore: number | null;
+    scoredSessions: number;
+  } | null;
+  monthly: { month: string; sessions: number; completed: number }[];
+  modules: { name: string; title: string; completed: number; inProgress: number }[];
+  activeSessions: { id: string; patientId: string; patientName: string; moduleCode: string; moduleTitle: string; startedAt: string; nurse: string }[];
+  activity: { type: 'session_started' | 'session_completed' | 'module_assigned' | 'patient_added'; description: string; user: string; at: string; patientId: string }[];
+}
