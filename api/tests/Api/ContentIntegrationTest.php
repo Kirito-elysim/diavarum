@@ -1,0 +1,122 @@
+<?php
+
+namespace App\Tests\Api;
+
+use App\Entity\Module;
+use App\Entity\ModuleCompetency;
+use App\Entity\SessionCompetencyValidation;
+use App\Entity\TrainingProgram;
+use App\Entity\TrainingSession;
+use App\Enum\EligibilityStatus;
+use App\Enum\UserRole;
+
+/**
+ * API d'intégration des contenus par le prestataire (cahier des charges §4).
+ */
+final class ContentIntegrationTest extends ApiTestCaseBase
+{
+    private const TOKEN = 'jeton-de-test-prestataire';
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function payload(array $overrides = []): array
+    {
+        return $overrides + [
+            'title' => 'Hygiène au centre de dialyse',
+            'estimatedDuration' => 35,
+            'competencies' => ['Le patient se lave les mains avant la séance', 'Le patient connaît la tenue adaptée'],
+            'content' => [[
+                'id' => 'p1', 'title' => 'Se laver les mains', 'blocks' => [
+                    ['id' => 't1', 'type' => 'text', 'content' => 'Pourquoi ?'],
+                    ['id' => 'q1', 'type' => 'quiz', 'questionType' => 'qcu', 'question' => '?', 'options' => [['id' => 'a', 'label' => 'Oui', 'isCorrect' => true]]],
+                ],
+            ]],
+        ];
+    }
+
+    private function put(string $code, array $payload, array $headers = ['X-Content-Token' => self::TOKEN]): void
+    {
+        $this->client->request('PUT', "/api/content/modules/$code", ['json' => $payload, 'headers' => $headers]);
+    }
+
+    public function testProviderIntegratesASessionWithItsToken(): void
+    {
+        $this->put('S2', $this->payload());
+        self::assertResponseIsSuccessful();
+
+        $this->client->request('GET', '/api/content/modules/S2', ['headers' => ['X-Content-Token' => self::TOKEN]]);
+        $module = $this->client->getResponse()->toArray();
+        self::assertSame(35, $module['estimatedDuration']);
+        self::assertCount(2, $module['competencies']);
+        self::assertSame('q1', $module['content'][0]['blocks'][1]['id']);
+    }
+
+    public function testAccessRequiresTheProviderTokenOrANationalAdmin(): void
+    {
+        $this->put('S2', $this->payload(), []);
+        self::assertResponseStatusCodeSame(401);
+
+        $this->put('S2', $this->payload(), ['X-Content-Token' => 'faux']);
+        self::assertResponseStatusCodeSame(403);
+
+        $ide = $this->createUser(UserRole::Ide, [$this->createCenter()]);
+        $this->requestAs($ide, 'PUT', '/api/content/modules/S2', $this->payload());
+        self::assertResponseStatusCodeSame(403);
+
+        $admin = $this->createUser(UserRole::AdminNational);
+        $this->requestAs($admin, 'PUT', '/api/content/modules/S2', $this->payload());
+        self::assertResponseIsSuccessful();
+    }
+
+    public function testProviderTokenGivesNoAccessToPatientData(): void
+    {
+        $this->client->request('GET', '/api/patients', ['headers' => ['X-Content-Token' => self::TOKEN]]);
+
+        self::assertResponseStatusCodeSame(401);
+    }
+
+    public function testInvalidContentIsRejectedWithExplicitErrors(): void
+    {
+        $payload = $this->payload();
+        $payload['content'][0]['blocks'][] = ['id' => 'q1', 'type' => 'inconnu'];
+
+        $this->put('S2', $payload);
+
+        self::assertResponseStatusCodeSame(422);
+        $errors = $this->client->getResponse()->toArray(false)['errors'];
+        self::assertCount(2, $errors, 'Identifiant en double + type inconnu');
+    }
+
+    public function testAtMostFiveCompetencies(): void
+    {
+        $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6']]));
+
+        self::assertResponseStatusCodeSame(422);
+    }
+
+    public function testCompetencyAlreadyAssessedCannotBeRemoved(): void
+    {
+        $this->put('S2', $this->payload());
+        $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S2']);
+        $competency = $this->em()->getRepository(ModuleCompetency::class)->findOneBy(['module' => $module, 'position' => 1]);
+
+        $center = $this->createCenter();
+        $ide = $this->createUser(UserRole::Ide, [$center]);
+        $patient = $this->createPatient($center, $ide)->setEligibilityStatus(EligibilityStatus::Eligible);
+        $program = (new TrainingProgram())->setPatient($patient);
+        $program->setAuthor($ide);
+        $session = (new TrainingSession())->setPatient($patient)->setModule($module)->setProgram($program);
+        $session->setAuthor($ide);
+        $validation = (new SessionCompetencyValidation())->setSession($session)->setCompetency($competency)->setValidated(true);
+        $validation->setAuthor($ide);
+        foreach ([$program, $session, $validation] as $entity) {
+            $this->em()->persist($entity);
+        }
+        $this->em()->flush();
+
+        $this->put('S2', $this->payload(['competencies' => ['Le patient se lave les mains avant la séance']]));
+
+        self::assertResponseStatusCodeSame(422);
+    }
+}

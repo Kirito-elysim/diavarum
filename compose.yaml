@@ -1,0 +1,53 @@
+# Base commune dev / prod.
+#   Dev  : docker compose up            (compose.override.yaml chargé automatiquement)
+#   Prod : docker compose -f compose.yaml -f compose.prod.yaml up -d
+
+services:
+  php:
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-app}@db:5432/${POSTGRES_DB:-diaverum}?serverVersion=${POSTGRES_VERSION:-16}&charset=utf8
+      MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
+      MAILER_DSN: ${MAILER_DSN:-smtp://mailpit:1025}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    command: ["php", "bin/console", "messenger:consume", "async", "--time-limit=3600", "--memory-limit=256M", "-vv"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-app}@db:5432/${POSTGRES_DB:-diaverum}?serverVersion=${POSTGRES_VERSION:-16}&charset=utf8
+      MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
+      MAILER_DSN: ${MAILER_DSN:-smtp://mailpit:1025}
+    depends_on:
+      db:
+        condition: service_healthy
+      php:
+        condition: service_started
+    restart: unless-stopped
+
+  nginx:
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    depends_on:
+      - php
+    restart: unless-stopped
+
+  db:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-diaverum}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  pgdata:

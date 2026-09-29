@@ -1,0 +1,18 @@
+**/.git
+**/.DS_Store
+.env
+doc/
+backups/
+
+front/node_modules
+front/dist
+front/.env
+front/.bolt
+front/*.tsbuildinfo
+
+api/vendor
+api/var
+api/.env.local
+api/.env.*.local
+# Clés JWT : jamais dans l'image, générées par environnement (volume jwt_keys en production)
+api/config/jwt/

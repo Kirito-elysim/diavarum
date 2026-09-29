@@ -1,0 +1,11 @@
+{
+  "name": "diaverum-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node scenario.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.55.0"
+  }
+}

@@ -1,0 +1,47 @@
+{% extends 'reports/_layout.html.twig' %}
+{% block title %}Bilan — {{ r.patient.lastName|upper }} {{ r.patient.firstName }}{% endblock %}
+{% block doc %}Bilan du programme d'entraînement{% endblock %}
+{% block body %}
+<h1>{{ r.patient.lastName|upper }} {{ r.patient.firstName }}</h1>
+<p class="muted">
+    Né(e) le {{ r.patient.dateOfBirth ? r.patient.dateOfBirth|date('d/m/Y', false) : '—' }}
+    · {{ r.patient.center }} · Éligibilité : {{ r.patient.eligibility }}
+</p>
+
+{% if r.program is null %}
+    <p>Aucun programme d'entraînement.</p>
+{% else %}
+    {% set p = r.program %}
+    <table class="kpis"><tr>
+        <td><div class="value">{{ p.status }}</div>Statut du programme</td>
+        <td><div class="value">{{ p.validatedCount }}/{{ p.selectedCount }}</div>séances validées</td>
+        <td><div class="value">{{ p.averageScore is not null ? p.averageScore ~ ' %' : '—' }}</div>score {{ p.completed ? 'total' : 'moyen' }}</td>
+        <td><div class="value">{{ (p.totalDurationSeconds / 60)|round }} min</div>durée {{ p.completed ? 'totale' : 'cumulée' }}</td>
+    </tr></table>
+    <p class="muted small">
+        {% if p.startedAt %}Démarré le {{ p.startedAt|date('d/m/Y') }}.{% endif %}
+        {% if p.completed %}Achevé le {{ p.completedAt|date('d/m/Y') }}{% if p.validatedBy %}, validé par {{ p.validatedBy }}{% endif %}.{% endif %}
+    </p>
+
+    <h2>Séances du parcours</h2>
+    <table>
+        <colgroup><col style="width: 34%"><col style="width: 13%"><col style="width: 8%"><col style="width: 9%"><col style="width: 14%"><col style="width: 22%"></colgroup>
+        <thead><tr><th>Séance</th><th>Statut</th><th class="num">Score</th><th class="num">Durée</th><th>Validée le</th><th>Compétences validées</th></tr></thead>
+        <tbody>
+        {% for c in r.courses %}
+            <tr>
+                <td><strong>{{ c.code }}</strong> {{ c.title }}{% if not c.selected %} <span class="muted small">(désélectionnée)</span>{% endif %}</td>
+                <td><span class="badge {{ c.status == 'Validé' ? 'ok' : (c.status == 'Non terminé' ? 'pending' : 'none') }}">{{ c.status }}</span></td>
+                <td class="num">{{ c.score is not null ? c.score ~ ' %' : '—' }}</td>
+                <td class="num">{{ c.durationSeconds is not null ? (c.durationSeconds / 60)|round ~ ' min' : '—' }}</td>
+                <td>{{ c.validatedAt ? c.validatedAt|date('d/m/Y H:i') : '—' }}</td>
+                <td class="small">
+                    {{ c.competencies|join(' ; ') }}
+                    {% if c.competenciesNotValidated is not empty %}<br><span class="muted">Non validées : {{ c.competenciesNotValidated|join(' ; ') }}</span>{% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

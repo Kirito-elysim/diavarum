@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}{% endblock %}</title>
+<style>
+    @page { margin: 22mm 16mm 18mm; }
+    body { font-family: 'DejaVu Sans', sans-serif; font-size: 9pt; color: #1f2937; }
+    header { position: fixed; top: -16mm; left: 0; right: 0; border-bottom: 2px solid #E86825; padding-bottom: 2mm; }
+    header .brand { color: #004138; font-weight: bold; font-size: 11pt; }
+    header .doc { float: right; color: #6b7280; font-size: 8pt; margin-top: 1mm; }
+    footer { position: fixed; bottom: -12mm; left: 0; right: 0; font-size: 7pt; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 1.5mm; }
+    h1 { color: #004138; font-size: 16pt; margin: 0 0 1mm; }
+    h2 { color: #004138; font-size: 11pt; margin: 6mm 0 2mm; border-bottom: 1px solid #d1d5db; padding-bottom: 1mm; }
+    .muted { color: #6b7280; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1mm; }
+    th { background: #004138; color: #fff; text-align: left; font-weight: bold; padding: 1.6mm 1.8mm; font-size: 8pt; }
+    td { padding: 1.4mm 1.8mm; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+    tr.total td { font-weight: bold; background: #ECF5E9; }
+    .num { text-align: right; white-space: nowrap; }
+    .kpis { width: 100%; margin: 3mm 0; }
+    .kpis td { border: 1px solid #e5e7eb; text-align: center; padding: 3mm; width: 25%; }
+    .kpis .value { font-size: 15pt; font-weight: bold; color: #E86825; }
+    .badge { white-space: nowrap; display: inline-block; padding: 0.5mm 2mm; border-radius: 2mm; font-size: 7.5pt; }
+    .ok { background: #ECF5E9; color: #1C5335; }
+    .pending { background: #FFE0D0; color: #9a3412; }
+    .none { background: #f3f4f6; color: #6b7280; }
+    .small { font-size: 7.5pt; }
+</style>
+</head>
+<body>
+<header><span class="brand">Diaverum · Programme d'entraînement des patients</span><span class="doc">{% block doc %}{% endblock %}</span></header>
+<footer>Document confidentiel — données de santé. Édité le {{ 'now'|date('d/m/Y à H:i') }}.</footer>
+{% block body %}{% endblock %}
+</body>
+</html>

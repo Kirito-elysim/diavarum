@@ -1,0 +1,4 @@
+# Réglages locaux de docker compose (ports, mots de passe) : voir .env.example
+/.env
+backups/
+.DS_Store

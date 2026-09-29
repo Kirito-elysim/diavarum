@@ -1,0 +1,450 @@
+[
+  {
+    "code": "S4",
+    "demoTitle": "Comprendre la dialyse",
+    "content": [
+      {
+        "id": "p1",
+        "title": "Qu'est-ce que la dialyse ?",
+        "blocks": [
+          {
+            "id": "t1",
+            "type": "text",
+            "content": "Bonjour ! Aujourd'hui, nous allons comprendre ensemble ce qu'est la dialyse et pourquoi elle est si importante pour vous. Ne vous inquiétez pas, tout sera expliqué simplement."
+          },
+          {
+            "id": "ic1",
+            "type": "info-card",
+            "title": "Le rôle des reins",
+            "content": "Les reins sont deux organes en forme de haricot situés dans le dos. Ils filtrent le sang environ 60 fois par jour pour éliminer les déchets et l'excès d'eau. Quand les reins ne fonctionnent plus assez, ces déchets s'accumulent dans le corps.",
+            "variant": "info"
+          },
+          {
+            "id": "ic2",
+            "type": "info-card",
+            "title": "Pourquoi la dialyse ?",
+            "content": "La dialyse remplace le travail des reins quand ils ne peuvent plus le faire. Elle nettoie votre sang en retirant les déchets et l'excès d'eau. C'est un traitement vital qui vous aide à continuer à vivre normalement.",
+            "variant": "success"
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "title": "Comment ça marche ?",
+        "blocks": [
+          {
+            "id": "t2",
+            "type": "text",
+            "content": "Pendant la dialyse, votre sang circule à travers une machine appelée « générateur ». Cette machine contient un filtre spécial, le dialyseur, qui joue le rôle de rein artificiel."
+          },
+          {
+            "id": "ic3",
+            "type": "info-card",
+            "title": "Le déroulement d'une séance",
+            "content": "Une séance dure en général 4 heures. Vous êtes installé confortablement dans un fauteuil. Le sang est prélevé, filtré par la machine, puis renvoyé dans votre corps. Pendant ce temps, vous pouvez lire, regarder la télévision ou vous reposer.",
+            "variant": "info"
+          },
+          {
+            "id": "ic4",
+            "type": "info-card",
+            "title": "Attention",
+            "content": "Il est normal de se sentir fatigué après une séance. Si vous ressentez des vertiges, des crampes ou une gêne, prévenez immédiatement l'infirmière.",
+            "variant": "warning"
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "title": "Vos questions fréquentes",
+        "blocks": [
+          {
+            "id": "tf1",
+            "type": "true-false",
+            "question": "Vrai ou faux ?",
+            "statements": [
+              {
+                "id": "s1",
+                "isTrue": false,
+                "statement": "La dialyse remplace complètement et définitivement les reins."
+              },
+              {
+                "id": "s2",
+                "isTrue": true,
+                "statement": "Pendant la dialyse, je peux lire ou regarder la télévision."
+              },
+              {
+                "id": "s3",
+                "isTrue": true,
+                "statement": "Il est normal de se sentir fatigué après une séance."
+              }
+            ],
+            "explanation": "La dialyse ne remplace pas totalement les reins : elle filtre le sang mais ne produit pas certaines hormones. Pendant la séance, vous êtes libre de lire ou regarder la TV. La fatigue après une séance est courante."
+          },
+          {
+            "id": "q1",
+            "type": "quiz",
+            "options": [
+              {
+                "id": "o1",
+                "label": "30 minutes",
+                "isCorrect": false
+              },
+              {
+                "id": "o2",
+                "label": "1 heure",
+                "isCorrect": false
+              },
+              {
+                "id": "o3",
+                "label": "4 heures",
+                "isCorrect": true
+              },
+              {
+                "id": "o4",
+                "label": "8 heures",
+                "isCorrect": false
+              }
+            ],
+            "question": "Combien de temps dure en général une séance de dialyse ?",
+            "explanation": "Une séance de dialyse dure en moyenne 4 heures, répétée 3 fois par semaine.",
+            "questionType": "qcu"
+          }
+        ]
+      }
+    ],
+    "competencies": [
+      "Le patient explique le rôle de la dialyse avec ses propres mots",
+      "Le patient identifie la durée d'une séance de dialyse",
+      "Le patient sait qu'il peut prévenir l'IDE en cas de gêne pendant la séance"
+    ]
+  },
+  {
+    "code": "S17",
+    "demoTitle": "Alimentation et hydratation",
+    "content": [
+      {
+        "id": "p1",
+        "title": "Pourquoi faire attention à son alimentation ?",
+        "blocks": [
+          {
+            "id": "t1",
+            "type": "text",
+            "content": "L'alimentation joue un rôle très important quand on est dialysé. Comme vos reins ne filtrent plus comme avant, certains aliments peuvent accumuler des déchets dans votre corps. Mais pas de panique : avec quelques habitudes simples, vous pouvez continuer à bien manger et vous faire plaisir !"
+          },
+          {
+            "id": "ic1",
+            "type": "info-card",
+            "title": "Les 3 points clés",
+            "content": "1. Limiter le sel pour éviter la soif et l'hypertension. 2. Contrôler les aliments riches en potassium. 3. Surveiller les apports en phosphore.",
+            "variant": "info"
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "title": "Les aliments à limiter",
+        "blocks": [
+          {
+            "id": "t2",
+            "type": "text",
+            "content": "Certains aliments contiennent beaucoup de potassium ou de phosphore. Ce sont des éléments que les reins ont du mal à éliminer. Découvrons lesquels limiter."
+          },
+          {
+            "id": "sb1",
+            "type": "sort-bin",
+            "items": [
+              {
+                "id": "i1",
+                "keep": false,
+                "label": "Banane"
+              },
+              {
+                "id": "i2",
+                "keep": true,
+                "label": "Pomme"
+              },
+              {
+                "id": "i3",
+                "keep": false,
+                "label": "Charcuterie"
+              },
+              {
+                "id": "i4",
+                "keep": true,
+                "label": "Poulet grillé"
+              },
+              {
+                "id": "i5",
+                "keep": false,
+                "label": "Chocolat"
+              },
+              {
+                "id": "i6",
+                "keep": true,
+                "label": "Riz"
+              },
+              {
+                "id": "i7",
+                "keep": false,
+                "label": "Noix"
+              },
+              {
+                "id": "i8",
+                "keep": true,
+                "label": "Haricots verts"
+              }
+            ],
+            "question": "Triez ces aliments : à limiter ou à privilégier ?",
+            "keepLabel": "À privilégier",
+            "explanation": "La banane, le chocolat et les noix sont riches en potassium. La charcuterie est très salée. Privilégiez la pomme, le poulet grillé, le riz et les haricots verts.",
+            "discardLabel": "À limiter"
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "title": "Gérer sa soif",
+        "blocks": [
+          {
+            "id": "t3",
+            "type": "text",
+            "content": "La gestion de la soif est un défi quotidien. Entre deux dialyses, le boire et le manger s'accumulent dans le corps. Trop d'eau peut cauffer des gonflements et essoufflement."
+          },
+          {
+            "id": "ic2",
+            "type": "info-card",
+            "title": "Astuces anti-soif",
+            "content": "Buvez dans un petit verre pour contrôler les quantités. Sucez des glaçons. Croquez un citron. Évitez les plats trop salés. Pèse-toi régulièrement entre deux séances.",
+            "variant": "tip"
+          },
+          {
+            "id": "q1",
+            "type": "quiz",
+            "options": [
+              {
+                "id": "o1",
+                "label": "0,5 litre maximum",
+                "isCorrect": false
+              },
+              {
+                "id": "o2",
+                "label": "Entre 0,5 et 1 litre selon le poids",
+                "isCorrect": true
+              },
+              {
+                "id": "o3",
+                "label": "Au moins 2 litres",
+                "isCorrect": false
+              },
+              {
+                "id": "o4",
+                "label": "Pas de restriction",
+                "isCorrect": false
+              }
+            ],
+            "question": "Combien de liquide par jour est généralement recommandé entre deux séances ?",
+            "explanation": "La quantité de liquide recommandée dépend de votre poids et de votre diurèse résiduelle. Demandez conseil à votre néphrologue.",
+            "questionType": "qcu"
+          }
+        ]
+      }
+    ],
+    "competencies": [
+      "Le patient distingue les aliments à privilégier de ceux à limiter",
+      "Le patient explique pourquoi le sel doit être limité",
+      "Le patient connaît au moins deux astuces pour gérer sa soif"
+    ]
+  },
+  {
+    "code": "S14",
+    "demoTitle": "La fistula - Mon trésor",
+    "content": [
+      {
+        "id": "p1",
+        "title": "Qu'est-ce qu'une fistula ?",
+        "blocks": [
+          {
+            "id": "t1",
+            "type": "text",
+            "content": "La fistula est la porte d'entrée de votre dialyse. C'est une connexion créée par chirurgie entre une artère et une veine, généralement dans le bras. Elle permet d'accéder à votre sang à chaque séance de façon sûre et durable."
+          },
+          {
+            "id": "ic1",
+            "type": "info-card",
+            "title": "Pourquoi la fistula est-elle si importante ?",
+            "content": "La fistula est considérée comme le meilleur accès vasculaire pour la dialyse. Elle peut durer de nombreuses années si vous en prenez soin. C'est votre « trésor » : protégez-le !",
+            "variant": "success"
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "title": "Prendre soin de sa fistula au quotidien",
+        "blocks": [
+          {
+            "id": "t2",
+            "type": "text",
+            "content": "Votre fistula demande quelques attentions chaque jour. Voici les gestes simples à connaître et les erreurs à éviter."
+          },
+          {
+            "id": "cat1",
+            "type": "categorize",
+            "items": [
+              {
+                "id": "i1",
+                "label": "Nettoyer la fistula avec de l'eau et du savon",
+                "category": "Bon geste"
+              },
+              {
+                "id": "i2",
+                "label": "Dormir sur le bras de la fistula",
+                "category": "À éviter"
+              },
+              {
+                "id": "i3",
+                "label": "Prendre la tension sur le bras de la fistula",
+                "category": "À éviter"
+              },
+              {
+                "id": "i4",
+                "label": "Palper la fistula chaque matin pour sentir le frémissement",
+                "category": "Bon geste"
+              },
+              {
+                "id": "i5",
+                "label": "Porter des bagues ou montres serrées sur ce bras",
+                "category": "À éviter"
+              },
+              {
+                "id": "i6",
+                "label": "Faire des exercices de serrage avec une balle molle",
+                "category": "Bon geste"
+              }
+            ],
+            "question": "Classez ces actions : bon geste ou à éviter ?",
+            "categories": [
+              "Bon geste",
+              "À éviter"
+            ],
+            "explanation": "Nettoyer la fistula et la palper chaque matin sont des gestes essentiels. En revanche, il ne faut jamais dormir dessus, prendre la tension, ni porter des bijoux serrés sur le bras de la fistula."
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "title": "Les signes d'alerte",
+        "blocks": [
+          {
+            "id": "t3",
+            "type": "text",
+            "content": "Il est important de reconnaître les signes qui doivent vous amener à contacter rapidement votre centre de dialyse. Soyez vigilant chaque jour."
+          },
+          {
+            "id": "ic2",
+            "type": "info-card",
+            "title": "Signes qui doivent alerter",
+            "content": "Vous ne sentez plus le frémissement (le « thrill ») de la fistula. La zone est rouge, chaude ou douloureuse. Vous avez de la fièvre. Il y a un saignement qui dure. La fistula est gonflée ou dure.",
+            "variant": "warning"
+          },
+          {
+            "id": "sc1",
+            "type": "scenario",
+            "steps": [
+              {
+                "id": "step1",
+                "choices": [
+                  {
+                    "id": "c1",
+                    "label": "J'attends le prochain jour de dialyse pour en parler",
+                    "feedback": "Non ! L'absence de frémissement est une urgence. La fistula pourrait être bouchée.",
+                    "isCorrect": false
+                  },
+                  {
+                    "id": "c2",
+                    "label": "J'appelle immédiatement mon centre de dialyse",
+                    "feedback": "Exact ! C'est la bonne réaction. Le centre pourra vérifier et déboucher la fistula si nécessaire.",
+                    "isCorrect": true
+                  },
+                  {
+                    "id": "c3",
+                    "label": "Je masse la zone pour la réactiver",
+                    "feedback": "Non ! Ne jamais masser une fistula. Cela pourrait causer des complications.",
+                    "isCorrect": false
+                  }
+                ],
+                "question": "Que faites-vous ?",
+                "situation": "Ce matin, en palpant votre fistula comme d'habitude, vous ne sentez plus le frémissement habituel."
+              }
+            ],
+            "question": "Que feriez-vous dans cette situation ?"
+          }
+        ]
+      },
+      {
+        "id": "p4",
+        "title": "Quiz final",
+        "blocks": [
+          {
+            "id": "q1",
+            "type": "quiz",
+            "options": [
+              {
+                "id": "o1",
+                "label": "La palper chaque matin",
+                "isCorrect": true
+              },
+              {
+                "id": "o2",
+                "label": "La nettoyer avec eau et savon",
+                "isCorrect": true
+              },
+              {
+                "id": "o3",
+                "label": "Éviter de porter des charges lourdes avec ce bras",
+                "isCorrect": true
+              },
+              {
+                "id": "o4",
+                "label": "Prendre la tension sur ce bras",
+                "isCorrect": false
+              }
+            ],
+            "question": "Quels sont les bons gestes pour préserver sa fistula ? (plusieurs réponses possibles)",
+            "explanation": "Les trois premiers sont de bons gestes. Ne jamais prendre la tension sur le bras de la fistula.",
+            "questionType": "qcm"
+          },
+          {
+            "id": "q2",
+            "type": "quiz",
+            "options": [
+              {
+                "id": "o1",
+                "label": "Attendre le prochain jour de dialyse",
+                "isCorrect": false
+              },
+              {
+                "id": "o2",
+                "label": "Appeler immédiatement le centre",
+                "isCorrect": true
+              },
+              {
+                "id": "o3",
+                "label": "Masser la fistula",
+                "isCorrect": false
+              }
+            ],
+            "question": "Si vous ne sentez plus le frémissement de votre fistula, que devez-vous faire ?",
+            "explanation": "L'absence de frémissement est une urgence : appelez immédiatement votre centre de dialyse.",
+            "questionType": "qcu"
+          }
+        ]
+      }
+    ],
+    "competencies": [
+      "Le patient palpe sa fistula chaque matin et sait reconnaître le frémissement",
+      "Le patient identifie les gestes à éviter sur le bras de la fistula",
+      "Le patient connaît les signes d'alerte nécessitant d'appeler le centre",
+      "Le patient sait réagir correctement face à une absence de frémissement"
+    ]
+  }
+]

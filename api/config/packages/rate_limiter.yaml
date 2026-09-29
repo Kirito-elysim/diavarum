@@ -1,0 +1,27 @@
+framework:
+    rate_limiter:
+        # Vérification du code de sécurité IDE (PIN à 4-6 chiffres : force brute facile sans limite)
+        security_code:
+            policy: fixed_window
+            limit: 5
+            interval: '15 minutes'
+
+        # Connexion : 5 échecs par compte (email + IP) → blocage 15 minutes
+        login_local:
+            policy: fixed_window
+            limit: 5
+            interval: '15 minutes'
+        # Plafond par adresse IP (toutes connexions confondues, réussies comprises). Toutes les tablettes
+        # d'un centre sortent souvent par la même IP : le défaut de Symfony (25) bloquerait une relève d'équipe.
+        login_global:
+            policy: sliding_window
+            limit: 100
+            interval: '15 minutes'
+
+services:
+    app.login_rate_limiter:
+        class: Symfony\Component\Security\Http\RateLimiter\DefaultLoginRateLimiter
+        arguments:
+            $globalFactory: '@limiter.login_global'
+            $localFactory: '@limiter.login_local'
+            $secret: '%kernel.secret%'

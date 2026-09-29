@@ -1,0 +1,69 @@
+{% extends 'reports/_layout.html.twig' %}
+{% block title %}Statistiques — {{ s.scope }}{% endblock %}
+{% block doc %}Synthèse statistique{% endblock %}
+{% macro share(v) %}{{ v.count }}{% if v.percent is not null %} <span class="muted">({{ v.percent|number_format(1) }} %)</span>{% endif %}{% endmacro %}
+{% macro minutes(seconds) %}{{ seconds is not null ? (seconds / 60)|round ~ ' min' : '—' }}{% endmacro %}
+{% block body %}
+{% import _self as f %}
+<h1>Synthèse statistique</h1>
+<p class="muted">Périmètre : {{ s.scope }}</p>
+
+<table class="kpis"><tr>
+    <td><div class="value">{{ s.total.patients.registered }}</div>patients enregistrés</td>
+    <td><div class="value">{{ s.total.programs.active.count }}</div>programmes en cours</td>
+    <td><div class="value">{{ s.total.programs.completed.count }}</div>programmes achevés</td>
+    <td><div class="value">{{ s.total.averageProgramScore is not null ? s.total.averageProgramScore ~ ' %' : '—' }}</div>score moyen des programmes</td>
+</tr></table>
+
+<h2>Patients</h2>
+<table>
+    <thead><tr><th>Centre</th><th class="num">Enregistrés</th><th class="num">Éligibles</th><th class="num">Non éligibles</th><th class="num">À statuer</th></tr></thead>
+    <tbody>
+    {% for a in s.centers|merge([s.total]) %}
+        <tr class="{{ loop.last ? 'total' }}">
+            <td>{{ a.center }}</td><td class="num">{{ a.patients.registered }}</td>
+            <td class="num">{{ f.share(a.patients.eligible) }}</td><td class="num">{{ f.share(a.patients.notEligible) }}</td><td class="num">{{ f.share(a.patients.pending) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Programmes</h2>
+<table>
+    <thead><tr><th>Centre</th><th class="num">Non actifs</th><th class="num">En cours</th><th class="num">Interrompus</th><th class="num">Achevés</th><th class="num">Score moyen</th><th class="num">Durée moy. (achevés)</th></tr></thead>
+    <tbody>
+    {% for a in s.centers|merge([s.total]) %}
+        <tr class="{{ loop.last ? 'total' }}">
+            <td>{{ a.center }}</td>
+            <td class="num">{{ f.share(a.programs.inactive) }}</td><td class="num">{{ f.share(a.programs.active) }}</td>
+            <td class="num">{{ f.share(a.programs.interrupted) }}</td><td class="num">{{ f.share(a.programs.completed) }}</td>
+            <td class="num">{{ a.averageProgramScore is not null ? a.averageProgramScore ~ ' %' : '—' }}</td>
+            <td class="num">{{ f.minutes(a.averageCompletedProgramDurationSeconds) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Séances</h2>
+<table>
+    <thead><tr><th>Séance</th><th class="num">Validations</th><th class="num">Score moyen</th><th class="num">Durée moyenne</th></tr></thead>
+    <tbody>
+    {% for c in s.courses %}
+        <tr><td><strong>{{ c.code }}</strong> {{ c.title }}</td><td class="num">{{ c.validations }}</td>
+            <td class="num">{{ c.averageScore is not null ? c.averageScore ~ ' %' : '—' }}</td><td class="num">{{ f.minutes(c.averageDurationSeconds) }}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Activité des IDE</h2>
+<table>
+    <thead><tr><th>IDE</th><th>Centres</th><th class="num">Séances validées</th><th class="num">Temps de séance</th></tr></thead>
+    <tbody>
+    {% for n in s.nurses %}
+        <tr><td>{{ n.name }}</td><td class="small">{{ n.centers }}</td><td class="num">{{ n.validatedSessions }}</td><td class="num">{{ f.minutes(n.totalDurationSeconds) }}</td></tr>
+    {% else %}
+        <tr><td colspan="4" class="muted">Aucune IDE sur ce périmètre.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

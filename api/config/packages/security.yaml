@@ -1,0 +1,65 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        # Codes de sécurité IDE et garde-fou national : hachés comme des mots de passe
+        security_code: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    # admin national ⊃ cadre ⊃ IDE (chaque profil peut tout ce que peut le profil inférieur)
+    role_hierarchy:
+        ROLE_ADMIN_NATIONAL: ROLE_CADRE
+        ROLE_CADRE: ROLE_IDE
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+        api:
+            pattern: ^/api
+            stateless: true
+            provider: app_user_provider
+            user_checker: App\Security\UserChecker
+            entry_point: jwt
+            json_login:
+                check_path: api_auth_login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt: ~
+            refresh_jwt:
+                check_path: api_auth_refresh
+                invalidate_token_on_logout: true
+            logout:
+                path: api_auth_logout
+            # Anti force brute : limites définies dans rate_limiter.yaml (5 échecs par compte, 100 tentatives par IP)
+            login_throttling:
+                limiter: app.login_rate_limiter
+
+    access_control:
+        - { path: ^/api/auth/(login|refresh)$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/health$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
+        - { path: ^/api/contexts, roles: PUBLIC_ACCESS }
+        # Intégration des contenus : jeton du prestataire (X-Content-Token) ou JWT administrateur, vérifié par le contrôleur
+        - { path: ^/api/content/, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10
+            security_code:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

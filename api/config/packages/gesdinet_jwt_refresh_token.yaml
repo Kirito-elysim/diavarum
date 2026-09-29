@@ -1,0 +1,26 @@
+gesdinet_jwt_refresh_token:
+    refresh_token_class: App\Entity\RefreshToken
+    # Une journée de travail sur tablette ; chaque refresh émet un nouveau jeton (rotation)
+    ttl: 43200
+    single_use: true
+    hash_tokens:
+        enabled: true
+        accept_stored_in_the_clear: false
+    # Jeton hors de portée du JavaScript (cookie httpOnly) et envoyé uniquement aux routes d'auth
+    cookie:
+        enabled: true
+        http_only: true
+        secure: true
+        same_site: strict
+        path: /api/auth
+        remove_token_from_body: true
+
+when@dev:
+    gesdinet_jwt_refresh_token:
+        cookie:
+            secure: false
+
+when@test:
+    gesdinet_jwt_refresh_token:
+        cookie:
+            secure: false

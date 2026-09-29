@@ -1,0 +1,54 @@
+# Développement : code monté en volume, Vite en HMR, Mailpit, Postgres exposé.
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: php-dev
+    image: diaverum-php:dev
+    environment:
+      APP_ENV: dev
+    volumes:
+      - ./api:/app
+
+  worker:
+    # Même image que « php » (construite par ce service) : jamais téléchargée
+    image: diaverum-php:dev
+    pull_policy: never
+    environment:
+      APP_ENV: dev
+    volumes:
+      - ./api:/app
+
+  nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./docker/nginx/dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./api/public:/app/public:ro
+    depends_on:
+      - front
+
+  front:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0 --port 5173 --strictPort"
+    environment:
+      VITE_HMR_CLIENT_PORT: ${HTTP_PORT:-8080}
+    volumes:
+      - ./front:/app
+      # node_modules propres au conteneur (binaires Linux, pas ceux du Mac)
+      - front_node_modules:/app/node_modules
+    restart: unless-stopped
+
+  db:
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+
+volumes:
+  front_node_modules:
