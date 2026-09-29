@@ -73,9 +73,11 @@ export default function Sidebar() {
     ...(isAdmin ? [{ to: '/modules', icon: GraduationCap, label: 'Contenus des séances' }] : []),
   ];
 
+  // Quitter d'abord les pages protégées : sinon la page en cours serait mémorisée comme destination
+  // et la personne suivante (tablette partagée) y serait renvoyée après sa connexion
   const handleLogout = async () => {
+    navigate('/login', { replace: true });
     await logout();
-    navigate('/login');
   };
 
   const initials = user ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.toUpperCase() : '';

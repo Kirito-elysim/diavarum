@@ -211,7 +211,9 @@ await step('Séance complète S4 : 3 bonnes réponses sur 4 → score serveur 75
 });
 
 await step('Remise de la tablette à l\'IDE (code) puis validation des compétences', async () => {
-  await page.getByText('Fin du cours').waitFor();
+  await page.getByText('Vous avez obtenu le score de').waitFor(); // score affiché au patient
+  await page.getByRole('button', { name: 'Fin du cours' }).click();
+  await page.getByRole('heading', { name: 'Fin du cours' }).waitFor();
   for (const d of '1234') await page.getByRole('button', { name: d, exact: true }).click();
   await page.getByRole('button', { name: 'Valider' }).click();
   await page.getByText("Compétences d'entraînement").waitFor();
@@ -221,6 +223,7 @@ await step('Remise de la tablette à l\'IDE (code) puis validation des compéten
   for (let i = 0; i < await validated.count(); i++) await validated.nth(i).click();
   await shot('08a-competences');
   await finish.click();
+  await page.getByRole('button', { name: 'Confirmer' }).click();
   await page.getByText('Cours validé').waitFor();
   await page.getByText('75%').waitFor();
   await shot('08b-cours-valide');
@@ -317,9 +320,9 @@ await step('Administrateur national : journal des accès (consultation du patien
   await shot('10a-journal');
 });
 
-await step('Administrateur national : contenus des séances (33, dont S4 intégrée)', async () => {
+await step('Administrateur national : contenus des séances (33, dont S1 et S4 intégrées)', async () => {
   await page.getByRole('link', { name: 'Contenus des séances' }).click();
-  await page.getByText('3/33 séances ont un contenu intégré').waitFor();
+  await page.getByText('4/33 séances ont un contenu intégré').waitFor(); // S1 (storyboard) + S4, S14, S17 (démo)
   await page.getByRole('row', { name: /S4 IRCT et hémodialyse/ }).getByText('Publiée').waitFor();
   await shot('10b-contenus');
 });
@@ -347,6 +350,47 @@ await step('Cadre : statistiques de son centre et export Excel', async () => {
   await shot('12-statistiques-cadre');
   const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Excel', exact: true }).click()]);
   if (!download.suggestedFilename().startsWith('statistiques-diaverum-paris-nord')) throw new Error(`nom inattendu : ${download.suggestedFilename()}`);
+});
+
+await step('Cours S1 (storyboard) : 16 pages, quiz juste → 100 %, 2 compétences sur 2', async () => {
+  await logout();
+  await login('ide@diaverum.test');
+  await page.waitForURL('**/dashboard');
+  await page.goto(`${BASE}/patients`);
+  await page.getByText('DUPONT Jean').click();
+  await page.getByRole('button', { name: 'Non', exact: true }).click().catch(() => {});
+  await page.locator('div.p-3.rounded-xl', { hasText: 'Droits et devoirs du patient' }).getByRole('button', { name: /Lancer|Refaire|Reprendre/ }).click();
+  await page.getByRole('button', { name: /Commencer la séance/ }).click();
+  const next = async () => { await page.getByRole('button', { name: /Page suivante|Terminer/ }).click(); await page.waitForTimeout(650); };
+  await page.getByText('En tant que patient, quels sont mes droits ?').waitFor();
+  for (let p = 2; p <= 4; p++) await next();
+  await page.getByText('Oui', { exact: true }).click(); // question de réflexion, non notée
+  await page.getByRole('button', { name: 'Valider ma réponse' }).click();
+  await next();
+  await page.getByRole('button', { name: 'Image suivante' }).click(); // carrousel
+  for (let p = 6; p <= 10; p++) await next();
+  const answers = [['Vrai'], ['Vrai'], ['Transmettre à l’équipe', 'Suivre exactement', 'Signaler tout changement'], ['Désigner un interlocuteur', 'Faire connaître vos volontés'], ['Vrai'], ['Sont confidentielles', 'Peuvent être annulées', 'Permettent de faire connaître aux équipes']];
+  for (const options of answers) {
+    await next();
+    for (const o of options) await page.getByText(o, { exact: o.length < 6 }).first().click();
+    await page.getByRole('button', { name: /Valider ma réponse|Valider/ }).first().click();
+    await page.waitForTimeout(350);
+  }
+  await next();
+  await page.getByText('Vous avez obtenu le score de').waitFor();
+  if ((await page.locator('p.text-8xl').innerText()) !== '100 %') throw new Error('score patient inattendu');
+  await page.getByRole('button', { name: 'Fin du cours' }).click();
+  for (const d of '1234') await page.getByRole('button', { name: d, exact: true }).click();
+  await page.getByRole('button', { name: 'Valider' }).click();
+  await page.getByText("Compétences d'entraînement").waitFor();
+  const validated = page.getByRole('button', { name: 'Validée', exact: true });
+  for (let i = 0; i < await validated.count(); i++) await validated.nth(i).click();
+  await page.getByRole('button', { name: 'Terminer le cours' }).click();
+  await page.getByRole('button', { name: 'Confirmer' }).click();
+  await page.getByText('Cours validé').waitFor();
+  await page.getByText('2 compétence(s) sur 2 validée(s)').waitFor();
+  await page.getByText('100%').waitFor(); // score officiel, recalculé par le serveur
+  await shot('13-cours-s1-valide');
 });
 
 await browser.close();

@@ -8,7 +8,7 @@ export type ContentBlockType =
   | 'reorder' | 'fill-blank' | 'true-false' | 'memory' | 'slider'
   | 'tap-sequence' | 'flip-cards' | 'categorize' | 'drawing' | 'scenario'
   | 'reveal-legends' | 'pull-timeline' | 'sort-bin'
-  | 'connect-dots' | 'word-search' | 'yes-no-path';
+  | 'connect-dots' | 'word-search' | 'yes-no-path' | 'carousel';
 
 export interface TextBlock {
   type: 'text';
@@ -50,6 +50,8 @@ export interface QuizBlock {
   type: 'quiz';
   id: string;
   questionType: QuestionType;
+  /** false = question de réflexion sans score ni correction (ex. « Avez-vous désigné quelqu'un ? ») */
+  graded?: boolean;
   question: string;
   options?: QuizOption[];
   pairs?: DragDropPair[];
@@ -63,7 +65,23 @@ export type ContentBlock =
   | SliderBlock | TapSequenceBlock | FlipCardsBlock | CategorizeBlock
   | DrawingBlock | ScenarioBlock
   | RevealLegendsBlock | PullTimelineBlock
-  | SortBinBlock | ConnectDotsBlock | WordSearchBlock | YesNoPathBlock;
+  | SortBinBlock | ConnectDotsBlock | WordSearchBlock | YesNoPathBlock
+  | CarouselBlock;
+
+/* Carrousel : images défilantes accompagnées d'un texte (interactivité du cahier des charges) */
+export interface CarouselSlide {
+  id: string;
+  imageUrl: string;
+  alt: string;
+  text: string;
+}
+
+export interface CarouselBlock {
+  type: 'carousel';
+  id: string;
+  question?: string;
+  slides: CarouselSlide[];
+}
 
 export interface IframeBlock {
   type: 'iframe';

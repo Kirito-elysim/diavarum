@@ -4,7 +4,7 @@ PHP     = $(DC) exec php
 CONSOLE = $(PHP) bin/console
 
 .DEFAULT_GOAL := help
-.PHONY: help up down restart build ps logs cc sh console composer npm migration migrate fixtures test e2e db db-dump db-restore prod-up prod-down
+.PHONY: help up down restart build ps logs cc sh console composer npm migration migrate fixtures content test e2e db db-dump db-restore prod-up prod-down
 
 help: ## Liste des commandes
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -56,6 +56,10 @@ fixtures: ## Recharge les données de démo (conserve le catalogue des séances 
 	$(CONSOLE) doctrine:fixtures:load --no-interaction \
 		--purge-exclusions=eligibility_reason --purge-exclusions=interruption_reason --purge-exclusions=codex_word \
 		--purge-exclusions=chapter --purge-exclusions=module
+	$(MAKE) content
+
+content: ## Importe les contenus de cours versionnés (api/content/*.json)
+	$(PHP) sh -c 'bin/console app:content:import content/*.json'
 
 test: ## Lance les tests (base diaverum_test créée / migrée si besoin)
 	$(PHP) sh -c 'rm -rf var/cache/test \

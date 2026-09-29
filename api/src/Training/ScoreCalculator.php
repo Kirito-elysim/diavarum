@@ -20,6 +20,11 @@ final class ScoreCalculator
      */
     public static function expectedAnswers(array $block): ?int
     {
+        // Question de réflexion sans score ni correction
+        if ('quiz' === ($block['type'] ?? null) && false === ($block['graded'] ?? true)) {
+            return null;
+        }
+
         return match ($block['type'] ?? null) {
             'quiz' => match ($block['questionType'] ?? 'qcu') {
                 'qcm' => \count(array_filter($block['options'] ?? [], static fn (array $o) => $o['isCorrect'] ?? false)),

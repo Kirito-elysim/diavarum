@@ -8,6 +8,7 @@ import type { ContentBlock, ModulePage } from '../types';
 export function expectedAnswers(block: ContentBlock): number | null {
   switch (block.type) {
     case 'quiz':
+      if (block.graded === false) return null;
       if (block.questionType === 'qcm') return (block.options ?? []).filter((o) => o.isCorrect).length;
       if (block.questionType === 'drag-drop') return (block.pairs ?? []).length;
       return 1;

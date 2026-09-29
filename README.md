@@ -92,6 +92,16 @@ Aucune suppression physique : patients, comptes et centres sont archivés (traç
 | `GET /api/statistics[?centers[]=…]` | Cadre | Synthèse (JSON) de ses centres ; national par défaut pour un administrateur |
 | `GET /api/exports/statistics.xlsx` / `.pdf` | Cadre | Même synthèse : patients, programmes, séances, activité des IDE |
 
+### Contenus de cours
+
+Les contenus intégrés sont versionnés dans `api/content/` (un JSON par séance, format de l'API d'intégration) et
+leurs illustrations dans `front/public/courses/<code>/`. `make content` les importe (fait aussi par `make fixtures`) ;
+en production : `docker compose exec php bin/console app:content:import content/*.json`.
+
+| Séance | Source | État |
+|--------|--------|------|
+| S1 — Droits et devoirs du patient, personne de confiance, directives anticipées | `doc/storybord_cours_1.pptx` | Intégrée — illustrations provisoires |
+
 ### Intégration des contenus (prestataire)
 
 `GET` / `PUT /api/content/modules/{code}` (ex. `S4`, `O2`, `PT`) avec l'en-tête `X-Content-Token: <CONTENT_API_TOKEN>`.

@@ -4,6 +4,7 @@ import { useInterruptSession, useModule, usePatient, useProgram, useStartSession
 import { exerciseResults } from '../lib/scoring';
 import { ApiError } from '../lib/api';
 import { QuizComponent } from '../components/QuizComponent';
+import { CarouselView } from '../components/CarouselView';
 import {
   ReorderView, FillBlankView, TrueFalseView, MemoryView,
   SliderView, TapSequenceView, FlipCardsView, CategorizeView,
@@ -76,7 +77,7 @@ function useStopwatch(running: boolean) {
 /* ─── Content block renderers ────────────────────────────────────────────── */
 function TextBlockView({ block }: { block: TextBlock }) {
   return (
-    <p className="text-[18px] leading-[1.75] text-white/80 tracking-[-0.01em]">{block.content}</p>
+    <p className="text-[18px] leading-[1.75] text-white/80 tracking-[-0.01em] whitespace-pre-line">{block.content}</p>
   );
 }
 
@@ -86,7 +87,7 @@ function ImageBlockView({ block }: { block: ImageBlock }) {
     <>
       <figure className="space-y-3">
         <div className="relative overflow-hidden rounded-2xl bg-white/5 cursor-zoom-in" onClick={() => setZoomed(true)}>
-          <img src={block.url} alt={block.alt} className="w-full object-cover max-h-72 transition-transform duration-300 hover:scale-[1.02]" loading="lazy" />
+          <img src={block.url} alt={block.alt} className="w-full object-contain max-h-72 transition-transform duration-300 hover:scale-[1.02]" loading="lazy" />
           <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm rounded-xl p-2">
             <ZoomIn className="w-4 h-4 text-white/80" />
           </div>
@@ -694,7 +695,7 @@ function useSwipe(onLeft: () => void, onRight: () => void, threshold = 55) {
 function ModuleCompletionScreen({
   patient, module, score, elapsedSeconds,
   nextModuleName, nextModuleDuration,
-  onNext, onRequestExit,
+  onNext, onRequestExit, competencies,
 }: {
   patient:             PlayerPatient;
   module:              PlayerModule;
@@ -704,6 +705,7 @@ function ModuleCompletionScreen({
   nextModuleDuration?: number;
   onNext?:             () => void;
   onRequestExit:       () => void;
+  competencies?:       { validated: number; total: number };
 }) {
   const isExcellent = score === null || score >= 80;
   const isGood      = score === null || score >= 60;
@@ -740,6 +742,9 @@ function ModuleCompletionScreen({
       <p className={cn('text-base font-semibold mb-1', isExcellent ? 'text-emerald-400' : isGood ? 'text-amber-400' : 'text-red-400')}>
         {score === null ? 'Cours sans exercice noté' : isExcellent ? 'Excellent résultat !' : isGood ? 'Bon résultat' : 'À améliorer'}
       </p>
+      {competencies && competencies.total > 0 && (
+        <p className="text-white/70 text-sm mb-2">{competencies.validated} compétence(s) sur {competencies.total} validée(s)</p>
+      )}
       <p className="text-white/40 text-sm max-w-xs mb-10">
         {score === null ? 'Durée et compétences enregistrées.' : isExcellent ? 'Contenu parfaitement assimilé.' : isGood ? 'Certains points à revoir.' : 'Révision approfondie recommandée.'}
       </p>
@@ -777,6 +782,44 @@ function ModuleCompletionScreen({
   );
 }
 
+/* ─── Score final (côté patient) ─────────────────────────────────────────── */
+const CONFETTI_COLORS = ['#E86825', '#FFB31B', '#1FABC7', '#ECF5E9', '#FFE0D0'];
+
+function PatientScoreScreen({ score, onFinish }: { score: number | null; onFinish: () => void }) {
+  const celebrate = score !== null && score >= 75;
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, #004138 0%, #001A16 80%)' }}>
+      {celebrate && (
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
+          {Array.from({ length: 40 }, (_, i) => (
+            <span
+              key={i}
+              className="confetti"
+              style={{
+                left: `${(i * 37) % 100}%`,
+                background: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+                animationDelay: `${(i % 10) * 0.15}s`,
+                animationDuration: `${2.4 + (i % 5) * 0.3}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+      <p className="text-white/60 text-lg font-semibold uppercase tracking-widest mb-4">Vous avez obtenu le score de</p>
+      <p className="text-8xl font-black text-white mb-4 pop-in">{score === null ? '—' : `${score} %`}</p>
+      <p className="text-white/50 text-base mb-12">{score === null ? 'Ce cours ne comporte pas de quiz noté.' : celebrate ? 'Bravo !' : 'Merci pour votre participation.'}</p>
+      <button
+        onClick={onFinish}
+        className="w-full max-w-sm h-16 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-xl shadow-2xl active:scale-[0.97] transition-transform touch-manipulation"
+      >
+        Fin du cours
+      </button>
+      <p className="text-white/30 text-xs mt-3">Rendez la tablette à votre infirmière</p>
+    </div>
+  );
+}
+
 /* ─── Validation des compétences (côté IDE) ──────────────────────────────── */
 function CompetencyValidationScreen({
   moduleTitle, patientName, competencies, choices, onChoose, onFinish, onBack, saving, error,
@@ -792,9 +835,13 @@ function CompetencyValidationScreen({
   error: string | null;
 }) {
   const complete = competencies.every((c) => choices[c.id] !== undefined);
+  const [confirming, setConfirming] = useState(false);
+  const validatedCount = competencies.filter((c) => choices[c.id]).length;
 
   return (
-    <div className="fixed inset-0 z-[9999] overflow-auto" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
+    // Fond neutre, distinct des écrans patient (storyboard : l'IDE doit voir que cet écran ne s'adresse pas au patient)
+    <div className="fixed inset-0 z-[9999] overflow-auto" style={{ background: 'linear-gradient(180deg, #111827 0%, #1f2937 100%)' }}>
+      <div className="h-1.5 bg-amber-400" />
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="flex items-center gap-3 mb-2 text-amber-300">
           <Shield className="w-5 h-5" />
@@ -835,8 +882,23 @@ function CompetencyValidationScreen({
         <p className="text-white/40 text-xs mb-3">
           Valider les compétences ne suffit pas : « Terminer le cours » enregistre la séance (durée, score, compétences).
         </p>
+        {confirming && (
+          <div className="fixed inset-0 z-[10001] bg-black/70 flex items-center justify-center px-6">
+            <div className="w-full max-w-sm rounded-3xl bg-[#00261F] border border-white/10 p-6 text-center">
+              <p className="text-white text-lg font-bold mb-2">Clôturer la séance ?</p>
+              <p className="text-white/60 text-sm mb-6">
+                {competencies.length ? `${validatedCount} compétence(s) validée(s) sur ${competencies.length}. ` : ''}
+                La durée et le score seront enregistrés ; cette action est définitive.
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <button onClick={() => setConfirming(false)} className="h-12 rounded-xl bg-white/10 text-white/70 font-semibold">Annuler</button>
+                <button onClick={() => { setConfirming(false); onFinish(); }} className="h-12 rounded-xl bg-emerald-500 text-white font-semibold">Confirmer</button>
+              </div>
+            </div>
+          </div>
+        )}
         <button
-          onClick={onFinish}
+          onClick={() => setConfirming(true)}
           disabled={!complete || saving}
           className="w-full h-16 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold text-lg flex items-center justify-center gap-3 disabled:opacity-30 active:scale-[0.98] transition-all touch-manipulation"
         >
@@ -919,6 +981,8 @@ function BlockCard({
     return interactiveWrapper(<ConnectDotsView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
   if (block.type === 'word-search')
     return interactiveWrapper(<WordSearchView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
+  if (block.type === 'carousel')
+    return interactiveWrapper(<CarouselView block={block} />);
   if (block.type === 'yes-no-path')
     return interactiveWrapper(<YesNoPathView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
 
@@ -926,8 +990,8 @@ function BlockCard({
 }
 
 /* ─── Main session page ──────────────────────────────────────────────────── */
-/** pre → active (patient) → handover (code IDE) → competencies (IDE) → done ; pin-exit = sortie anticipée */
-type Phase = 'pre' | 'active' | 'handover' | 'competencies' | 'done' | 'pin-exit';
+/** pre → active (patient) → score (patient) → handover (code IDE) → competencies (IDE) → done ; pin-exit = sortie anticipée */
+type Phase = 'pre' | 'active' | 'score' | 'handover' | 'competencies' | 'done' | 'pin-exit';
 
 /**
  * Charge le cours (et le patient / parcours hors prévisualisation) avant de monter le lecteur :
@@ -1060,7 +1124,7 @@ function SessionRunner({
     if (animating || (paused && !isPreview)) return;
     if (dir === 'next' && !allQuizAnswered) return;
     if (dir === 'prev' && pageIndex === 0) return;
-    if (dir === 'next' && pageIndex === totalPages - 1) { setPhase(isPreview ? 'done' : 'handover'); return; }
+    if (dir === 'next' && pageIndex === totalPages - 1) { setPhase(isPreview ? 'done' : 'score'); return; }
 
     setSlideClass(dir === 'next' ? 'slide-out-left' : 'slide-out-right');
     setAnimating(true);
@@ -1157,8 +1221,17 @@ function SessionRunner({
         nextModuleDuration={nextModule?.estimatedDuration}
         onNext={nextModule ? handleNextModule : undefined}
         onRequestExit={backToPatient}
+        competencies={{ validated: module.competencies.filter((c) => choices[c.id]).length, total: module.competencies.length }}
       />
     );
+  }
+
+  /* ── Score final, côté patient ────────────────────────────────────── */
+  if (phase === 'score') {
+    const results = exerciseResults(module.pages, quizAnswers);
+    const total = results.reduce((sum, r) => sum + r.total, 0);
+    const score = total ? Math.round((100 * results.reduce((sum, r) => sum + r.correct, 0)) / total) : null;
+    return <PatientScoreScreen score={score} onFinish={() => setPhase('handover')} />;
   }
 
   /* ── Fin du contenu : la tablette revient à l'IDE (code demandé) ───── */
@@ -1168,7 +1241,7 @@ function SessionRunner({
         title="Fin du cours"
         subtitle="Rendez la tablette à l'IDE : son code est demandé pour valider la séance."
         onSuccess={() => setPhase('competencies')}
-        onCancel={() => setPhase('active')}
+        onCancel={() => setPhase('score')}
       />
     );
   }

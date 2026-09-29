@@ -13,7 +13,7 @@ final class ContentValidator
         'text', 'image', 'info-card', 'quiz', 'timeline', 'hotspot', 'iframe',
         'reorder', 'fill-blank', 'true-false', 'memory', 'slider', 'tap-sequence', 'flip-cards',
         'categorize', 'drawing', 'scenario', 'reveal-legends', 'pull-timeline', 'sort-bin',
-        'connect-dots', 'word-search', 'yes-no-path',
+        'connect-dots', 'word-search', 'yes-no-path', 'carousel',
     ];
 
     /**

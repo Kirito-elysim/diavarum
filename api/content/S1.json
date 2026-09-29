@@ -1,0 +1,517 @@
+{
+  "code": "S1",
+  "title": "Droits et devoirs du patient – Personne de confiance – Directives anticipées",
+  "description": "Connaître ses droits et devoirs de patient, le rôle de la personne de confiance et l’intérêt des directives anticipées.",
+  "estimatedDuration": 35,
+  "published": true,
+  "competencies": [
+    "Le patient sait définir la personne de confiance et expliquer son rôle.",
+    "Le patient sait expliquer l’intérêt des directives anticipées."
+  ],
+  "content": [
+    {
+      "id": "p01",
+      "title": "Droits du patient",
+      "blocks": [
+        {
+          "id": "s1-droits",
+          "type": "flip-cards",
+          "question": "En tant que patient, quels sont mes droits ?",
+          "cards": [
+            {
+              "id": "s1-droits-1",
+              "front": "INFORMATION",
+              "back": "Être informé sur mon état de santé"
+            },
+            {
+              "id": "s1-droits-2",
+              "front": "DOSSIER MÉDICAL",
+              "back": "Accéder à tout mon dossier médical"
+            },
+            {
+              "id": "s1-droits-3",
+              "front": "DÉCISION",
+              "back": "Participer aux décisions sur mon traitement"
+            },
+            {
+              "id": "s1-droits-4",
+              "front": "CONSENTEMENT",
+              "back": "Consentir ou refuser un soin"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p02",
+      "title": "Droits du patient (suite)",
+      "blocks": [
+        {
+          "id": "s1-respect",
+          "type": "reveal-legends",
+          "question": "Le personnel soignant garantit le respect de :",
+          "imageUrl": "/courses/S1/patient-soignante.png",
+          "alt": "Une patiente accompagnée par une infirmière",
+          "points": [
+            {
+              "id": "s1-respect-1",
+              "x": 18,
+              "y": 22,
+              "label": "Votre dignité",
+              "description": ""
+            },
+            {
+              "id": "s1-respect-2",
+              "x": 82,
+              "y": 22,
+              "label": "Votre intimité",
+              "description": ""
+            },
+            {
+              "id": "s1-respect-3",
+              "x": 18,
+              "y": 78,
+              "label": "Votre vie privée",
+              "description": ""
+            },
+            {
+              "id": "s1-respect-4",
+              "x": 82,
+              "y": 78,
+              "label": "Du secret médical",
+              "description": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p03",
+      "title": "Devoirs du patient",
+      "blocks": [
+        {
+          "id": "s1-devoirs",
+          "type": "flip-cards",
+          "question": "En tant que patient, quels sont mes devoirs ?",
+          "cards": [
+            {
+              "id": "s1-devoirs-1",
+              "front": "INFORMER",
+              "back": "Transmettre des informations exactes concernant ma santé"
+            },
+            {
+              "id": "s1-devoirs-2",
+              "front": "ÊTRE OBSERVANT",
+              "back": "Respecter les rendez-vous et les prescriptions"
+            },
+            {
+              "id": "s1-devoirs-3",
+              "front": "SIGNALER",
+              "back": "Signaler tout changement de situation médicale"
+            },
+            {
+              "id": "s1-devoirs-4",
+              "front": "RESPECTER",
+              "back": "Respecter le personnel, les autres patients et les règles du centre"
+            }
+          ]
+        },
+        {
+          "id": "s1-devoirs-important",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Le patient, en tant qu’acteur de sa santé, est invité à participer activement à son parcours de soin."
+        }
+      ]
+    },
+    {
+      "id": "p04",
+      "title": "La personne de confiance",
+      "blocks": [
+        {
+          "id": "s1-pc-designee",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Lors de votre arrivée au centre, vous avez rempli le formulaire de la personne de confiance. Avez-vous désigné quelqu’un ?",
+          "options": [
+            {
+              "id": "s1-pc-designee-1",
+              "label": "Oui",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-pc-designee-2",
+              "label": "Non",
+              "isCorrect": true
+            }
+          ],
+          "graded": false
+        },
+        {
+          "id": "s1-pc-qui",
+          "type": "text",
+          "content": "La personne de confiance peut être un membre de votre famille, un proche ou un ami."
+        },
+        {
+          "id": "s1-pc-facultative",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Cette désignation est facultative et peut être modifiée à tout moment."
+        }
+      ]
+    },
+    {
+      "id": "p05",
+      "title": "Le rôle de la personne de confiance",
+      "blocks": [
+        {
+          "id": "s1-pc-role",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "s1-pc-role-1",
+              "imageUrl": "/courses/S1/accompagner.png",
+              "alt": "Une patiente accompagnée par un proche",
+              "text": "Vous accompagner lors de consultations ou d’hospitalisations."
+            },
+            {
+              "id": "s1-pc-role-2",
+              "imageUrl": "/courses/S1/echanges.png",
+              "alt": "Deux personnes qui échangent",
+              "text": "Vous aider à comprendre les informations médicales."
+            },
+            {
+              "id": "s1-pc-role-3",
+              "imageUrl": "/courses/S1/echanges.png",
+              "alt": "Deux personnes qui échangent",
+              "text": "Faciliter les échanges avec les soignants."
+            },
+            {
+              "id": "s1-pc-role-4",
+              "imageUrl": "/courses/S1/accompagner.png",
+              "alt": "Une patiente soutenue par un proche",
+              "text": "Vous soutenir dans vos décisions."
+            },
+            {
+              "id": "s1-pc-role-5",
+              "imageUrl": "/courses/S1/equipe-soignante.png",
+              "alt": "Un proche qui parle à l’équipe soignante",
+              "text": "Témoigner de vos souhaits si vous n’êtes plus en capacité de vous exprimer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p06",
+      "title": "Le rôle majeur de la personne de confiance",
+      "blocks": [
+        {
+          "id": "s1-pc-image",
+          "type": "image",
+          "url": "/courses/S1/accompagner.png",
+          "alt": "Une patiente accompagnée par un proche"
+        },
+        {
+          "id": "s1-pc-majeur",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Le rôle majeur de la personne de confiance est de faire connaître vos volontés si vous n’êtes plus en capacité de les exprimer. Son avis est alors pris en compte prioritairement par l’équipe médicale."
+        }
+      ]
+    },
+    {
+      "id": "p07",
+      "title": "Les directives anticipées",
+      "blocks": [
+        {
+          "id": "s1-da-modalites",
+          "type": "flip-cards",
+          "question": "Quelles sont les modalités principales des directives anticipées ?",
+          "cards": [
+            {
+              "id": "s1-da-modalites-1",
+              "front": "QUOI",
+              "back": "Document qui recueille les souhaits de la personne concernant sa fin de vie, si elle ne peut plus les exprimer."
+            },
+            {
+              "id": "s1-da-modalites-2",
+              "front": "QUI",
+              "back": "Toute personne majeure, y compris les personnes sous tutelle ou curatelle (sous conditions)."
+            },
+            {
+              "id": "s1-da-modalites-3",
+              "front": "QUAND",
+              "back": "N’importe quand, et à tout âge. Il est possible de les annuler ou de les modifier à tout moment."
+            },
+            {
+              "id": "s1-da-modalites-4",
+              "front": "OÙ",
+              "back": "Elles peuvent être conservées par votre centre de dialyse, ou par votre médecin traitant."
+            }
+          ]
+        },
+        {
+          "id": "s1-da-encadrees",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Les directives anticipées restent très encadrées et protégées par les textes réglementaires."
+        }
+      ]
+    },
+    {
+      "id": "p08",
+      "title": "À quoi servent les directives anticipées ?",
+      "blocks": [
+        {
+          "id": "s1-da-role",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "s1-da-role-1",
+              "imageUrl": "/courses/S1/accompagner.png",
+              "alt": "Une personne face à ses choix",
+              "text": "Les directives anticipées permettent à la personne de faire connaître ses choix sur les traitements de fin de vie, comme la nutrition artificielle, la ventilation artificielle, la réanimation, la sédation, etc."
+            },
+            {
+              "id": "s1-da-role-2",
+              "imageUrl": "/courses/S1/medecin.png",
+              "alt": "Un médecin",
+              "text": "Les directives anticipées s’imposent au médecin pour toute décision d’investigation, d’intervention ou de traitement lors de la fin de vie, sauf en cas d’urgence et si les directives anticipées apparaissent inappropriées en regard de la situation médicale du patient."
+            },
+            {
+              "id": "s1-da-role-3",
+              "imageUrl": "/courses/S1/medecin.png",
+              "alt": "Un médecin",
+              "text": "Si les directives anticipées apparaissent inappropriées en regard de la situation médicale du patient, le médecin peut décider de ne pas les appliquer."
+            },
+            {
+              "id": "s1-da-role-4",
+              "imageUrl": "/courses/S1/equipe-soignante.png",
+              "alt": "Une équipe soignante réunie",
+              "text": "Dans ce cas, il doit solliciter un avis collégial. La décision collégiale s’impose alors et elle est inscrite dans le dossier médical. La personne de confiance, ou à défaut la famille ou les proches, en sont informés."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p09",
+      "title": "Sédation profonde et continue",
+      "blocks": [
+        {
+          "id": "s1-sedation",
+          "type": "text",
+          "content": "La loi française n’autorise pas l’euthanasie, mais la loi permet la sédation profonde et continue jusqu’au décès.\n\nCela signifie que si les traitements ne peuvent plus soulager le patient, il est possible de l’endormir profondément pour qu’il ne ressente plus la douleur, et ce jusqu’à la fin."
+        },
+        {
+          "id": "s1-sedation-da",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Les directives anticipées permettent notamment à la personne de décider si elle souhaiterait avoir accès à cette sédation ou non."
+        }
+      ]
+    },
+    {
+      "id": "p10",
+      "title": "Conclusion",
+      "blocks": [
+        {
+          "id": "s1-conclusion-image",
+          "type": "image",
+          "url": "/courses/S1/echanges.png",
+          "alt": "Deux personnes qui échangent"
+        },
+        {
+          "id": "s1-conclusion",
+          "type": "text",
+          "content": "La désignation d’une personne de confiance ainsi que la rédaction de directives anticipées permettent :\n• de faire respecter vos choix ;\n• d’anticiper certaines situations médicales complexes ;\n• de rassurer vos proches ;\n• d’aider les professionnels de santé à prendre des décisions conformes à vos souhaits."
+        }
+      ]
+    },
+    {
+      "id": "p11",
+      "title": "Quiz de fin de module — question 1/6",
+      "blocks": [
+        {
+          "id": "s1-q1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Vous avez le droit d’être informé de votre état de santé.",
+          "options": [
+            {
+              "id": "s1-q1-1",
+              "label": "Vrai",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q1-2",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p12",
+      "title": "Quiz de fin de module — question 2/6",
+      "blocks": [
+        {
+          "id": "s1-q2",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Vous êtes invité à participer aux décisions concernant votre santé.",
+          "options": [
+            {
+              "id": "s1-q2-1",
+              "label": "Vrai",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q2-2",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p13",
+      "title": "Quiz de fin de module — question 3/6",
+      "blocks": [
+        {
+          "id": "s1-q3",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "En tant que patient, vous devez :",
+          "options": [
+            {
+              "id": "s1-q3-1",
+              "label": "Transmettre à l’équipe de soins des informations strictement exactes concernant votre santé.",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q3-2",
+              "label": "Suivre exactement les prescriptions et sinon, le signaler immédiatement.",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q3-3",
+              "label": "Signaler tout changement de situation médicale (traitement, symptôme, médecin…).",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q3-4",
+              "label": "Écouter ce que dit le médecin sans donner votre opinion, même si vous n’êtes pas d’accord.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p14",
+      "title": "Quiz de fin de module — question 4/6",
+      "blocks": [
+        {
+          "id": "s1-q4",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "La personne de confiance permet de :",
+          "options": [
+            {
+              "id": "s1-q4-1",
+              "label": "Désigner un interlocuteur privilégié auprès de l’équipe de soins parmi votre entourage.",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q4-2",
+              "label": "Faire connaître vos volontés si vous n’êtes pas en état de les exprimer.",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q4-3",
+              "label": "Obliger cette personne à vous accompagner lors de toutes vos consultations.",
+              "isCorrect": false
+            },
+            {
+              "id": "s1-q4-4",
+              "label": "Prendre les décisions médicales importantes à votre place.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p15",
+      "title": "Quiz de fin de module — question 5/6",
+      "blocks": [
+        {
+          "id": "s1-q5",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Vous pouvez changer de personne de confiance à tout moment.",
+          "options": [
+            {
+              "id": "s1-q5-1",
+              "label": "Vrai",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q5-2",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p16",
+      "title": "Quiz de fin de module — question 6/6",
+      "blocks": [
+        {
+          "id": "s1-q6",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Les directives anticipées :",
+          "options": [
+            {
+              "id": "s1-q6-1",
+              "label": "Permettent de savoir si vous acceptez ou non une greffe de rein.",
+              "isCorrect": false
+            },
+            {
+              "id": "s1-q6-2",
+              "label": "Sont confidentielles et soumises au secret médical.",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q6-3",
+              "label": "Peuvent être annulées ou modifiées à tout moment.",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q6-4",
+              "label": "Permettent de faire connaître aux équipes de soins vos choix sur le sujet de la fin de vie.",
+              "isCorrect": true
+            },
+            {
+              "id": "s1-q6-5",
+              "label": "Doivent obligatoirement être renseignées pour tout patient dialysé.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

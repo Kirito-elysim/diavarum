@@ -26,10 +26,13 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
     setSelected(id);
   };
 
+  // Question de réflexion (non notée) : ni correction, ni score, une seule réponse
+  const ungraded = block.graded === false;
+
   const handleSubmit = () => {
     if (!selected) return;
     const opt       = block.options?.find((o: QuizOption) => o.id === selected);
-    const isCorrect = opt?.isCorrect ?? false;
+    const isCorrect = ungraded || (opt?.isCorrect ?? false);
     setSubmitted(true);
     if (!isCorrect) { setShake(true); setTimeout(() => setShake(false), 400); }
     onAnswer(isCorrect, isCorrect ? 100 : 0);
@@ -53,7 +56,11 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
           let letterBg  = 'bg-white/10 text-white/50';
           let anim      = '';
 
-          if (submitted) {
+          if (submitted && ungraded) {
+            if (isSelected) {
+              ringClass = 'ring-2 ring-sky-400'; bgClass = 'bg-sky-500/10'; textClass = 'text-sky-200'; letterBg = 'bg-sky-400 text-white';
+            }
+          } else if (submitted) {
             if (isCorrect) {
               ringClass = 'ring-2 ring-emerald-400'; bgClass = 'bg-emerald-500/10'; textClass = 'text-emerald-300';
               letterBg = 'bg-emerald-400 text-white'; anim = 'pop-in';
@@ -84,8 +91,8 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
                 {letter}
               </span>
               <span className="flex-1 text-[17px] font-medium leading-snug">{opt.label}</span>
-              {submitted && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
-              {submitted && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
+              {submitted && !ungraded && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
+              {submitted && !ungraded && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
             </button>
           );
         })}
@@ -97,7 +104,7 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
       )}
 
       {/* Explanation */}
-      {submitted && block.explanation && <Explanation text={block.explanation} isCorrect={block.options?.find((o: QuizOption) => o.id === selected)?.isCorrect ?? false} />}
+      {submitted && block.explanation && <Explanation text={block.explanation} isCorrect={ungraded || (block.options?.find((o: QuizOption) => o.id === selected)?.isCorrect ?? false)} />}
     </div>
   );
 }
