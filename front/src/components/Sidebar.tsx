@@ -9,6 +9,7 @@ import {
   Settings,
   Activity,
   UserCog,
+  Building2,
   GraduationCap,
   LogOut,
   ChevronRight,
@@ -42,10 +43,11 @@ const navItems: NavItem[] = [
   { to: '/settings', icon: Settings, label: 'Paramètres' },
 ];
 
-function NavEntry({ to, icon: Icon, label }: NavItem) {
+function NavEntry({ to, icon: Icon, label, onNavigate }: NavItem & { onNavigate?: () => void }) {
   return (
     <NavLink
       to={to}
+      onClick={onNavigate}
       className={({ isActive }) =>
         cn(
           'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
@@ -64,13 +66,13 @@ function NavEntry({ to, icon: Icon, label }: NavItem) {
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({ onNavigate, drawer = false }: { onNavigate?: () => void; drawer?: boolean }) {
   const { user, isCadre, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   const adminItems: NavItem[] = [
-    ...(isCadre ? [{ to: '/admin', icon: UserCog, label: isAdmin ? 'Centres et comptes' : 'Équipe IDE' }] : []),
-    ...(isAdmin ? [{ to: '/modules', icon: GraduationCap, label: 'Contenus des séances' }] : []),
+    ...(isCadre ? [{ to: '/admin/accounts', icon: UserCog, label: 'Comptes' }] : []),
+    ...(isAdmin ? [{ to: '/admin/centers', icon: Building2, label: 'Centres' }, { to: '/modules', icon: GraduationCap, label: 'Contenus des séances' }] : []),
   ];
 
   // Quitter d'abord les pages protégées : sinon la page en cours serait mémorisée comme destination
@@ -84,8 +86,8 @@ export default function Sidebar() {
   const centersLabel = user?.role === 'admin_national' ? 'Tous les centres' : user?.centers.map((c) => c.name).join(', ');
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-white border-r border-gray-100 shadow-sm">
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100">
+    <aside className={cn("flex flex-col bg-white border-r border-gray-100 shadow-sm", drawer ? "h-full w-full" : "fixed inset-y-0 left-0 z-40 hidden xl:flex w-64")}>
+      <div className="flex items-center gap-3 px-6 py-5 pr-14 border-b border-gray-100">
         <div className="flex items-center justify-center w-9 h-9 bg-orange-500 rounded-xl shadow-sm shadow-orange-200">
           <GraduationCap className="w-5 h-5 text-white" />
         </div>
@@ -96,14 +98,14 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => <NavEntry key={item.to} {...item} />)}
+        {navItems.map((item) => <NavEntry key={item.to} {...item} onNavigate={onNavigate} />)}
 
         {adminItems.length > 0 && (
           <>
             <div className="px-3 pt-4 pb-2">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Administration</p>
             </div>
-            {adminItems.map((item) => <NavEntry key={item.to} {...item} />)}
+            {adminItems.map((item) => <NavEntry key={item.to} {...item} onNavigate={onNavigate} />)}
           </>
         )}
       </nav>

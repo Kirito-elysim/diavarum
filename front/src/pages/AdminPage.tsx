@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+import { ListPagination } from '../components/ListPagination';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
@@ -13,64 +15,37 @@ import {
 } from '../components/ui/alert-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Building2, ChevronLeft, ChevronRight, KeyRound, Loader2, Plus, ScrollText, Trash2, Users } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Pencil, Plus, UserRoundX } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import {
-  useAccessLogs, useArchiveUser, useCenters, useCreateCenter, useCreateUser, useSetNationalSecurityCode, useUsers, type UserInput,
+  useUpdateUser, useAccessLogs, useArchiveUser, useCenters, useCreateCenter, useCreateUser, useSetNationalSecurityCode, useUsers, type UserInput,
 } from '../api/hooks';
 import { ROLE_LABELS, type UserAccount, type UserRole } from '../api/types';
 import { ApiError } from '../lib/api';
 import { formatDate } from '../lib/format';
 import { SecurityCodeForm } from '../components/SecurityCodeForm';
 
-export default function AdminPage() {
-  const { isAdmin } = useAuth();
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">{isAdmin ? 'Centres et comptes' : 'Équipe IDE'}</h1>
-        <p className="text-gray-500 text-sm mt-0.5">
-          {isAdmin
-            ? 'Centres de dialyse, cadres, IDE et administrateurs nationaux'
-            : "IDE d'entraînement de vos centres : création, affiliation, désactivation"}
-        </p>
-      </div>
-
-      {isAdmin ? (
-        <Tabs defaultValue="users">
-          <TabsList className="bg-gray-100 p-1 h-auto rounded-xl">
-            <TabsTrigger value="users" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <Users className="w-4 h-4 mr-2" />Comptes
-            </TabsTrigger>
-            <TabsTrigger value="centers" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <Building2 className="w-4 h-4 mr-2" />Centres
-            </TabsTrigger>
-            <TabsTrigger value="code" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <KeyRound className="w-4 h-4 mr-2" />Code national
-            </TabsTrigger>
-            <TabsTrigger value="log" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <ScrollText className="w-4 h-4 mr-2" />Journal des accès
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="users" className="mt-4"><UsersPanel /></TabsContent>
-          <TabsContent value="centers" className="mt-4"><CentersPanel /></TabsContent>
-          <TabsContent value="code" className="mt-4"><NationalCodePanel /></TabsContent>
-          <TabsContent value="log" className="mt-4"><AccessLogPanel /></TabsContent>
-        </Tabs>
-      ) : (
-        <UsersPanel />
-      )}
-    </div>
-  );
+export default function AdminPage({ section = 'users' }: { section?: 'users' | 'centers' }) {
+  return <div className="space-y-6">
+    <div><h1 className="text-2xl font-semibold text-emerald-950">{section === 'centers' ? 'Centres' : 'Comptes'}</h1>
+    <p className="text-gray-500 text-sm mt-1">{section === 'centers' ? 'Les centres de dialyse et leurs équipes.' : 'Gérez les accès et le rattachement des membres de votre équipe.'}</p></div>
+    {section === 'centers' ? <CentersPanel /> : <UsersPanel />}
+  </div>;
 }
 
 /* ─── Comptes ──────────────────────────────────────────────────────────── */
 
-function UsersPanel() {
+export function UsersPanel({ centerId, centerIri }: { centerId?: string; centerIri?: string } = {}) {
   const { user: me, isAdmin } = useAuth();
-  const { data, isLoading } = useUsers();
+  const { data, isLoading, isError } = useUsers();
+  const { data: centers } = useCenters();
+  const [search, setSearch] = useState('');
+  const [role, setRole] = useState('all');
+  const [center, setCenter] = useState(centerId ?? 'all');
+  const [page, setPage] = useState(1);
+  const [editing, setEditing] = useState<UserAccount | null>(null);
+  const accounts = (data?.member ?? []).filter(a => `${a.firstName} ${a.lastName} ${a.email}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()) && (role === 'all' || a.role === role) && (center === 'all' || a.centers.some(c => c.id === center)));
+  const currentPage = Math.min(page, Math.max(1, Math.ceil(accounts.length / 20)));
   const archiveUser = useArchiveUser();
   const [creating, setCreating] = useState(false);
   const [toArchive, setToArchive] = useState<UserAccount | null>(null);
@@ -79,55 +54,30 @@ function UsersPanel() {
 
   return (
     <Card className="border-0 shadow-sm ring-1 ring-gray-100 overflow-hidden">
-      <div className="flex items-center justify-between p-4 border-b border-gray-100">
-        <p className="text-sm text-gray-500">{data?.totalItems ?? 0} compte{(data?.totalItems ?? 0) > 1 ? 's' : ''} actif{(data?.totalItems ?? 0) > 1 ? 's' : ''}</p>
-        <Button onClick={() => setCreating(true)} className="bg-orange-500 hover:bg-orange-600 text-white h-9 gap-2">
+      <div className="flex flex-wrap gap-3 items-center justify-between p-4 border-b border-gray-100">
+        <p className="text-sm text-gray-500">{accounts.length} compte{accounts.length > 1 ? 's' : ''} actif{accounts.length > 1 ? 's' : ''}</p>
+        <Button onClick={() => setCreating(true)} className="bg-orange-500 hover:bg-orange-600 text-white min-h-11 gap-2">
           <Plus className="w-4 h-4" />{isAdmin ? 'Nouveau compte' : 'Nouvelle IDE'}
         </Button>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-gray-50/80 hover:bg-gray-50/80">
-            <TableHead className="text-xs font-semibold text-gray-500 uppercase">Nom</TableHead>
-            <TableHead className="text-xs font-semibold text-gray-500 uppercase">Profil</TableHead>
-            <TableHead className="text-xs font-semibold text-gray-500 uppercase">Centres</TableHead>
-            <TableHead className="text-xs font-semibold text-gray-500 uppercase">Dernière connexion</TableHead>
-            <TableHead />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.member.map((account) => (
-            <TableRow key={account.id}>
-              <TableCell>
-                <p className="font-medium text-gray-900">{account.lastName.toUpperCase()} {account.firstName}</p>
-                <p className="text-xs text-gray-400">{account.email}</p>
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary" className={account.role === 'ide' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}>
-                  {ROLE_LABELS[account.role]}
-                </Badge>
-                {!account.securityCodeConfigured && account.role !== 'admin_national' && (
-                  <p className="text-xs text-amber-600 mt-1">Code de sécurité non défini</p>
-                )}
-              </TableCell>
-              <TableCell className="text-sm text-gray-700">{account.centers.map((c) => c.name).join(', ') || '—'}</TableCell>
-              <TableCell className="text-sm text-gray-500">{account.lastLoginAt ? formatDate(account.lastLoginAt, "d MMM yyyy 'à' HH:mm") : 'Jamais'}</TableCell>
-              <TableCell className="text-right">
-                {canManage(account) && (
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-red-600" aria-label="Désactiver" onClick={() => setToArchive(account)}>
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-          {isLoading && (
-            <TableRow><TableCell colSpan={5} className="text-center py-10 text-gray-400"><Loader2 className="w-5 h-5 animate-spin inline" /></TableCell></TableRow>
-          )}
-        </TableBody>
-      </Table>
-
-      <NewUserDialog open={creating} onOpenChange={setCreating} />
+      <div className="grid sm:grid-cols-3 gap-3 p-4 bg-gray-50/60">
+        <div><Label htmlFor="account-search">Rechercher</Label><Input id="account-search" className="h-11 mt-1" placeholder="Nom ou email" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} /></div>
+        <div><Label htmlFor="role-filter">Rôle</Label><select id="role-filter" className="w-full h-11 mt-1 rounded-md border bg-white px-3 text-sm" value={role} onChange={e => { setRole(e.target.value); setPage(1); }}><option value="all">Tous les rôles</option>{Object.entries(ROLE_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></div>
+        {!centerId && <div><Label htmlFor="center-filter">Centre</Label><select id="center-filter" className="w-full h-11 mt-1 rounded-md border bg-white px-3 text-sm" value={center} onChange={e => { setCenter(e.target.value); setPage(1); }}><option value="all">Tous les centres</option>{centers?.member.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>}
+      </div>
+      <Table><TableHeader><TableRow className="bg-gray-50"><TableHead>Collaborateur</TableHead><TableHead>Rôle</TableHead>{!centerId && <TableHead>Centres</TableHead>}<TableHead>Dernière connexion</TableHead><TableHead>Statut</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader><TableBody>
+        {accounts.slice((currentPage - 1) * 20, currentPage * 20).map(account => <TableRow key={account.id}>
+          <TableCell><p className="font-medium text-emerald-950">{account.lastName} {account.firstName}</p><p className="text-xs text-gray-500">{account.email}</p></TableCell>
+          <TableCell><Badge variant="secondary" className={account.role === 'ide' ? 'bg-blue-100 text-blue-800' : account.role === 'cadre' ? 'bg-orange-100 text-orange-800' : 'bg-violet-100 text-violet-800'}>{ROLE_LABELS[account.role]}</Badge></TableCell>
+          {!centerId && <TableCell className="text-sm max-w-xs">{account.role === 'admin_national' ? 'Tous les centres' : account.centers.map((c, i) => <span key={c.id}>{i > 0 && ', '}{isAdmin ? <Link className="hover:underline text-emerald-800" to={`/admin/centers/${c.id}`}>{c.name}</Link> : c.name}</span>)}</TableCell>}
+          <TableCell className="text-sm whitespace-nowrap">{account.lastLoginAt ? formatDate(account.lastLoginAt) : 'Jamais'}</TableCell><TableCell><span className="text-xs text-emerald-700">Actif</span></TableCell>
+          <TableCell className="text-right whitespace-nowrap">{canManage(account) && <><Button variant="ghost" size="sm" className="gap-1.5" onClick={() => setEditing(account)}><Pencil className="w-4 h-4" aria-hidden="true" />Modifier</Button><Button variant="ghost" size="sm" className="gap-1.5 text-red-700" onClick={() => setToArchive(account)}><UserRoundX className="w-4 h-4" aria-hidden="true" />Désactiver</Button></>}</TableCell>
+        </TableRow>)}
+        {(isLoading || isError || !accounts.length) && <TableRow><TableCell colSpan={6} className="py-8 text-center text-gray-500">{isLoading ? 'Chargement…' : isError ? 'Impossible de charger les comptes.' : 'Aucun compte ne correspond à votre recherche.'}</TableCell></TableRow>}
+      </TableBody></Table>
+      <ListPagination page={currentPage} total={accounts.length} pageSize={20} onChange={setPage} />
+      {editing && <NewUserDialog key={editing.id} account={editing} open onOpenChange={open => !open && setEditing(null)} />}
+      <NewUserDialog defaultCenter={centerIri} open={creating} onOpenChange={setCreating} />
 
       <AlertDialog open={!!toArchive} onOpenChange={(open) => !open && setToArchive(null)}>
         <AlertDialogContent>
@@ -158,12 +108,13 @@ function UsersPanel() {
   );
 }
 
-function NewUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+function NewUserDialog({ open, onOpenChange, account, defaultCenter }: { open: boolean; onOpenChange: (open: boolean) => void; account?: UserAccount; defaultCenter?: string }) {
   const { isAdmin } = useAuth();
   const { data: centers } = useCenters();
   const createUser = useCreateUser();
-  const empty: UserInput = { email: '', firstName: '', lastName: '', role: 'ide', centers: [], plainPassword: '' };
-  const [form, setForm] = useState<UserInput>(empty);
+  const updateUser = useUpdateUser();
+  const empty: UserInput = { email: '', firstName: '', lastName: '', role: 'ide', centers: defaultCenter ? [defaultCenter] : [], plainPassword: '' };
+  const [form, setForm] = useState<UserInput>(account ? { email: account.email, firstName: account.firstName, lastName: account.lastName, role: account.role, centers: account.centers.map(c => c['@id']), plainPassword: '' } : empty);
   const [error, setError] = useState<ApiError | null>(null);
 
   const set = (field: 'email' | 'firstName' | 'lastName' | 'plainPassword') => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -175,8 +126,9 @@ function NewUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
     e.preventDefault();
     setError(null);
     try {
-      const user = await createUser.mutateAsync(form);
-      toast.success(`Compte créé pour ${user.firstName} ${user.lastName}`);
+      const input = { ...form, centers: form.role === 'admin_national' ? [] : form.centers };
+      const user = account ? await updateUser.mutateAsync({ id: account.id, input }) : await createUser.mutateAsync(input);
+      toast.success(`Compte ${account ? 'modifié' : 'créé'} pour ${user.firstName} ${user.lastName}`);
       setForm(empty);
       onOpenChange(false);
     } catch (err) {
@@ -190,11 +142,11 @@ function NewUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{isAdmin ? 'Nouveau compte' : 'Nouvelle IDE d\'entraînement'}</DialogTitle>
-          <DialogDescription>Communiquez le mot de passe provisoire à la personne ; elle choisira son code de sécurité à la première connexion.</DialogDescription>
+          <DialogTitle>{account ? 'Modifier le compte' : isAdmin ? 'Nouveau compte' : 'Nouvelle IDE d\'entraînement'}</DialogTitle>
+          <DialogDescription>{account ? 'Mettez à jour les informations et les accès de ce compte.' : 'Communiquez le mot de passe provisoire à la personne ; elle choisira son code de sécurité à la première connexion.'}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <h3 className="font-semibold text-emerald-950">Identité</h3><div className="grid sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="u-last">Nom</Label>
               <Input id="u-last" value={form.lastName} onChange={set('lastName')} required />
@@ -211,7 +163,7 @@ function NewUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
           </div>
           {isAdmin && (
             <div className="space-y-1.5">
-              <Label>Profil</Label>
+              <Label>Droits d’accès</Label>
               <Select value={form.role} onValueChange={(role) => setForm({ ...form, role: role as UserRole })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -222,10 +174,10 @@ function NewUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
           )}
           {form.role !== 'admin_national' && (
             <div className="space-y-2">
-              <Label>Centres d'affiliation</Label>
-              <div className="grid grid-cols-2 gap-2">
+              <Label>Centres de rattachement</Label>
+              <div className="grid sm:grid-cols-2 gap-2">
                 {centers?.member.map((center) => (
-                  <div key={center.id} className="flex items-center gap-2">
+                  <div key={center.id} className="flex items-center gap-2 min-h-11">
                     <Checkbox id={`c-${center.id}`} checked={form.centers.includes(center['@id'])} onCheckedChange={(c) => toggleCenter(center['@id'], c === true)} />
                     <label htmlFor={`c-${center.id}`} className="text-sm cursor-pointer">{center.name}</label>
                   </div>
@@ -235,17 +187,17 @@ function NewUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
             </div>
           )}
           <div className="space-y-1.5">
-            <Label htmlFor="u-pass">Mot de passe provisoire</Label>
-            <Input id="u-pass" type="text" autoComplete="new-password" value={form.plainPassword} onChange={set('plainPassword')} required />
+            <Label htmlFor="u-pass">{account ? 'Nouveau mot de passe (facultatif)' : 'Mot de passe provisoire'}</Label>
+            <Input id="u-pass" type="password" autoComplete="new-password" value={form.plainPassword} onChange={set('plainPassword')} required={!account} />
             <p className="text-xs text-gray-400">12 caractères minimum, avec majuscules, chiffres ou symboles.</p>
             {fieldError('plainPassword')}
           </div>
           {error && error.violations.length === 0 && <p className="text-sm text-red-600">{error.message}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annuler</Button>
-            <Button type="submit" disabled={createUser.isPending} className="bg-orange-500 hover:bg-orange-600 text-white">
+            <Button type="submit" disabled={createUser.isPending || updateUser.isPending} className="bg-orange-500 hover:bg-orange-600 text-white">
               {createUser.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Créer le compte
+              {account ? 'Enregistrer les modifications' : 'Créer le compte'}
             </Button>
           </DialogFooter>
         </form>
@@ -257,7 +209,12 @@ function NewUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
 /* ─── Centres (administrateur national) ────────────────────────────────── */
 
 function CentersPanel() {
-  const { data, isLoading } = useCenters();
+  const { data, isLoading, isError } = useCenters();
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [creating, setCreating] = useState(false);
+  const filtered = (data?.member ?? []).filter(c => `${c.name} ${c.city}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+  const currentPage = Math.min(page, Math.max(1, Math.ceil(filtered.length / 20)));
   const createCenter = useCreateCenter();
   const [form, setForm] = useState({ name: '', city: '' });
 
@@ -267,34 +224,20 @@ function CentersPanel() {
       await createCenter.mutateAsync(form);
       toast.success(`Centre « ${form.name} » créé`);
       setForm({ name: '', city: '' });
+      setCreating(false);
     } catch (err) {
       toast.error(err instanceof ApiError ? (err.violations[0]?.message ?? err.message) : 'Création impossible');
     }
   };
 
   return (
-    <div className="grid lg:grid-cols-3 gap-5">
-      <Card className="lg:col-span-2 border-0 shadow-sm ring-1 ring-gray-100 overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50/80 hover:bg-gray-50/80">
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase">Centre</TableHead>
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase">Ville</TableHead>
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase">Créé le</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.member.map((center) => (
-              <TableRow key={center.id}>
-                <TableCell className="font-medium text-gray-900">{center.name}</TableCell>
-                <TableCell className="text-gray-600">{center.city}</TableCell>
-                <TableCell className="text-gray-500 text-sm">{formatDate(center.createdAt)}</TableCell>
-              </TableRow>
-            ))}
-            {isLoading && <TableRow><TableCell colSpan={3} className="text-center py-10"><Loader2 className="w-5 h-5 animate-spin inline text-gray-400" /></TableCell></TableRow>}
-          </TableBody>
-        </Table>
-      </Card>
+    <div className="space-y-5">
+      <div className="flex flex-wrap gap-3 justify-between"><div className="w-full sm:w-80"><Label htmlFor="center-search">Rechercher un centre</Label><Input id="center-search" className="h-11 mt-1" placeholder="Nom ou ville" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} /></div><Button className="min-h-11 self-end" onClick={() => setCreating(true)}><Plus className="w-4 h-4 mr-2" />Ajouter un centre</Button></div>
+      <Card className="overflow-hidden shadow-sm"><Table><TableHeader><TableRow className="bg-gray-50"><TableHead>Centre</TableHead><TableHead>Ville</TableHead><TableHead>Pays</TableHead><TableHead>Statut</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader><TableBody>
+        {filtered.slice((currentPage - 1) * 20, currentPage * 20).map(c => <TableRow key={c.id}><TableCell><Link className="font-medium text-emerald-900 hover:underline" to={`/admin/centers/${c.id}`}>{c.name}</Link></TableCell><TableCell>{c.city}</TableCell><TableCell>{c.country}</TableCell><TableCell><Badge variant="secondary">Actif</Badge></TableCell><TableCell className="text-right"><Button asChild variant="ghost" size="sm"><Link to={`/admin/centers/${c.id}`}>Ouvrir le centre</Link></Button></TableCell></TableRow>)}
+        {(isLoading || isError || !filtered.length) && <TableRow><TableCell colSpan={5} className="text-center py-8">{isLoading ? 'Chargement…' : isError ? 'Impossible de charger les centres.' : 'Aucun centre trouvé.'}</TableCell></TableRow>}
+      </TableBody></Table><ListPagination page={currentPage} total={filtered.length} pageSize={20} onChange={setPage} /></Card>
+      <Dialog open={creating} onOpenChange={setCreating}><DialogContent><DialogHeader><DialogTitle>Ajouter un centre</DialogTitle><DialogDescription>Renseignez le nom du centre de dialyse et sa ville.</DialogDescription></DialogHeader>
       <Card className="border-0 shadow-sm ring-1 ring-gray-100 h-fit">
         <CardHeader>
           <CardTitle className="text-base">Nouveau centre</CardTitle>
@@ -316,13 +259,14 @@ function CentersPanel() {
           </form>
         </CardContent>
       </Card>
+      </DialogContent></Dialog>
     </div>
   );
 }
 
 /* ─── Code national (garde-fou) ────────────────────────────────────────── */
 
-function NationalCodePanel() {
+export function NationalCodePanel() {
   const setNationalCode = useSetNationalSecurityCode();
 
   return (
@@ -361,7 +305,7 @@ const ACTION_LABELS: Record<string, string> = {
   export: 'Export',
 };
 
-function AccessLogPanel() {
+export function AccessLogPanel() {
   const [user, setUser] = useState('');
   const [action, setAction] = useState('all');
   const [resourceId, setResourceId] = useState('');

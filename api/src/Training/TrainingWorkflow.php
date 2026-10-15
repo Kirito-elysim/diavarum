@@ -37,6 +37,10 @@ final class TrainingWorkflow
         $program = $session->getProgram();
         $module = $session->getModule();
 
+        if (!$module->isPublished()) {
+            throw new WorkflowException('Ce cours n’est pas publié.');
+        }
+
         if (!$patient->getId()->equals($program->getPatient()->getId())) {
             throw new WorkflowException('Ce programme n\'est pas celui du patient.');
         }
@@ -52,6 +56,14 @@ final class TrainingWorkflow
         $selection = $program->findModule($module);
         if (null === $selection || !$selection->isSelected()) {
             throw new WorkflowException('Ce cours ne fait pas partie des séances sélectionnées du parcours.');
+        }
+
+        if ('PT' === $module->getCode()) {
+            foreach ($program->getModules() as $item) {
+                if ($item->isSelected() && 'PT' !== $item->getModule()->getCode() && 'valide' !== $item->getStatus()) {
+                    throw new WorkflowException('Le post-test est accessible une fois tous les cours sélectionnés validés par l’IDE.');
+                }
+            }
         }
 
         $openSessions = $this->entityManager->getRepository(TrainingSession::class)->findBy([
@@ -92,6 +104,8 @@ final class TrainingWorkflow
         }
 
         $score = $this->scoreCalculator->score($module, $answers);
+        // Le post-test n’est pas chronométré (cahier des charges §5.3).
+        if ('PT' === $module->getCode()) $durationSeconds = 0;
         $session->markValidated($durationSeconds, $score, $answers);
 
         foreach ($competencies as $id => $validated) {

@@ -156,3 +156,51 @@ répartiteur de charge précède Nginx, le déclarer dans `TRUSTED_PROXIES` pour
 Couleurs Diaverum (orange `#E86825`, vert `#004138`…) appliquées via Tailwind (`front/tailwind.config.js`).
 La police de marque **Euclid Circular A** est sous licence : déposer ses fichiers dans `front/public/fonts/`
 (voir `LISEZMOI.md`), sinon repli sur Segoe UI.
+
+### Protocole CODEX
+
+Le test utilise « Clé, ballon, citron » (ou « Cigare, fleur, porte » pour un second test exceptionnel), un cadran vierge à dessiner à 5h10 et quatre critères évalués par l’IDE. Le dessin reste disponible pendant la validation ; seuls les critères et les réponses sont enregistrés dans le dossier.
+
+Si l’horloge ou le rappel des trois mots échoue, les cinq questions d’orientation sont obligatoires. Un score de 4–5 donne un CODEX normal, 0–3 un CODEX anormal. Si les deux épreuves initiales réussissent, le CODEX est normal sans orientation. Un résultat normal ne valide pas automatiquement l’éligibilité générale. Un résultat anormal classe le patient non éligible et affiche un rappel de transmission au néphrologue par l’IDE (aucun envoi automatique). La requalification manuelle est bloquée tant que le dernier CODEX est anormal. Les anciens tests gardent leur interprétation initiale.
+
+La migration `Version20261012120000` ajoute deux champs JSON nullable sans réinterpréter les résultats existants. Appliquer les migrations et vider le cache Symfony lors du déploiement.
+
+Vérification ciblée : `docker compose exec php vendor/bin/phpunit tests/Api/CodexTest.php`. Parcours navigateur sans enregistrement de résultat : `E2E_BASE_URL=http://localhost:8091 node e2e/codex-protocol.mjs` (compte IDE de démonstration requis).
+
+### Utilisation sur tablette
+
+La navigation devient un menu escamotable sous 1280 px pour conserver la largeur utile en portrait et en paysage. Les cibles tactiles sont agrandies, les onglets reviennent à la ligne et les fenêtres longues défilent. Le test CODEX accepte le dessin au doigt ou au stylet ; le dessin est conservé lors d’un changement d’orientation. Les exercices de mots cachés suivent la position du doigt, y compris lorsque le navigateur capture le pointeur.
+
+Contrôle en navigateur tactile émulé (768×1024, 1024×768 et 800×600) : `node e2e/tablet-layout.mjs`. Ce scénario utilise le compte administrateur de démonstration, vérifie les neuf pages principales et les gestes CODEX/mots cachés sans enregistrer de résultat patient. Une recette sur les modèles physiques et navigateurs du parc reste nécessaire.
+
+### Recette du parcours IDE / apprenant (12 octobre 2026)
+
+Le lecteur de séance utilise un verrou de navigation : un retour navigateur demande le code IDE et une tentative de chargement direct du back-office dans le même onglet renvoie vers le lecteur verrouillé. La prévisualisation reste distincte. Les réponses QCU/QCM validées restent affichées lors du retour à une page ; les questions non notées sont explicitement signalées. Le parcours sans cours optionnel nécessite une confirmation avant lancement. Le post-test est refusé par l’API tant que les autres cours sélectionnés ne sont pas validés, et sa durée n’est pas comptabilisée.
+
+`node e2e/learner-workflow.mjs` vérifie le choix du cours, la confirmation sans option, les légendes cliquables, le carrousel, les cartes retournables, les QCU/QCM, le scoring sans pénalité, le retour navigateur, le code incorrect/correct et la validation des compétences. Les séances et leurs résultats sont simulés ; la connexion et le contrôle du code utilisent le compte IDE de démonstration. Aucun résultat n’est écrit dans un dossier réel.
+
+État du contenu local lors de la recette : S1 comporte 16 pages et 12 références médias locales présentes. S4, S14 et S17 contiennent des exemples issus de la maquette ; les 29 autres entrées du catalogue (dont S0 et PT) sont vides. Le lecteur fonctionnel ne signifie donc pas que les 31 cours sont livrés. Les contenus validés restent à intégrer.
+
+La cible indiquée dans le cahier des charges est la Tab A11+ 11 pouces, en ligne. Les essais automatisés utilisent un navigateur tactile émulé ; la recette physique sur ce modèle reste à réaliser. Le verrou applicatif protège la navigation dans l’onglet ; il ne remplace pas un mode kiosque Android pour bloquer les boutons système ou l’ouverture d’un autre navigateur.
+
+Le profil patient dispose d’un onglet de saisie libre : notes médicales/administratives et questions/réponses ajoutées par l’IDE. Son résumé apparaît dans le parcours et lors du lancement d’une nouvelle séance. Les questions métier fixes restent à fournir et à valider ; cette saisie ne constitue pas un questionnaire médical validé et ne détermine pas automatiquement l’éligibilité. Les données sont stockées dans la clé `profile` des champs JSON existants (`notes`, `answers`), en préservant leurs autres clés. Aucune migration supplémentaire.
+
+`node e2e/patient-profile.mjs` contrôle la saisie tactile, la reprise après erreur d’enregistrement, la conservation des données existantes, le résumé du parcours, le rechargement et l’annulation. Les écritures patient sont interceptées ; aucun dossier réel n’est modifié.
+
+
+### Éditeur pédagogique (13 octobre 2026)
+
+Dans **Contenus des séances → Modifier**, les administrateurs nationaux rédigent les écrans et leurs consignes, ajoutent textes, images, encadrés, carrousels, cartes recto/verso, images à légendes et QCU/QCM. Les écrans peuvent être dupliqués, déplacés et retirés ; les éléments d’une activité sont ordonnables. Les repères de légende se placent directement sur l’image au doigt ou à la souris. Les compétences IDE, la description, la durée et la publication se règlent dans les informations du cours.
+
+L’aperçu utilise les composants du lecteur sur le brouillon, sans écrire de séance. Une question peut être non notée avec correction : `graded` et `showCorrection` sont indépendants ; l’absence de `showCorrection` conserve le comportement des anciens contenus. Les consignes sont enregistrées dans `ModulePage.instruction`.
+
+Les modifications incomplètes restent dans un brouillon local, lié au compte et au cours. La récupération est proposée au retour. Le bouton Enregistrer contrôle le contenu puis demande de confirmer le remplacement de la version serveur. Ce brouillon ne se synchronise pas entre appareils ; la version serveur est remplacée à l’enregistrement (pas d’historique de versions serveur). Les activités complémentaires historiques sont conservées, déplaçables et prévisualisables ; leurs formulaires spécifiques ne sont pas encore disponibles. L’import automatique de la matrice Excel n’est pas inclus.
+
+Images : `POST /api/content/media`, administrateur national uniquement, PNG/JPEG/WebP jusqu’à 5 Mo et 20 millions de pixels. Les fichiers reçoivent un nom aléatoire et sont servis comme images avec `nosniff`. Les illustrations de cours sont accessibles par leur URL, sans données patient. Le stockage est `api/var/course-media` en développement et le volume Docker `course_media` en production ; sauvegarder ce volume avec la base de données. Les tests utilisent un dossier distinct dans le cache de test. Un média importé mais non utilisé reste stocké ; aucune suppression automatique n’est effectuée.
+
+Les cours non publiés sont masqués des lectures du catalogue et du contenu pour les IDE/cadres ; le démarrage d’une séance non publiée est également refusé côté serveur. Aucun cours existant n’est dépublié par cette mise à jour. Aucune migration SQL supplémentaire n’est requise pour l’éditeur ; reconstruire les images de production et vider le cache lors du déploiement.
+
+Recette : `node e2e/course-editor.mjs` (écritures de cours et médias simulées), `node e2e/learner-workflow.mjs`, et `docker compose exec -T php vendor/bin/phpunit`. L’éditeur est contrôlé en navigateur tactile portrait/paysage ; la recette sur tablette physique reste nécessaire.
+
+
+L’éditeur propose également **Glisser-déposer** (associations destination/élément) et **Remettre dans l’ordre**. Les associations et les étapes sont ajoutables, retirables et déplaçables ; pour la remise en ordre, la liste de rédaction définit l’ordre attendu. Ces deux activités utilisent la notation et la correction existantes du lecteur. Chaque activité nécessite au moins deux entrées complètes ; les textes des éléments à déplacer doivent être distincts. Les explications de correction sont éditables et affichées après validation. Vérification du format : `node --experimental-strip-types e2e/course-editor-model.mjs`.

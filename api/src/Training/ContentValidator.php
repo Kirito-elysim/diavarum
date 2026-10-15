@@ -60,6 +60,41 @@ final class ContentValidator
                     $errors[] = \sprintf('%s : type « %s » inconnu.', $at, \is_string($block['type'] ?? null) ? $block['type'] : '?');
                     continue;
                 }
+                if ('quiz' === $block['type'] && \in_array($block['questionType'] ?? '', ['qcu', 'qcm'], true)) {
+                    foreach (['graded', 'showCorrection'] as $flag) {
+                        if (isset($block[$flag]) && !\is_bool($block[$flag])) {
+                            $errors[] = "$at : $flag doit être un booléen.";
+                        }
+                    }
+                    $options = $block['options'] ?? [];
+                    if (!\is_array($options) || !array_is_list($options)) {
+                        $errors[] = "$at : propositions invalides.";
+                        continue;
+                    }
+                    $correct = 0;
+                    $ids = [];
+                    $invalidOption = false;
+                    foreach ($options as $option) {
+                        if (!\is_array($option) || !\is_string($option['id'] ?? null) || !\is_string($option['label'] ?? null) || '' === trim($option['label']) || !\is_bool($option['isCorrect'] ?? null)) {
+                            $errors[] = "$at : complétez chaque proposition et sa bonne réponse.";
+                            $invalidOption = true;
+                            continue;
+                        }
+                        if (isset($ids[$option['id']])) {
+                            $errors[] = "$at : identifiant de proposition en double.";
+                        }
+                        $ids[$option['id']] = true;
+                        $correct += $option['isCorrect'] ? 1 : 0;
+                    }
+                    $graded = $block['graded'] ?? true;
+                    $correction = $block['showCorrection'] ?? $graded;
+                    if (($graded || $correction) && (0 === $correct || ('qcu' === $block['questionType'] && 1 !== $correct))) {
+                        $errors[] = "$at : indiquez les bonnes réponses (une seule pour un QCU).";
+                    }
+                    if ($invalidOption) {
+                        continue;
+                    }
+                }
                 if (0 === ScoreCalculator::expectedAnswers($block)) {
                     $errors[] = "$at : exercice sans aucune bonne réponse attendue.";
                 }

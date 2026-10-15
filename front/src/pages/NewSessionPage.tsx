@@ -1,3 +1,4 @@
+import { PatientProfileSummary } from '../components/PatientProfile';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -6,6 +7,7 @@ import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { ArrowLeft, Clock, Play } from 'lucide-react';
 import { usePatientProgram, usePatients } from '../api/hooks';
+import { useCourseLaunch } from '../components/CourseLaunchConfirmation';
 import { sessionLabel } from '../lib/format';
 
 /**
@@ -21,16 +23,18 @@ export default function NewSessionPage() {
   const { data: patients } = usePatients({ eligibilityStatus: 'eligible' });
   const patient = patients?.member.find((p) => p.id === patientId);
   const { data: program, isLoading: programLoading } = usePatientProgram(patient?.['@id']);
+  const { launch, confirmation } = useCourseLaunch(patientId, program);
   const selection = program?.modules.filter((m) => m.selected) ?? [];
 
   const start = () => {
     if (patient && program && moduleId) {
-      navigate(`/sessions/run?patientId=${patient.id}&moduleId=${moduleId}&programId=${program.id}`);
+      launch(moduleId);
     }
   };
 
   return (
     <div className="max-w-lg mx-auto space-y-6">
+      {confirmation}
       <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="text-gray-500 -ml-1">
         <ArrowLeft className="w-4 h-4 mr-1.5" />
         Retour
@@ -65,6 +69,8 @@ export default function NewSessionPage() {
               Ce patient n'a pas encore de parcours. <Link to={`/patients/${patient.id}`} className="underline font-medium">Le créer depuis sa fiche</Link>.
             </p>
           )}
+
+          {patient && <PatientProfileSummary patient={patient} />}
 
           {program && (
             <div>

@@ -95,6 +95,51 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         self::assertResponseStatusCodeSame(422);
     }
 
+    public function testUnscoredQuestionCanHaveCorrectionWithoutAffectingScore(): void
+    {
+        $payload = $this->payload();
+        $payload['content'][0]['instruction'] = 'Touchez une réponse.';
+        $quiz = &$payload['content'][0]['blocks'][1];
+        $quiz['graded'] = false;
+        $quiz['showCorrection'] = true;
+        $this->put('S2', $payload);
+        self::assertResponseIsSuccessful();
+        $result = $this->client->getResponse()->toArray();
+        self::assertTrue($result['content'][0]['blocks'][1]['showCorrection']);
+        self::assertSame('Touchez une réponse.', $result['content'][0]['instruction']);
+        self::assertNull(\App\Training\ScoreCalculator::expectedAnswers($quiz));
+
+        $quiz['options'][0]['isCorrect'] = false;
+        $this->put('S2', $payload);
+        self::assertResponseStatusCodeSame(422);
+
+        $quiz['showCorrection'] = false;
+        $this->put('S2', $payload);
+        self::assertResponseIsSuccessful();
+    }
+
+    public function testSingleChoiceRequiresExactlyOneCorrectAnswer(): void
+    {
+        $payload = $this->payload();
+        $payload['content'][0]['blocks'][1]['options'][] = ['id' => 'b', 'label' => 'Autre', 'isCorrect' => true];
+        $this->put('S2', $payload);
+        self::assertResponseStatusCodeSame(422);
+    }
+
+    public function testUnpublishedContentIsOnlyReadableByNationalAdmin(): void
+    {
+        $this->put('S2', $this->payload(['published' => false]));
+        self::assertResponseIsSuccessful();
+        $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S2']);
+        $url = '/api/modules/'.$module->getId();
+        $ide = $this->createUser(UserRole::Ide, [$this->createCenter()]);
+        $this->requestAs($ide, 'GET', $url);
+        self::assertResponseStatusCodeSame(404);
+        $admin = $this->createUser(UserRole::AdminNational);
+        $this->requestAs($admin, 'GET', $url);
+        self::assertResponseIsSuccessful();
+    }
+
     public function testCompetencyAlreadyAssessedCannotBeRemoved(): void
     {
         $this->put('S2', $this->payload());

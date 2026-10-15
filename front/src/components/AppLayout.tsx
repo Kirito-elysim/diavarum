@@ -1,13 +1,16 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ShieldCheck } from 'lucide-react';
+import { Menu, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSetSecurityCode } from '../api/hooks';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 import Sidebar from './Sidebar';
 import { SecurityCodeForm } from './SecurityCodeForm';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 
 export default function AppLayout() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const { user, refreshUser } = useAuth();
   const setSecurityCode = useSetSecurityCode();
 
@@ -18,8 +21,20 @@ export default function AppLayout() {
   return (
     <div className="flex min-h-screen bg-gray-50/50">
       <Sidebar />
-      <div className="flex-1 ml-64 flex flex-col min-h-screen">
-        <main className="flex-1 p-6">
+      <div className="flex-1 min-w-0 xl:ml-64 flex flex-col min-h-dvh">
+        <header className="sticky top-0 z-30 flex items-center gap-3 border-b bg-white px-4 py-2 xl:hidden">
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <button className="flex min-h-12 items-center gap-2 rounded-xl border px-3 font-medium" aria-label="Ouvrir le menu de navigation"><Menu className="h-5 w-5" />Menu</button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-80 max-w-[90vw] p-0" aria-describedby={undefined}>
+              <SheetTitle className="sr-only">Navigation Diaverum</SheetTitle>
+              <Sidebar drawer onNavigate={() => setMenuOpen(false)} />
+            </SheetContent>
+          </Sheet>
+          <span className="font-semibold text-diaverum-green">Diaverum</span>
+        </header>
+        <main className="flex-1 min-w-0 p-4 md:p-6">
           <Outlet />
         </main>
       </div>

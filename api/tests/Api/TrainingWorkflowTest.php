@@ -107,6 +107,27 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
         self::assertSame(0, $tracking['validatedCount']);
     }
 
+    public function testPostTestRequiresCompletedCoursesAndDoesNotRecordDuration(): void
+    {
+        $post = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'PT']);
+        $this->program->addModule($post);
+        $this->em()->flush();
+        $payload = ['patient' => $this->iri($this->patient), 'module' => $this->iri($post), 'program' => $this->iri($this->program)];
+        $this->requestAs($this->ide, 'POST', '/api/sessions', $payload);
+        self::assertResponseStatusCodeSame(422);
+
+        $program = $this->em()->find(TrainingProgram::class, $this->program->getId());
+        $program->findModule($this->module)->markValidated(0, 60);
+        $this->em()->flush();
+        $session = $this->requestAs($this->ide, 'POST', '/api/sessions', $payload)->toArray();
+        self::assertResponseStatusCodeSame(201);
+        $result = $this->requestAs($this->ide, 'POST', '/api/sessions/'.$session['id'].'/validate', [
+            'durationSeconds' => 120, 'answers' => [], 'competencies' => [],
+        ])->toArray();
+        self::assertResponseIsSuccessful();
+        self::assertSame(0, $result['durationSeconds']);
+    }
+
     public function testDeselectedCourseCannotBeStarted(): void
     {
         $this->program->findModule($this->module)->setSelected(false);

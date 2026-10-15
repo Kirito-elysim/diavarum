@@ -5,20 +5,21 @@ import type { QuizBlock, QuizOption, DragDropPair } from '../types';
 
 interface QuizProps {
   block: QuizBlock;
-  onAnswer: (isCorrect: boolean, score: number) => void;
+  onAnswer: (isCorrect: boolean, score: number, selected?: string[]) => void;
+  previousResult?: { isCorrect: boolean; score: number; selected?: string[] };
   disabled?: boolean;
 }
 
-export function QuizComponent({ block, onAnswer, disabled }: QuizProps) {
-  if (block.questionType === 'qcu')       return <QCUQuestion  block={block} onAnswer={onAnswer} disabled={disabled} />;
-  if (block.questionType === 'qcm')       return <QCMQuestion  block={block} onAnswer={onAnswer} disabled={disabled} />;
-  return <DragDropQuestion block={block} onAnswer={onAnswer} disabled={disabled} />;
+export function QuizComponent({ block, onAnswer, disabled, previousResult }: QuizProps) {
+  if (block.questionType === 'qcu')       return <QCUQuestion  block={block} onAnswer={onAnswer} disabled={disabled} previousResult={previousResult} />;
+  if (block.questionType === 'qcm')       return <QCMQuestion  block={block} onAnswer={onAnswer} disabled={disabled} previousResult={previousResult} />;
+  return <DragDropQuestion block={block} onAnswer={onAnswer} disabled={disabled} previousResult={previousResult} />;
 }
 
 /* ─── QCU ────────────────────────────────────────────────────────────────── */
-function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
-  const [selected,  setSelected]  = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
+  const [selected,  setSelected]  = useState<string | null>(previousResult?.selected?.[0] ?? null);
+  const [submitted, setSubmitted] = useState(!!previousResult);
   const [shake,     setShake]     = useState(false);
 
   const handleSelect = (id: string) => {
@@ -28,20 +29,22 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
 
   // Question de réflexion (non notée) : ni correction, ni score, une seule réponse
   const ungraded = block.graded === false;
+  const showCorrection = block.showCorrection ?? !ungraded;
 
   const handleSubmit = () => {
     if (!selected) return;
     const opt       = block.options?.find((o: QuizOption) => o.id === selected);
-    const isCorrect = ungraded || (opt?.isCorrect ?? false);
+    const isCorrect = opt?.isCorrect ?? false;
     setSubmitted(true);
-    if (!isCorrect) { setShake(true); setTimeout(() => setShake(false), 400); }
-    onAnswer(isCorrect, isCorrect ? 100 : 0);
+    if (!isCorrect && showCorrection) { setShake(true); setTimeout(() => setShake(false), 400); }
+    onAnswer(ungraded && !showCorrection || isCorrect, isCorrect ? 100 : 0, [selected]);
   };
 
   return (
     <div className="space-y-6">
       {/* Question */}
       <QuestionHeader label="Question" text={block.question} />
+      {ungraded && <p className="text-sky-200">Question non notée.</p>}
 
       {/* Options */}
       <div className="space-y-3">
@@ -56,7 +59,7 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
           let letterBg  = 'bg-white/10 text-white/50';
           let anim      = '';
 
-          if (submitted && ungraded) {
+          if (submitted && !showCorrection) {
             if (isSelected) {
               ringClass = 'ring-2 ring-sky-400'; bgClass = 'bg-sky-500/10'; textClass = 'text-sky-200'; letterBg = 'bg-sky-400 text-white';
             }
@@ -91,8 +94,8 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
                 {letter}
               </span>
               <span className="flex-1 text-[17px] font-medium leading-snug">{opt.label}</span>
-              {submitted && !ungraded && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
-              {submitted && !ungraded && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
+              {submitted && showCorrection && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
+              {submitted && showCorrection && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
             </button>
           );
         })}
@@ -104,15 +107,17 @@ function QCUQuestion({ block, onAnswer, disabled }: QuizProps) {
       )}
 
       {/* Explanation */}
-      {submitted && block.explanation && <Explanation text={block.explanation} isCorrect={ungraded || (block.options?.find((o: QuizOption) => o.id === selected)?.isCorrect ?? false)} />}
+      {submitted && showCorrection && block.explanation && <Explanation text={block.explanation} isCorrect={(block.options?.find((o: QuizOption) => o.id === selected)?.isCorrect ?? false)} />}
     </div>
   );
 }
 
 /* ─── QCM ────────────────────────────────────────────────────────────────── */
-function QCMQuestion({ block, onAnswer, disabled }: QuizProps) {
-  const [selected,  setSelected]  = useState<Set<string>>(new Set());
-  const [submitted, setSubmitted] = useState(false);
+function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
+  const [selected,  setSelected]  = useState<Set<string>>(() => new Set(previousResult?.selected));
+  const [submitted, setSubmitted] = useState(!!previousResult);
+  const ungraded = block.graded === false;
+  const showCorrection = block.showCorrection ?? !ungraded;
 
   const toggle = (id: string) => {
     if (submitted || disabled) return;
@@ -134,12 +139,13 @@ function QCMQuestion({ block, onAnswer, disabled }: QuizProps) {
     const correctSel = [...selected].filter((id) => correctIds.has(id)).length;
     const score = correctIds.size > 0 ? Math.round((correctSel / correctIds.size) * 100) : 0;
     setSubmitted(true);
-    onAnswer(isCorrect, score);
+    onAnswer(ungraded || isCorrect, score, [...selected]);
   };
 
   return (
     <div className="space-y-6">
       <QuestionHeader label="Plusieurs réponses" text={block.question} multi />
+      {ungraded && <p className="text-sky-200">Question non notée.</p>}
 
       <div className="space-y-3">
         {block.options?.map((opt: QuizOption) => {
@@ -147,7 +153,9 @@ function QCMQuestion({ block, onAnswer, disabled }: QuizProps) {
           const isCorrect  = opt.isCorrect;
 
           let ringClass = ''; let bgClass = ''; let textClass = ''; let checkClass = ''; let anim = '';
-          if (submitted) {
+          if (submitted && !showCorrection) {
+            if (isSelected) { ringClass = 'ring-2 ring-sky-400'; bgClass = 'bg-sky-500/10'; textClass = 'text-sky-200'; checkClass = 'border-sky-400 bg-sky-400'; }
+          } else if (submitted) {
             if (isCorrect) {
               ringClass = 'ring-2 ring-emerald-400'; bgClass = 'bg-emerald-500/10'; textClass = 'text-emerald-300';
               checkClass = 'border-emerald-400 bg-emerald-400'; anim = 'pop-in';
@@ -178,13 +186,13 @@ function QCMQuestion({ block, onAnswer, disabled }: QuizProps) {
                 'w-7 h-7 rounded-lg border-2 flex-shrink-0 flex items-center justify-center transition-all',
                 checkClass
               )}>
-                {(isSelected || (submitted && isCorrect)) && (
+                {(isSelected || (submitted && showCorrection && isCorrect)) && (
                   <span className="w-3.5 h-3.5 bg-white rounded-sm block" />
                 )}
               </span>
               <span className="flex-1 text-[17px] font-medium leading-snug">{opt.label}</span>
-              {submitted && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
-              {submitted && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
+              {submitted && showCorrection && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
+              {submitted && showCorrection && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
             </button>
           );
         })}
@@ -193,7 +201,7 @@ function QCMQuestion({ block, onAnswer, disabled }: QuizProps) {
       {!submitted && (
         <SubmitButton onClick={handleSubmit} disabled={selected.size === 0 || !!disabled} label="Valider mes réponses" />
       )}
-      {submitted && block.explanation && <Explanation text={block.explanation} isCorrect={false} />}
+      {submitted && showCorrection && block.explanation && <Explanation text={block.explanation} isCorrect={false} />}
     </div>
   );
 }
@@ -382,6 +390,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
           <p className="text-base font-bold text-sky-300">
             {block.pairs?.filter((p: DragDropPair) => matches[p.id] === p.right).length} / {block.pairs?.length} associations correctes
           </p>
+          {block.explanation && <p className="mt-3 whitespace-pre-line text-sky-200">{block.explanation}</p>}
         </div>
       )}
     </div>

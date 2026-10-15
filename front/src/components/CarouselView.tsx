@@ -10,9 +10,12 @@ import { cn } from '../lib/utils';
 export function CarouselView({ block }: { block: CarouselBlock }) {
   const [index, setIndex] = useState(0);
   const startX = useRef<number | null>(null);
+  const startY = useRef<number | null>(null);
   const slide = block.slides[index];
   const last = block.slides.length - 1;
   const go = (i: number) => setIndex(Math.max(0, Math.min(last, i)));
+
+  if (!slide) return null;
 
   return (
     <div className="space-y-4">
@@ -22,15 +25,17 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
         <p className="text-sm text-sky-300 font-medium">Faites défiler les images avec les textes associés</p>
       </div>
 
-      {/* touch-action: none → le lecteur ne change pas de page pendant le défilement du carrousel */}
+      {/* Le geste horizontal reste dans le carrousel ; le défilement vertical reste disponible. */}
       <div
         className="relative rounded-2xl overflow-hidden bg-[#FFE0D0]"
-        style={{ touchAction: 'none' }}
-        onTouchStart={(e) => (startX.current = e.touches[0].clientX)}
+        data-course-gesture
+        style={{ touchAction: 'pan-y' }}
+        onTouchStart={(e) => { startX.current = e.touches[0].clientX; startY.current = e.touches[0].clientY; }}
+        onTouchCancel={() => { startX.current = null; startY.current = null; }}
         onTouchEnd={(e) => {
           if (startX.current === null) return;
           const dx = e.changedTouches[0].clientX - startX.current;
-          if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+          if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(e.changedTouches[0].clientY - (startY.current ?? 0))) go(index + (dx < 0 ? 1 : -1));
           startX.current = null;
         }}
       >
@@ -55,8 +60,11 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
             key={s.id}
             onClick={() => go(i)}
             aria-label={`Image ${i + 1}`}
-            className={cn('h-2.5 rounded-full transition-all', i === index ? 'w-8 bg-orange-500' : 'w-2.5 bg-white/25')}
-          />
+            aria-current={i === index ? 'true' : undefined}
+            className="w-11 h-11 flex items-center justify-center"
+          >
+            <span className={cn('h-2.5 rounded-full transition-all', i === index ? 'w-8 bg-orange-500' : 'w-2.5 bg-white/25')} />
+          </button>
         ))}
       </div>
     </div>

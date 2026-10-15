@@ -55,9 +55,15 @@
 
 /* Tablet-specific: minimum 44px touch targets */
 @media (pointer: coarse) {
-  button, [role="button"], a, input, select, textarea {
+  button, [role="button"], [role="tab"], [role="menuitem"], [role="option"], a, select, textarea,
+  input:not([type="radio"]):not([type="checkbox"]) {
     min-height: 44px;
   }
+  button, [role="button"], [role="tab"] { min-width: 44px; touch-action: manipulation; }
+  [role="checkbox"], [role="radio"] { min-width: 28px; min-height: 28px; }
+  input, select, textarea { font-size: 16px; }
+  label:has([type="radio"]), label:has([type="checkbox"]) { min-height: 44px; }
+
 }
 
 /* Scroll smoothing */
@@ -157,3 +163,16 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   .confetti { display: none; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Les écrans de séance restent défilables en paysage et avec le clavier ouvert. */
+.session-overlay {
+  overflow-y: auto;
+  justify-content: safe center;
+  padding-top: max(1.5rem, env(safe-area-inset-top));
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+.session-overlay > * { flex-shrink: 0; }

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
+import { Card } from '../components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Download, Eye, Info, Loader2, Upload } from 'lucide-react';
+import { Download, Eye, Pencil, Loader2, Upload } from 'lucide-react';
 import { getModuleContent, useImportModuleContent, useModules } from '../api/hooks';
 import type { Module, ModuleContent } from '../api/types';
 import { ApiError } from '../lib/api';
@@ -27,20 +27,7 @@ export default function ContentAdminPage() {
         <p className="text-gray-500 text-sm mt-0.5">{withContent}/{modules.length} séances ont un contenu intégré</p>
       </div>
 
-      <Card className="border-0 shadow-sm ring-1 ring-blue-100 bg-blue-50/50">
-        <CardContent className="p-4 flex gap-3 text-sm text-blue-900">
-          <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
-          <div>
-            <p>
-              Le prestataire intègre les contenus par l'API <code className="bg-white px-1 rounded">PUT /api/content/modules/&#123;code&#125;</code> avec
-              l'en-tête <code className="bg-white px-1 rounded">X-Content-Token</code> (jeton fourni par l'hébergeur, sans accès aux données patients).
-            </p>
-            <p className="mt-1 text-blue-800/80">
-              Ici, vous pouvez télécharger le JSON d'une séance, le corriger et le réimporter. Le serveur contrôle la structure avant tout enregistrement.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <p className="text-sm text-gray-600">Rédigez vos écrans, ajoutez des activités et prévisualisez le cours avant de le publier.</p>
 
       <Card className="border-0 shadow-sm ring-1 ring-gray-100 overflow-hidden">
         <Table>
@@ -123,6 +110,7 @@ function ModuleRow({ module }: { module: Module }) {
             : <Badge variant="secondary">Non publiée</Badge>}
       </TableCell>
       <TableCell className="text-right whitespace-nowrap">
+        <Button variant="outline" size="sm" className="mr-2 gap-2" onClick={() => navigate(`/modules/${module.code}/edit`)}><Pencil className="w-4 h-4" />Modifier</Button>
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Prévisualiser" aria-label="Prévisualiser" disabled={empty}
           onClick={() => navigate(`/sessions/run?moduleId=${module.id}&preview=1`)}>
           <Eye className="w-4 h-4" />

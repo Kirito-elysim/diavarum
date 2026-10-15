@@ -212,6 +212,10 @@ export interface CodexTestResult extends Resource {
   nurse: Author;
   words: string[];
   clockTime: string;
+  clockChecks: boolean[] | null;
+  orientationAnswers: number[] | null;
+  orientationScore: number | null;
+  nephrologistReviewRequired: boolean;
   clockTestPassed: boolean;
   wordRecallPassed: boolean;
   passed: boolean;

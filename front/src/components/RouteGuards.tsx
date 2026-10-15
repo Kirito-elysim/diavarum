@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { learnerSessionUrl } from '../lib/learnerSession';
 import { useAuth } from '../contexts/AuthContext';
 
 export function FullPageLoader() {
@@ -19,6 +20,11 @@ export function RequireAuth() {
 
   if (isLoading) return <FullPageLoader />;
   if (!user) return <Navigate to="/login" replace state={{ from: location }} />;
+
+  const lockedUrl = learnerSessionUrl(user.id);
+  if (lockedUrl && location.pathname + location.search !== lockedUrl) {
+    return <Navigate to={lockedUrl} replace state={{ requestSessionExit: true }} />;
+  }
 
   return <Outlet />;
 }

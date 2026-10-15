@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { cn } from '../lib/utils';
 import {
   CheckCircle, XCircle, HelpCircle, GripVertical,
@@ -620,6 +620,7 @@ export function FlipCardsView({ block }: { block: FlipCardsBlock }) {
             <button
               key={card.id}
               onClick={() => toggle(card.id)}
+              aria-pressed={isFlipped}
               className={cn(
                 'relative min-h-[140px] rounded-2xl p-5 flex items-center justify-center text-center transition-all touch-manipulation',
                 isFlipped
@@ -1094,7 +1095,7 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
         )}
 
         {/* Info panel */}
-        <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-72 opacity-100' : 'max-h-0 opacity-0')}>
+        <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-none opacity-100' : 'max-h-0 opacity-0')}>
           {active && (
             <div className="mx-4 mb-4 mt-2 rounded-2xl p-4" style={{ backgroundColor: '#fff7ed', border: '1.5px solid #fed7aa' }}>
               <div className="flex items-start gap-3">
@@ -1511,10 +1512,9 @@ export function WordSearchView({ block, onAnswer, disabled }: {
   onAnswer: (isCorrect: boolean, score: number) => void;
   disabled?: boolean;
 }) {
-  const grid: string[][] = [];
-  for (let r = 0; r < block.gridSize; r++) {
-    grid.push(block.letters.slice(r * block.gridSize, (r + 1) * block.gridSize).split(''));
-  }
+  const grid = useMemo(() => Array.from({ length: block.gridSize }, (_, row) =>
+    block.letters.slice(row * block.gridSize, (row + 1) * block.gridSize).split('')
+  ), [block.gridSize, block.letters]);
 
   const [selected, setSelected] = useState<{ r: number; c: number }[]>([]);
   const [found, setFound] = useState<Set<string>>(new Set());
@@ -1583,12 +1583,18 @@ export function WordSearchView({ block, onAnswer, disabled }: {
 
       {/* Grid */}
       <div
-        className="inline-grid gap-1 mx-auto select-none"
+        className="inline-grid max-w-full gap-1 mx-auto select-none"
         style={{
           gridTemplateColumns: `repeat(${block.gridSize}, 1fr)`,
           touchAction: 'none',
         }}
+        onPointerMove={(event) => {
+          if (!dragging) return;
+          const cell = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-word-row]');
+          if (cell && event.currentTarget.contains(cell)) handleCellEnter(Number(cell.dataset.wordRow), Number(cell.dataset.wordColumn));
+        }}
         onPointerUp={handleUp}
+        onPointerCancel={() => { setDragging(false); setSelected([]); }}
       >
         {grid.map((row, r) => row.map((letter, c) => {
           const isSelected = isCellSelected(r, c);
@@ -1600,8 +1606,12 @@ export function WordSearchView({ block, onAnswer, disabled }: {
           return (
             <button
               key={`${r}-${c}`}
-              onPointerDown={() => handleCellDown(r, c)}
-              onPointerEnter={() => handleCellEnter(r, c)}
+              data-word-row={r}
+              data-word-column={c}
+              onPointerDown={(event) => {
+                event.currentTarget.setPointerCapture(event.pointerId);
+                handleCellDown(r, c);
+              }}
               disabled={submitted || disabled}
               className={cn(
                 'w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-bold text-base transition-all touch-none',

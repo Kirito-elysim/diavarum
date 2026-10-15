@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { NationalCodePanel, AccessLogPanel } from './AdminPage';
+import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -9,21 +12,27 @@ import { SecurityCodeForm } from '../components/SecurityCodeForm';
 
 export default function SettingsPage() {
   const { user, refreshUser } = useAuth();
+  const [section, setSection] = useState('account');
   const setSecurityCode = useSetSecurityCode();
 
   if (!user) return null;
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
-        <p className="text-gray-500 text-sm mt-0.5">Votre compte et votre code de sécurité</p>
+        <p className="text-gray-500 text-sm mt-0.5">Votre compte, la sécurité des séances et les accès</p>
       </div>
 
-      <Card className="border-0 shadow-sm ring-1 ring-gray-100">
+      <nav aria-label="Rubriques des paramètres" className="flex flex-wrap gap-2">
+        <Button variant={section === 'account' ? 'default' : 'outline'} className="min-h-11" onClick={() => setSection('account')}>Mon compte</Button>
+        <Button variant={section === 'security' ? 'default' : 'outline'} className="min-h-11" onClick={() => setSection('security')}>Sécurité des séances</Button>
+        {user.role === 'admin_national' && <Button variant={section === 'logs' ? 'default' : 'outline'} className="min-h-11" onClick={() => setSection('logs')}>Journal des accès</Button>}
+      </nav>
+      {section === 'account' && <Card className="border-0 shadow-sm ring-1 ring-gray-100 max-w-3xl">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2"><User className="w-4 h-4 text-gray-400" />Mon compte</CardTitle>
-          <CardDescription>Pour modifier ces informations, adressez-vous à votre cadre de service.</CardDescription>
+          <CardDescription>Pour modifier vos informations ou votre mot de passe, adressez-vous à un administrateur ou à votre cadre de service.</CardDescription>
         </CardHeader>
         <CardContent>
           <dl className="grid sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
@@ -38,9 +47,9 @@ export default function SettingsPage() {
             </div>
           </dl>
         </CardContent>
-      </Card>
+      </Card>}
 
-      {user.role !== 'admin_national' && (
+      {section === 'security' && user.role !== 'admin_national' && (
         <Card className="border-0 shadow-sm ring-1 ring-gray-100">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-gray-400" />Code de sécurité</CardTitle>
@@ -61,6 +70,8 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       )}
+      {section === 'security' && user.role === 'admin_national' && <NationalCodePanel />}
+      {section === 'logs' && user.role === 'admin_national' && <AccessLogPanel />}
     </div>
   );
 }

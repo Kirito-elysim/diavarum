@@ -175,10 +175,10 @@ export default function PatientsPage() {
   );
 }
 
-function NewPatientDialog({ open, onOpenChange, onCreated }: { open: boolean; onOpenChange: (open: boolean) => void; onCreated: (id: string) => void }) {
+export function NewPatientDialog({ open, onOpenChange, onCreated, defaultCenter }: { open: boolean; onOpenChange: (open: boolean) => void; onCreated: (id: string) => void; defaultCenter?: string }) {
   const { data: centers } = useCenters();
   const createPatient = useCreatePatient();
-  const [form, setForm] = useState({ firstName: '', lastName: '', dateOfBirth: '', center: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', dateOfBirth: '', center: defaultCenter ?? '' });
   const [error, setError] = useState<ApiError | null>(null);
 
   const centerList = centers?.member ?? [];
@@ -191,7 +191,7 @@ function NewPatientDialog({ open, onOpenChange, onCreated }: { open: boolean; on
     try {
       const patient = await createPatient.mutateAsync({ ...form, center, dateOfBirth: form.dateOfBirth || null });
       toast.success(`${patient.firstName} ${patient.lastName} enregistré`);
-      setForm({ firstName: '', lastName: '', dateOfBirth: '', center: '' });
+      setForm({ firstName: '', lastName: '', dateOfBirth: '', center: defaultCenter ?? '' });
       onOpenChange(false);
       onCreated(patient.id);
     } catch (err) {

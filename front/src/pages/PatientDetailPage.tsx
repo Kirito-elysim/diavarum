@@ -1,3 +1,4 @@
+import { PatientProfile, PatientProfileSummary } from '../components/PatientProfile';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -29,6 +30,7 @@ import {
   ShieldCheck,
   User,
 } from 'lucide-react';
+import { useCourseLaunch } from '../components/CourseLaunchConfirmation';
 import { useAuth } from '../contexts/AuthContext';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
@@ -137,6 +139,7 @@ export default function PatientDetailPage() {
 
       <Tabs defaultValue={patient.eligibilityStatus === 'eligible' ? 'parcours' : 'eligibility'} className="space-y-4">
         <TabsList className="bg-gray-100 p-1 h-auto rounded-xl">
+          <TabsTrigger value="profile" className="rounded-lg px-4 py-2 text-sm"><User className="w-4 h-4 mr-2" />Profil patient</TabsTrigger>
           <TabsTrigger value="parcours" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Route className="w-4 h-4 mr-2" />Parcours
           </TabsTrigger>
@@ -148,7 +151,9 @@ export default function PatientDetailPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="parcours">
+        <TabsContent value="profile"><PatientProfile key={patient.id} patient={patient} /></TabsContent>
+        <TabsContent value="parcours" className="space-y-4">
+          <PatientProfileSummary patient={patient} />
           <ProgramSection patient={patient} program={program ?? null} />
         </TabsContent>
         {program && <ResumePrompt patient={patient} program={program} />}
@@ -168,6 +173,7 @@ export default function PatientDetailPage() {
 
 function ProgramSection({ patient, program }: { patient: Patient; program: TrainingProgram | null }) {
   const createProgram = useCreateProgram();
+  const { launch, confirmation } = useCourseLaunch(patient.id, program);
 
   if (patient.eligibilityStatus !== 'eligible') {
     return (
@@ -216,6 +222,7 @@ function ProgramSection({ patient, program }: { patient: Patient; program: Train
 
   return (
     <div className="space-y-4">
+      {confirmation}
       <CodexSummary patient={patient} />
       <ProgramActions program={program} />
       <p className="text-sm text-gray-500">
@@ -229,16 +236,16 @@ function ProgramSection({ patient, program }: { patient: Patient; program: Train
         </div>
       )}
       {[...themes.values()].map((theme) => (
-        <ModuleGroup key={theme.title} title={theme.title} items={theme.items} patient={patient} readOnly={readOnly} canStart={canStart} programId={program.id} />
+        <ModuleGroup key={theme.title} title={theme.title} items={theme.items} patient={patient} readOnly={readOnly} canStart={canStart} onLaunch={launch} />
       ))}
     </div>
   );
 }
 
 function ModuleGroup({
-  title, items, patient, readOnly, canStart, programId,
+  title, items, patient, readOnly, canStart, onLaunch,
 }: {
-  title: string; items: ProgramModule[]; patient: Patient; readOnly: boolean; canStart: boolean; programId: string;
+  title: string; items: ProgramModule[]; patient: Patient; readOnly: boolean; canStart: boolean; onLaunch: (moduleId: string) => void;
 }) {
   const navigate = useNavigate();
   const toggle = useToggleProgramModule(patient['@id']);
@@ -287,7 +294,7 @@ function ModuleGroup({
                   size="sm"
                   variant={item.status === 'valide' ? 'outline' : 'default'}
                   className={item.status === 'valide' ? 'h-8 px-3 text-xs gap-1.5' : 'h-8 px-3 bg-orange-500 hover:bg-orange-600 text-white text-xs gap-1.5'}
-                  onClick={() => navigate(`/sessions/run?patientId=${patient.id}&moduleId=${item.module.id}&programId=${programId}`)}
+                  onClick={() => onLaunch(item.module.id)}
                 >
                   <Play className="w-3 h-3" />
                   {item.status === 'valide' ? 'Refaire' : item.status === 'non_termine' ? 'Reprendre' : 'Lancer'}
@@ -513,10 +520,10 @@ function CodexSection({ patient }: { patient: Patient }) {
 
   return (
     <Card className="border-0 shadow-sm ring-1 ring-gray-100">
-      <CardHeader className="flex-row items-start justify-between space-y-0">
+      <CardHeader className="flex-col gap-3 lg:flex-row items-start justify-between space-y-0">
         <div>
           <CardTitle className="text-base">Test CODEX</CardTitle>
-          <p className="text-sm text-gray-500 mt-1">3 mots à mémoriser, placement des aiguilles d'une horloge, rappel des mots.</p>
+          <p className="text-sm text-gray-500 mt-1">3 mots à mémoriser, horloge à dessiner, rappel des mots et orientation si nécessaire.</p>
         </div>
         <Button className="bg-orange-500 hover:bg-orange-600 text-white gap-2" onClick={() => navigate(`/patients/${patient.id}/codex`)}>
           <Play className="w-4 h-4" />Faire passer le test
@@ -528,9 +535,9 @@ function CodexSection({ patient }: { patient: Patient }) {
         ) : (
           <div className="space-y-2">
             {tests.map((t) => (
-              <div key={t.id} className="flex items-center gap-4 p-3 rounded-xl bg-gray-50 text-sm">
-                <Badge variant="secondary" className={t.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}>{t.passed ? 'Réussi' : 'Échec'}</Badge>
-                <span className="text-gray-600">Horloge ({t.clockTime}) : {t.clockTestPassed ? '✓' : '✗'} · Mots ({t.words.join(', ')}) : {t.wordRecallPassed ? '✓' : '✗'}</span>
+              <div key={t.id} className="flex flex-wrap items-center gap-4 p-3 rounded-xl bg-gray-50 text-sm">
+                <Badge variant="secondary" className={t.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}>{t.clockChecks ? (t.passed ? 'Normal' : 'Anormal') : (t.passed ? 'Réussi (ancien protocole)' : 'Échec (ancien protocole)')}</Badge>
+                <span className="text-gray-600">Horloge ({t.clockTime}) : {t.clockTestPassed ? '✓' : '✗'} · Mots ({t.words.join(', ')}) : {t.wordRecallPassed ? '✓' : '✗'}{t.orientationScore != null && ` · Orientation : ${t.orientationScore}/5`}{t.nephrologistReviewRequired && <strong className="block text-red-700 mt-1">Non éligible — résultat à transmettre au néphrologue par l’IDE.</strong>}</span>
                 <span className="ml-auto text-xs text-gray-400">{formatDate(t.createdAt, "d MMM yyyy 'à' HH:mm")} · {t.nurse.firstName} {t.nurse.lastName}</span>
               </div>
             ))}
@@ -547,12 +554,12 @@ function CodexSummary({ patient }: { patient: Patient }) {
   const last = data?.member[0];
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-white ring-1 ring-gray-100 text-sm">
+    <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-white ring-1 ring-gray-100 text-sm">
       <ShieldCheck className="w-4 h-4 text-gray-400" />
       <span className="text-gray-500">Profil patient — test CODEX :</span>
       {last ? (
         <span className={last.passed ? 'text-green-700 font-medium' : 'text-red-600 font-medium'}>
-          {last.passed ? 'réussi' : 'échec'} le {formatDate(last.createdAt)} (horloge {last.clockTestPassed ? '✓' : '✗'}, mots {last.wordRecallPassed ? '✓' : '✗'})
+          {last.clockChecks ? (last.passed ? 'normal' : 'anormal') : (last.passed ? 'réussi (ancien protocole)' : 'échec (ancien protocole)')} le {formatDate(last.createdAt)} (horloge {last.clockTestPassed ? '✓' : '✗'}, mots {last.wordRecallPassed ? '✓' : '✗'})
         </span>
       ) : (
         <span className="text-amber-700">non réalisé</span>

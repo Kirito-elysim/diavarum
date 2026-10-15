@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
@@ -15,9 +15,11 @@ const SessionsPage = lazy(() => import('./pages/SessionsPage'));
 const NewSessionPage = lazy(() => import('./pages/NewSessionPage'));
 const TrainingSessionPage = lazy(() => import('./pages/TrainingSessionPage'));
 const ContentAdminPage = lazy(() => import('./pages/ContentAdminPage'));
+const CourseEditorPage = lazy(() => import('./pages/CourseEditorPage'));
 const CourseLibraryPage = lazy(() => import('./pages/CourseLibraryPage'));
 const ParcoursPage = lazy(() => import('./pages/ParcoursPage'));
 const ResultsPage = lazy(() => import('./pages/ResultsPage'));
+const CenterDetailPage = lazy(() => import('./pages/CenterDetailPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const CodexTestPage = lazy(() => import('./pages/CodexTestPage'));
@@ -34,13 +36,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <Suspense fallback={<FullPageLoader />}>
-          <Routes>
+const router = createBrowserRouter(createRoutesFromElements(<>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<RequireAuth />}>
               <Route path="/sessions/run" element={<TrainingSessionPage />} />
@@ -57,16 +53,26 @@ export default function App() {
                 <Route path="/results" element={<ResultsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route element={<RequireRole level="cadre" />}>
-                  <Route path="/admin" element={<AdminPage />} />
+                  <Route path="/admin" element={<Navigate to="/admin/accounts" replace />} />
+                  <Route path="/admin/accounts" element={<AdminPage />} />
                 </Route>
                 <Route element={<RequireRole level="admin" />}>
+                  <Route path="/admin/centers/:id" element={<CenterDetailPage />} />
+                  <Route path="/admin/centers" element={<AdminPage section="centers" />} />
                   <Route path="/modules" element={<ContentAdminPage />} />
+                  <Route path="/modules/:code/edit" element={<CourseEditorPage />} />
                 </Route>
               </Route>
             </Route>
-          </Routes>
-          </Suspense>
-        </BrowserRouter>
+</>));
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Suspense fallback={<FullPageLoader />}>
+          <RouterProvider router={router} />
+        </Suspense>
         <Toaster position="top-right" richColors />
       </AuthProvider>
     </QueryClientProvider>

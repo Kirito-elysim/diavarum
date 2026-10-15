@@ -83,7 +83,7 @@ interface RequestOptions {
 export async function api<T>(path: string, { method = 'GET', body }: RequestOptions = {}, retry = true): Promise<T> {
   const headers: Record<string, string> = { Accept: 'application/ld+json' };
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
-  if (body !== undefined) {
+  if (body !== undefined && !(body instanceof FormData)) {
     headers['Content-Type'] = method === 'PATCH' ? 'application/merge-patch+json' : 'application/ld+json';
   }
 
@@ -91,7 +91,7 @@ export async function api<T>(path: string, { method = 'GET', body }: RequestOpti
     method,
     headers,
     credentials: 'same-origin',
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: body === undefined ? undefined : body instanceof FormData ? body : JSON.stringify(body),
   });
 
   if (response.status === 401 && retry) {

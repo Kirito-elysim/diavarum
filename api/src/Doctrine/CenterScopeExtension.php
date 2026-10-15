@@ -64,6 +64,9 @@ final class CenterScopeExtension implements QueryCollectionExtensionInterface, Q
 
     private function restrictToUserCenters(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass): void
     {
+        if (\App\Entity\Module::class === $resourceClass && !$this->security->isGranted('ROLE_ADMIN_NATIONAL')) {
+            $queryBuilder->andWhere($queryBuilder->getRootAliases()[0].'.published = true');
+        }
         $isScoped = isset(self::CENTER_PATHS[$resourceClass]) || Center::class === $resourceClass || User::class === $resourceClass;
         if (!$isScoped || $this->security->isGranted('ROLE_ADMIN_NATIONAL')) {
             return;

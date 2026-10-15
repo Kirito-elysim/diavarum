@@ -53,7 +53,7 @@ class CodexTest implements CenterScopedInterface, AuthoredInterface
     #[Groups(['codex_test:read'])]
     private ?User $nurse = null;
 
-    /** @var list<string> les 3 mots tirés au sort */
+    /** @var list<string> les 3 mots de la liste du protocole */
     #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
     #[Assert\Count(exactly: 3)]
     #[Assert\All([new Assert\NotBlank(), new Assert\Type('string')])]
@@ -74,6 +74,54 @@ class CodexTest implements CenterScopedInterface, AuthoredInterface
     #[ORM\Column]
     #[Groups(['codex_test:read', 'codex_test:write'])]
     private bool $wordRecallPassed = false;
+
+    /** @var list<bool>|null Null pour les anciens tests. */
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
+    #[Groups(['codex_test:read', 'codex_test:write'])]
+    private ?array $clockChecks = null;
+
+    /** @var list<int>|null */
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
+    #[Groups(['codex_test:read', 'codex_test:write'])]
+    private ?array $orientationAnswers = null;
+
+    public const WORD_LISTS = [['Clé', 'ballon', 'citron'], ['Cigare', 'fleur', 'porte']];
+
+    public function getClockChecks(): ?array
+    {
+        return $this->clockChecks;
+    }
+
+    public function setClockChecks(?array $checks): static
+    {
+        $this->clockChecks = $checks;
+
+        return $this;
+    }
+
+    public function getOrientationAnswers(): ?array
+    {
+        return $this->orientationAnswers;
+    }
+
+    public function setOrientationAnswers(?array $answers): static
+    {
+        $this->orientationAnswers = $answers;
+
+        return $this;
+    }
+
+    #[Groups(['codex_test:read'])]
+    public function getOrientationScore(): ?int
+    {
+        return null === $this->orientationAnswers ? null : array_sum($this->orientationAnswers);
+    }
+
+    #[Groups(['codex_test:read'])]
+    public function isNephrologistReviewRequired(): bool
+    {
+        return null !== $this->clockChecks && !$this->isPassed();
+    }
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['codex_test:read', 'codex_test:write'])]
@@ -180,11 +228,11 @@ class CodexTest implements CenterScopedInterface, AuthoredInterface
         return $this;
     }
 
-    /** Réussite globale : les deux épreuves sont réussies */
+    /** Protocole actuel : deux épreuves réussies ou orientation >= 4 ; anciens tests inchangés. */
     #[Groups(['codex_test:read'])]
     public function isPassed(): bool
     {
-        return $this->clockTestPassed && $this->wordRecallPassed;
+        return ($this->clockTestPassed && $this->wordRecallPassed) || (null !== $this->clockChecks && ($this->getOrientationScore() ?? 0) >= 4);
     }
 
     public function getNotes(): ?string

@@ -1,6 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { CoursePageCounter, CoursePageHeading } from '../components/CoursePageHeading';
+import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
+import { useSearchParams, useNavigate, useBlocker, useLocation } from 'react-router-dom';
 import { useInterruptSession, useModule, usePatient, useProgram, useStartSession, useValidateSession, verifySecurityCode } from '../api/hooks';
+import { useAuth } from '../contexts/AuthContext';
+import { learnerSessionUrl, lockLearnerSession, unlockLearnerSession } from '../lib/learnerSession';
 import { exerciseResults } from '../lib/scoring';
 import { ApiError } from '../lib/api';
 import { QuizComponent } from '../components/QuizComponent';
@@ -45,6 +48,7 @@ function exitFullscreen() {
 /** Données minimales dont le lecteur a besoin */
 interface PlayerModule {
   id: string;
+  code: string;
   title: string;
   estimatedDuration: number;
   pages: ModulePage[];
@@ -234,7 +238,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
     <div className="rounded-3xl overflow-hidden bg-white ring-1 ring-gray-100/80 shadow-sm">
       {/* Image with markers */}
       <div className="relative select-none" onClick={() => setActiveId(null)}>
-        <img src={block.imageUrl} alt={block.alt} className="w-full object-cover" style={{ maxHeight: 280 }} loading="lazy" />
+        <img src={block.imageUrl} alt={block.alt} className="w-full h-auto" loading="lazy" />
         {activeId && <div className="absolute inset-0 bg-black/30 transition-opacity" />}
         {block.hotspots.map((hs, i) => (
           <button
@@ -243,10 +247,12 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
             className={cn(
               'absolute flex items-center justify-center rounded-full font-black text-xs shadow-lg transition-all duration-200 touch-manipulation',
               hs.id === activeId
-                ? 'w-9 h-9 bg-orange-500 text-white scale-110 ring-4 ring-orange-300/60'
-                : 'w-8 h-8 bg-white/90 text-orange-600 hover:scale-110 ring-2 ring-orange-400/60'
+                ? 'w-12 h-12 bg-orange-500 text-white scale-110 ring-4 ring-orange-300/60'
+                : 'w-12 h-12 bg-white/90 text-orange-600 hover:scale-110 ring-2 ring-orange-400/60'
             )}
-            style={{ left: `calc(${hs.x}% - 16px)`, top: `calc(${hs.y}% - 16px)`, zIndex: hs.id === activeId ? 20 : 10 }}
+            aria-label={`Afficher la légende ${i + 1} : ${hs.label}`}
+            aria-expanded={activeId === hs.id}
+            style={{ left: `clamp(24px, ${hs.x}%, calc(100% - 24px))`, top: `clamp(24px, ${hs.y}%, calc(100% - 24px))`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
           >
             {i + 1}
             {hs.id !== activeId && (
@@ -263,7 +269,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
       )}
 
       {/* Info panel */}
-      <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0')}>
+      <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-none opacity-100' : 'max-h-0 opacity-0')}>
         {active && (
           <div className="mx-4 mb-4 mt-2 rounded-2xl p-4" style={{ backgroundColor: '#fff7ed', border: '1.5px solid #fed7aa' }}>
             <div className="flex items-start justify-between gap-3 mb-2">
@@ -273,7 +279,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
                 </div>
                 <p className="font-bold text-gray-900 text-sm">{active.label}</p>
               </div>
-              <button onClick={() => setActiveId(null)} className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors flex-shrink-0 touch-manipulation">
+              <button aria-label="Fermer la légende" onClick={() => setActiveId(null)} className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors flex-shrink-0 touch-manipulation">
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -429,7 +435,7 @@ function PreSessionScreen({
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: 'radial-gradient(ellipse at top, #004138 0%, #001A16 70%)' }}>
+    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: 'radial-gradient(ellipse at top, #004138 0%, #001A16 70%)' }}>
       {/* Ambient glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: 'radial-gradient(circle, #E86825 0%, transparent 70%)' }} />
 
@@ -496,7 +502,7 @@ function PINExitModal({
   title = 'Code IDE',
   subtitle = 'Entrez votre code pour quitter la séance',
 }: {
-  onSuccess: () => void;
+  onSuccess: () => void | Promise<void>;
   onCancel: () => void;
   title?: string;
   subtitle?: string;
@@ -520,10 +526,10 @@ function PINExitModal({
     setChecking(true);
     try {
       await verifySecurityCode(entered);
-      onSuccess();
+      await onSuccess();
     } catch (err) {
       setShake(true);
-      setMessage(err instanceof ApiError && err.status === 429 ? 'Trop de tentatives. Réessayez dans 15 minutes.' : 'Code incorrect');
+      setMessage(err instanceof ApiError && err.status === 429 ? 'Trop de tentatives. Réessayez dans 15 minutes.' : err instanceof ApiError && (err.status === 401 || err.status === 403) ? 'Code incorrect' : 'Vérification ou enregistrement impossible. Réessayez.');
       setTimeout(() => { setEntered(''); setShake(false); }, 600);
     } finally {
       setChecking(false);
@@ -533,7 +539,7 @@ function PINExitModal({
   const keys = ['1','2','3','4','5','6','7','8','9','⌫','0','✓'];
 
   return (
-    <div className="fixed inset-0 z-[10000] backdrop-blur-md flex flex-col items-center justify-center px-6 fade-scale-in" style={{ backgroundColor: 'rgba(0,26,22,0.98)' }}>
+    <div className="session-overlay fixed inset-0 z-[10000] overflow-y-auto backdrop-blur-md flex flex-col items-center justify-center px-6 py-6 fade-scale-in" style={{ backgroundColor: 'rgba(0,26,22,0.98)' }}>
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: 'rgba(245,158,11,0.2)', border: '1px solid rgba(245,158,11,0.3)' }}>
         <Shield className="w-7 h-7 text-amber-400" />
       </div>
@@ -614,7 +620,7 @@ function PauseOverlay({
   onResume: () => void; onRequestExit: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-[10000] bg-gray-900/95 backdrop-blur-md flex flex-col items-center justify-center px-8 fade-scale-in">
+    <div className="session-overlay fixed inset-0 z-[10000] bg-gray-900/95 backdrop-blur-md flex flex-col items-center justify-center px-8 fade-scale-in">
       <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mb-8">
         <Pause className="w-12 h-12 text-white" />
       </div>
@@ -651,7 +657,7 @@ function PauseOverlay({
 /* ─── Swipe hook ─────────────────────────────────────────────────────────── */
 function isGestureElement(el: HTMLElement): boolean {
   const style = window.getComputedStyle(el);
-  if (style.touchAction === 'none') return true;
+  if (style.touchAction === 'none' || el.dataset.courseGesture !== undefined) return true;
   const tag = el.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'CANVAS' || tag === 'SELECT') return true;
   if (style.overflowX === 'auto' || style.overflowX === 'scroll') return true;
@@ -713,7 +719,7 @@ function ModuleCompletionScreen({
   const ss = String(elapsedSeconds % 60).padStart(2, '0');
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: 'radial-gradient(ellipse at center, #004138 0%, #001A16 80%)' }}>
+    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: 'radial-gradient(ellipse at center, #004138 0%, #001A16 80%)' }}>
       <div className={cn(
         'w-28 h-28 rounded-full flex items-center justify-center mb-8 pop-in shadow-2xl',
         isExcellent ? 'bg-emerald-500/20 shadow-emerald-500/20' : isGood ? 'bg-amber-500/20 shadow-amber-500/20' : 'bg-red-500/20 shadow-red-500/20'
@@ -789,7 +795,7 @@ function PatientScoreScreen({ score, onFinish }: { score: number | null; onFinis
   const celebrate = score !== null && score >= 75;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, #004138 0%, #001A16 80%)' }}>
+    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, #004138 0%, #001A16 80%)' }}>
       {celebrate && (
         <div className="pointer-events-none absolute inset-0" aria-hidden>
           {Array.from({ length: 40 }, (_, i) => (
@@ -912,12 +918,12 @@ function CompetencyValidationScreen({
 }
 
 /* ─── Block card ─────────────────────────────────────────────────────────── */
-function BlockCard({
+export function BlockCard({
   block, quizAnswers, onQuizAnswer,
 }: {
   block: ContentBlock;
-  quizAnswers: Record<string, { isCorrect: boolean; score: number }>;
-  onQuizAnswer: (id: string, isCorrect: boolean, score: number) => void;
+  quizAnswers: Record<string, { isCorrect: boolean; score: number; selected?: string[] }>;
+  onQuizAnswer: (id: string, isCorrect: boolean, score: number, selected?: string[]) => void;
 }) {
   if (block.type === 'text')
     return <div className="rounded-3xl p-7" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><TextBlockView block={block} /></div>;
@@ -936,7 +942,8 @@ function BlockCard({
       <div className="rounded-3xl p-7" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderTop: '3px solid rgba(249,115,22,0.6)' }}>
         <QuizComponent
           block={block}
-          onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)}
+          onAnswer={(isCorrect, score, selected) => onQuizAnswer(block.id, isCorrect, score, selected)}
+          previousResult={quizAnswers[block.id]}
           disabled={!!quizAnswers[block.id]}
         />
       </div>
@@ -998,6 +1005,8 @@ type Phase = 'pre' | 'active' | 'score' | 'handover' | 'competencies' | 'done' |
  * le chronomètre s'initialise avec la durée du cours.
  */
 export default function TrainingSessionPage() {
+  const { user } = useAuth();
+  const [recoveryPin, setRecoveryPin] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate       = useNavigate();
 
@@ -1010,13 +1019,22 @@ export default function TrainingSessionPage() {
   const patientQuery = usePatient(patientId);
   const programQuery = useProgram(programId);
 
+  const leaveUnavailableCourse = () => {
+    if (user && learnerSessionUrl(user.id)) setRecoveryPin(true);
+    else navigate(-1);
+  };
+  if (recoveryPin) return <PINExitModal onCancel={() => setRecoveryPin(false)} onSuccess={() => {
+    unlockLearnerSession();
+    navigate('/patients');
+  }} />;
+
   const failed = !moduleId || (!isPreview && !patientId) || moduleQuery.isError || patientQuery.isError;
   if (failed) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
+      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
         <AlertCircle className="w-10 h-10 text-red-400" />
         <p className="text-white/70">Impossible d'ouvrir ce cours pour ce patient.</p>
-        <button onClick={() => navigate(-1)} className="h-12 px-6 rounded-2xl bg-white/10 text-white font-semibold">Retour</button>
+        <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white/10 text-white font-semibold">Retour</button>
       </div>
     );
   }
@@ -1034,10 +1052,10 @@ export default function TrainingSessionPage() {
 
   if (module.content.length === 0) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
+      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
         <BookOpen className="w-10 h-10 text-white/40" />
         <p className="text-white/70">Ce cours n'a pas encore de contenu.</p>
-        <button onClick={() => navigate(-1)} className="h-12 px-6 rounded-2xl bg-white/10 text-white font-semibold">Retour</button>
+        <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white/10 text-white font-semibold">Retour</button>
       </div>
     );
   }
@@ -1052,6 +1070,7 @@ export default function TrainingSessionPage() {
       key={module.id}
       module={{
         id: module.id,
+        code: module.code,
         title: module.title,
         estimatedDuration: module.estimatedDuration,
         pages: module.content,
@@ -1080,10 +1099,20 @@ function SessionRunner({
   const navigate       = useNavigate();
   const patientName    = patient ? `${patient.firstName} ${patient.lastName}` : '';
 
+  const location = useLocation();
+  const { user } = useAuth();
+  const allowExit = useRef(false);
+  const contentRef = useRef<HTMLElement>(null);
+  const startRequested = useRef(false);
+  const [restoredExit, setRestoredExit] = useState(location.state?.requestSessionExit === true);
+  const blocker = useBlocker(() => !isPreview && !allowExit.current);
+  useLayoutEffect(() => {
+    if (!isPreview && user) lockLearnerSession(user.id, location.pathname + location.search);
+  }, [isPreview, user, location.pathname, location.search]);
   const skipPre = searchParams.get('skipPre') === '1';
   const [phase,        setPhase]        = useState<Phase>((skipPre || isPreview) ? 'active' : 'pre');
   const [pageIndex,    setPageIndex]    = useState(0);
-  const [quizAnswers,  setQuizAnswers]  = useState<Record<string, { isCorrect: boolean; score: number }>>({});
+  const [quizAnswers,  setQuizAnswers]  = useState<Record<string, { isCorrect: boolean; score: number; selected?: string[] }>>({});
   const [slideClass,   setSlideClass]   = useState('slide-in-right');
   const [animating,    setAnimating]    = useState(false);
   const [paused,       setPaused]       = useState(false);
@@ -1099,7 +1128,8 @@ function SessionRunner({
 
   // Le cours est « commencé » dès son lancement : la séance est créée côté serveur, le chronomètre démarre
   useEffect(() => {
-    if (isPreview || phase !== 'active' || sessionId || startSession.isPending || apiError || !patient || !programId) return;
+    if (isPreview || phase !== 'active' || sessionId || startRequested.current || startSession.isPending || apiError || !patient || !programId) return;
+    startRequested.current = true;
     startSession
       .mutateAsync({ patient: `/api/patients/${patient.id}`, module: `/api/modules/${module.id}`, program: `/api/training_programs/${programId}` })
       .then((session) => setSessionId(session.id))
@@ -1111,14 +1141,14 @@ function SessionRunner({
   const progress    = Math.round(((pageIndex + 1) / totalPages) * 100);
 
   // Le chronomètre ne tourne que pendant le cours côté patient (arrêté à la remise de la tablette à l'IDE)
-  const { elapsed, mm, ss } = useStopwatch(!isPreview && phase === 'active' && !!sessionId && !paused);
+  const { elapsed, mm, ss } = useStopwatch(module.code !== 'PT' && !isPreview && phase === 'active' && !!sessionId && !paused && blocker.state !== 'blocked' && !restoredExit);
 
   const interactiveTypes = ['quiz', 'reorder', 'fill-blank', 'true-false', 'memory', 'scenario', 'sort-bin', 'yes-no-path', 'tap-sequence', 'categorize'];
   const interactiveBlocks = isPreview ? [] : currentPage.blocks.filter((b) => interactiveTypes.includes(b.type));
   const allQuizAnswered = isPreview || interactiveBlocks.length === 0 || interactiveBlocks.every((b) => quizAnswers[b.id] !== undefined);
 
-  const handleQuizAnswer = (id: string, isCorrect: boolean, score: number) =>
-    setQuizAnswers((p) => ({ ...p, [id]: { isCorrect, score } }));
+  const handleQuizAnswer = (id: string, isCorrect: boolean, score: number, selected?: string[]) =>
+    setQuizAnswers((p) => ({ ...p, [id]: { isCorrect, score, selected } }));
 
   const navigatePage = useCallback((dir: 'next' | 'prev') => {
     if (animating || (paused && !isPreview)) return;
@@ -1132,7 +1162,7 @@ function SessionRunner({
       setPageIndex((i) => dir === 'next' ? i + 1 : i - 1);
       setSlideClass(dir === 'next' ? 'slide-in-right' : 'slide-in-left');
       setTimeout(() => setAnimating(false), 320);
-      window.scrollTo({ top: 0 });
+      contentRef.current?.scrollTo({ top: 0, behavior: 'instant' });
     }, 270);
   }, [animating, paused, allQuizAnswered, pageIndex, totalPages, isPreview]);
 
@@ -1141,11 +1171,16 @@ function SessionRunner({
     () => navigatePage('prev'),
   );
 
-  const backToPatient = () => { exitFullscreen(); navigate(patient ? `/patients/${patient.id}` : '/patients'); };
+  const backToPatient = () => {
+    allowExit.current = true;
+    unlockLearnerSession();
+    exitFullscreen();
+    navigate(patient ? `/patients/${patient.id}` : '/patients');
+  };
 
   // Sortie anticipée : la séance n'est pas validée, rien n'est comptabilisé
   const handlePINSuccess = async () => {
-    if (sessionId) await interruptSession.mutateAsync(sessionId).catch(() => {});
+    if (sessionId && !result) await interruptSession.mutateAsync(sessionId);
     backToPatient();
   };
 
@@ -1168,8 +1203,17 @@ function SessionRunner({
 
   const handleNextModule = () => {
     if (!nextModule || !patient || !programId) return;
+    allowExit.current = true;
+    unlockLearnerSession();
     navigate(`/sessions/run?patientId=${patient.id}&moduleId=${nextModule.id}&programId=${programId}&skipPre=1`);
   };
+
+  if (blocker.state === 'blocked' || restoredExit) {
+    return <PINExitModal
+      onSuccess={handlePINSuccess}
+      onCancel={() => { if (blocker.state === 'blocked') blocker.reset(); setRestoredExit(false); }}
+    />;
+  }
 
   /* ── Pre-session ──────────────────────────────────────────────────── */
   if (phase === 'pre') {
@@ -1192,7 +1236,7 @@ function SessionRunner({
   if (phase === 'done') {
     if (isPreview) {
       return (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
+        <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
           <div className="w-16 h-16 rounded-3xl bg-emerald-500/20 flex items-center justify-center">
             <CheckCircle2 className="w-8 h-8 text-emerald-400" />
           </div>
@@ -1278,7 +1322,7 @@ function SessionRunner({
   // Séance en cours de création (ou refusée par le serveur)
   if (!isPreview && !sessionId) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
+      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
         {apiError ? (
           <>
             <AlertCircle className="w-10 h-10 text-red-400" />
@@ -1297,50 +1341,40 @@ function SessionRunner({
 
       {/* ── Header ───────────────────────────────────────────────── */}
       <header className="flex-shrink-0" style={{ background: 'rgba(0,38,31,0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="flex items-center gap-3 px-4 pt-4 pb-3">
-          <button
-            onClick={() => { if (!paused) toggle(); }}
-            className="w-11 h-11 rounded-2xl flex items-center justify-center text-white/50 hover:bg-white/10 active:bg-white/15 transition-colors touch-manipulation flex-shrink-0"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
-          <div className="flex-1 min-w-0">
-            <p className="font-bold text-white text-base truncate leading-tight">{module.title}</p>
-            <p className="text-sm text-white/40 truncate">
-              {isPreview ? 'Mode prévisualisation' : patientName}
-            </p>
+        <div className="flex flex-wrap items-end gap-x-6 gap-y-3 px-5 py-4">
+          <div className="min-w-0 flex-1 basis-72">
+            <CoursePageHeading title={currentPage.title} instruction={currentPage.instruction} showCounter={false} pageNumber={pageIndex + 1} totalPages={totalPages} />
           </div>
-
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0 self-end">
             {isPreview ? (
               <button
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2 h-11 px-4 rounded-2xl bg-white/10 text-white/60 hover:bg-white/15 transition-all touch-manipulation"
               >
-                <X className="w-5 h-5" />
-                <span className="hidden sm:inline text-sm font-semibold">Quitter</span>
+                <span className="text-sm font-medium">Fermer l’aperçu</span>
               </button>
             ) : (
               <>
-                <div
+                {module.code !== 'PT' && <div
                   className={cn('flex items-center gap-1.5 px-3.5 py-2 rounded-2xl transition-all', overEstimate ? 'bg-amber-500/20' : 'bg-white/10')}
                   title={`Durée indicative : ${module.estimatedDuration} min`}
                 >
                   <Clock className={cn('w-4 h-4', overEstimate ? 'text-amber-300' : 'text-white/80')} />
-                  <span className={cn('font-black text-lg font-mono leading-none tabular-nums', overEstimate ? 'text-amber-300' : 'text-white/80')}>{mm}:{ss}</span>
-                </div>
+                  <span className={cn('font-medium text-base font-sans leading-none tabular-nums', overEstimate ? 'text-amber-300' : 'text-white/80')}>{mm}:{ss}</span>
+                </div>}
                 <button
                   onClick={toggle}
                   className={cn(
-                    'w-11 h-11 rounded-2xl flex items-center justify-center transition-all touch-manipulation',
+                    'h-11 px-3 rounded-xl flex items-center justify-center gap-2 text-sm font-medium transition-all touch-manipulation',
                     paused ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30' : 'bg-white/10 text-white/60 hover:bg-white/15'
                   )}
                 >
-                  {paused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
+                  {paused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+                  <span>{paused ? 'Reprendre' : 'Pause'}</span>
                 </button>
               </>
             )}
+            <CoursePageCounter pageNumber={pageIndex + 1} totalPages={totalPages} />
           </div>
         </div>
 
@@ -1353,7 +1387,7 @@ function SessionRunner({
         </div>
 
         {/* Page dots */}
-        <div className="flex items-center justify-center gap-2 py-2.5">
+        <div className="flex flex-wrap items-center justify-center gap-2 px-4 py-2.5">
           {module.pages.map((_, i) => (
             <div key={i} className={cn(
               'rounded-full transition-all duration-300',
@@ -1365,21 +1399,11 @@ function SessionRunner({
       </header>
 
       {/* ── Content ──────────────────────────────────────────────── */}
-      <main className="flex-1 overflow-y-auto overflow-x-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <div key={pageIndex} className={cn('max-w-2xl mx-auto px-5 py-8', slideClass)}>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-orange-500/20">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-orange-400 uppercase tracking-widest">Partie {pageIndex + 1}</p>
-              <h1 className="text-2xl font-black text-white leading-tight">{currentPage.title}</h1>
-            </div>
-          </div>
-
+      <main ref={contentRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div className={cn('max-w-2xl mx-auto px-5 py-8', slideClass)}>
           <div className="space-y-5 pb-36">
-            {currentPage.blocks.map((block: ContentBlock, i: number) => (
-              <div key={block.id} className="fade-scale-in" style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }}>
+            {currentPage.blocks.map((block) => (
+              <div key={`${currentPage.id}:${block.id}`}>
                 <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} />
               </div>
             ))}
@@ -1399,6 +1423,7 @@ function SessionRunner({
       <footer className="flex-shrink-0" style={{ background: 'rgba(0,38,31,0.95)', backdropFilter: 'blur(12px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="max-w-2xl mx-auto px-5 py-4 flex items-center gap-3">
           <button
+            aria-label="Page précédente"
             onClick={() => navigatePage('prev')}
             disabled={pageIndex === 0 || animating || (!isPreview && paused)}
             className="flex items-center gap-2 h-14 px-5 rounded-2xl border border-white/10 font-semibold text-white/50 hover:bg-white/5 active:bg-white/10 disabled:opacity-30 transition-all touch-manipulation flex-shrink-0"

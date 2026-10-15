@@ -35,7 +35,7 @@ const query = (params: Record<string, string | undefined>) => {
 export function useCenters() {
   return useQuery({
     queryKey: ['centers'],
-    queryFn: () => api<Collection<Center>>('/centers?itemsPerPage=100'),
+    queryFn: () => allPages<Center>('/centers'),
   });
 }
 
@@ -120,7 +120,7 @@ export function useStatistics(centerIds: string[], enabled = true) {
 export function useUsers(enabled = true) {
   return useQuery({
     queryKey: ['users'],
-    queryFn: () => api<Collection<UserAccount>>('/users?itemsPerPage=100'),
+    queryFn: () => allPages<UserAccount>('/users'),
     enabled,
   });
 }
@@ -158,7 +158,7 @@ export interface EligibilityInput {
 export function useUpdatePatient(id: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (input: Partial<PatientInput> | EligibilityInput) => api<Patient>(`/patients/${id}`, { method: 'PATCH', body: input }),
+    mutationFn: (input: Partial<PatientInput> | EligibilityInput | Pick<Patient, 'medicalData' | 'administrativeData'>) => api<Patient>(`/patients/${id}`, { method: 'PATCH', body: input }),
     onSuccess: (patient) => {
       client.setQueryData(['patient', id], patient);
       client.invalidateQueries({ queryKey: ['patients'] });
@@ -304,7 +304,7 @@ export function useCodexTests(patientIri: string | undefined) {
   });
 }
 
-/** 3 mots tirés au sort : tirage figé pendant tout le test */
+/** Liste principale fixe du protocole CODEX */
 export function useCodexDraw() {
   return useQuery({
     queryKey: ['codex-draw'],
@@ -318,9 +318,11 @@ export function useCodexDraw() {
 export function useCreateCodexTest() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (input: { patient: string; words: string[]; clockTime: string; clockTestPassed: boolean; wordRecallPassed: boolean }) =>
+    mutationFn: (input: { patient: string; words: string[]; clockTime: string; clockTestPassed: boolean; wordRecallPassed: boolean; clockChecks: boolean[]; orientationAnswers: number[] | null }) =>
       api<CodexTestResult>('/codex_tests', { method: 'POST', body: input }),
-    onSuccess: (test) => client.invalidateQueries({ queryKey: ['codex', test.patient] }),
+    onSuccess: async (test) => {
+      await Promise.all([client.invalidateQueries({ queryKey: ['codex', test.patient] }), client.invalidateQueries({ queryKey: ['patients'] }), client.invalidateQueries({ queryKey: ['patient'] }), client.invalidateQueries({ queryKey: ['eligibility-reasons'] })]);
+    },
   });
 }
 
@@ -347,6 +349,7 @@ export function useImportModuleContent() {
     onSuccess: (content) => {
       client.invalidateQueries({ queryKey: ['modules'] });
       client.invalidateQueries({ queryKey: ['module'] });
+      client.invalidateQueries({ queryKey: ['content-editor'] });
       return content;
     },
   });
@@ -361,4 +364,38 @@ export function useDashboard() {
     // Les séances en cours bougent : rafraîchissement régulier
     refetchInterval: 60_000,
   });
+}
+
+export function useUpdateUser() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: UserInput }) => {
+      const { plainPassword, ...fields } = input;
+      return api<UserAccount>(`/users/${id}`, { method: 'PATCH', body: plainPassword ? input : fields });
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ['users'] }),
+  });
+}
+
+// Follow every page so local search and pagination include entries beyond the first 100.
+async function allPages<T>(path: string): Promise<Collection<T>> {
+  const first = await api<Collection<T>>(`${path}?itemsPerPage=100&page=1`);
+  const member = [...first.member];
+  let page = 2;
+  while (member.length < first.totalItems) {
+    const next = await api<Collection<T>>(`${path}?itemsPerPage=100&page=${page++}`);
+    if (!next.member.length) break;
+    member.push(...next.member);
+  }
+  return { ...first, member };
+}
+export function useCenter(id: string) {
+  return useQuery({ queryKey: ['centers', id], queryFn: () => api<Center>(`/centers/${id}`), enabled: !!id });
+}
+export function useUpdateCenter() {
+  const client = useQueryClient();
+  return useMutation({ mutationFn: ({ id, ...input }: { id: string; name: string; city: string }) => api<Center>(`/centers/${id}`, { method: 'PATCH', body: input }), onSuccess: () => client.invalidateQueries({ queryKey: ['centers'] }) });
+}
+export function useCenterPatients(center: string, search: string, page: number) {
+  return useQuery({ queryKey: ['patients', 'center', center, search, page], queryFn: () => api<Collection<Patient>>(`/patients${query({ center, search: search || undefined, page: String(page), itemsPerPage: '20' })}`), enabled: !!center });
 }

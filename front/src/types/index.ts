@@ -52,6 +52,8 @@ export interface QuizBlock {
   questionType: QuestionType;
   /** false = question de réflexion sans score ni correction (ex. « Avez-vous désigné quelqu'un ? ») */
   graded?: boolean;
+  /** Defaults to graded for older courses. Independent from score participation. */
+  showCorrection?: boolean;
   question: string;
   options?: QuizOption[];
   pairs?: DragDropPair[];
@@ -379,5 +381,6 @@ export interface HotspotBlock {
 export interface ModulePage {
   id: string;
   title: string;
+  instruction?: string;
   blocks: ContentBlock[];
 }
