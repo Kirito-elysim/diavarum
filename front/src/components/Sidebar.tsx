@@ -6,7 +6,9 @@ import {
   LayoutDashboard,
   Users,
   BarChart2,
-  Settings,
+  CircleUserRound,
+  ScrollText,
+  ShieldCheck,
   Activity,
   UserCog,
   Building2,
@@ -40,7 +42,7 @@ const navItems: NavItem[] = [
   { to: '/sessions', icon: Activity, label: 'Séances' },
   { to: '/courses', icon: Library, label: 'Bibliothèque' },
   { to: '/results', icon: BarChart2, label: 'Résultats' },
-  { to: '/settings', icon: Settings, label: 'Paramètres' },
+  { to: '/account', icon: CircleUserRound, label: 'Mon compte' },
 ];
 
 function NavEntry({ to, icon: Icon, label, onNavigate }: NavItem & { onNavigate?: () => void }) {
@@ -71,8 +73,13 @@ export default function Sidebar({ onNavigate, drawer = false }: { onNavigate?: (
   const navigate = useNavigate();
 
   const adminItems: NavItem[] = [
-    ...(isCadre ? [{ to: '/admin/accounts', icon: UserCog, label: 'Comptes' }] : []),
-    ...(isAdmin ? [{ to: '/admin/centers', icon: Building2, label: 'Centres' }, { to: '/modules', icon: GraduationCap, label: 'Contenus des séances' }] : []),
+    ...(isCadre ? [{ to: '/admin/users', icon: UserCog, label: 'Utilisateurs' }] : []),
+    ...(isAdmin ? [
+      { to: '/admin/centers', icon: Building2, label: 'Centres' },
+      { to: '/modules', icon: GraduationCap, label: 'Contenus des séances' },
+      { to: '/admin/security', icon: ShieldCheck, label: 'Code national' },
+      { to: '/admin/access-logs', icon: ScrollText, label: 'Journal des accès' },
+    ] : []),
   ];
 
   // Quitter d'abord les pages protégées : sinon la page en cours serait mémorisée comme destination
@@ -93,7 +100,7 @@ export default function Sidebar({ onNavigate, drawer = false }: { onNavigate?: (
         </div>
         <div>
           <span className="font-bold text-diaverum-green text-base leading-tight block">Diaverum</span>
-          <span className="text-xs text-orange-500 font-medium">Programme d'entraînement</span>
+          <span className="text-xs text-orange-500 font-medium">Parcours d'entraînement</span>
         </div>
       </div>
 
@@ -136,6 +143,10 @@ export default function Sidebar({ onNavigate, drawer = false }: { onNavigate?: (
               <p className="text-xs text-gray-400">{centersLabel}</p>
             </div>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => { navigate('/account'); onNavigate?.(); }} className="cursor-pointer">
+              <CircleUserRound className="w-4 h-4 mr-2" />
+              Mon compte
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600 cursor-pointer">
               <LogOut className="w-4 h-4 mr-2" />
               Se déconnecter

@@ -22,7 +22,7 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 /**
  * Bilans et statistiques (cahier des charges §3), en Excel et en PDF.
  *   IDE   : bilans des patients de ses centres
- *   Cadre : + synthèses statistiques de ses centres (patients, programmes, séances, IDE)
+ *   Cadre : + synthèses statistiques de ses centres (patients, parcours, séances, IDE)
  *   Admin : + synthèse nationale
  */
 #[IsGranted('ROLE_IDE')]

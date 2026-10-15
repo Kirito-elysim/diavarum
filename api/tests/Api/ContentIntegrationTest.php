@@ -45,7 +45,6 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         $this->put('S2', $this->payload());
         self::assertResponseIsSuccessful();
 
-        $this->client->request('GET', '/api/content/modules/S2', ['headers' => ['X-Content-Token' => self::TOKEN]]);
         $module = $this->client->getResponse()->toArray();
         self::assertSame(35, $module['estimatedDuration']);
         self::assertCount(2, $module['competencies']);
@@ -140,7 +139,7 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         self::assertResponseIsSuccessful();
     }
 
-    public function testCompetencyAlreadyAssessedCannotBeRemoved(): void
+    public function testRemovedCompetencyIsArchivedAndKeepsItsAssessments(): void
     {
         $this->put('S2', $this->payload());
         $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S2']);
@@ -159,9 +158,20 @@ final class ContentIntegrationTest extends ApiTestCaseBase
             $this->em()->persist($entity);
         }
         $this->em()->flush();
+        $competencyId = $competency->getId();
 
         $this->put('S2', $this->payload(['competencies' => ['Le patient se lave les mains avant la séance']]));
+        self::assertResponseIsSuccessful();
 
-        self::assertResponseStatusCodeSame(422);
+        $this->em()->clear();
+        $archived = $this->em()->find(ModuleCompetency::class, $competencyId);
+        self::assertNotNull($archived, 'La compétence retirée reste en base');
+        self::assertTrue($archived->isArchived());
+        self::assertSame(1, $this->em()->getRepository(SessionCompetencyValidation::class)->count(['competency' => $archived]));
+
+        $admin = $this->createUser(UserRole::AdminNational);
+        $module = $this->requestAs($admin, 'GET', '/api/modules/'.$module->getId())->toArray();
+        self::assertCount(1, $module['competencies']);
+        self::assertTrue(array_is_list($module['competencies']));
     }
 }

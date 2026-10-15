@@ -10,7 +10,7 @@ use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
 
 /**
- * Renseigne l'auteur (IDE connectée) des patients, programmes, séances… à leur création.
+ * Renseigne l'auteur (IDE connectée) des patients, parcours, séances… à leur création.
  */
 #[AsDoctrineListener(event: Events::prePersist)]
 final class AuthorListener

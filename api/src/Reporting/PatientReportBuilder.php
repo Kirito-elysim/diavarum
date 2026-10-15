@@ -10,7 +10,7 @@ use App\Enum\SessionStatus;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Bilan d'un patient (cahier des charges §3) : statut du programme, puis pour chaque séance du parcours
+ * Bilan d'un patient (cahier des charges §3) : statut du parcours, puis pour chaque séance du parcours
  * son statut, et pour chaque séance validée : score, durée, date et heure, compétences validées.
  */
 final class PatientReportBuilder
@@ -55,7 +55,7 @@ final class PatientReportBuilder
     }
 
     /**
-     * @param array<string, TrainingSession> $validatedSessions dernière séance validée, par programme + cours
+     * @param array<string, TrainingSession> $validatedSessions dernière séance validée, par parcours + cours
      *
      * @return array<string, mixed>
      */

@@ -86,7 +86,7 @@ export default function CodexTestPage() {
         <ResultLine label="Horloge (5h10)" passed={result.clockTestPassed} />
         <ResultLine label="Rappel des 3 mots" passed={result.wordRecallPassed} />
         {result.orientationScore != null && <p>Orientation : {result.orientationScore}/5</p>}
-        {result.nephrologistReviewRequired && <p role="alert" className="rounded-xl bg-red-50 p-4 text-red-800">Le patient n’est pas éligible au programme d’entraînement. L’IDE doit transmettre le résultat au néphrologue.</p>}
+        {result.nephrologistReviewRequired && <p role="alert" className="rounded-xl bg-red-50 p-4 text-red-800">Le patient n’est pas éligible au parcours d’entraînement. L’IDE doit transmettre le résultat au néphrologue.</p>}
         <PrimaryButton onClick={back}>Retour à la fiche patient</PrimaryButton>
       </>}
     </div>

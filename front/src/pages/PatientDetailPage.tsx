@@ -116,14 +116,14 @@ export default function PatientDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className={eligibilityBadge[patient.eligibilityStatus]}>{ELIGIBILITY_LABELS[patient.eligibilityStatus]}</Badge>
-                  {program && <Badge variant="secondary" className={programBadge[program.status]}>Programme {PROGRAM_STATUS_LABELS[program.status].toLowerCase()}</Badge>}
+                  {program && <Badge variant="secondary" className={programBadge[program.status]}>Parcours {PROGRAM_STATUS_LABELS[program.status].toLowerCase()}</Badge>}
                 </div>
               </div>
               {program && (
                 <div className="pt-2">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-sm font-medium text-gray-700">
-                      Progression du programme
+                      Progression du parcours
                       {program.averageScore != null && <span className="text-gray-400 font-normal"> · score moyen {program.averageScore}%</span>}
                       {program.totalDurationSeconds > 0 && <span className="text-gray-400 font-normal"> · {formatDuration(program.totalDurationSeconds)} au total</span>}
                     </span>
@@ -326,7 +326,7 @@ function CourseStatusBadge({ item }: { item: ProgramModule }) {
   return null;
 }
 
-/** Actions sur le programme : clôture justifiée, validation par un cadre, reprise d'un programme interrompu */
+/** Actions sur le parcours : clôture justifiée, validation par un cadre, reprise d'un parcours interrompu */
 function ProgramActions({ program }: { program: TrainingProgram }) {
   const { isCadre } = useAuth();
   const action = useProgramAction();
@@ -349,7 +349,7 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
       <div className="flex items-start gap-3 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-sm">
         <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
         <p>
-          <strong>Programme achevé</strong>
+          <strong>Parcours achevé</strong>
           {program.validatedBy && <> — validé par {program.validatedBy.firstName} {program.validatedBy.lastName}</>} le {formatDate(program.completedAt)}.
           Il n'est plus modifiable.
         </p>
@@ -362,10 +362,10 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
       <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm">
         <CirclePause className="w-5 h-5 flex-shrink-0 mt-0.5" />
         <div className="flex-1">
-          <p><strong>Programme interrompu</strong> le {formatDate(program.interruptedAt)} : {program.interruptionReasons.map(reasonLabel).filter(Boolean).join(', ')}.</p>
+          <p><strong>Parcours interrompu</strong> le {formatDate(program.interruptedAt)} : {program.interruptionReasons.map(reasonLabel).filter(Boolean).join(', ')}.</p>
           {program.interruptionNotes && <p className="mt-1 italic">« {program.interruptionNotes} »</p>}
         </div>
-        <Button size="sm" variant="outline" className="gap-1.5 bg-white" disabled={action.isPending} onClick={() => run('resume', {}, 'Programme repris')}>
+        <Button size="sm" variant="outline" className="gap-1.5 bg-white" disabled={action.isPending} onClick={() => run('resume', {}, 'Parcours repris')}>
           <RotateCcw className="w-4 h-4" />Reprendre
         </Button>
       </div>
@@ -376,24 +376,24 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
     <div className="flex flex-wrap items-center justify-end gap-2">
       {isCadre && program.status === 'actif' && (
         <Button size="sm" className="gap-1.5 bg-green-600 hover:bg-green-700 text-white" disabled={program.validatedCount === 0} onClick={() => setConfirmComplete(true)}>
-          <CheckCircle2 className="w-4 h-4" />Valider le programme
+          <CheckCircle2 className="w-4 h-4" />Valider le parcours
         </Button>
       )}
       <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setInterrupting(true)}>
-        <CirclePause className="w-4 h-4" />Clôturer le programme
+        <CirclePause className="w-4 h-4" />Clôturer le parcours
       </Button>
 
       <AlertDialog open={confirmComplete} onOpenChange={setConfirmComplete}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Valider le programme d'entraînement ?</AlertDialogTitle>
+            <AlertDialogTitle>Valider le parcours d'entraînement ?</AlertDialogTitle>
             <AlertDialogDescription>
-              {program.validatedCount}/{program.selectedCount} séances validées. Le programme passera « achevé » et ne sera plus modifiable.
+              {program.validatedCount}/{program.selectedCount} séances validées. Le parcours passera « achevé » et ne sera plus modifiable.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction className="bg-green-600 hover:bg-green-700" onClick={() => run('complete', {}, 'Programme validé')}>Valider</AlertDialogAction>
+            <AlertDialogAction className="bg-green-600 hover:bg-green-700" onClick={() => run('complete', {}, 'Parcours validé')}>Valider</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -401,8 +401,8 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
       <Dialog open={interrupting} onOpenChange={setInterrupting}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Clôturer le programme</DialogTitle>
-            <DialogDescription>Le programme sera interrompu avant son terme. Indiquez au moins un motif.</DialogDescription>
+            <DialogTitle>Clôturer le parcours</DialogTitle>
+            <DialogDescription>Le parcours sera interrompu avant son terme. Indiquez au moins un motif.</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
             {reasons?.member.filter((r) => r.active).map((reason) => (
@@ -425,7 +425,7 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
             <Button
               className="bg-amber-600 hover:bg-amber-700 text-white"
               disabled={checked.length === 0 || action.isPending}
-              onClick={() => run('interrupt', { reasons: checked, notes: notes || null }, 'Programme interrompu').then(() => setInterrupting(false))}
+              onClick={() => run('interrupt', { reasons: checked, notes: notes || null }, 'Parcours interrompu').then(() => setInterrupting(false))}
             >
               Clôturer
             </Button>
@@ -597,7 +597,7 @@ function EligibilitySection({ patient }: { patient: Patient }) {
   return (
     <Card className="border-0 shadow-sm ring-1 ring-gray-100">
       <CardHeader>
-        <CardTitle className="text-base">Éligibilité au programme d'entraînement</CardTitle>
+        <CardTitle className="text-base">Éligibilité au parcours d'entraînement</CardTitle>
         <p className="text-sm text-gray-500">À statuer après le questionnaire profil et le test CODEX.</p>
       </CardHeader>
       <CardContent className="space-y-5">

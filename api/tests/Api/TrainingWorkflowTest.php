@@ -13,7 +13,7 @@ use App\Enum\EligibilityStatus;
 use App\Enum\UserRole;
 
 /**
- * Déroulement d'une séance et d'un programme (cahier des charges §2 à §4).
+ * Déroulement d'une séance et d'un parcours (cahier des charges §2 à §4).
  */
 final class TrainingWorkflowTest extends ApiTestCaseBase
 {
@@ -244,14 +244,14 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
 
         $selection = $this->tracking()['module'];
         $this->requestAs($this->ide, 'PATCH', '/api/program_modules/'.$selection['id'], ['selected' => false]);
-        self::assertResponseStatusCodeSame(422, 'Programme achevé non modifiable');
+        self::assertResponseStatusCodeSame(422, 'Parcours achevé non modifiable');
 
         $this->requestAs($this->ide, 'POST', '/api/sessions', [
             'patient' => $this->iri($this->patient),
             'module' => $this->iri($this->module),
             'program' => $programPath,
         ]);
-        self::assertResponseStatusCodeSame(422, 'Plus de séance sur un programme achevé');
+        self::assertResponseStatusCodeSame(422, 'Plus de séance sur un parcours achevé');
     }
 
     public function testProgramInterruptionRequiresAReasonAndCanBeResumed(): void
@@ -271,7 +271,7 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
             'module' => $this->iri($this->module),
             'program' => $programPath,
         ]);
-        self::assertResponseStatusCodeSame(422, 'Pas de séance sur un programme interrompu');
+        self::assertResponseStatusCodeSame(422, 'Pas de séance sur un parcours interrompu');
 
         $this->requestAs($this->ide, 'POST', "$programPath/resume");
         self::assertResponseIsSuccessful();

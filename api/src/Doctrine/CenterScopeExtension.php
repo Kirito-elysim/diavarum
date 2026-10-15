@@ -22,7 +22,8 @@ use Symfony\Bundle\SecurityBundle\Security;
  * (listes et éléments) : une IDE ou un cadre ne voit que ce qui relève de ses centres,
  * un administrateur national voit tout. Hors périmètre, un élément répond 404.
  *
- * Les éléments archivés (patients sortis de la file active, comptes et centres supprimés)
+ * Les éléments archivés (patients sortis de la file active, comptes, centres, cours, thématiques
+ * et compétences supprimés)
  * sont masqués des listes mais restent consultables individuellement (historique).
  */
 final class CenterScopeExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
@@ -41,6 +42,9 @@ final class CenterScopeExtension implements QueryCollectionExtensionInterface, Q
         Patient::class => 'removedAt',
         User::class => 'archivedAt',
         Center::class => 'archivedAt',
+        \App\Entity\Module::class => 'archivedAt',
+        \App\Entity\Chapter::class => 'archivedAt',
+        \App\Entity\ModuleCompetency::class => 'archivedAt',
     ];
 
     public function __construct(private readonly Security $security)
@@ -52,9 +56,33 @@ final class CenterScopeExtension implements QueryCollectionExtensionInterface, Q
         $this->restrictToUserCenters($queryBuilder, $queryNameGenerator, $resourceClass);
 
         if (isset(self::ARCHIVE_FIELDS[$resourceClass])) {
-            $alias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(\sprintf('%s.%s IS NULL', $alias, self::ARCHIVE_FIELDS[$resourceClass]));
+            $condition = match ($this->archiveStatus($resourceClass, $context)) {
+                'all' => null,
+                'archived' => 'IS NOT NULL',
+                default => 'IS NULL',
+            };
+            if (null !== $condition) {
+                $alias = $queryBuilder->getRootAliases()[0];
+                $queryBuilder->andWhere(\sprintf('%s.%s %s', $alias, self::ARCHIVE_FIELDS[$resourceClass], $condition));
+            }
         }
+    }
+
+    /**
+     * Comptes désactivés et centres archivés : listables sur demande (?status=archived|all)
+     * par ceux qui peuvent les réactiver — cadre et administrateur pour les comptes,
+     * administrateur pour les centres. Partout ailleurs, seuls les éléments actifs sont listés.
+     */
+    private function archiveStatus(string $resourceClass, array $context): string
+    {
+        $status = $context['filters']['status'] ?? 'active';
+        $allowed = match ($resourceClass) {
+            User::class => $this->security->isGranted('ROLE_CADRE'),
+            Center::class => $this->security->isGranted('ROLE_ADMIN_NATIONAL'),
+            default => false,
+        };
+
+        return $allowed && \in_array($status, ['archived', 'all'], true) ? $status : 'active';
     }
 
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, ?Operation $operation = null, array $context = []): void

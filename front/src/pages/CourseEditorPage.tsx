@@ -100,7 +100,7 @@ function Editor({ initial }: { initial: ModuleContent }) {
           <Toggle label="Cours publié et accessible aux IDE" checked={course.published} onChange={published => change({ ...course, published })} />
           <h2 className="pt-3 font-semibold">Compétences évaluées par l’IDE</h2>
           {course.competencies.map((label, index) => <div key={index} className="flex items-end gap-2"><div className="flex-1"><Field label={`Compétence ${index + 1}`} value={label} onChange={value => change({ ...course, competencies: course.competencies.map((c, i) => i === index ? value : c) })} /></div><Button variant="ghost" onClick={() => change({ ...course, competencies: course.competencies.filter((_, i) => i !== index) })}>Retirer</Button></div>)}
-          <Button variant="outline" disabled={course.competencies.length >= 5} onClick={() => change({ ...course, competencies: [...course.competencies, ''] })}>Ajouter une compétence</Button><p className="text-xs text-gray-500">5 compétences maximum. Une compétence déjà évaluée ne peut pas être supprimée.</p>
+          <Button variant="outline" disabled={course.competencies.length >= 5} onClick={() => change({ ...course, competencies: [...course.competencies, ''] })}>Ajouter une compétence</Button><p className="text-xs text-gray-500">5 compétences maximum. Une compétence retirée est archivée : les évaluations déjà faites sont conservées.</p>
         </div>
       </details>
       <div className="grid gap-6 xl:grid-cols-[260px_minmax(0,1fr)]">

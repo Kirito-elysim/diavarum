@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Motif (à cocher) justifiant qu'un patient est déclaré non éligible au programme.
+ * Motif (à cocher) justifiant qu'un patient est déclaré non éligible au parcours.
  * Pas de suppression (des patients y font référence) : désactiver avec « active: false ».
  */
 #[ORM\Entity]

@@ -53,7 +53,7 @@ export default function LoginPage() {
             <Activity className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-diaverum-green tracking-tight">Diaverum</h1>
-          <p className="text-gray-500 mt-1">Programme d'entraînement des patients</p>
+          <p className="text-gray-500 mt-1">Parcours d'entraînement des patients</p>
         </div>
 
         <Card className="shadow-xl border-0 ring-1 ring-gray-100">

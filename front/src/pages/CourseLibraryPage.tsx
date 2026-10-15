@@ -57,7 +57,7 @@ export default function CourseLibraryPage() {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Bibliothèque de cours</h1>
             <p className="text-sm text-gray-500">
-              Prévisualisez les cours du programme (mode démo : aucune séance n'est enregistrée)
+              Prévisualisez les cours du parcours (mode démo : aucune séance n'est enregistrée)
             </p>
           </div>
         </div>

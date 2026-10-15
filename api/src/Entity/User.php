@@ -47,6 +47,10 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             parameters: [
                 'search' => new QueryParameter(filter: new PartialSearchFilter(), property: 'lastName'),
                 'role' => new QueryParameter(filter: new ExactFilter(), property: 'role'),
+                'status' => new QueryParameter(
+                schema: ['type' => 'string', 'enum' => ['active', 'archived', 'all']],
+                description: 'active (défaut), archived ou all — appliqué par CenterScopeExtension',
+            ),
             ],
         ),
         new Get(security: "is_granted('USER_VIEW', object)"),
@@ -122,7 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Archiva
     private ?\DateTimeImmutable $lastLoginAt = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'me:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE)]
@@ -311,6 +315,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Archiva
         return null !== $this->securityCodeHash;
     }
 
+    #[Groups(['me:read'])]
     public function getSecurityCodeUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->securityCodeUpdatedAt;
@@ -344,6 +349,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Archiva
     public function archive(): void
     {
         $this->archivedAt ??= new \DateTimeImmutable();
+    }
+
+    public function restore(): void
+    {
+        $this->archivedAt = null;
     }
 
     public function isArchived(): bool

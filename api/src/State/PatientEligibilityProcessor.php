@@ -25,7 +25,7 @@ final class PatientEligibilityProcessor implements ProcessorInterface
     {
         $latest = $this->entityManager->getRepository(CodexTest::class)->findOneBy(['patient' => $data], ['createdAt' => 'DESC']);
         if ($latest?->isNephrologistReviewRequired() && EligibilityStatus::NotEligible !== $data->getEligibilityStatus()) {
-            throw new WorkflowException('Le dernier CODEX est anormal : le patient n’est pas éligible au programme. Transmettez le résultat au néphrologue.');
+            throw new WorkflowException('Le dernier CODEX est anormal : le patient n’est pas éligible au parcours. Transmettez le résultat au néphrologue.');
         }
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);

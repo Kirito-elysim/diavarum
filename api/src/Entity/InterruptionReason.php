@@ -14,8 +14,8 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Motif (à cocher) justifiant la clôture anticipée d'un programme d'entraînement.
- * Pas de suppression (des programmes y font référence) : désactiver avec « active: false ».
+ * Motif (à cocher) justifiant la clôture anticipée d'un parcours d'entraînement.
+ * Pas de suppression (des parcours y font référence) : désactiver avec « active: false ».
  */
 #[ORM\Entity]
 #[ApiResource(

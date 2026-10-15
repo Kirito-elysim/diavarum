@@ -5,8 +5,10 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Center;
+use App\Entity\RefreshToken;
 use App\Entity\User;
 use App\Enum\UserRole;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -15,7 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Création / modification d'un compte :
- * - hache le mot de passe fourni ;
+ * - hache le mot de passe fourni ; sur un compte existant (réinitialisation), ferme ses sessions ;
  * - applique la hiérarchie : un cadre ne crée que des IDE, et ne les affilie
  *   (ou désaffilie) qu'à ses propres centres.
  *
@@ -31,6 +33,7 @@ final class UserProcessor implements ProcessorInterface
         private readonly ProcessorInterface $persistProcessor,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly Security $security,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -48,9 +51,26 @@ final class UserProcessor implements ProcessorInterface
         if (null !== $data->getPlainPassword()) {
             $data->setPassword($this->passwordHasher->hashPassword($data, $data->getPlainPassword()));
             $data->setPlainPassword(null);
+            if ($this->entityManager->contains($data)) {
+                $this->revokeSessions($data);
+            }
         }
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+    }
+
+    /** Jetons de rafraîchissement du compte (identifiant actuel et, s'il change, l'ancien) */
+    private function revokeSessions(User $user): void
+    {
+        $original = $this->entityManager->getUnitOfWork()->getOriginalEntityData($user);
+        $identifiers = array_unique(array_filter([$user->getUserIdentifier(), $original['email'] ?? null]));
+
+        $this->entityManager->createQueryBuilder()
+            ->delete(RefreshToken::class, 't')
+            ->where('t.username IN (:identifiers)')
+            ->setParameter('identifiers', $identifiers)
+            ->getQuery()
+            ->execute();
     }
 
     private function enforceCadreLimits(User $cadre, User $target): void

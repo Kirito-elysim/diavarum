@@ -122,7 +122,7 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
     #[Groups(['patient:read'])]
     private \DateTimeImmutable $updatedAt;
 
-    /** Sorti de la file active (≠ patient ayant achevé son programme) */
+    /** Sorti de la file active (≠ patient ayant achevé son parcours) */
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     #[Groups(['patient:read'])]
     private ?\DateTimeImmutable $removedAt = null;
@@ -314,6 +314,11 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
     public function archive(): void
     {
         $this->removedAt ??= new \DateTimeImmutable();
+    }
+
+    public function restore(): void
+    {
+        $this->removedAt = null;
     }
 
     public function isArchived(): bool

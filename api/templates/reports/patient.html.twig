@@ -1,6 +1,6 @@
 {% extends 'reports/_layout.html.twig' %}
 {% block title %}Bilan — {{ r.patient.lastName|upper }} {{ r.patient.firstName }}{% endblock %}
-{% block doc %}Bilan du programme d'entraînement{% endblock %}
+{% block doc %}Bilan du parcours d'entraînement{% endblock %}
 {% block body %}
 <h1>{{ r.patient.lastName|upper }} {{ r.patient.firstName }}</h1>
 <p class="muted">
@@ -9,11 +9,11 @@
 </p>
 
 {% if r.program is null %}
-    <p>Aucun programme d'entraînement.</p>
+    <p>Aucun parcours d'entraînement.</p>
 {% else %}
     {% set p = r.program %}
     <table class="kpis"><tr>
-        <td><div class="value">{{ p.status }}</div>Statut du programme</td>
+        <td><div class="value">{{ p.status }}</div>Statut du parcours</td>
         <td><div class="value">{{ p.validatedCount }}/{{ p.selectedCount }}</div>séances validées</td>
         <td><div class="value">{{ p.averageScore is not null ? p.averageScore ~ ' %' : '—' }}</div>score {{ p.completed ? 'total' : 'moyen' }}</td>
         <td><div class="value">{{ (p.totalDurationSeconds / 60)|round }} min</div>durée {{ p.completed ? 'totale' : 'cumulée' }}</td>

@@ -22,6 +22,8 @@ final class AccessLogSubscriber
     /** Routes techniques, sans donnée personnelle */
     private const IGNORED = '#^/api/(health|docs|contexts|auth/refresh)(/|\.|$)#';
     private const LOGIN_EMAIL = '_access_log_login_email';
+    /** Précisions qu'une action peut fournir : action, resourceType, resourceId, detail */
+    public const OVERRIDE = '_access_log';
 
     public function __construct(
         private readonly Connection $connection,
@@ -58,6 +60,7 @@ final class AccessLogSubscriber
         $status = $event->getResponse()->getStatusCode();
         $user = $this->security->getUser();
         [$resourceType, $resourceId] = $this->resource($path);
+        $override = (array) $request->attributes->get(self::OVERRIDE, []);
 
         try {
             $this->connection->insert('access_log', [
@@ -65,11 +68,12 @@ final class AccessLogSubscriber
                 'occurred_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:sP'),
                 'user_id' => $user instanceof User ? $user->getId()->toRfc4122() : null,
                 'user_email' => $user instanceof User ? $user->getEmail() : $request->attributes->get(self::LOGIN_EMAIL),
-                'action' => $this->action($request, $path, $status),
+                'action' => $override['action'] ?? $this->action($request, $path, $status),
                 'method' => $request->getMethod(),
                 'path' => mb_substr($path, 0, 255),
-                'resource_type' => $resourceType,
-                'resource_id' => $resourceId,
+                'resource_type' => $override['resourceType'] ?? $resourceType,
+                'resource_id' => $override['resourceId'] ?? $resourceId,
+                'detail' => isset($override['detail']) ? mb_substr($override['detail'], 0, 255) : null,
                 'status_code' => $status,
                 'ip' => $request->getClientIp(),
                 'user_agent' => mb_substr((string) $request->headers->get('User-Agent'), 0, 255) ?: null,

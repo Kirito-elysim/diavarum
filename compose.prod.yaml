@@ -20,6 +20,7 @@ services:
     volumes:
       - jwt_keys:/app/config/jwt
       - course_media:/app/var/course-media
+      - import_files:/app/var/import-files
 
   worker:
     # Même image que « php » (construite par ce service) : jamais téléchargée
@@ -50,3 +51,4 @@ services:
 volumes:
   jwt_keys:
   course_media:
+  import_files:

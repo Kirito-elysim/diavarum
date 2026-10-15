@@ -10,6 +10,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Contract\ArchivableInterface;
+use App\Entity\Contract\ArchivableTrait;
+use App\State\ArchiveProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -29,15 +32,17 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         new Get(),
         new Post(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
         new Patch(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
-        new Delete(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
+        new Delete(security: "is_granted('ROLE_ADMIN_NATIONAL')", processor: ArchiveProcessor::class),
     ],
     normalizationContext: ['groups' => ['competency:read']],
     denormalizationContext: ['groups' => ['competency:write']],
     order: ['position' => 'ASC'],
     paginationEnabled: false,
 )]
-class ModuleCompetency
+class ModuleCompetency implements ArchivableInterface
 {
+    use ArchivableTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
     #[Groups(['competency:read', 'module:read'])]
@@ -71,8 +76,8 @@ class ModuleCompetency
             return;
         }
 
-        $others = $this->module->getCompetencies()->filter(fn (self $c) => !$c->getId()->equals($this->id));
-        if ($others->count() >= Module::MAX_COMPETENCIES) {
+        $others = array_filter($this->module->getActiveCompetencies(), fn (self $c) => !$c->getId()->equals($this->id));
+        if (\count($others) >= Module::MAX_COMPETENCIES) {
             $context->buildViolation('Un cours ne peut pas avoir plus de {{ max }} compétences.')
                 ->setParameter('{{ max }}', (string) Module::MAX_COMPETENCIES)
                 ->atPath('module')

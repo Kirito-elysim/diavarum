@@ -10,5 +10,8 @@ interface ArchivableInterface
 {
     public function archive(): void;
 
+    /** Annule l'archivage (réactivation) */
+    public function restore(): void;
+
     public function isArchived(): bool;
 }

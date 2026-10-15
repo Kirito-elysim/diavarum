@@ -29,7 +29,7 @@ final class TrainingProgramProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): TrainingProgram
     {
-        $modules = $this->entityManager->getRepository(Module::class)->findBy(['published' => true], ['position' => 'ASC']);
+        $modules = $this->entityManager->getRepository(Module::class)->findBy(['published' => true, 'archivedAt' => null], ['position' => 'ASC']);
         foreach ($modules as $module) {
             $data->addModule($module);
         }

@@ -26,14 +26,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * Programme (= parcours) d'entraînement individualisé d'un patient.
+ * Parcours (= parcours) d'entraînement individualisé d'un patient.
  *
  * Statuts : non actif → actif → achevé (non modifiable), ou interrompu avec justification.
  * Les changements de statut passeront par des actions dédiées (démarrer, interrompre, valider),
  * avec leurs règles métier : ils ne sont pas modifiables directement.
  */
 #[ORM\Entity]
-#[UniqueEntity('patient', message: 'Ce patient a déjà un programme d\'entraînement.')]
+#[UniqueEntity('patient', message: 'Ce patient a déjà un parcours d\'entraînement.')]
 #[ApiResource(
     operations: [
         new GetCollection(parameters: [
@@ -90,7 +90,7 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
     #[Groups(['program:read'])]
     private ?\DateTimeImmutable $completedAt = null;
 
-    /** Validation du programme par un cadre de service */
+    /** Validation du parcours par un cadre de service */
     #[ORM\ManyToOne]
     #[Groups(['program:read'])]
     private ?User $validatedBy = null;
@@ -128,7 +128,7 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
     #[Assert\Callback]
     public function validatePatientEligibility(ExecutionContextInterface $context): void
     {
-        // Patient non éligible = programme bloqué, pas de sélection de cours
+        // Patient non éligible = parcours bloqué, pas de sélection de cours
         if (null !== $this->patient && EligibilityStatus::Eligible !== $this->patient->getEligibilityStatus()) {
             $context->buildViolation('Le patient doit être déclaré éligible avant de créer son parcours.')
                 ->atPath('patient')
@@ -136,7 +136,7 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
         }
     }
 
-    /** Programme achevé : plus aucune modification (cahier des charges §3) */
+    /** Parcours achevé : plus aucune modification (cahier des charges §3) */
     public function isLocked(): bool
     {
         return ProgramStatus::Completed === $this->status;
@@ -163,7 +163,7 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
         $this->markValidated($validatedBy);
     }
 
-    /** Reprise d'un programme interrompu */
+    /** Reprise d'un parcours interrompu */
     public function resume(): void
     {
         $this->status = null === $this->startedAt ? ProgramStatus::Inactive : ProgramStatus::Active;
@@ -184,7 +184,7 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
         return null;
     }
 
-    /** Séances sélectionnées : le « total » du programme individualisé (ex. 14/31) */
+    /** Séances sélectionnées : le « total » du parcours individualisé (ex. 14/31) */
     #[Groups(['program:read'])]
     public function getSelectedCount(): int
     {

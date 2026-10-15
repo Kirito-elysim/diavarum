@@ -58,9 +58,9 @@ function StatisticsView() {
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Kpi icon={<Users className="w-5 h-5 text-orange-600" />} bg="bg-orange-50" label="Patients enregistrés" value={`${stats.total.patients.registered}`} />
-            <Kpi icon={<Route className="w-5 h-5 text-blue-600" />} bg="bg-blue-50" label="Programmes en cours" value={`${stats.total.programs.active.count}`} />
-            <Kpi icon={<Trophy className="w-5 h-5 text-amber-500" />} bg="bg-amber-50" label="Score moyen des programmes" value={stats.total.averageProgramScore != null ? `${stats.total.averageProgramScore}%` : '—'} />
-            <Kpi icon={<Clock className="w-5 h-5 text-green-600" />} bg="bg-green-50" label="Durée moyenne d'un programme achevé" value={formatDuration(stats.total.averageCompletedProgramDurationSeconds)} />
+            <Kpi icon={<Route className="w-5 h-5 text-blue-600" />} bg="bg-blue-50" label="Parcours en cours" value={`${stats.total.programs.active.count}`} />
+            <Kpi icon={<Trophy className="w-5 h-5 text-amber-500" />} bg="bg-amber-50" label="Score moyen des parcours" value={stats.total.averageProgramScore != null ? `${stats.total.averageProgramScore}%` : '—'} />
+            <Kpi icon={<Clock className="w-5 h-5 text-green-600" />} bg="bg-green-50" label="Durée moyenne d'un parcours achevé" value={formatDuration(stats.total.averageCompletedProgramDurationSeconds)} />
           </div>
 
           <AreaTable
@@ -75,7 +75,7 @@ function StatisticsView() {
           />
 
           <AreaTable
-            title="Programmes"
+            title="Parcours"
             areas={[...stats.centers, stats.total]}
             columns={[
               ['Non actifs', (a) => <ShareCell share={a.programs.inactive} />],

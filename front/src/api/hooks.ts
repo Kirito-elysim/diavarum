@@ -8,6 +8,7 @@ import type {
   Dashboard,
   ModuleContent,
   Center,
+  CenterInput,
   CodexTestResult,
   EligibilityStatus,
   ModuleDetail,
@@ -32,10 +33,13 @@ const query = (params: Record<string, string | undefined>) => {
 
 /* ─── Lecture ──────────────────────────────────────────────────────────── */
 
-export function useCenters() {
+/** Statut d'archivage demandé à l'API (actifs par défaut) */
+export type ArchiveStatus = 'active' | 'archived' | 'all';
+
+export function useCenters(status: ArchiveStatus = 'active') {
   return useQuery({
-    queryKey: ['centers'],
-    queryFn: () => allPages<Center>('/centers'),
+    queryKey: status === 'active' ? ['centers'] : ['centers', 'status', status],
+    queryFn: () => allPages<Center>(status === 'active' ? '/centers' : `/centers?status=${status}`),
   });
 }
 
@@ -54,7 +58,7 @@ export function usePatient(id: string | null | undefined) {
   });
 }
 
-/** Programme d'un patient (au plus un) */
+/** Parcours d'un patient (au plus un) */
 export function usePatientProgram(patientIri: string | undefined) {
   return useQuery({
     queryKey: ['program', 'patient', patientIri],
@@ -117,10 +121,10 @@ export function useStatistics(centerIds: string[], enabled = true) {
   });
 }
 
-export function useUsers(enabled = true) {
+export function useUsers(enabled = true, status: ArchiveStatus = 'active') {
   return useQuery({
-    queryKey: ['users'],
-    queryFn: () => allPages<UserAccount>('/users'),
+    queryKey: status === 'active' ? ['users'] : ['users', 'status', status],
+    queryFn: () => allPages<UserAccount>(status === 'active' ? '/users' : `/users?status=${status}`),
     enabled,
   });
 }
@@ -145,7 +149,11 @@ export function useCreatePatient() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (input: PatientInput) => api<Patient>('/patients', { method: 'POST', body: input }),
-    onSuccess: () => client.invalidateQueries({ queryKey: ['patients'] }),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['patients'] });
+      client.invalidateQueries({ queryKey: ['statistics'] });
+      client.invalidateQueries({ queryKey: ['dashboard'] });
+    },
   });
 }
 
@@ -162,6 +170,8 @@ export function useUpdatePatient(id: string) {
     onSuccess: (patient) => {
       client.setQueryData(['patient', id], patient);
       client.invalidateQueries({ queryKey: ['patients'] });
+      client.invalidateQueries({ queryKey: ['statistics'] }); // éligibilité
+      client.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }
@@ -192,7 +202,15 @@ export function useToggleProgramModule(patientIri: string) {
 export function useCreateCenter() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (input: { name: string; city: string }) => api<Center>('/centers', { method: 'POST', body: input }),
+    mutationFn: (input: CenterInput) => api<Center>('/centers', { method: 'POST', body: input }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['centers'] }),
+  });
+}
+
+export function useArchiveCenter() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (center: Center) => api<void>(`/centers/${center.id}`, { method: 'DELETE' }),
     onSuccess: () => client.invalidateQueries({ queryKey: ['centers'] }),
   });
 }
@@ -218,19 +236,77 @@ export function useArchiveUser() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (user: UserAccount) => api<void>(`/users/${user.id}`, { method: 'DELETE' }),
-    onSuccess: () => client.invalidateQueries({ queryKey: ['users'] }),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['users'] });
+      client.invalidateQueries({ queryKey: ['centers'] });
+    },
   });
 }
 
-/* ─── Déroulement des séances et du programme ──────────────────────────── */
+/* ─── Imports en masse (Excel / CSV) ──────────────────────────────────────── */
+
+export type ImportType = 'users' | 'centers' | 'patients';
+
+export interface ImportReport {
+  valid: boolean;
+  rows: { line: number; label: string; errors: string[] }[];
+  created: number;
+  /** Mots de passe provisoires des comptes créés (renvoyés une seule fois) */
+  credentials?: { name: string; email: string; role: string; password: string }[];
+}
+
+export function useImport(type: ImportType) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: ({ file, mode, centerId }: { file: File; mode: 'preview' | 'import'; centerId?: string }) => {
+      const body = new FormData();
+      body.append('file', file);
+      body.append('mode', mode);
+      if (centerId) body.append('center', centerId);
+      return api<ImportReport>(`/imports/${type}`, { method: 'POST', body });
+    },
+    onSuccess: (_, { mode }) => {
+      if (mode !== 'import') return;
+      client.invalidateQueries({ queryKey: ['users'] });
+      client.invalidateQueries({ queryKey: ['centers'] });
+      client.invalidateQueries({ queryKey: ['patients'] });
+      client.invalidateQueries({ queryKey: ['statistics'] });
+      client.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+  });
+}
+
+export function useRestoreUser() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (user: UserAccount) => api<void>(`/users/${user.id}/restore`, { method: 'POST' }),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['users'] });
+      client.invalidateQueries({ queryKey: ['centers'] });
+    },
+  });
+}
+
+export function useRestoreCenter() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (center: Center) => api<void>(`/centers/${center.id}/restore`, { method: 'POST' }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['centers'] }),
+  });
+}
+
+/* ─── Déroulement des séances et du parcours ──────────────────────────── */
 
 /** Invalide tout ce qui dépend de l'avancement d'un patient (parcours, séances, tableaux de bord) */
+/** Après toute action sur un parcours ou une séance : listes, tableau de bord et statistiques à rafraîchir */
 function useInvalidateProgress() {
   const client = useQueryClient();
   return () => {
     client.invalidateQueries({ queryKey: ['program'] });
     client.invalidateQueries({ queryKey: ['programs'] });
     client.invalidateQueries({ queryKey: ['sessions'] });
+    client.invalidateQueries({ queryKey: ['statistics'] });
+    client.invalidateQueries({ queryKey: ['dashboard'] });
   };
 }
 
@@ -240,7 +316,7 @@ export function useStartSession() {
   return useMutation({
     mutationFn: (input: { patient: string; module: string; program: string }) =>
       api<TrainingSession>('/sessions', { method: 'POST', body: input }),
-    // Le programme passe « actif » et le cours « non terminé »
+    // Le parcours passe « actif » et le cours « non terminé »
     onSuccess: invalidate,
   });
 }
@@ -377,13 +453,34 @@ export function useUpdateUser() {
   });
 }
 
+/** Rattachement / détachement d'un utilisateur à des centres (liste complète des IRI) */
+export function useSetUserCenters() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, centers }: { id: string; centers: string[] }) =>
+      api<UserAccount>(`/users/${id}`, { method: 'PATCH', body: { centers } }),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['users'] });
+      client.invalidateQueries({ queryKey: ['centers'] });
+    },
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: ({ id, plainPassword }: { id: string; plainPassword: string }) =>
+      api<UserAccount>(`/users/${id}`, { method: 'PATCH', body: { plainPassword } }),
+  });
+}
+
 // Follow every page so local search and pagination include entries beyond the first 100.
 async function allPages<T>(path: string): Promise<Collection<T>> {
-  const first = await api<Collection<T>>(`${path}?itemsPerPage=100&page=1`);
+  const separator = path.includes('?') ? '&' : '?';
+  const first = await api<Collection<T>>(`${path}${separator}itemsPerPage=100&page=1`);
   const member = [...first.member];
   let page = 2;
   while (member.length < first.totalItems) {
-    const next = await api<Collection<T>>(`${path}?itemsPerPage=100&page=${page++}`);
+    const next = await api<Collection<T>>(`${path}${separator}itemsPerPage=100&page=${page++}`);
     if (!next.member.length) break;
     member.push(...next.member);
   }
@@ -394,7 +491,7 @@ export function useCenter(id: string) {
 }
 export function useUpdateCenter() {
   const client = useQueryClient();
-  return useMutation({ mutationFn: ({ id, ...input }: { id: string; name: string; city: string }) => api<Center>(`/centers/${id}`, { method: 'PATCH', body: input }), onSuccess: () => client.invalidateQueries({ queryKey: ['centers'] }) });
+  return useMutation({ mutationFn: ({ id, ...input }: { id: string } & CenterInput) => api<Center>(`/centers/${id}`, { method: 'PATCH', body: input }), onSuccess: () => client.invalidateQueries({ queryKey: ['centers'] }) });
 }
 export function useCenterPatients(center: string, search: string, page: number) {
   return useQuery({ queryKey: ['patients', 'center', center, search, page], queryFn: () => api<Collection<Patient>>(`/patients${query({ center, search: search || undefined, page: String(page), itemsPerPage: '20' })}`), enabled: !!center });

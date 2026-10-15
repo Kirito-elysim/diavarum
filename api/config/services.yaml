@@ -8,6 +8,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     course_media_dir: '%kernel.project_dir%/var/course-media'
+    # Fichiers importés (données personnelles) : hors du dossier public, volume dédié en production
+    import_files_dir: '%kernel.project_dir%/var/import-files'
 
 services:
     # default configuration for services in *this* file
@@ -26,3 +28,4 @@ services:
 when@test:
     parameters:
         course_media_dir: '%kernel.cache_dir%/course-media'
+        import_files_dir: '%kernel.cache_dir%/import-files'

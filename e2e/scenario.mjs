@@ -253,7 +253,10 @@ await step('Prévisualisation depuis la bibliothèque (sans patient ni code)', a
 });
 
 await step('IDE : pas d\'accès à l\'administration', async () => {
-  if (await page.getByRole('link', { name: /Équipe IDE|Centres et comptes/ }).count()) throw new Error('menu admin visible');
+  if (await page.getByRole('link', { name: /^(Utilisateurs|Centres|Code national|Journal des accès)$/ }).count()) throw new Error('menu admin visible');
+  await page.goto(`${BASE}/settings`); // ancienne adresse : redirigée
+  await page.waitForURL('**/account');
+  await page.getByText('Mon code de sécurité').waitFor();
   await page.goto(`${BASE}/admin`);
   await page.waitForURL('**/dashboard');
   await page.getByRole('heading', { name: 'Tableau de bord' }).waitFor();
@@ -270,49 +273,59 @@ await step('Déconnexion', async () => {
 });
 
 const newIde = `ide.${stamp}@diaverum.test`;
+let newIdePassword = '';
 await step('Cadre : crée une IDE dans son centre', async () => {
   await login('cadre@diaverum.test');
   await page.waitForURL('**/dashboard');
-  await page.getByRole('link', { name: 'Équipe IDE' }).click();
+  await page.getByRole('link', { name: 'Utilisateurs', exact: true }).click();
+  await page.getByRole('heading', { name: 'Utilisateurs' }).waitFor();
   await page.getByRole('button', { name: 'Nouvelle IDE' }).click();
   await page.fill('#u-last', 'Nouvelle');
   await page.fill('#u-first', 'Recrue');
   await page.fill('#u-email', newIde);
-  await page.getByText('Diaverum Paris Nord').last().click();
-  await page.fill('#u-pass', 'Provisoire-Solide-2026');
-  await page.getByRole('button', { name: 'Créer le compte' }).click();
+  await page.getByRole('button', { name: 'Retirer Diaverum Paris Nord' }).waitFor(); // seul centre du cadre : présélectionné
+  await page.getByRole('button', { name: 'Générer' }).click();
+  newIdePassword = await page.inputValue('#u-pass');
+  if (newIdePassword.length < 12) throw new Error('mot de passe généré trop court');
+  await page.getByRole('button', { name: "Créer l'utilisateur" }).click();
   await page.getByText('Compte créé pour Recrue Nouvelle').waitFor();
+  await page.getByText(newIde, { exact: true }).waitFor(); // visible dans la liste des utilisateurs
   await shot('08-equipe-cadre');
   await logout();
 });
 
 await step('Nouvelle IDE : code de sécurité exigé à la première connexion', async () => {
-  await login(newIde, 'Provisoire-Solide-2026');
+  await login(newIde, newIdePassword);
   await page.getByText('Choisissez votre code de sécurité').waitFor();
   await shot('09-premiere-connexion');
   await page.fill('#sc-code', '2468');
   await page.fill('#sc-confirm', '2468');
-  await page.fill('#sc-password', 'Provisoire-Solide-2026');
+  await page.fill('#sc-password', newIdePassword);
   await page.getByRole('button', { name: 'Enregistrer mon code' }).click();
   await page.getByText('Code de sécurité enregistré').waitFor();
   await page.getByText('Choisissez votre code de sécurité').waitFor({ state: 'hidden' });
   await logout();
 });
 
-await step('Administrateur national : centres, comptes et code national', async () => {
+await step('Administrateur national : centres, utilisateurs et code national', async () => {
   await login('admin@diaverum.test');
   await page.waitForURL('**/dashboard');
-  await page.getByRole('link', { name: 'Centres et comptes' }).click();
+  await page.getByRole('link', { name: 'Utilisateurs', exact: true }).click();
   await page.getByText('ide.lyon@diaverum.test').waitFor();
-  await page.getByRole('tab', { name: 'Centres' }).click();
-  await page.getByText('Diaverum Lyon Sud').waitFor();
-  await page.getByRole('tab', { name: 'Code national' }).click();
+  await page.getByRole('link', { name: 'Centres', exact: true }).click();
+  await page.getByText('Diaverum Lyon Sud').first().waitFor();
+  await page.getByText('FINESS 750099999').waitFor();
+  await page.getByRole('combobox', { name: 'Filtrer par région' }).click();
+  await page.keyboard.type('ile-de');
+  await page.keyboard.press('Enter');
+  await page.getByText('Diaverum Lyon Sud').waitFor({ state: 'hidden' }); // filtre par région, recherche sans accents
+  await page.getByRole('link', { name: 'Code national', exact: true }).click();
   await page.getByText('Code de sécurité national').waitFor();
   await shot('10-admin');
 });
 
 await step('Administrateur national : journal des accès (consultation du patient tracée)', async () => {
-  await page.getByRole('tab', { name: 'Journal des accès' }).click();
+  await page.getByRole('link', { name: 'Journal des accès', exact: true }).click();
   await page.getByPlaceholder('Identifiant de ressource (ex. patient)').fill(patientUrl.split('/').pop());
   await page.getByRole('cell', { name: 'ide@diaverum.test' }).first().waitFor();
   await page.getByRole('cell', { name: 'Consultation' }).first().waitFor();
@@ -326,18 +339,18 @@ await step('Administrateur national : contenus des séances (33, dont S1 et S4 i
   await shot('10b-contenus');
 });
 
-await step('Cadre : valide le programme, qui devient non modifiable', async () => {
+await step('Cadre : valide le parcours, qui devient non modifiable', async () => {
   await logout();
   await login('cadre@diaverum.test');
   await page.waitForURL('**/dashboard');
   await page.goto(patientUrl);
   await page.getByRole('tab', { name: 'Parcours' }).click();
-  await page.getByRole('button', { name: 'Valider le programme' }).click();
+  await page.getByRole('button', { name: 'Valider le parcours' }).click();
   await page.getByRole('alertdialog').getByRole('button', { name: 'Valider' }).click();
-  await page.getByText('Programme achevé', { exact: true }).last().waitFor();
+  await page.getByText('Parcours achevé', { exact: true }).last().waitFor();
   if (await page.getByRole('button', { name: /Lancer|Reprendre|Refaire/ }).count()) throw new Error('séance encore lançable');
   if (await page.getByRole('checkbox').first().isEnabled()) throw new Error('sélection encore modifiable');
-  await shot('11-programme-acheve');
+  await shot('11-parcours-acheve');
 });
 
 await step('Cadre : statistiques de son centre et export Excel', async () => {

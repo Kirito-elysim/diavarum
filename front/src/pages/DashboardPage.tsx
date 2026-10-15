@@ -54,7 +54,7 @@ export default function DashboardPage() {
       {/* Page header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-        <p className="text-gray-500 text-sm mt-0.5">Vue d'ensemble du programme d'entraînement</p>
+        <p className="text-gray-500 text-sm mt-0.5">Vue d'ensemble du parcours d'entraînement</p>
       </div>
 
       {/* KPI Cards */}

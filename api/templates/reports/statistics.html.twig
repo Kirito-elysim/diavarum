@@ -10,9 +10,9 @@
 
 <table class="kpis"><tr>
     <td><div class="value">{{ s.total.patients.registered }}</div>patients enregistrés</td>
-    <td><div class="value">{{ s.total.programs.active.count }}</div>programmes en cours</td>
-    <td><div class="value">{{ s.total.programs.completed.count }}</div>programmes achevés</td>
-    <td><div class="value">{{ s.total.averageProgramScore is not null ? s.total.averageProgramScore ~ ' %' : '—' }}</div>score moyen des programmes</td>
+    <td><div class="value">{{ s.total.programs.active.count }}</div>parcours en cours</td>
+    <td><div class="value">{{ s.total.programs.completed.count }}</div>parcours achevés</td>
+    <td><div class="value">{{ s.total.averageProgramScore is not null ? s.total.averageProgramScore ~ ' %' : '—' }}</div>score moyen des parcours</td>
 </tr></table>
 
 <h2>Patients</h2>
@@ -28,7 +28,7 @@
     </tbody>
 </table>
 
-<h2>Programmes</h2>
+<h2>Parcours</h2>
 <table>
     <thead><tr><th>Centre</th><th class="num">Non actifs</th><th class="num">En cours</th><th class="num">Interrompus</th><th class="num">Achevés</th><th class="num">Score moyen</th><th class="num">Durée moy. (achevés)</th></tr></thead>
     <tbody>

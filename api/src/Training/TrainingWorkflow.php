@@ -14,7 +14,7 @@ use App\Exception\WorkflowException;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Règles du déroulement d'un programme d'entraînement (cahier des charges §2 à §4).
+ * Règles du déroulement d'un parcours d'entraînement (cahier des charges §2 à §4).
  */
 final class TrainingWorkflow
 {
@@ -42,15 +42,15 @@ final class TrainingWorkflow
         }
 
         if (!$patient->getId()->equals($program->getPatient()->getId())) {
-            throw new WorkflowException('Ce programme n\'est pas celui du patient.');
+            throw new WorkflowException('Ce parcours n\'est pas celui du patient.');
         }
         if (EligibilityStatus::Eligible !== $patient->getEligibilityStatus()) {
-            throw new WorkflowException('Le patient n\'est pas éligible au programme.');
+            throw new WorkflowException('Le patient n\'est pas éligible au parcours.');
         }
         if (!$program->acceptsSessions()) {
             throw new WorkflowException(ProgramStatus::Completed === $program->getStatus()
-                ? 'Le programme est achevé.'
-                : 'Le programme est interrompu : reprenez-le avant de lancer une séance.');
+                ? 'Le parcours est achevé.'
+                : 'Le parcours est interrompu : reprenez-le avant de lancer une séance.');
         }
 
         $selection = $program->findModule($module);
@@ -93,7 +93,7 @@ final class TrainingWorkflow
 
         $module = $session->getModule();
         $expected = [];
-        foreach ($module->getCompetencies() as $competency) {
+        foreach ($module->getActiveCompetencies() as $competency) {
             $expected[$competency->getId()->toRfc4122()] = $competency;
         }
         if ([] !== array_diff_key($competencies, $expected)) {
@@ -114,7 +114,7 @@ final class TrainingWorkflow
             $session->addCompetencyValidation($validation);
         }
 
-        // Le cours passe « validé » dans le programme (même s'il a été désélectionné depuis)
+        // Le cours passe « validé » dans le parcours (même s'il a été désélectionné depuis)
         $session->getProgram()->findModule($module)?->markValidated($score, $durationSeconds);
         $this->entityManager->flush();
     }
@@ -126,11 +126,11 @@ final class TrainingWorkflow
         $this->entityManager->flush();
     }
 
-    /** Validation du programme par un cadre : le programme passe « achevé » et n'est plus modifiable */
+    /** Validation du parcours par un cadre : le parcours passe « achevé » et n'est plus modifiable */
     public function complete(TrainingProgram $program, User $cadre): void
     {
         if (ProgramStatus::Active !== $program->getStatus()) {
-            throw new WorkflowException('Seul un programme en cours peut être validé.');
+            throw new WorkflowException('Seul un parcours en cours peut être validé.');
         }
         if (0 === $program->getValidatedCount()) {
             throw new WorkflowException('Aucune séance n\'a encore été validée.');
@@ -142,14 +142,14 @@ final class TrainingWorkflow
     }
 
     /**
-     * Clôture anticipée d'un programme non achevé, justifiée par des motifs cochés (+ texte libre).
+     * Clôture anticipée d'un parcours non achevé, justifiée par des motifs cochés (+ texte libre).
      *
      * @param list<InterruptionReason> $reasons
      */
     public function interruptProgram(TrainingProgram $program, array $reasons, ?string $notes, User $by): void
     {
         if (!$program->acceptsSessions()) {
-            throw new WorkflowException('Ce programme est déjà achevé ou interrompu.');
+            throw new WorkflowException('Ce parcours est déjà achevé ou interrompu.');
         }
         if ([] === $reasons) {
             throw new WorkflowException('Indiquez au moins un motif d\'interruption.');
@@ -163,7 +163,7 @@ final class TrainingWorkflow
     public function resumeProgram(TrainingProgram $program): void
     {
         if (ProgramStatus::Interrupted !== $program->getStatus()) {
-            throw new WorkflowException('Seul un programme interrompu peut être repris.');
+            throw new WorkflowException('Seul un parcours interrompu peut être repris.');
         }
 
         $program->resume();

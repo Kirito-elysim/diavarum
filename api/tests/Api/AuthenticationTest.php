@@ -118,6 +118,9 @@ final class AuthenticationTest extends ApiTestCaseBase
         self::assertSame('cadre', $me['role']);
         self::assertSame('Diaverum Test', $me['centers'][0]['name']);
         self::assertFalse($me['securityCodeConfigured']);
+        self::assertNull($me['securityCodeUpdatedAt']);
+        self::assertArrayHasKey('createdAt', $me);
         self::assertArrayNotHasKey('password', $me);
+        self::assertArrayNotHasKey('securityCodeHash', $me);
     }
 }

@@ -59,7 +59,7 @@ class AccessLog
     #[Groups(['access_log:read'])]
     private ?string $userEmail = null;
 
-    /** login_success, login_failure, logout, read, create, update, delete, action, export */
+    /** login_success, login_failure, logout, read, create, update, delete, action, export, import, import_check */
     #[ORM\Column(length: 20)]
     #[Groups(['access_log:read'])]
     private string $action;
@@ -91,6 +91,11 @@ class AccessLog
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['access_log:read'])]
     private ?string $userAgent = null;
+
+    /** Précision lisible fournie par l'action (ex. nom du fichier importé) */
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['access_log:read'])]
+    private ?string $detail = null;
 
     private function __construct()
     {
@@ -131,6 +136,11 @@ class AccessLog
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    public function getDetail(): ?string
+    {
+        return $this->detail;
     }
 
     public function getResourceType(): ?string

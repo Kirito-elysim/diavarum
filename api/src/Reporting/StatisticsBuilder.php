@@ -17,9 +17,9 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Synthèse pour un ou plusieurs centres, ou au national (cahier des charges §3) :
  * - nombre et proportion de patients enregistrés / éligibles / non éligibles ;
- * - nombre et proportion de programmes par statut ;
- * - scores moyens par cours et des programmes ;
- * - durées moyennes par cours (pas par chapitre) et des programmes achevés, par centre et au total ;
+ * - nombre et proportion de parcours par statut ;
+ * - scores moyens par cours et des parcours ;
+ * - durées moyennes par cours (pas par chapitre) et des parcours achevés, par centre et au total ;
  * - activité des IDE (séances validées, temps passé).
  */
 final class StatisticsBuilder
@@ -134,7 +134,11 @@ final class StatisticsBuilder
             }
         }
 
-        $modules = $this->entityManager->getRepository(Module::class)->findBy([], ['position' => 'ASC']);
+        // Un cours archivé reste dans le bilan s'il a déjà été réalisé
+        $modules = array_values(array_filter(
+            $this->entityManager->getRepository(Module::class)->findBy([], ['position' => 'ASC']),
+            static fn (Module $m) => !$m->isArchived() || isset($durations[$m->getCode()]),
+        ));
 
         return array_map(static fn (Module $m) => [
             'code' => $m->getCode(),

@@ -9,11 +9,12 @@ import { Card, CardContent } from '../components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Search, Plus, Eye, Users, Filter, Loader2 } from 'lucide-react';
+import { Search, Plus, Eye, Users, Filter, Loader2, Upload } from 'lucide-react';
 import { useCenters, useCreatePatient, usePatients } from '../api/hooks';
 import { ELIGIBILITY_LABELS } from '../api/types';
 import { ApiError } from '../lib/api';
 import { ExportButton } from '../components/ExportButton';
+import { ImportDialog } from '../components/ImportDialog';
 import { eligibilityBadge, formatDate } from '../lib/format';
 
 /** Recherche envoyée au serveur après une courte pause de frappe */
@@ -32,6 +33,7 @@ export default function PatientsPage() {
   const [centerFilter, setCenterFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [creating, setCreating] = useState(false);
+  const [importing, setImporting] = useState(false);
   const navigate = useNavigate();
   const debouncedSearch = useDebounced(search);
 
@@ -53,6 +55,10 @@ export default function PatientsPage() {
         </div>
         <div className="flex items-center gap-2">
           <ExportButton path="/exports/patients.xlsx" format="xlsx" label="Bilan des patients (Excel)" />
+          <Button variant="outline" onClick={() => setImporting(true)} className="h-10 px-4 gap-2">
+            <Upload className="w-4 h-4" />
+            Importer
+          </Button>
           <Button onClick={() => setCreating(true)} className="bg-orange-500 hover:bg-orange-600 text-white h-10 px-4 gap-2 shadow-sm shadow-orange-200">
             <Plus className="w-4 h-4" />
             Nouveau patient
@@ -171,6 +177,7 @@ export default function PatientsPage() {
       </Card>
 
       <NewPatientDialog open={creating} onOpenChange={setCreating} onCreated={(id) => navigate(`/patients/${id}`)} />
+      <ImportDialog type="patients" open={importing} onOpenChange={setImporting} />
     </div>
   );
 }

@@ -11,6 +11,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Contract\ArchivableInterface;
+use App\Entity\Contract\ArchivableTrait;
+use App\State\ArchiveProcessor;
 use App\Training\ScoreCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,15 +49,17 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new Post(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
         new Patch(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
-        new Delete(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
+        new Delete(security: "is_granted('ROLE_ADMIN_NATIONAL')", processor: ArchiveProcessor::class),
     ],
     normalizationContext: ['groups' => ['module:list', 'module:read']],
     denormalizationContext: ['groups' => ['module:write']],
     order: ['position' => 'ASC'],
     paginationEnabled: false,
 )]
-class Module
+class Module implements ArchivableInterface
 {
+    use ArchivableTrait;
+
     public const MAX_COMPETENCIES = 5;
 
     #[ORM\Id]
@@ -71,7 +77,7 @@ class Module
     #[Groups(['module:list', 'module:write', 'program:read', 'session:read'])]
     private string $code = '';
 
-    /** Ordre d'affichage dans le programme */
+    /** Ordre d'affichage dans le parcours */
     #[ORM\Column(options: ['default' => 0])]
     #[Assert\PositiveOrZero]
     #[Groups(['module:list', 'module:write', 'program:read'])]
@@ -103,7 +109,7 @@ class Module
     #[Groups(['module:list', 'module:write', 'program:read'])]
     private bool $mandatory = true;
 
-    /** Cours zéro de démarrage / présentation du programme */
+    /** Cours zéro de démarrage / présentation du parcours */
     #[ORM\Column(options: ['default' => false])]
     #[Groups(['module:list', 'module:write', 'program:read'])]
     private bool $intro = false;
@@ -120,7 +126,6 @@ class Module
     /** @var Collection<int, ModuleCompetency> compétences d'entraînement validées par l'IDE en fin de séance */
     #[ORM\OneToMany(targetEntity: ModuleCompetency::class, mappedBy: 'module')]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    #[Groups(['module:read'])]
     private Collection $competencies;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE)]
@@ -275,6 +280,18 @@ class Module
     public function getCompetencies(): Collection
     {
         return $this->competencies;
+    }
+
+    /**
+     * Compétences en vigueur (les compétences archivées restent liées aux séances déjà évaluées).
+     *
+     * @return list<ModuleCompetency>
+     */
+    #[Groups(['module:read'])]
+    #[SerializedName('competencies')]
+    public function getActiveCompetencies(): array
+    {
+        return array_values($this->competencies->filter(static fn (ModuleCompetency $c) => !$c->isArchived())->toArray());
     }
 
     #[Groups(['module:list'])]

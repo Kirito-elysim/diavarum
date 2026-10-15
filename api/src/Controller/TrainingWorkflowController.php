@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Actions du déroulement d'une séance et d'un programme. Chaque action vérifie que la ressource
+ * Actions du déroulement d'une séance et d'un parcours. Chaque action vérifie que la ressource
  * relève d'un centre de l'utilisateur (CENTER_SCOPE) ; les règles métier sont dans TrainingWorkflow.
  */
 #[IsGranted('ROLE_IDE')]
@@ -56,7 +56,7 @@ final class TrainingWorkflowController
         return new JsonResponse(['status' => $session->getStatus()->value]);
     }
 
-    /** Validation du programme par un cadre de service */
+    /** Validation du parcours par un cadre de service */
     #[Route('/api/training_programs/{id}/complete', name: 'api_program_complete', requirements: ['id' => Requirement::UUID], methods: ['POST'])]
     #[IsGranted('ROLE_CADRE')]
     #[IsGranted('CENTER_SCOPE', subject: 'program')]
@@ -67,7 +67,7 @@ final class TrainingWorkflowController
         return new JsonResponse(['status' => $program->getStatus()->value]);
     }
 
-    /** Clôture anticipée d'un programme, avec motifs */
+    /** Clôture anticipée d'un parcours, avec motifs */
     #[Route('/api/training_programs/{id}/interrupt', name: 'api_program_interrupt', requirements: ['id' => Requirement::UUID], methods: ['POST'])]
     #[IsGranted('CENTER_SCOPE', subject: 'program')]
     public function interruptProgram(

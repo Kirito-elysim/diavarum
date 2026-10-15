@@ -21,9 +21,30 @@ export interface CenterRef extends Resource {
 export interface Center extends CenterRef {
   city: string;
   country: string;
+  finess: string | null;
+  address: string | null;
+  postalCode: string | null;
+  region: string | null;
+  phone: string | null;
+  email: string | null;
+  /** Nombre de postes de dialyse */
+  stations: number | null;
+  /** Indicateurs calculés par l'API */
+  patientCount: number;
+  nurseCount: number;
+  managers: { id: string; name: string }[];
   createdAt: string;
   archivedAt?: string | null;
 }
+
+export type CenterInput = Pick<Center, 'name' | 'city' | 'finess' | 'address' | 'postalCode' | 'region' | 'phone' | 'email' | 'stations'>;
+
+/** Régions françaises (mêmes valeurs que Center::REGIONS côté API) */
+export const CENTER_REGIONS = [
+  'Auvergne-Rhône-Alpes', 'Bourgogne-Franche-Comté', 'Bretagne', 'Centre-Val de Loire', 'Corse',
+  'Grand Est', 'Hauts-de-France', 'Île-de-France', 'Normandie', 'Nouvelle-Aquitaine', 'Occitanie',
+  'Pays de la Loire', "Provence-Alpes-Côte d'Azur", 'Guadeloupe', 'Guyane', 'La Réunion', 'Martinique', 'Mayotte',
+];
 
 export interface Author extends Resource {
   firstName: string;
@@ -39,6 +60,8 @@ export interface Me {
   role: UserRole;
   centers: { id: string; name: string; city: string }[];
   securityCodeConfigured: boolean;
+  securityCodeUpdatedAt: string | null;
+  createdAt: string;
 }
 
 export interface UserAccount extends Author {
@@ -141,7 +164,7 @@ export interface TrainingProgram extends Resource {
   interruptionReasons: string[];
   interruptionNotes?: string | null;
   interruptedAt?: string | null;
-  /** Séances sélectionnées (total du programme individualisé) */
+  /** Séances sélectionnées (total du parcours individualisé) */
   selectedCount: number;
   /** Séances validées, y compris désélectionnées après coup */
   validatedCount: number;
@@ -235,6 +258,8 @@ export interface AccessLogEntry {
   path: string;
   resourceType?: string | null;
   resourceId?: string | null;
+  /** Précision lisible (ex. « Import patients · liste.xlsx (12 créés) ») */
+  detail?: string | null;
   statusCode: number;
   ip?: string | null;
 }

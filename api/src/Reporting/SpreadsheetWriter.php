@@ -24,7 +24,7 @@ final class SpreadsheetWriter
 
         $summary = $book->getActiveSheet()->setTitle('Synthèse');
         $this->table($summary, [
-            'Nom', 'Prénom', 'Date de naissance', 'Centre', 'Éligibilité', 'Programme',
+            'Nom', 'Prénom', 'Date de naissance', 'Centre', 'Éligibilité', 'Parcours',
             'Séances validées', 'Séances du parcours', 'Score moyen (%)', 'Durée totale (min)', 'Validé par', 'Achevé le',
         ], array_map(static fn (array $r) => [
             mb_strtoupper($r['patient']['lastName']),
@@ -91,10 +91,10 @@ final class SpreadsheetWriter
             $a['patients']['pending']['count'], $a['patients']['pending']['percent'],
         ], $areas), $this->caption($stats));
 
-        $programs = $book->createSheet()->setTitle('Programmes');
+        $programs = $book->createSheet()->setTitle('Parcours');
         $this->table($programs, [
-            'Centre', 'Programmes', 'Non actifs', '%', 'En cours', '%', 'Interrompus', '%', 'Achevés', '%',
-            'Score moyen des programmes (%)', 'Durée moyenne d\'un programme achevé (min)',
+            'Centre', 'Parcours', 'Non actifs', '%', 'En cours', '%', 'Interrompus', '%', 'Achevés', '%',
+            'Score moyen des parcours (%)', 'Durée moyenne d\'un parcours achevé (min)',
         ], array_map(static fn (array $a) => [
             $a['center'], $a['programs']['total'],
             $a['programs']['inactive']['count'], $a['programs']['inactive']['percent'],

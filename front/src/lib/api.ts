@@ -125,7 +125,10 @@ export async function downloadFile(path: string, retry = true): Promise<void> {
     throw await toApiError(response);
   }
 
-  const fileName = /filename="?([^";]+)"?/.exec(response.headers.get('Content-Disposition') ?? '')?.[1] ?? 'export';
+  // filename* (RFC 5987) garde les accents du nom d'origine ; filename en repli ASCII
+  const disposition = response.headers.get('Content-Disposition') ?? '';
+  const encoded = /filename\*=UTF-8''([^;]+)/i.exec(disposition)?.[1];
+  const fileName = encoded ? decodeURIComponent(encoded) : /filename="?([^";]+)"?/.exec(disposition)?.[1] ?? 'export';
   const url = URL.createObjectURL(await response.blob());
   const link = Object.assign(document.createElement('a'), { href: url, download: fileName });
   document.body.appendChild(link);

@@ -8,6 +8,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Entity\Contract\ArchivableInterface;
+use App\Entity\Contract\ArchivableTrait;
+use App\State\ArchiveProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -24,15 +27,17 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new Post(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
         new Patch(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
-        new Delete(security: "is_granted('ROLE_ADMIN_NATIONAL')"),
+        new Delete(security: "is_granted('ROLE_ADMIN_NATIONAL')", processor: ArchiveProcessor::class),
     ],
     normalizationContext: ['groups' => ['chapter:read']],
     denormalizationContext: ['groups' => ['chapter:write']],
     order: ['position' => 'ASC'],
     paginationEnabled: false,
 )]
-class Chapter
+class Chapter implements ArchivableInterface
 {
+    use ArchivableTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
     #[Groups(['chapter:read', 'module:read', 'program:read'])]

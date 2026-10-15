@@ -41,8 +41,12 @@ final class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $paris = (new Center())->setName('Diaverum Paris Nord')->setCity('Paris');
-        $lyon = (new Center())->setName('Diaverum Lyon Sud')->setCity('Lyon');
+        $paris = (new Center())->setName('Diaverum Paris Nord')->setCity('Paris')
+            ->setFiness('750099999')->setAddress('12 rue de la Chapelle')->setPostalCode('75018')->setRegion('Île-de-France')
+            ->setPhone('01 42 00 00 00')->setEmail('paris-nord@diaverum.test')->setStations(24);
+        $lyon = (new Center())->setName('Diaverum Lyon Sud')->setCity('Lyon')
+            ->setFiness('690099999')->setAddress('45 avenue Jean Jaurès')->setPostalCode('69007')->setRegion('Auvergne-Rhône-Alpes')
+            ->setPhone('04 72 00 00 00')->setEmail('lyon-sud@diaverum.test')->setStations(18);
         $manager->persist($paris);
         $manager->persist($lyon);
 
@@ -148,7 +152,7 @@ final class AppFixtures extends Fixture
     /**
      * Contenu d'exemple sur des séances du catalogue officiel (le contenu réel sera intégré par le prestataire).
      *
-     * @return list<Module> séances publiées, dans l'ordre du programme
+     * @return list<Module> séances publiées, dans l'ordre du parcours
      */
     private function loadModules(ObjectManager $manager): array
     {

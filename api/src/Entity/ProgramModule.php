@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Séance d'un parcours : sélectionnée ou non par l'IDE, avec son suivi (non démarrée / non terminée / validée).
- * Une séance désélectionnée reste en base : une séance déjà validée reste visible dans le programme.
+ * Une séance désélectionnée reste en base : une séance déjà validée reste visible dans le parcours.
  */
 #[ORM\Entity]
 #[ORM\UniqueConstraint(fields: ['program', 'module'])]
@@ -92,7 +92,7 @@ class ProgramModule implements CenterScopedInterface
     public function validateProgramIsEditable(ExecutionContextInterface $context): void
     {
         if ($this->program?->isLocked()) {
-            $context->buildViolation('Le programme est achevé : il n\'est plus modifiable.')
+            $context->buildViolation('Le parcours est achevé : il n\'est plus modifiable.')
                 ->atPath('selected')
                 ->addViolation();
         }

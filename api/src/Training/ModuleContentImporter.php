@@ -4,8 +4,6 @@ namespace App\Training;
 
 use App\Entity\Module;
 use App\Entity\ModuleCompetency;
-use App\Entity\SessionCompetencyValidation;
-use App\Exception\WorkflowException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -23,7 +21,7 @@ final class ModuleContentImporter
 
     public function find(string $code): Module
     {
-        return $this->entityManager->getRepository(Module::class)->findOneBy(['code' => $code])
+        return $this->entityManager->getRepository(Module::class)->findOneBy(['code' => $code, 'archivedAt' => null])
             ?? throw new NotFoundHttpException(\sprintf('Séance %s inconnue.', $code));
     }
 
@@ -71,7 +69,8 @@ final class ModuleContentImporter
     }
 
     /**
-     * Compétences mises à jour par position ; une compétence déjà évaluée en séance ne peut pas être supprimée.
+     * Compétences mises à jour par position ; une compétence retirée est archivée, pas effacée :
+     * les évaluations déjà faites en séance la conservent.
      *
      * @param list<string> $labels
      */
@@ -90,12 +89,7 @@ final class ModuleContentImporter
         }
 
         foreach (\array_slice($existing, \count($labels)) as $removed) {
-            $used = $this->entityManager->getRepository(SessionCompetencyValidation::class)->count(['competency' => $removed]);
-            if ($used > 0) {
-                throw new WorkflowException(\sprintf('La compétence « %s » a déjà été évaluée en séance : elle ne peut pas être supprimée.', $removed->getLabel()));
-            }
-            $module->getCompetencies()->removeElement($removed);
-            $this->entityManager->remove($removed);
+            $removed->archive();
         }
     }
 
@@ -104,7 +98,7 @@ final class ModuleContentImporter
      */
     private function sortedCompetencies(Module $module): array
     {
-        $competencies = $module->getCompetencies()->toArray();
+        $competencies = $module->getActiveCompetencies();
         usort($competencies, static fn (ModuleCompetency $a, ModuleCompetency $b) => $a->getPosition() <=> $b->getPosition());
 
         return $competencies;

@@ -21,7 +21,7 @@ const ParcoursPage = lazy(() => import('./pages/ParcoursPage'));
 const ResultsPage = lazy(() => import('./pages/ResultsPage'));
 const CenterDetailPage = lazy(() => import('./pages/CenterDetailPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
-const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const AccountPage = lazy(() => import('./pages/AccountPage'));
 const CodexTestPage = lazy(() => import('./pages/CodexTestPage'));
 import LoginPage from './pages/LoginPage';
 import './App.css';
@@ -51,14 +51,18 @@ const router = createBrowserRouter(createRoutesFromElements(<>
                 <Route path="/sessions/new" element={<NewSessionPage />} />
                 <Route path="/courses" element={<CourseLibraryPage />} />
                 <Route path="/results" element={<ResultsPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/account" element={<AccountPage />} />
+                <Route path="/settings" element={<Navigate to="/account" replace />} />
                 <Route element={<RequireRole level="cadre" />}>
-                  <Route path="/admin" element={<Navigate to="/admin/accounts" replace />} />
-                  <Route path="/admin/accounts" element={<AdminPage />} />
+                  <Route path="/admin" element={<Navigate to="/admin/users" replace />} />
+                  <Route path="/admin/users" element={<AdminPage />} />
+                  <Route path="/admin/accounts" element={<Navigate to="/admin/users" replace />} />
                 </Route>
                 <Route element={<RequireRole level="admin" />}>
                   <Route path="/admin/centers/:id" element={<CenterDetailPage />} />
                   <Route path="/admin/centers" element={<AdminPage section="centers" />} />
+                  <Route path="/admin/security" element={<AdminPage section="security" />} />
+                  <Route path="/admin/access-logs" element={<AdminPage section="logs" />} />
                   <Route path="/modules" element={<ContentAdminPage />} />
                   <Route path="/modules/:code/edit" element={<CourseEditorPage />} />
                 </Route>

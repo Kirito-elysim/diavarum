@@ -10,7 +10,7 @@ import { PROGRAM_STATUS_LABELS, type ProgramStatus } from '../api/types';
 import { formatDate, programBadge } from '../lib/format';
 
 /**
- * Vue d'ensemble des programmes d'entraînement des patients de mes centres.
+ * Vue d'ensemble des parcours d'entraînement des patients de mes centres.
  * Un parcours se crée et se compose depuis la fiche du patient.
  */
 export default function ParcoursPage() {
