@@ -1,6 +1,6 @@
-# Base commune dev / prod.
+# Stack de développement.
 #   Dev  : docker compose up            (compose.override.yaml chargé automatiquement)
-#   Prod : docker compose -f compose.yaml -f compose.prod.yaml up -d
+#   Prod : docker-compose.prod.yml, fichier autonome déployé par Coolify (voir DEPLOYMENT.md)
 
 services:
   php:

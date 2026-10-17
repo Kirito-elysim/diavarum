@@ -138,9 +138,12 @@ navigateur ──► nginx ─┬─ /api/*  ──► php (Symfony, php-fpm) �
 
 ## Production
 
+Mise en ligne sur **Coolify** avec `docker-compose.prod.yml` (fichier autonome) : pas à pas dans
+[DEPLOYMENT.md](DEPLOYMENT.md), variables dans [.env.prod.example](.env.prod.example).
+
 ```bash
-# Variables obligatoires : APP_SECRET, JWT_PASSPHRASE, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, MAILER_DSN, MAILER_FROM
-make prod-up           # docker compose -f compose.yaml -f compose.prod.yaml up -d --build
+make prod-check        # valide docker-compose.prod.yml
+make prod-build        # construit les images de production en local avant de pousser
 ```
 
 Les images de production embarquent le code : pas de volume de sources, front compilé servi par Nginx,

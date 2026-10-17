@@ -1,10 +1,11 @@
 DC      = docker compose
-DC_PROD = docker compose -f compose.yaml -f compose.prod.yaml
+# Production (Coolify) : fichier autonome ; secrets factices pour pouvoir le valider et le construire en local
+DC_PROD = APP_SECRET=local JWT_PASSPHRASE=local POSTGRES_PASSWORD=local MAILPIT_UI_AUTH=local:local docker compose -f docker-compose.prod.yml
 PHP     = $(DC) exec php
 CONSOLE = $(PHP) bin/console
 
 .DEFAULT_GOAL := help
-.PHONY: help up down restart build ps logs cc sh console composer npm migration migrate fixtures content test e2e db db-dump db-restore prod-up prod-down
+.PHONY: help up down restart build ps logs cc sh console composer npm migration migrate fixtures content test e2e db db-dump db-restore prod-check prod-build
 
 help: ## Liste des commandes
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -86,8 +87,8 @@ db-restore: ## Restaure une sauvegarde (ex : make db-restore f=backups/xxx.sql)
 	$(DC) exec -T db sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' < $(f)
 
 ## —— Production ——————————————————————————————————————————————
-prod-up: ## Build + démarrage en mode production
-	$(DC_PROD) up -d --build
+prod-check: ## Valide docker-compose.prod.yml (déployé par Coolify, voir DEPLOYMENT.md)
+	$(DC_PROD) config --quiet && echo "docker-compose.prod.yml valide"
 
-prod-down: ## Arrêt de la production
-	$(DC_PROD) down
+prod-build: ## Construit les images de production en local (vérifie le build avant un push)
+	$(DC_PROD) build

@@ -38,7 +38,9 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
 FROM php-base AS php-prod
 
 ENV APP_ENV=prod
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+# fcgi : contrôle de santé du conteneur (cgi-fcgi interroge /api/health directement dans php-fpm)
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+ && apk add --no-cache fcgi
 COPY docker/php/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/20-app.prod.ini
 
 COPY api/composer.json api/composer.lock api/symfony.lock ./

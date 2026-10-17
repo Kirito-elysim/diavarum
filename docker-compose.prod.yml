@@ -1,0 +1,170 @@
+# Production sur Coolify (ressource « Docker Compose », fichier : docker-compose.prod.yml).
+# Fichier autonome : Coolify ne fusionne pas compose.yaml et un fichier d'override.
+#
+# - Aucun port publié sur l'hôte : seuls les services ayant un domaine dans Coolify rejoignent le
+#   réseau externe `coolify` (Traefik) ; tout le reste dialogue sur le réseau `internal`.
+# - Les variables ${...} se définissent dans Coolify → Environment Variables (voir .env.prod.example).
+# - Guide pas à pas : DEPLOYMENT.md
+
+services:
+  # API Symfony (php-fpm). Au démarrage : migrations, puis clés JWT si absentes (docker-entrypoint).
+  php:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: php-prod
+    image: diaverum-php:prod
+    restart: unless-stopped
+    environment: &app-env
+      APP_ENV: prod
+      APP_DEBUG: 0
+      APP_SECRET: ${APP_SECRET:?Définir APP_SECRET dans Coolify}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-diaverum}:${POSTGRES_PASSWORD:?Définir POSTGRES_PASSWORD dans Coolify}@db:5432/${POSTGRES_DB:-diaverum}?serverVersion=16&charset=utf8
+      MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
+      JWT_PASSPHRASE: ${JWT_PASSPHRASE:?Définir JWT_PASSPHRASE dans Coolify}
+      # Mailpit tant qu'aucun vrai fournisseur n'est défini (les emails sont capturés, jamais envoyés)
+      MAILER_DSN: ${MAILER_DSN:-smtp://mailer:1025}
+      MAILER_FROM: ${MAILER_FROM:-noreply@diaverum.fr}
+      # Jeton du prestataire pour l'intégration des contenus (vide = API d'intégration désactivée)
+      CONTENT_API_TOKEN: ${CONTENT_API_TOKEN:-}
+    volumes:
+      - jwt_keys:/app/config/jwt
+      - course_media:/app/var/course-media
+      - import_files:/app/var/import-files
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "9000"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          SCRIPT_NAME=/index.php SCRIPT_FILENAME=/app/public/index.php REQUEST_METHOD=GET
+          REQUEST_URI=/api/health SERVER_PROTOCOL=HTTP/1.1 SERVER_NAME=localhost SERVER_PORT=80
+          cgi-fcgi -bind -connect 127.0.0.1:9000 |
+          php -r 'exit(str_contains(stream_get_contents(STDIN), "\"status\":\"ok\"") ? 0 : 1);'
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - internal
+
+  # File d'attente Messenger (emails…). Pas de `build:` : réutilise l'image construite par `php`,
+  # pour ne pas compiler deux fois la même image à chaque déploiement.
+  worker:
+    image: diaverum-php:prod
+    pull_policy: never
+    restart: unless-stopped
+    command: ["php", "bin/console", "messenger:consume", "async", "--time-limit=3600", "--memory-limit=256M", "-vv"]
+    environment: *app-env
+    volumes:
+      - jwt_keys:/app/config/jwt
+    depends_on:
+      # Attendre que `php` soit sain : les migrations sont alors passées
+      php:
+        condition: service_healthy
+    networks:
+      - internal
+
+  # Point d'entrée public : front React compilé + /api relayé à php-fpm.
+  # Dans Coolify : domaine sur ce service, port 80.
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: nginx-prod
+    image: diaverum-nginx:prod
+    restart: unless-stopped
+    environment:
+      # Liste blanche (IP de sortie des centres), vide = tout le monde
+      ALLOWED_IPS: ${ALLOWED_IPS:-}
+      # Traefik transmet l'IP réelle du client dans X-Forwarded-For : on fait confiance au réseau Docker
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+    depends_on:
+      php:
+        condition: service_healthy
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/health | grep -q healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - coolify
+      - internal
+    labels:
+      - traefik.docker.network=coolify
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-diaverum}
+      POSTGRES_USER: ${POSTGRES_USER:-diaverum}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Définir POSTGRES_PASSWORD dans Coolify}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - internal
+
+  # Emails « pour le moment » : Mailpit capture tout ce que l'application envoie, sans rien délivrer.
+  # Interface web (port 8025) protégée : domaine optionnel dans Coolify. À remplacer par un vrai
+  # fournisseur (MAILER_DSN) avant l'ouverture aux centres.
+  mailer:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_MAX_MESSAGES: 5000
+      MP_UI_AUTH: ${MAILPIT_UI_AUTH:?Définir MAILPIT_UI_AUTH (utilisateur:motdepasse) dans Coolify}
+    volumes:
+      - mailpit_data:/data
+    expose:
+      - "8025"
+    networks:
+      - coolify
+      - internal
+    labels:
+      - traefik.docker.network=coolify
+
+  # Administration de la base (équivalent de phpMyAdmin pour PostgreSQL). Port 8080.
+  # Ne lui donner un domaine dans Coolify que le temps nécessaire : la base contient des données de santé.
+  adminer:
+    image: adminer:4
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8080"
+    networks:
+      - coolify
+      - internal
+    labels:
+      - traefik.docker.network=coolify
+
+volumes:
+  pgdata:
+  jwt_keys:
+  course_media:
+  import_files:
+  mailpit_data:
+
+networks:
+  internal:
+    driver: bridge
+  coolify:
+    external: true
+    name: coolify
