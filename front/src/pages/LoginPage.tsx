@@ -9,7 +9,11 @@ import { Alert, AlertDescription } from '../components/ui/alert';
 import { Loader2, Activity, AlertCircle } from 'lucide-react';
 import { ApiError } from '../lib/api';
 
-/** Comptes des données de démonstration (make fixtures) — affichés en développement uniquement */
+/**
+ * Comptes des données de démonstration (make fixtures, app:demo:load) : affichés en développement,
+ * et sur une recette en ligne construite avec VITE_DEMO_ACCOUNTS=true (jamais en production réelle).
+ */
+const SHOW_DEMO_ACCOUNTS = import.meta.env.DEV || import.meta.env.VITE_DEMO_ACCOUNTS === 'true';
 const DEMO_ACCOUNTS = [
   { label: 'Administrateur national', email: 'admin@diaverum.test' },
   { label: 'Cadre (Paris)', email: 'cadre@diaverum.test' },
@@ -122,9 +126,9 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            {import.meta.env.DEV && (
+            {SHOW_DEMO_ACCOUNTS && (
               <div className="mt-6 pt-6 border-t border-gray-100">
-                <p className="text-xs text-gray-400 text-center">Comptes de démonstration (développement)</p>
+                <p className="text-xs text-gray-400 text-center">Comptes de démonstration ({import.meta.env.DEV ? 'développement' : 'recette'})</p>
                 <div className="mt-3 space-y-2">
                   {DEMO_ACCOUNTS.map((account) => (
                     <DemoAccount

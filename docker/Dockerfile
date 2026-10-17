@@ -61,6 +61,9 @@ WORKDIR /app
 COPY front/package.json front/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY front/ ./
+# Recette uniquement : affiche les comptes de démonstration sur la page de connexion
+ARG VITE_DEMO_ACCOUNTS=false
+ENV VITE_DEMO_ACCOUNTS=$VITE_DEMO_ACCOUNTS
 RUN npm run build
 
 # ─── Nginx : production ───────────────────────────────────────────────

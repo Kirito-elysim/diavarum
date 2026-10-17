@@ -75,6 +75,9 @@ services:
       context: .
       dockerfile: docker/Dockerfile
       target: nginx-prod
+      args:
+        # Recette : DEMO_ACCOUNTS=true affiche les comptes de démonstration sur la page de connexion
+        VITE_DEMO_ACCOUNTS: ${DEMO_ACCOUNTS:-false}
     image: diaverum-nginx:prod
     restart: unless-stopped
     environment:
