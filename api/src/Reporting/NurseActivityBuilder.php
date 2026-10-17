@@ -7,6 +7,7 @@ use App\Entity\SessionCompetencyValidation;
 use App\Entity\TrainingSession;
 use App\Entity\User;
 use App\Enum\SessionStatus;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
@@ -66,10 +67,10 @@ final class NurseActivityBuilder
             ->andWhere('p.center IN (:centers)')->andWhere('p.removedAt IS NULL')
             ->setParameter('nurse', $nurse)->setParameter('validated', SessionStatus::Validated)->setParameter('centers', $centers);
         if (null !== $from) {
-            $query->andWhere('s.completedAt >= :from')->setParameter('from', $from);
+            $query->andWhere('s.completedAt >= :from')->setParameter('from', $from, Types::DATETIMETZ_IMMUTABLE);
         }
         if (null !== $to) {
-            $query->andWhere('s.completedAt <= :to')->setParameter('to', $to);
+            $query->andWhere('s.completedAt <= :to')->setParameter('to', $to, Types::DATETIMETZ_IMMUTABLE);
         }
 
         return $query;

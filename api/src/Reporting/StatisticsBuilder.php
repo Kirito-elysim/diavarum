@@ -12,6 +12,7 @@ use App\Enum\EligibilityStatus;
 use App\Enum\ProgramStatus;
 use App\Enum\SessionStatus;
 use App\Enum\UserRole;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -203,10 +204,10 @@ final class StatisticsBuilder
             ->setParameter('centers', $centers)->setParameter('validated', SessionStatus::Validated)
             ->groupBy('s.nurse');
         if (null !== $from) {
-            $query->andWhere('s.completedAt >= :from')->setParameter('from', $from);
+            $query->andWhere('s.completedAt >= :from')->setParameter('from', $from, Types::DATETIMETZ_IMMUTABLE);
         }
         if (null !== $to) {
-            $query->andWhere('s.completedAt <= :to')->setParameter('to', $to);
+            $query->andWhere('s.completedAt <= :to')->setParameter('to', $to, Types::DATETIMETZ_IMMUTABLE);
         }
         $activity = $query->getQuery()->getArrayResult();
         $byNurse = array_column($activity, null, 'nurse');
