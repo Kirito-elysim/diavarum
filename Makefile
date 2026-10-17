@@ -56,7 +56,7 @@ migrate: ## Applique les migrations
 fixtures: ## Recharge les données de démo (conserve le catalogue des séances et les listes de référence)
 	$(CONSOLE) doctrine:fixtures:load --no-interaction \
 		--purge-exclusions=eligibility_reason --purge-exclusions=interruption_reason --purge-exclusions=codex_word \
-		--purge-exclusions=chapter --purge-exclusions=module
+		--purge-exclusions=chapter --purge-exclusions=module --purge-exclusions=module_competency
 	$(MAKE) content
 
 content: ## Importe les contenus de cours versionnés (api/content/*.json)

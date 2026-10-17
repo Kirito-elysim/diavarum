@@ -5,7 +5,6 @@ namespace App\Demo;
 use App\Entity\Center;
 use App\Entity\EligibilityReason;
 use App\Entity\Module;
-use App\Entity\ModuleCompetency;
 use App\Entity\NationalSecurityCode;
 use App\Entity\Patient;
 use App\Entity\TrainingProgram;
@@ -20,7 +19,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Données de démonstration : 2 centres, un compte par profil, quelques patients et leurs parcours,
- * et un contenu d'exemple (repris de la maquette Bolt) sur 3 séances : S4, S14 et S17.
+ * et un contenu d'exemple (repris de la maquette Bolt) sur 3 séances : S4, S7 et S17.
  * Le catalogue des séances et les listes de référence viennent des migrations.
  *
  * Utilisées par les fixtures (`make fixtures`, dev) et par `app:demo:load` (recette en ligne).
@@ -150,6 +149,7 @@ final class DemoDataLoader
 
     /**
      * Contenu d'exemple sur des séances du catalogue officiel (le contenu réel sera intégré par le prestataire).
+     * Les compétences viennent du catalogue (migrations, guide IDE) : elles ne sont pas redéfinies ici.
      *
      * @return list<Module> séances publiées, dans l'ordre du parcours
      */
@@ -161,10 +161,6 @@ final class DemoDataLoader
             $module = $repository->findOneBy(['code' => $data['code']])
                 ?? throw new \RuntimeException(\sprintf('Séance %s absente du catalogue : lancez les migrations.', $data['code']));
             $module->setContent($data['content']);
-
-            foreach ($data['competencies'] as $position => $label) {
-                $manager->persist((new ModuleCompetency())->setModule($module)->setLabel($label)->setPosition($position));
-            }
         }
 
         return $repository->findBy(['published' => true], ['position' => 'ASC']);

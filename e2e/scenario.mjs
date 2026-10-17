@@ -334,7 +334,7 @@ await step('Administrateur national : journal des accès (consultation du patien
 
 await step('Administrateur national : contenus des séances (33, dont S1 et S4 intégrées)', async () => {
   await page.getByRole('link', { name: 'Contenus des séances' }).click();
-  await page.getByText('4/33 séances ont un contenu intégré').waitFor(); // S1 (storyboard) + S4, S14, S17 (démo)
+  await page.getByText('4/33 séances ont un contenu intégré').waitFor(); // S1 (storyboard) + S4, S7, S17 (démo)
   await page.getByRole('row', { name: /S4 IRCT et hémodialyse/ }).getByText('Publiée').waitFor();
   await shot('10b-contenus');
 });

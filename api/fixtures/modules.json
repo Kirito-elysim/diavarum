@@ -111,11 +111,6 @@
           }
         ]
       }
-    ],
-    "competencies": [
-      "Le patient explique le rôle de la dialyse avec ses propres mots",
-      "Le patient identifie la durée d'une séance de dialyse",
-      "Le patient sait qu'il peut prévenir l'IDE en cas de gêne pendant la séance"
     ]
   },
   {
@@ -248,15 +243,10 @@
           }
         ]
       }
-    ],
-    "competencies": [
-      "Le patient distingue les aliments à privilégier de ceux à limiter",
-      "Le patient explique pourquoi le sel doit être limité",
-      "Le patient connaît au moins deux astuces pour gérer sa soif"
     ]
   },
   {
-    "code": "S14",
+    "code": "S7",
     "demoTitle": "La fistula - Mon trésor",
     "content": [
       {
@@ -439,12 +429,6 @@
           }
         ]
       }
-    ],
-    "competencies": [
-      "Le patient palpe sa fistula chaque matin et sait reconnaître le frémissement",
-      "Le patient identifie les gestes à éviter sur le bras de la fistula",
-      "Le patient connaît les signes d'alerte nécessitant d'appeler le centre",
-      "Le patient sait réagir correctement face à une absence de frémissement"
     ]
   }
 ]
