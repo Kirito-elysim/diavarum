@@ -47,7 +47,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         ]),
         new Get(),
         new Post(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)"),
-        new Patch(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)", processor: \App\State\PatientEligibilityProcessor::class),
+        new Patch(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)"),
         new Delete(security: "is_granted('ROLE_CADRE')", processor: ArchiveProcessor::class),
     ],
     normalizationContext: ['groups' => ['patient:read', 'author:read']],

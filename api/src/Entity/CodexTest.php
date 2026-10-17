@@ -228,7 +228,7 @@ class CodexTest implements CenterScopedInterface, AuthoredInterface
         return $this;
     }
 
-    /** Protocole actuel : deux épreuves réussies ou orientation >= 4 ; anciens tests inchangés. */
+    /** Protocole actuel : deux épreuves réussies, ou une seule échouée et orientation >= 4 ; anciens tests inchangés. */
     #[Groups(['codex_test:read'])]
     public function isPassed(): bool
     {

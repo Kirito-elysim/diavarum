@@ -83,27 +83,34 @@ await step('Création d\'un patient → ouverture de sa fiche', async () => {
   await page.getByText('01/05/1950').waitFor();
 });
 
-await step('Test CODEX : liste fixe, cadran vierge, validation IDE et rappel', async () => {
+await step('Test CODEX : écrans du protocole, cadran à 12 repères, restitution automatique et décision de l’IDE', async () => {
   await page.getByRole('tab', { name: 'Éligibilité' }).click();
   await page.getByRole('button', { name: 'Faire passer le test' }).click();
-  await page.getByText('ballon', { exact: true }).waitFor();
-  await page.getByRole('button', { name: /Mots lus et répétés/ }).click();
-  await page.getByRole('button', { name: 'Donner la tablette au patient' }).click();
+  await page.getByRole('button', { name: 'Démarrer le test' }).click();
+  for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Suite du test' }).click();
   const face = page.getByRole('img', { name: 'Cadran vierge à dessiner au doigt ou au stylet' });
-  if (await face.locator('text, line').count()) throw new Error('Le cadran doit être vierge');
+  if (await face.locator('text, line, polyline').count()) throw new Error('Le cadran ne doit comporter aucun chiffre');
+  if (await face.locator('circle').count() !== 13) throw new Error('Le cadran doit comporter les 12 repères des heures');
   const clock = await face.boundingBox();
   await page.mouse.move(clock.x + clock.width / 2, clock.y + clock.height / 2);
   await page.mouse.down();
   await page.mouse.move(clock.x + clock.width * 0.8, clock.y + clock.height * 0.3, { steps: 8 });
   await page.mouse.up();
   await shot('02a-codex-horloge');
-  await page.getByRole('button', { name: /J’ai terminé/ }).click();
+  await page.getByRole('button', { name: 'Suite du test' }).click();
+  await page.getByRole('button', { name: 'Suite du test' }).click();
   if (await page.getByRole('img', { name: 'Horloge dessinée par le patient' }).locator('polyline').count() !== 1) throw new Error('Dessin perdu');
   for (const radio of await page.getByRole('radio', { name: 'Oui', exact: true }).all()) await radio.check();
-  await page.getByRole('button', { name: 'Continuer vers le rappel des mots' }).click();
-  await page.getByRole('button', { name: '3 mots rappelés' }).click();
-  await page.getByRole('heading', { name: 'CODEX normal' }).waitFor();
-  await page.getByRole('button', { name: 'Retour à la fiche patient' }).click();
+  await page.getByRole('status').filter({ hasText: 'RÉUSSI' }).waitFor();
+  await page.getByRole('button', { name: 'Suite du test' }).click();
+  await page.getByRole('radio', { name: 'Oui', exact: true }).check();
+  await page.getByRole('button', { name: 'Suite du test' }).click();
+  await page.getByText('Test CODEX normal').waitFor();
+  // Patient laissé non éligible : le parcours doit rester verrouillé
+  await page.getByRole('button', { name: 'Non éligible' }).click();
+  await page.getByText('Patient non consentant').click();
+  await page.getByRole('button', { name: 'Valider' }).click();
+  await page.waitForURL(/\/patients\/[0-9a-f-]{36}$/);
   await page.getByRole('tab', { name: 'Éligibilité' }).click();
   await page.getByText('Normal', { exact: true }).first().waitFor();
 });
@@ -115,8 +122,7 @@ await step('Parcours verrouillé tant que le patient n\'est pas éligible', asyn
 
 await step('Non éligible sans motif → refus ; avec motif → enregistré', async () => {
   await page.getByRole('tab', { name: 'Éligibilité' }).click();
-  await page.getByRole('combobox').click();
-  await page.getByRole('option', { name: 'Non éligible' }).click();
+  await page.getByText('Patient non consentant').click();
   await page.getByRole('button', { name: 'Enregistrer' }).click();
   await page.getByText('Un patient non éligible doit avoir au moins un motif.').waitFor();
   await page.getByText('Patient non consentant').click();

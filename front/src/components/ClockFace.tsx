@@ -2,7 +2,10 @@ import { useRef } from 'react';
 
 export type ClockStroke = { x: number; y: number }[];
 
-/** Cadran vierge : aucune graduation ni aiguille susceptible de guider le patient. */
+/** 12 repères des heures, sans aucun chiffre ni aiguille susceptible de guider le patient. */
+const marks = Array.from({ length: 12 }, (_, hour) => ({ x: 150 + 128 * Math.sin(hour * Math.PI / 6), y: 150 - 128 * Math.cos(hour * Math.PI / 6) }));
+
+/** Cadran à dessiner au doigt ou au stylet. */
 export function ClockFace({ strokes, onChange, readOnly = false }: {
   strokes: ClockStroke[];
   onChange?: (strokes: ClockStroke[]) => void;
@@ -17,7 +20,7 @@ export function ClockFace({ strokes, onChange, readOnly = false }: {
   };
   const update = (next: ClockStroke[]) => { current.current = next; onChange?.(next); };
   return (
-    <svg viewBox="0 0 300 300" className="w-full max-w-[420px] touch-none select-none" role="img" aria-label={readOnly ? 'Horloge dessinée par le patient' : 'Cadran vierge à dessiner au doigt ou au stylet'}
+    <svg viewBox="0 0 300 300" className="w-full max-w-[520px] touch-none select-none" role="img" aria-label={readOnly ? 'Horloge dessinée par le patient' : 'Cadran vierge à dessiner au doigt ou au stylet'}
       onPointerDown={(event) => {
         if (readOnly || pointer.current !== null) return;
         event.preventDefault();
@@ -34,6 +37,7 @@ export function ClockFace({ strokes, onChange, readOnly = false }: {
       onPointerCancel={() => { pointer.current = null; }}
       onLostPointerCapture={() => { pointer.current = null; }}>
       <circle cx="150" cy="150" r="140" fill="white" stroke="#004138" strokeWidth="3" />
+      {marks.map(({ x, y }, hour) => <circle key={hour} cx={x} cy={y} r="3.5" fill="#004138" />)}
       {strokes.map((stroke, index) => <polyline key={index} points={stroke.map(({ x, y }) => `${x},${y}`).join(' ')} fill="none" stroke="#1f2937" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />)}
     </svg>
   );

@@ -537,7 +537,7 @@ function CodexSection({ patient }: { patient: Patient }) {
             {tests.map((t) => (
               <div key={t.id} className="flex flex-wrap items-center gap-4 p-3 rounded-xl bg-gray-50 text-sm">
                 <Badge variant="secondary" className={t.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}>{t.clockChecks ? (t.passed ? 'Normal' : 'Anormal') : (t.passed ? 'Réussi (ancien protocole)' : 'Échec (ancien protocole)')}</Badge>
-                <span className="text-gray-600">Horloge ({t.clockTime}) : {t.clockTestPassed ? '✓' : '✗'} · Mots ({t.words.join(', ')}) : {t.wordRecallPassed ? '✓' : '✗'}{t.orientationScore != null && ` · Orientation : ${t.orientationScore}/5`}{t.nephrologistReviewRequired && <strong className="block text-red-700 mt-1">Non éligible — résultat à transmettre au néphrologue par l’IDE.</strong>}</span>
+                <span className="text-gray-600">Horloge ({t.clockTime}) : {t.clockTestPassed ? '✓' : '✗'} · Mots ({t.words.join(', ')}) : {t.wordRecallPassed ? '✓' : '✗'}{t.orientationScore != null && ` · Orientation : ${t.orientationScore}/5`}{t.nephrologistReviewRequired && <strong className="block text-red-700 mt-1">CODEX anormal — résultat à transmettre au néphrologue par l’IDE.</strong>}</span>
                 <span className="ml-auto text-xs text-gray-400">{formatDate(t.createdAt, "d MMM yyyy 'à' HH:mm")} · {t.nurse.firstName} {t.nurse.lastName}</span>
               </div>
             ))}
