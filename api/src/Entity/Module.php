@@ -317,7 +317,7 @@ class Module implements ArchivableInterface
     #[Groups(['module:list'])]
     public function getCompetencyCount(): int
     {
-        return $this->competencies->count();
+        return \count($this->getActiveCompetencies());
     }
 
     public function getCreatedAt(): \DateTimeImmutable

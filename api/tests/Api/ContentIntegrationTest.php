@@ -173,5 +173,7 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         $module = $this->requestAs($admin, 'GET', '/api/modules/'.$module->getId())->toArray();
         self::assertCount(1, $module['competencies']);
         self::assertTrue(array_is_list($module['competencies']));
+        $listed = array_values(array_filter($this->requestAs($admin, 'GET', '/api/modules')->toArray(), static fn (array $m) => 'S2' === $m['code']))[0];
+        self::assertSame(1, $listed['competencyCount'], 'Le compteur ignore les compétences archivées');
     }
 }
