@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Patient;
 use App\Entity\User;
+use App\Reporting\Labels;
 use App\Reporting\PatientReportBuilder;
 use App\Reporting\PdfWriter;
 use App\Reporting\ReportingScope;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -83,7 +85,7 @@ final class ReportingController
     {
         $stats = $this->buildStatistics($request, $user);
 
-        return $this->file($this->pdf->render('reports/statistics.html.twig', ['s' => $stats]), 'application/pdf', $this->statisticsFileName($stats, 'pdf'));
+        return $this->file($this->pdf->render('reports/statistics.html.twig', ['s' => $stats, 'period' => Labels::period($stats['period'])]), 'application/pdf', $this->statisticsFileName($stats, 'pdf'));
     }
 
     /**
@@ -93,8 +95,27 @@ final class ReportingController
     {
         $requested = $request->query->all('centers');
         $centers = $this->scope->centers($user, $requested);
+        $from = self::day($request->query->getString('from'), '00:00:00');
+        $to = self::day($request->query->getString('to'), '23:59:59');
+        if (null !== $from && null !== $to && $from > $to) {
+            throw new BadRequestHttpException('Période invalide : la date de début est postérieure à la date de fin.');
+        }
 
-        return $this->statistics->build($centers, $this->scope->isNationalAdmin() && [] === $requested);
+        return $this->statistics->build($centers, $this->scope->isNationalAdmin() && [] === $requested, $from, $to);
+    }
+
+    /** « 2026-10-15 » → début ou fin de cette journée, heure de Paris */
+    private static function day(string $value, string $time): ?\DateTimeImmutable
+    {
+        if ('' === $value) {
+            return null;
+        }
+        $date = \DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $value.' '.$time, new \DateTimeZone('Europe/Paris'));
+        if (false === $date || $date->format('Y-m-d') !== $value) {
+            throw new BadRequestHttpException(\sprintf('Date « %s » invalide : format attendu AAAA-MM-JJ.', $value));
+        }
+
+        return $date;
     }
 
     private function patientFileName(Patient $patient): string

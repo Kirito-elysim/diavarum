@@ -15,9 +15,11 @@ import type {
   Module,
   Patient,
   ProgramModule,
+  ProgramStatus,
   ReferenceItem,
   Statistics,
   TrainingProgram,
+  TrainingProgramListItem,
   TrainingSession,
   UserAccount,
   UserRole,
@@ -62,15 +64,12 @@ export function usePatient(id: string | null | undefined) {
 export function usePatientProgram(patientIri: string | undefined) {
   return useQuery({
     queryKey: ['program', 'patient', patientIri],
-    queryFn: async () => (await api<Collection<TrainingProgram>>(`/training_programs${query({ patient: patientIri })}`)).member[0] ?? null,
+    // La liste est allégée : le parcours complet (détail des séances) est lu ensuite par son identifiant
+    queryFn: async () => {
+      const found = (await api<Collection<TrainingProgramListItem>>(`/training_programs${query({ patient: patientIri })}`)).member[0];
+      return found ? api<TrainingProgram>(`/training_programs/${found.id}`) : null;
+    },
     enabled: !!patientIri,
-  });
-}
-
-export function usePrograms() {
-  return useQuery({
-    queryKey: ['programs'],
-    queryFn: () => api<Collection<TrainingProgram>>('/training_programs?itemsPerPage=100'),
   });
 }
 
@@ -113,10 +112,20 @@ export function useInterruptionReasons() {
   });
 }
 
-export function useStatistics(centerIds: string[], enabled = true) {
+/** Paramètres d'URL des statistiques et de leurs exports : centres et période (AAAA-MM-JJ) */
+export function statisticsQuery(centerIds: string[], period: { from?: string | null; to?: string | null } = {}) {
+  const params = new URLSearchParams();
+  centerIds.forEach((id) => params.append('centers[]', id));
+  if (period.from) params.set('from', period.from);
+  if (period.to) params.set('to', period.to);
+  const query = params.toString();
+  return query ? `?${query}` : '';
+}
+
+export function useStatistics(centerIds: string[], period: { from?: string | null; to?: string | null } = {}, enabled = true) {
   return useQuery({
-    queryKey: ['statistics', centerIds],
-    queryFn: () => api<Statistics>(`/statistics${centerIds.map((id, i) => `${i ? '&' : '?'}centers[]=${id}`).join('')}`),
+    queryKey: ['statistics', centerIds, period.from ?? null, period.to ?? null],
+    queryFn: () => api<Statistics>(`/statistics${statisticsQuery(centerIds, period)}`),
     enabled,
   });
 }
@@ -133,6 +142,85 @@ export function useSessions(params: { patient?: string } = {}) {
   return useQuery({
     queryKey: ['sessions', params],
     queryFn: () => api<Collection<TrainingSession>>(`/sessions${query({ ...params, itemsPerPage: '50' })}`),
+  });
+}
+
+/* ─── Listes paginées côté serveur (Séances, Parcours) ─────────────────── */
+
+export interface ListSort { key: string; desc?: boolean }
+
+/** Jour (AAAA-MM-JJ) → instant ISO en heure locale : début ou fin de journée */
+const dayBound = (day: string | null | undefined, end: boolean) =>
+  day ? new Date(`${day}T${end ? '23:59:59.999' : '00:00:00'}`).toISOString() : undefined;
+
+export interface SessionFilters {
+  search?: string;
+  center?: string;
+  nurse?: string;
+  status?: string;
+  patient?: string;
+  from?: string | null;
+  to?: string | null;
+}
+
+const sessionParams = (f: SessionFilters) => ({
+  search: f.search || undefined,
+  center: f.center,
+  nurse: f.nurse,
+  status: f.status,
+  patient: f.patient,
+  'startedAt[after]': dayBound(f.from, false),
+  'startedAt[before]': dayBound(f.to, true),
+});
+
+const SESSION_SORT: Record<string, string> = { date: 'startedAt', patient: 'patient', course: 'module', nurse: 'nurse', duration: 'durationSeconds', score: 'score' };
+
+export function useSessionList(filters: SessionFilters, sort: ListSort, page: number, itemsPerPage = 25) {
+  return useQuery({
+    queryKey: ['sessions', 'list', filters, sort, page, itemsPerPage],
+    queryFn: () => api<Collection<TrainingSession>>(`/sessions${query({
+      ...sessionParams(filters),
+      [`order[${SESSION_SORT[sort.key] ?? 'startedAt'}]`]: sort.desc ? 'desc' : 'asc',
+      page: String(page),
+      itemsPerPage: String(itemsPerPage),
+    })}`),
+    placeholderData: (previous) => previous,
+  });
+}
+
+export function useSessionSummary(filters: SessionFilters) {
+  return useQuery({
+    queryKey: ['sessions', 'summary', filters],
+    queryFn: () => api<{ count: number; averageScore: number | null; averageDurationSeconds: number | null }>(`/summaries/sessions${query(sessionParams(filters))}`),
+    placeholderData: (previous) => previous,
+  });
+}
+
+export interface ProgramFilters { search?: string; center?: string; status?: string }
+
+const PROGRAM_SORT: Record<string, string> = { patient: 'patient', status: 'status', start: 'startedAt', created: 'createdAt' };
+
+export function useProgramList(filters: ProgramFilters, sort: ListSort, page: number, itemsPerPage = 25) {
+  return useQuery({
+    queryKey: ['programs', 'list', filters, sort, page, itemsPerPage],
+    queryFn: () => api<Collection<TrainingProgramListItem>>(`/training_programs${query({
+      search: filters.search || undefined,
+      center: filters.center,
+      status: filters.status,
+      [`order[${PROGRAM_SORT[sort.key] ?? 'createdAt'}]`]: sort.desc ? 'desc' : 'asc',
+      page: String(page),
+      itemsPerPage: String(itemsPerPage),
+    })}`),
+    placeholderData: (previous) => previous,
+  });
+}
+
+/** Nombre de parcours par statut, avec la recherche et le centre (mais pas le statut) de la liste */
+export function useProgramSummary(filters: Omit<ProgramFilters, 'status'>) {
+  return useQuery({
+    queryKey: ['programs', 'summary', filters],
+    queryFn: () => api<{ total: number; byStatus: Record<ProgramStatus, number> }>(`/summaries/training_programs${query({ search: filters.search || undefined, center: filters.center })}`),
+    placeholderData: (previous) => previous,
   });
 }
 

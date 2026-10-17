@@ -112,9 +112,17 @@ final class SpreadsheetWriter
         ], $stats['courses']), $this->caption($stats));
 
         $nurses = $book->createSheet()->setTitle('IDE');
-        $this->table($nurses, ['IDE', 'Centres', 'Séances validées', 'Temps de séance (min)'], array_map(static fn (array $n) => [
-            $n['name'], $n['centers'], $n['validatedSessions'], self::minutes($n['totalDurationSeconds']),
+        $this->table($nurses, ['IDE', 'Centres', 'Séances validées', 'Patients', 'Score moyen (%)', 'Temps de séance (min)'], array_map(static fn (array $n) => [
+            $n['name'], $n['centers'], $n['validatedSessions'], $n['patients'], $n['averageScore'], self::minutes($n['totalDurationSeconds']),
         ], $stats['nurses']), $this->caption($stats));
+
+        $monthly = $book->createSheet()->setTitle('Activité mensuelle');
+        $this->table($monthly, ['Mois', 'Séances validées', 'Score moyen (%)'], array_map(static fn (array $m) => [
+            $m['month'], $m['validatedSessions'], $m['averageScore'],
+        ], $stats['monthly']), $this->caption($stats));
+
+        $reasons = $book->createSheet()->setTitle('Motifs de clôture');
+        $this->table($reasons, ['Motif', 'Parcours clôturés'], array_map(static fn (array $r) => [$r['label'], $r['count']], $stats['interruptionReasons']), $this->caption($stats));
 
         $book->setActiveSheetIndex(0);
 
@@ -123,7 +131,7 @@ final class SpreadsheetWriter
 
     private function caption(array $stats): string
     {
-        return \sprintf('Périmètre : %s — édité le %s', $stats['scope'], $stats['generatedAt']->setTimezone(new \DateTimeZone('Europe/Paris'))->format('d/m/Y à H:i'));
+        return \sprintf('Périmètre : %s — %s — édité le %s', $stats['scope'], Labels::period($stats['period']), $stats['generatedAt']->setTimezone(new \DateTimeZone('Europe/Paris'))->format('d/m/Y à H:i'));
     }
 
     /**

@@ -20,7 +20,11 @@ use Doctrine\ORM\EntityManagerInterface;
  * - nombre et proportion de parcours par statut ;
  * - scores moyens par cours et des parcours ;
  * - durées moyennes par cours (pas par chapitre) et des parcours achevés, par centre et au total ;
- * - activité des IDE (séances validées, temps passé).
+ * - activité des IDE (séances validées, temps passé, patients, score) ;
+ * - activité mois par mois et motifs de clôture des parcours.
+ *
+ * La période (facultative) filtre l'activité : séances validées, parcours achevés ou clôturés.
+ * Les effectifs (patients, parcours par statut) sont toujours donnés à date.
  */
 final class StatisticsBuilder
 {
@@ -33,8 +37,11 @@ final class StatisticsBuilder
      *
      * @return array<string, mixed>
      */
-    public function build(array $centers, bool $national): array
+    public function build(array $centers, bool $national, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null): array
     {
+        $inPeriod = static fn (?\DateTimeInterface $date): bool => null !== $date
+            && (null === $from || $date >= $from) && (null === $to || $date <= $to);
+
         $patients = [] === $centers ? [] : $this->entityManager->createQueryBuilder()
             ->select('p', 'c')->from(Patient::class, 'p')->join('p.center', 'c')
             ->andWhere('c IN (:centers)')->andWhere('p.removedAt IS NULL')
@@ -59,27 +66,45 @@ final class StatisticsBuilder
         $perCenter = array_map(fn (Center $center) => ['center' => $center->getName()] + $this->aggregate(
             $patientsByCenter[$center->getId()->toRfc4122()] ?? [],
             $programsByCenter[$center->getId()->toRfc4122()] ?? [],
+            $inPeriod,
         ), $centers);
 
         return [
             'scope' => $national ? 'National' : implode(', ', array_map(static fn (Center $c) => $c->getName(), $centers)),
             'national' => $national,
             'generatedAt' => new \DateTimeImmutable(),
+            'period' => ['from' => $from?->format('Y-m-d'), 'to' => $to?->format('Y-m-d')],
             'centers' => $perCenter,
-            'total' => ['center' => $national ? 'National' : 'Total'] + $this->aggregate($patients, $programs),
-            'courses' => $this->courses($programs),
-            'nurses' => $this->nurses($centers),
+            'total' => ['center' => $national ? 'National' : 'Total'] + $this->aggregate($patients, $programs, $inPeriod),
+            'courses' => $this->courses($programs, $inPeriod),
+            'nurses' => $this->nurses($centers, $from, $to),
+            'monthly' => $this->monthly($programs, $inPeriod, $from, $to),
+            'interruptionReasons' => $this->interruptionReasons($programs, $inPeriod),
         ];
     }
 
     /**
      * @param list<Patient>         $patients
      * @param list<TrainingProgram> $programs
+     * @param \Closure(?\DateTimeInterface): bool $inPeriod
      *
      * @return array<string, mixed>
      */
-    private function aggregate(array $patients, array $programs): array
+    private function aggregate(array $patients, array $programs, \Closure $inPeriod): array
     {
+        $sessionScores = [];
+        $validatedSessions = 0;
+        foreach ($programs as $program) {
+            foreach ($program->getModules() as $selection) {
+                if ($inPeriod($selection->getValidatedAt())) {
+                    ++$validatedSessions;
+                    if (null !== $selection->getScore()) {
+                        $sessionScores[] = $selection->getScore();
+                    }
+                }
+            }
+        }
+
         $registered = \count($patients);
         $countPatients = static fn (EligibilityStatus $status) => \count(array_filter($patients, static fn (Patient $p) => $p->getEligibilityStatus() === $status));
         $totalPrograms = \count($programs);
@@ -107,6 +132,12 @@ final class StatisticsBuilder
             ],
             'averageProgramScore' => self::average($programScores),
             'averageCompletedProgramDurationSeconds' => self::average(array_values($completedDurations)),
+            'activity' => [
+                'validatedSessions' => $validatedSessions,
+                'averageSessionScore' => self::average($sessionScores),
+                'completedPrograms' => \count(array_filter($programs, static fn (TrainingProgram $p) => ProgramStatus::Completed === $p->getStatus() && $inPeriod($p->getCompletedAt()))),
+                'interruptedPrograms' => \count(array_filter($programs, static fn (TrainingProgram $p) => ProgramStatus::Interrupted === $p->getStatus() && $inPeriod($p->getInterruptedAt()))),
+            ],
         ];
     }
 
@@ -114,16 +145,17 @@ final class StatisticsBuilder
      * Score et durée moyens de chaque séance du catalogue, sur les séances validées du périmètre.
      *
      * @param list<TrainingProgram> $programs
+     * @param \Closure(?\DateTimeInterface): bool $inPeriod
      *
      * @return list<array<string, mixed>>
      */
-    private function courses(array $programs): array
+    private function courses(array $programs, \Closure $inPeriod): array
     {
         $scores = [];
         $durations = [];
         foreach ($programs as $program) {
             foreach ($program->getModules() as $selection) {
-                if (null === $selection->getValidatedAt()) {
+                if (!$inPeriod($selection->getValidatedAt())) {
                     continue;
                 }
                 $code = $selection->getModule()->getCode();
@@ -157,19 +189,26 @@ final class StatisticsBuilder
      *
      * @return list<array<string, mixed>>
      */
-    private function nurses(array $centers): array
+    private function nurses(array $centers, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to): array
     {
         if ([] === $centers) {
             return [];
         }
 
-        $activity = $this->entityManager->createQueryBuilder()
-            ->select('IDENTITY(s.nurse) AS nurse', 'COUNT(s.id) AS sessions', 'COALESCE(SUM(s.durationSeconds), 0) AS duration')
+        $query = $this->entityManager->createQueryBuilder()
+            ->select('IDENTITY(s.nurse) AS nurse', 'COUNT(s.id) AS sessions', 'COALESCE(SUM(s.durationSeconds), 0) AS duration',
+                'COUNT(DISTINCT s.patient) AS patients', 'AVG(s.score) AS score')
             ->from(TrainingSession::class, 's')->join('s.patient', 'p')
             ->andWhere('p.center IN (:centers)')->andWhere('s.status = :validated')
             ->setParameter('centers', $centers)->setParameter('validated', SessionStatus::Validated)
-            ->groupBy('s.nurse')
-            ->getQuery()->getArrayResult();
+            ->groupBy('s.nurse');
+        if (null !== $from) {
+            $query->andWhere('s.completedAt >= :from')->setParameter('from', $from);
+        }
+        if (null !== $to) {
+            $query->andWhere('s.completedAt <= :to')->setParameter('to', $to);
+        }
+        $activity = $query->getQuery()->getArrayResult();
         $byNurse = array_column($activity, null, 'nurse');
 
         $nurses = $this->entityManager->createQueryBuilder()
@@ -193,10 +232,80 @@ final class StatisticsBuilder
             )),
             'validatedSessions' => (int) ($byNurse[$u->getId()->toRfc4122()]['sessions'] ?? 0),
             'totalDurationSeconds' => (int) ($byNurse[$u->getId()->toRfc4122()]['duration'] ?? 0),
+            'patients' => (int) ($byNurse[$u->getId()->toRfc4122()]['patients'] ?? 0),
+            'averageScore' => isset($byNurse[$u->getId()->toRfc4122()]['score']) ? (int) round((float) $byNurse[$u->getId()->toRfc4122()]['score']) : null,
         ], $nurses);
         usort($rows, static fn (array $a, array $b) => strcmp($a['name'], $b['name']));
 
         return $rows;
+    }
+
+    /**
+     * Séances validées et score moyen, mois par mois (mois sans activité compris).
+     * Sans période : de la première séance validée au mois en cours.
+     *
+     * @param list<TrainingProgram> $programs
+     * @param \Closure(?\DateTimeInterface): bool $inPeriod
+     *
+     * @return list<array{month: string, validatedSessions: int, averageScore: int|null}>
+     */
+    private function monthly(array $programs, \Closure $inPeriod, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to): array
+    {
+        $paris = new \DateTimeZone('Europe/Paris');
+        $counts = [];
+        $scores = [];
+        $first = null;
+        foreach ($programs as $program) {
+            foreach ($program->getModules() as $selection) {
+                $date = $selection->getValidatedAt();
+                if (!$inPeriod($date)) {
+                    continue;
+                }
+                $month = $date->setTimezone($paris)->format('Y-m');
+                $counts[$month] = ($counts[$month] ?? 0) + 1;
+                if (null !== $selection->getScore()) {
+                    $scores[$month][] = $selection->getScore();
+                }
+                $first = null === $first || $month < $first ? $month : $first;
+            }
+        }
+
+        $start = $from?->setTimezone($paris)->format('Y-m') ?? $first;
+        if (null === $start) {
+            return [];
+        }
+        $end = ($to ?? new \DateTimeImmutable())->setTimezone($paris)->format('Y-m');
+        $months = [];
+        for ($cursor = new \DateTimeImmutable($start.'-01'); $cursor->format('Y-m') <= $end && \count($months) < 60; $cursor = $cursor->modify('+1 month')) {
+            $key = $cursor->format('Y-m');
+            $months[] = ['month' => $key, 'validatedSessions' => $counts[$key] ?? 0, 'averageScore' => self::average($scores[$key] ?? [])];
+        }
+
+        return $months;
+    }
+
+    /**
+     * Motifs cochés lors de la clôture des parcours interrompus sur la période, du plus fréquent au moins fréquent.
+     *
+     * @param list<TrainingProgram> $programs
+     * @param \Closure(?\DateTimeInterface): bool $inPeriod
+     *
+     * @return list<array{label: string, count: int}>
+     */
+    private function interruptionReasons(array $programs, \Closure $inPeriod): array
+    {
+        $counts = [];
+        foreach ($programs as $program) {
+            if (ProgramStatus::Interrupted !== $program->getStatus() || !$inPeriod($program->getInterruptedAt())) {
+                continue;
+            }
+            foreach ($program->getInterruptionReasons() as $reason) {
+                $counts[$reason->getLabel()] = ($counts[$reason->getLabel()] ?? 0) + 1;
+            }
+        }
+        arsort($counts);
+
+        return array_map(static fn (string $label, int $count) => ['label' => $label, 'count' => $count], array_keys($counts), array_values($counts));
     }
 
     /**

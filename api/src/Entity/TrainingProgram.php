@@ -3,7 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\FreeTextQueryFilter;
 use ApiPlatform\Doctrine\Orm\Filter\IriFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -39,7 +43,13 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         new GetCollection(parameters: [
             'patient' => new QueryParameter(filter: new IriFilter(), property: 'patient'),
             'status' => new QueryParameter(filter: new ExactFilter(), property: 'status'),
-        ]),
+            'center' => new QueryParameter(filter: new IriFilter(), property: 'patient.center'),
+            'search' => new QueryParameter(filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())), properties: ['patient.lastName', 'patient.firstName']),
+            'order[patient]' => new QueryParameter(filter: new SortFilter(), property: 'patient.lastName'),
+            'order[status]' => new QueryParameter(filter: new SortFilter(), property: 'status'),
+            'order[startedAt]' => new QueryParameter(filter: new SortFilter(nullsComparison: 'nulls_always_last'), property: 'startedAt'),
+            'order[createdAt]' => new QueryParameter(filter: new SortFilter(), property: 'createdAt'),
+        ], normalizationContext: ['groups' => ['program:list', 'author:read']]),
         new Get(),
         new Post(
             denormalizationContext: ['groups' => ['program:create']],
@@ -54,17 +64,17 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private Uuid $id;
 
     #[ORM\OneToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
-    #[Groups(['program:read', 'program:create'])]
+    #[Groups(['program:read', 'program:list', 'program:create'])]
     private ?Patient $patient = null;
 
     #[ORM\Column(length: 20, enumType: ProgramStatus::class, options: ['default' => 'non_actif'])]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ProgramStatus $status = ProgramStatus::Inactive;
 
     /** @var Collection<int, ProgramModule> sélection des cours du parcours */
@@ -75,46 +85,46 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?User $createdBy = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?\DateTimeImmutable $startedAt = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?\DateTimeImmutable $completedAt = null;
 
     /** Validation du parcours par un cadre de service */
     #[ORM\ManyToOne]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?User $validatedBy = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?\DateTimeImmutable $validatedAt = null;
 
     /** @var Collection<int, InterruptionReason> motifs cochés lors d'une clôture anticipée */
     #[ORM\ManyToMany(targetEntity: InterruptionReason::class)]
     #[ORM\JoinTable(name: 'program_interruption_reason')]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private Collection $interruptionReasons;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?string $interruptionNotes = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?User $interruptedBy = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     private ?\DateTimeImmutable $interruptedAt = null;
 
     public function __construct()
@@ -185,21 +195,47 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
     }
 
     /** Séances sélectionnées : le « total » du parcours individualisé (ex. 14/31) */
-    #[Groups(['program:read'])]
+    /** Date de la dernière séance validée (liste des parcours) */
+    #[Groups(['program:list'])]
+    public function getLastValidatedAt(): ?\DateTimeImmutable
+    {
+        $dates = array_filter(array_map(static fn (ProgramModule $m) => $m->getValidatedAt(), $this->modules->toArray()));
+
+        return [] === $dates ? null : max($dates);
+    }
+
+    /**
+     * Prochaine séance prévue : première séance sélectionnée non validée, dans l'ordre du parcours.
+     *
+     * @return array{code: string, title: string}|null
+     */
+    #[Groups(['program:list'])]
+    public function getNextModule(): ?array
+    {
+        if (\in_array($this->status, [ProgramStatus::Completed, ProgramStatus::Interrupted], true)) {
+            return null;
+        }
+        $pending = array_filter($this->modules->toArray(), static fn (ProgramModule $m) => $m->isSelected() && null === $m->getValidatedAt());
+        usort($pending, static fn (ProgramModule $a, ProgramModule $b) => $a->getPosition() <=> $b->getPosition());
+
+        return [] === $pending ? null : ['code' => $pending[0]->getModule()->getCode(), 'title' => $pending[0]->getModule()->getTitle()];
+    }
+
+    #[Groups(['program:read', 'program:list'])]
     public function getSelectedCount(): int
     {
         return $this->modules->filter(static fn (ProgramModule $m) => $m->isSelected())->count();
     }
 
     /** Séances validées, y compris celles désélectionnées après coup */
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     public function getValidatedCount(): int
     {
         return $this->modules->filter(static fn (ProgramModule $m) => null !== $m->getValidatedAt())->count();
     }
 
     /** Moyenne des scores des séances validées (%), null si aucune séance notée */
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     public function getAverageScore(): ?int
     {
         $scores = $this->modules->map(static fn (ProgramModule $m) => $m->getScore())->filter(static fn (?int $s) => null !== $s)->toArray();
@@ -208,7 +244,7 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
     }
 
     /** Durée cumulée des séances validées */
-    #[Groups(['program:read'])]
+    #[Groups(['program:read', 'program:list'])]
     public function getTotalDurationSeconds(): int
     {
         return array_sum($this->modules->map(static fn (ProgramModule $m) => $m->getDurationSeconds() ?? 0)->toArray());

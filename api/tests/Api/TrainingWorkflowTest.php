@@ -277,4 +277,37 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
         self::assertResponseIsSuccessful();
         self::assertSame('non_actif', $this->tracking()['status']);
     }
+
+    public function testNurseOnlyListsProgramsOfHerCenters(): void
+    {
+        $elsewhere = $this->createCenter('Ailleurs');
+        $otherIde = $this->createUser(UserRole::Ide, [$elsewhere]);
+        $otherProgram = (new TrainingProgram())->setPatient($this->createPatient($elsewhere, $otherIde, 'Lointain'));
+        $otherProgram->setAuthor($otherIde);
+        $this->em()->persist($otherProgram);
+        $this->em()->flush();
+
+        $listed = array_column($this->requestAs($this->ide, 'GET', '/api/training_programs')->toArray(), 'id');
+        self::assertSame([$this->program->getId()->toRfc4122()], $listed);
+
+        $this->requestAs($this->ide, 'GET', '/api/training_programs/'.$otherProgram->getId());
+        self::assertResponseStatusCodeSame(404);
+    }
+
+    public function testColleagueContinuesTheProgramAndIsRecordedAsTheSessionNurse(): void
+    {
+        $colleague = $this->createUser(UserRole::Ide, [$this->center]);
+
+        // Le parcours a été créé par une autre IDE ; une tentative d'imposer l'IDE de la séance est ignorée
+        $session = $this->requestAs($colleague, 'POST', '/api/sessions', [
+            'patient' => $this->iri($this->patient),
+            'module' => $this->iri($this->module),
+            'program' => $this->iri($this->program),
+            'nurse' => $this->iri($this->ide),
+        ])->toArray();
+
+        self::assertResponseStatusCodeSame(201);
+        self::assertSame($this->ide->getId()->toRfc4122(), $this->program->getCreatedBy()->getId()->toRfc4122());
+        self::assertSame($colleague->getId()->toRfc4122(), $session['nurse']['id']);
+    }
 }

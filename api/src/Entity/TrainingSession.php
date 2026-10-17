@@ -2,8 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\FreeTextQueryFilter;
 use ApiPlatform\Doctrine\Orm\Filter\IriFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -40,6 +45,17 @@ use Symfony\Component\Validator\Constraints as Assert;
             'patient' => new QueryParameter(filter: new IriFilter(), property: 'patient'),
             'module' => new QueryParameter(filter: new IriFilter(), property: 'module'),
             'status' => new QueryParameter(filter: new ExactFilter(), property: 'status'),
+            'center' => new QueryParameter(filter: new IriFilter(), property: 'patient.center'),
+            'nurse' => new QueryParameter(filter: new IriFilter(), property: 'nurse'),
+            // Patient (nom, prénom) ou séance (code, titre)
+            'search' => new QueryParameter(filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())), properties: ['patient.lastName', 'patient.firstName', 'module.code', 'module.title']),
+            'startedAt' => new QueryParameter(filter: new DateFilter(), property: 'startedAt'),
+            'order[startedAt]' => new QueryParameter(filter: new SortFilter(), property: 'startedAt'),
+            'order[patient]' => new QueryParameter(filter: new SortFilter(), property: 'patient.lastName'),
+            'order[module]' => new QueryParameter(filter: new SortFilter(), property: 'module.position'),
+            'order[nurse]' => new QueryParameter(filter: new SortFilter(), property: 'nurse.lastName'),
+            'order[durationSeconds]' => new QueryParameter(filter: new SortFilter(), property: 'durationSeconds'),
+            'order[score]' => new QueryParameter(filter: new SortFilter(nullsComparison: 'nulls_always_last'), property: 'score'),
         ]),
         new Get(),
         new Post(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)", processor: StartSessionProcessor::class),

@@ -58,19 +58,19 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
-    #[Groups(['patient:read', 'session:read', 'program:read'])]
+    #[Groups(['patient:read', 'session:read', 'program:read', 'program:list'])]
     private Uuid $id;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 100)]
-    #[Groups(['patient:read', 'patient:write', 'session:read', 'program:read'])]
+    #[Groups(['patient:read', 'patient:write', 'session:read', 'program:read', 'program:list'])]
     private string $firstName = '';
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 100)]
-    #[Groups(['patient:read', 'patient:write', 'session:read', 'program:read'])]
+    #[Groups(['patient:read', 'patient:write', 'session:read', 'program:read', 'program:list'])]
     private string $lastName = '';
 
     /** Nom + prénom + date de naissance identifient le patient dans les exports */
@@ -83,7 +83,7 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
-    #[Groups(['patient:read', 'patient:write'])]
+    #[Groups(['patient:read', 'patient:write', 'program:read', 'program:list', 'session:read'])]
     private ?Center $center = null;
 
     #[ORM\Column(length: 20, enumType: EligibilityStatus::class, options: ['default' => 'enregistre'])]

@@ -353,14 +353,23 @@ await step('Cadre : valide le parcours, qui devient non modifiable', async () =>
   await shot('11-parcours-acheve');
 });
 
-await step('Cadre : statistiques de son centre et export Excel', async () => {
+await step('Cadre : statistiques de son centre (onglets, période) et export Excel', async () => {
   await page.getByRole('link', { name: 'Résultats' }).click();
-  await page.getByText('Résultats et statistiques').waitFor();
-  await page.getByText('Périmètre : Diaverum Paris Nord').waitFor();
-  await page.getByText('Activité des IDE').waitFor();
+  await page.getByRole('heading', { name: 'Résultats' }).waitFor();
+  await page.getByText(/^Diaverum Paris Nord · activité/).waitFor();
+  await page.getByText('Du patient enregistré au parcours achevé').waitFor();
+  await page.getByRole('tab', { name: 'Parcours', exact: true }).click();
+  await page.getByRole('cell', { name: /DUPONT Jean/ }).waitFor();
+  await page.getByRole('tab', { name: 'Centres', exact: true }).click();
   if (await page.getByRole('cell', { name: 'Diaverum Lyon Sud', exact: true }).count()) throw new Error('centre hors périmètre dans la synthèse');
+  await page.getByRole('tab', { name: 'IDE', exact: true }).click();
+  await page.getByText('Dubois Claire').waitFor();
+  await page.getByRole('button', { name: 'Période' }).click();
+  await page.getByRole('button', { name: 'Année en cours' }).click();
+  await page.getByText(/activité du 1 janv\./).waitFor();
   await shot('12-statistiques-cadre');
-  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Excel', exact: true }).click()]);
+  await page.getByRole('button', { name: 'Exporter' }).click();
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('menuitem', { name: 'Statistiques (Excel)' }).click()]);
   if (!download.suggestedFilename().startsWith('statistiques-diaverum-paris-nord')) throw new Error(`nom inattendu : ${download.suggestedFilename()}`);
 });
 

@@ -152,7 +152,7 @@ export interface ProgramModule extends Resource {
 }
 
 export interface TrainingProgram extends Resource {
-  patient: Author;
+  patient: Author & { center?: { id: string; name: string } };
   status: ProgramStatus;
   modules: ProgramModule[];
   createdBy: Author;
@@ -172,9 +172,15 @@ export interface TrainingProgram extends Resource {
   totalDurationSeconds: number;
 }
 
+/** Parcours tel que renvoyé par la liste (sans le détail des séances) */
+export type TrainingProgramListItem = Omit<TrainingProgram, 'modules'> & {
+  lastValidatedAt: string | null;
+  nextModule: { code: string; title: string } | null;
+};
+
 export interface TrainingSession extends Resource {
-  patient: Author;
-  module: { '@id': string; id: string; title: string };
+  patient: Author & { center?: { id: string; name: string } };
+  module: { '@id': string; id: string; code: string; title: string };
   program?: string | null;
   nurse: Author;
   status: SessionStatus;
@@ -216,16 +222,21 @@ export interface AreaStatistics {
   programs: { total: number; inactive: Share; active: Share; interrupted: Share; completed: Share };
   averageProgramScore: number | null;
   averageCompletedProgramDurationSeconds: number | null;
+  /** Activité sur la période demandée (toute l'activité sans période) */
+  activity: { validatedSessions: number; averageSessionScore: number | null; completedPrograms: number; interruptedPrograms: number };
 }
 
 export interface Statistics {
   scope: string;
   national: boolean;
   generatedAt: string;
+  period: { from: string | null; to: string | null };
   centers: AreaStatistics[];
   total: AreaStatistics;
   courses: { code: string; title: string; mandatory: boolean; validations: number; averageScore: number | null; averageDurationSeconds: number | null }[];
-  nurses: { name: string; centers: string; validatedSessions: number; totalDurationSeconds: number }[];
+  nurses: { name: string; centers: string; validatedSessions: number; totalDurationSeconds: number; patients: number; averageScore: number | null }[];
+  monthly: { month: string; validatedSessions: number; averageScore: number | null }[];
+  interruptionReasons: { label: string; count: number }[];
 }
 
 /* ─── Test CODEX ───────────────────────────────────────────────────────── */

@@ -56,13 +56,13 @@ class Center implements ArchivableInterface
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
-    #[Groups(['center:read', 'user:read', 'me:read', 'patient:read'])]
+    #[Groups(['center:read', 'user:read', 'me:read', 'patient:read', 'program:read', 'program:list', 'session:read'])]
     private Uuid $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    #[Groups(['center:read', 'center:write', 'user:read', 'me:read', 'patient:read'])]
+    #[Groups(['center:read', 'center:write', 'user:read', 'me:read', 'patient:read', 'program:read', 'program:list', 'session:read'])]
     private string $name = '';
 
     #[ORM\Column(length: 255)]

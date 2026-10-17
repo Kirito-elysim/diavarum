@@ -6,13 +6,14 @@
 {% block body %}
 {% import _self as f %}
 <h1>Synthèse statistique</h1>
-<p class="muted">Périmètre : {{ s.scope }}</p>
+<p class="muted">Périmètre : {{ s.scope }} · {{ period }}</p>
 
 <table class="kpis"><tr>
     <td><div class="value">{{ s.total.patients.registered }}</div>patients enregistrés</td>
     <td><div class="value">{{ s.total.programs.active.count }}</div>parcours en cours</td>
     <td><div class="value">{{ s.total.programs.completed.count }}</div>parcours achevés</td>
     <td><div class="value">{{ s.total.averageProgramScore is not null ? s.total.averageProgramScore ~ ' %' : '—' }}</div>score moyen des parcours</td>
+    <td><div class="value">{{ s.total.activity.validatedSessions }}</div>séances validées sur la période</td>
 </tr></table>
 
 <h2>Patients</h2>
@@ -44,26 +45,39 @@
     </tbody>
 </table>
 
-<h2>Séances</h2>
+<h2>Séances réalisées sur la période</h2>
 <table>
     <thead><tr><th>Séance</th><th class="num">Validations</th><th class="num">Score moyen</th><th class="num">Durée moyenne</th></tr></thead>
     <tbody>
-    {% for c in s.courses %}
+    {% for c in s.courses|filter(c => c.validations > 0) %}
         <tr><td><strong>{{ c.code }}</strong> {{ c.title }}</td><td class="num">{{ c.validations }}</td>
             <td class="num">{{ c.averageScore is not null ? c.averageScore ~ ' %' : '—' }}</td><td class="num">{{ f.minutes(c.averageDurationSeconds) }}</td></tr>
+    {% else %}
+        <tr><td colspan="4" class="muted">Aucune séance validée sur la période.</td></tr>
     {% endfor %}
     </tbody>
 </table>
 
 <h2>Activité des IDE</h2>
 <table>
-    <thead><tr><th>IDE</th><th>Centres</th><th class="num">Séances validées</th><th class="num">Temps de séance</th></tr></thead>
+    <thead><tr><th>IDE</th><th>Centres</th><th class="num">Séances validées</th><th class="num">Patients</th><th class="num">Score moyen</th><th class="num">Temps de séance</th></tr></thead>
     <tbody>
     {% for n in s.nurses %}
-        <tr><td>{{ n.name }}</td><td class="small">{{ n.centers }}</td><td class="num">{{ n.validatedSessions }}</td><td class="num">{{ f.minutes(n.totalDurationSeconds) }}</td></tr>
+        <tr><td>{{ n.name }}</td><td class="small">{{ n.centers }}</td><td class="num">{{ n.validatedSessions }}</td><td class="num">{{ n.patients }}</td>
+            <td class="num">{{ n.averageScore is not null ? n.averageScore ~ ' %' : '—' }}</td><td class="num">{{ f.minutes(n.totalDurationSeconds) }}</td></tr>
     {% else %}
-        <tr><td colspan="4" class="muted">Aucune IDE sur ce périmètre.</td></tr>
+        <tr><td colspan="6" class="muted">Aucune IDE sur ce périmètre.</td></tr>
     {% endfor %}
     </tbody>
 </table>
+
+{% if s.interruptionReasons is not empty %}
+<h2>Motifs de clôture des parcours</h2>
+<table>
+    <thead><tr><th>Motif</th><th class="num">Parcours clôturés</th></tr></thead>
+    <tbody>
+    {% for r in s.interruptionReasons %}<tr><td>{{ r.label }}</td><td class="num">{{ r.count }}</td></tr>{% endfor %}
+    </tbody>
+</table>
+{% endif %}
 {% endblock %}

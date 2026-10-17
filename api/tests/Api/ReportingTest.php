@@ -141,4 +141,48 @@ final class ReportingTest extends ApiTestCaseBase
         self::assertResponseIsSuccessful();
         self::assertStringStartsWith('%PDF', $stats->getContent());
     }
+
+    public function testPeriodFiltersActivityButNotHeadcounts(): void
+    {
+        $today = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
+        $yesterday = (new \DateTimeImmutable('yesterday', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
+        $course = static fn (array $stats) => array_values(array_filter($stats['courses'], static fn (array $c) => 'S97' === $c['code']))[0];
+
+        $current = $this->statisticsAs($this->cadreParis, "?from=$today&to=$today");
+        self::assertSame(['from' => $today, 'to' => $today], $current['period']);
+        self::assertSame(1, $current['total']['activity']['validatedSessions']);
+        self::assertSame(80, $current['total']['activity']['averageSessionScore']);
+        self::assertSame(1, $course($current)['validations']);
+        self::assertSame([['month' => substr($today, 0, 7), 'validatedSessions' => 1, 'averageScore' => 80]], $current['monthly']);
+
+        $past = $this->statisticsAs($this->cadreParis, "?to=$yesterday");
+        self::assertSame(0, $past['total']['activity']['validatedSessions']);
+        self::assertSame(0, $course($past)['validations']);
+        self::assertSame(2, $past['total']['patients']['registered'], 'Effectifs à date, quelle que soit la période');
+        self::assertSame(1, $past['total']['programs']['active']['count']);
+    }
+
+    public function testInterruptionReasonsAreCounted(): void
+    {
+        $reason = $this->em()->getRepository(\App\Entity\InterruptionReason::class)->findOneBy([]);
+        $martin = $this->em()->getRepository(Patient::class)->findOneBy(['lastName' => 'Martin']);
+        $program = (new TrainingProgram())->setPatient($martin);
+        $program->setAuthor($this->ideParis);
+        $program->markInterrupted($this->cadreParis, [$reason], null);
+        $this->em()->persist($program);
+        $this->em()->flush();
+
+        $stats = $this->statisticsAs($this->cadreParis);
+
+        self::assertSame([['label' => $reason->getLabel(), 'count' => 1]], $stats['interruptionReasons']);
+        self::assertSame(1, $stats['total']['activity']['interruptedPrograms']);
+    }
+
+    public function testInvalidPeriodIsRejected(): void
+    {
+        foreach (['?from=2026-13-01', '?to=hier', '?from=2026-10-02&to=2026-10-01'] as $query) {
+            $this->requestAs($this->cadreParis, 'GET', '/api/statistics'.$query);
+            self::assertResponseStatusCodeSame(400, $query);
+        }
+    }
 }
