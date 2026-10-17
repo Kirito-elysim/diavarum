@@ -5,7 +5,7 @@ import { Archive, Eye, Loader2, Mail, MapPin, Pencil, Phone, Plus, RotateCcw, Se
 import { useCenter, useCenterPatients, useRestoreCenter } from '../api/hooks';
 import { ELIGIBILITY_LABELS, type Center } from '../api/types';
 import { UsersPanel } from './AdminPage';
-import { NewPatientDialog } from './PatientsPage';
+import { PatientDialog } from './PatientsPage';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent } from '../components/ui/card';
@@ -103,6 +103,6 @@ function CenterPatients({ center }: { center: Center }) {
     </TableBody></Table>
     {(data?.totalItems ?? 0) > 20 && <ListPagination page={page} total={data?.totalItems ?? 0} pageSize={20} onChange={setPage} />}
     <ImportDialog type="patients" open={importing} onOpenChange={setImporting} centerId={center.id} centerName={center.name} />
-    {creating && <NewPatientDialog open defaultCenter={center['@id']} onOpenChange={setCreating} onCreated={id => navigate(`/patients/${id}`)} />}
+    {creating && <PatientDialog open defaultCenter={center['@id']} onOpenChange={setCreating} onSaved={id => navigate(`/patients/${id}`)} />}
   </Card>;
 }

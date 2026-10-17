@@ -9,10 +9,10 @@ import { Card, CardContent } from '../components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Archive, Search, Plus, Eye, Users, Filter, Loader2, Upload } from 'lucide-react';
-import { useCenters, useCreatePatient, usePatients, type ArchiveStatus } from '../api/hooks';
+import { Archive, Search, Plus, Eye, Pencil, Users, Filter, Loader2, Upload } from 'lucide-react';
+import { useCenters, useCreatePatient, usePatients, useUpdatePatient, type ArchiveStatus } from '../api/hooks';
 import { useAuth } from '../contexts/AuthContext';
-import { ELIGIBILITY_LABELS } from '../api/types';
+import { ELIGIBILITY_LABELS, type Patient } from '../api/types';
 import { ApiError } from '../lib/api';
 import { ExportButton } from '../components/ExportButton';
 import { ImportDialog } from '../components/ImportDialog';
@@ -36,6 +36,7 @@ export default function PatientsPage() {
   const [archiveFilter, setArchiveFilter] = useState<ArchiveStatus>('active');
   const [creating, setCreating] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [editing, setEditing] = useState<Patient | null>(null);
   const navigate = useNavigate();
   const { isCadre } = useAuth();
   const debouncedSearch = useDebounced(search);
@@ -174,9 +175,17 @@ export default function PatientsPage() {
                 </TableCell>
                 <TableCell className="text-sm text-gray-700">{patient.createdBy.firstName} {patient.createdBy.lastName}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-500 hover:text-gray-900" aria-label="Voir la fiche">
-                    <Eye className="w-4 h-4" />
-                  </Button>
+                  <div className="flex justify-end gap-1">
+                    {!patient.removedAt && (
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-500 hover:text-gray-900" aria-label={`Modifier ${patient.lastName.toUpperCase()} ${patient.firstName}`} title="Modifier"
+                        onClick={(e) => { e.stopPropagation(); setEditing(patient); }}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                    )}
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-500 hover:text-gray-900" aria-label="Voir la fiche" title="Voir la fiche">
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -198,17 +207,24 @@ export default function PatientsPage() {
         </Table>
       </Card>
 
-      <NewPatientDialog open={creating} onOpenChange={setCreating} onCreated={(id) => navigate(`/patients/${id}`)} />
+      <PatientDialog open={creating} onOpenChange={setCreating} onSaved={(id) => navigate(`/patients/${id}`)} />
+      {editing && <PatientDialog key={editing.id} open patient={editing} onOpenChange={(open) => { if (!open) setEditing(null); }} />}
       {isCadre && <ImportDialog type="patients" open={importing} onOpenChange={setImporting} />}
     </div>
   );
 }
 
-export function NewPatientDialog({ open, onOpenChange, onCreated, defaultCenter }: { open: boolean; onOpenChange: (open: boolean) => void; onCreated: (id: string) => void; defaultCenter?: string }) {
+/** Création d'un patient, ou modification de son identité et de son centre si « patient » est fourni */
+export function PatientDialog({ open, onOpenChange, onSaved, defaultCenter, patient }: { open: boolean; onOpenChange: (open: boolean) => void; onSaved?: (id: string) => void; defaultCenter?: string; patient?: Patient }) {
   const { data: centers } = useCenters();
   const createPatient = useCreatePatient();
-  const [form, setForm] = useState({ firstName: '', lastName: '', dateOfBirth: '', center: defaultCenter ?? '' });
+  const updatePatient = useUpdatePatient(patient?.id ?? '');
+  const initial = patient
+    ? { firstName: patient.firstName, lastName: patient.lastName, dateOfBirth: patient.dateOfBirth ?? '', center: patient.center['@id'] }
+    : { firstName: '', lastName: '', dateOfBirth: '', center: defaultCenter ?? '' };
+  const [form, setForm] = useState(initial);
   const [error, setError] = useState<ApiError | null>(null);
+  const saving = createPatient.isPending || updatePatient.isPending;
 
   const centerList = centers?.member ?? [];
   const center = form.center || (centerList.length === 1 ? centerList[0]['@id'] : '');
@@ -218,11 +234,12 @@ export function NewPatientDialog({ open, onOpenChange, onCreated, defaultCenter 
     e.preventDefault();
     setError(null);
     try {
-      const patient = await createPatient.mutateAsync({ ...form, center, dateOfBirth: form.dateOfBirth || null });
-      toast.success(`${patient.firstName} ${patient.lastName} enregistré`);
-      setForm({ firstName: '', lastName: '', dateOfBirth: '', center: defaultCenter ?? '' });
+      const input = { ...form, center, dateOfBirth: form.dateOfBirth || null };
+      const saved = patient ? await updatePatient.mutateAsync(input) : await createPatient.mutateAsync(input);
+      toast.success(patient ? 'Patient modifié' : `${saved.firstName} ${saved.lastName} enregistré`);
+      setForm(initial);
       onOpenChange(false);
-      onCreated(patient.id);
+      onSaved?.(saved.id);
     } catch (err) {
       setError(err instanceof ApiError ? err : new ApiError(0, 'Une erreur est survenue.'));
     }
@@ -234,8 +251,8 @@ export function NewPatientDialog({ open, onOpenChange, onCreated, defaultCenter 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Nouveau patient</DialogTitle>
-          <DialogDescription>Le profil complet (questionnaire, test CODEX, éligibilité) se renseigne ensuite sur sa fiche.</DialogDescription>
+          <DialogTitle>{patient ? 'Modifier le patient' : 'Nouveau patient'}</DialogTitle>
+          <DialogDescription>{patient ? 'Identité et centre de rattachement. Le profil, le test CODEX et l’éligibilité se modifient dans les onglets de la fiche.' : 'Le profil complet (questionnaire, test CODEX, éligibilité) se renseigne ensuite sur sa fiche.'}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
@@ -270,8 +287,8 @@ export function NewPatientDialog({ open, onOpenChange, onCreated, defaultCenter 
           {error && error.violations.length === 0 && <p className="text-sm text-red-600">{error.message}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annuler</Button>
-            <Button type="submit" disabled={createPatient.isPending || !center} className="bg-orange-500 hover:bg-orange-600 text-white">
-              {createPatient.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            <Button type="submit" disabled={saving || !center} className="bg-orange-500 hover:bg-orange-600 text-white">
+              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Enregistrer
             </Button>
           </DialogFooter>

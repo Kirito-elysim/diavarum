@@ -15,6 +15,7 @@ import {
   AlertTriangle,
   Archive,
   ArrowLeft,
+  Pencil,
   CheckCircle2,
   CirclePause,
   RotateCcw,
@@ -61,6 +62,7 @@ import {
 } from '../api/types';
 import { ApiError } from '../lib/api';
 import { ExportButton } from '../components/ExportButton';
+import { PatientDialog } from './PatientsPage';
 import { eligibilityBadge, formatDate, formatDuration, programBadge, sessionLabel } from '../lib/format';
 
 export default function PatientDetailPage() {
@@ -70,6 +72,7 @@ export default function PatientDetailPage() {
   const { data: patient, isLoading, error } = usePatient(id);
   const { data: program } = usePatientProgram(patient?.['@id']);
   const [confirmArchive, setConfirmArchive] = useState(false);
+  const [editing, setEditing] = useState(false);
   const archivePatient = useArchivePatient();
   const restorePatient = useArchivePatient(true);
 
@@ -98,6 +101,11 @@ export default function PatientDetailPage() {
           Patients
         </Button>
         <div className="flex items-center gap-2">
+          {!patient.removedAt && (
+            <Button variant="outline" size="sm" className="gap-1.5 text-gray-600" onClick={() => setEditing(true)}>
+              <Pencil className="w-4 h-4" />Modifier
+            </Button>
+          )}
           {isCadre && !patient.removedAt && (
             <Button variant="outline" size="sm" className="mr-2 gap-1.5 text-gray-600" onClick={() => setConfirmArchive(true)}>
               <Archive className="w-4 h-4" />Archiver
@@ -194,6 +202,8 @@ export default function PatientDetailPage() {
           <SessionHistory patientIri={patient['@id']} />
         </TabsContent>
       </Tabs>
+
+      {editing && <PatientDialog open patient={patient} onOpenChange={setEditing} />}
 
       <AlertDialog open={confirmArchive} onOpenChange={setConfirmArchive}>
         <AlertDialogContent>
