@@ -40,13 +40,13 @@ try {
     await page.getByRole('button', { name: 'Démarrer le test' }).click();
     await page.getByText(/Je vais vous dire 3 mots/).waitFor();
     await next();
-    await page.getByText('ballon', { exact: true }).waitFor();
+    await page.getByText('Ballon', { exact: true }).waitFor();
     if (changeWords) {
       await page.getByRole('button', { name: 'Changer de mots' }).click();
       await page.getByText('Cigare', { exact: true }).waitFor();
     }
     await next();
-    await page.getByText(/demander au patient de répéter ces 3 mots/).waitFor();
+    await page.getByText(/demander au patient de répéter/).waitFor();
     await next();
     await page.getByText(/donner la tablette au patient/).waitFor();
     await next();
@@ -67,7 +67,7 @@ try {
     assert.equal(await face.locator('polyline').count(), 3);
     await page.getByRole('button', { name: 'Effacer le dernier trait' }).click();
     assert.equal(await face.locator('polyline').count(), 2);
-    await page.getByRole('button', { name: 'Effacer les dessins' }).click();
+    await page.getByRole('button', { name: 'Effacer tout' }).click();
     assert.equal(await face.locator('polyline').count(), 0);
     await draw();
     await next();
@@ -82,6 +82,7 @@ try {
     await page.getByRole('status').filter({ hasText: clock ? 'RÉUSSI' : 'ÉCHOUÉ' }).waitFor();
     await next();
     await page.getByText(/quels étaient les 3 mots/).waitFor();
+    await page.getByText(changeWords ? 'Mots attendus : cigare, fleur, porte' : 'Mots attendus : clé, ballon, citron').waitFor();
     await page.getByRole('radio', { name: recall ? 'Oui' : 'Non', exact: true }).check();
     await page.getByRole('status').filter({ hasText: recall ? 'RÉUSSI' : 'ÉCHOUÉ' }).waitFor();
     await next();
@@ -93,7 +94,7 @@ try {
       await field.getByRole('radio', { name: index < score ? 'Juste' : 'Faux', exact: true }).check();
     }
     await page.getByRole('button', { name: 'Validation' }).click();
-    await page.getByText(`${score} / 5`).waitFor();
+    await page.getByRole('status').filter({ hasText: `${score} / 5` }).filter({ hasText: 'orientation' }).waitFor();
   }
   const validate = async () => {
     await page.getByRole('button', { name: 'Valider' }).click();
@@ -121,12 +122,18 @@ try {
   assert.equal(submitted.clockTestPassed, false);
   assert.deepEqual(submitted.orientationAnswers, [1, 1, 1, 1, 0]);
 
-  // Rappel échoué, orientation 3/5 → anormal : « non éligible » et « CODEX anormal » présélectionnés, reprise après erreur
+  // Rappel échoué, orientation 3/5 → anormal : « non éligible » et « Test CODEX anormal » présélectionnés, reprise après erreur
   await run({ clock: true, recall: false });
   await orientation(3);
   await page.getByText('Résultat du test CODEX : Anormal').waitFor();
   assert.equal(await page.getByRole('button', { name: 'Non éligible' }).getAttribute('aria-pressed'), 'true');
-  assert.equal(await page.getByRole('checkbox', { name: 'CODEX anormal' }).isChecked(), true);
+  assert.equal(await page.getByRole('checkbox', { name: 'Test CODEX anormal' }).isChecked(), true);
+  const labels = await page.locator('label:has(input[type=checkbox])').allTextContents();
+  assert.deepEqual([labels[0], labels[1], labels.at(-1)], ['Test CODEX anormal', 'Troubles cognitifs autres', 'Autre (à préciser)']);
+  await page.getByRole('checkbox', { name: 'Test CODEX anormal' }).uncheck();
+  assert.equal(await page.getByRole('button', { name: 'Valider' }).isDisabled(), true);
+  await page.getByText('Cochez au moins un motif de non-éligibilité pour valider.').waitFor();
+  await page.getByRole('checkbox', { name: 'Test CODEX anormal' }).check();
   failOnce = true;
   await page.getByRole('button', { name: 'Valider' }).click();
   await page.getByRole('alert').waitFor();
@@ -136,7 +143,7 @@ try {
 
   // Les 2 épreuves échouées : pas d'orientation, CODEX anormal, l'IDE peut passer outre
   await run({ clock: false, recall: false });
-  await page.getByText('Test CODEX anormal').waitFor();
+  await page.locator('p', { hasText: /^Test CODEX anormal$/ }).waitFor();
   assert.equal(await page.getByText(/Puisque le patient a échoué/).count(), 0);
   await page.getByRole('button', { name: 'Éligible', exact: true }).click();
   await page.screenshot({ path: '/tmp/codex-result.png' });

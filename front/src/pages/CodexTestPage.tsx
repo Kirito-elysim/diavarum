@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { CheckCircle2, EyeOff, Loader2, X, XCircle } from 'lucide-react';
@@ -19,7 +19,9 @@ type Decision = 'eligible' | 'non_eligible';
 const lists = [['Clé', 'ballon', 'citron'], ['Cigare', 'fleur', 'porte']];
 const criteria = ['Les nombres sont tous présents.', 'Leur position est correcte.', 'On reconnaît une petite et une grande aiguille.', 'Les 2 placements des aiguilles sont corrects.'];
 const questions = ['Quel est le nom de l’hôpital où nous sommes (ou quel est le nom de la rue du cabinet où nous nous trouvons) ?', 'Quel est le nom de la ville où nous sommes ?', 'Quel est le nom du département où nous nous trouvons ?', 'Quel est le nom de la région où nous nous trouvons ?', 'À quel étage sommes-nous ?'];
-const ABNORMAL_REASON = 'CODEX anormal';
+const ABNORMAL_REASON = 'Test CODEX anormal';
+/** Affichage des mots : initiale en majuscule dans les encarts, en minuscules dans le rappel */
+const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
 
 /** Étape affichée en tête d'écran et dans la barre de progression */
 const stages: { title: string; screens: Screen[] }[] = [
@@ -33,7 +35,7 @@ export default function CodexTestPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: patient, isError: patientError } = usePatient(id);
-  const { data: reasons } = useEligibilityReasons();
+  const { data: reasons, refetch: refetchReasons } = useEligibilityReasons();
   const createTest = useCreateCodexTest();
   const updatePatient = useUpdatePatient(id ?? '');
   const [screen, setScreen] = useState<Screen>('intro');
@@ -43,7 +45,8 @@ export default function CodexTestPage() {
   const [recall, setRecall] = useState<(boolean | null)[]>([null]);
   const [answers, setAnswers] = useState<(boolean | null)[]>([null, null, null, null, null]);
   const [decision, setDecision] = useState<Decision | null>(null);
-  const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
+  /** null tant que l'IDE n'a pas touché aux motifs : « Test CODEX anormal » est alors coché par défaut si le CODEX est anormal */
+  const [chosenReasons, setChosenReasons] = useState<string[] | null>(null);
   const [notes, setNotes] = useState('');
   const [saved, setSaved] = useState<CodexTestResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -56,14 +59,17 @@ export default function CodexTestPage() {
   const normal = needsOrientation ? orientationScore >= 4 : clockPassed && recallPassed;
   const busy = createTest.isPending || updatePatient.isPending;
   const back = () => navigate(`/patients/${id}`);
+  // Motifs relus à l'ouverture du test : une liste gardée en cache pourrait ne pas contenir le dernier motif ajouté
+  useEffect(() => { void refetchReasons(); }, [refetchReasons]);
+  const abnormalReason = reasons?.member.find(r => r.active && r.label === ABNORMAL_REASON);
+  const selectedReasons = chosenReasons ?? (!normal && abnormalReason ? [abnormalReason['@id']] : []);
+  const toggleReason = (iri: string, checked: boolean) => setChosenReasons(checked ? [...selectedReasons, iri] : selectedReasons.filter(r => r !== iri));
+  const missing = !decision ? 'Choisissez « Éligible » ou « Non éligible » pour valider.'
+    : decision === 'non_eligible' && !selectedReasons.length ? 'Cochez au moins un motif de non-éligibilité pour valider.' : null;
 
   /** Écran de décision : un CODEX anormal présélectionne « non éligible » et son motif, l'IDE reste libre */
   const openDecision = () => {
-    if (!normal) {
-      setDecision('non_eligible');
-      const reason = reasons?.member.find(r => r.active && r.label === ABNORMAL_REASON);
-      setSelectedReasons(reason ? [reason['@id']] : []);
-    }
+    if (!normal) setDecision('non_eligible');
     setScreen('decision');
   };
   const afterRecall = () => (needsOrientation ? setScreen('orientation') : openDecision());
@@ -105,7 +111,7 @@ export default function CodexTestPage() {
 
       {screen === 'intro' && <>
         <h1 className="text-center text-2xl font-bold text-[#004138]">Test CODEX</h1>
-        <div className="space-y-4 text-base leading-relaxed text-gray-800">
+        <div className="space-y-4 text-base leading-relaxed text-gray-800 text-justify hyphens-auto" lang="fr">
           <p>Vous allez réaliser un test CODEX auprès du patient <strong>{patientName}</strong>.</p>
           <p>Ce test permet d’évaluer certaines capacités cognitives du patient, afin de savoir s’il est apte ou non à suivre le parcours d’entraînement.</p>
           <p>Merci de suivre rigoureusement les consignes qui vous seront indiquées, elles garantissent la fiabilité du test.</p>
@@ -135,13 +141,13 @@ export default function CodexTestPage() {
 
       {screen === 'words-repeat' && <>
         <WordList words={words} />
-        <Instruction>Vous devez maintenant demander au patient de répéter ces 3 mots à voix haute.</Instruction>
+        <Instruction>Vous devez maintenant demander au patient de répéter<br />ces 3 mots à voix haute.</Instruction>
         <PrimaryButton onClick={() => setScreen('clock-handover')}>Suite du test</PrimaryButton>
       </>}
 
       {screen === 'clock-handover' && <>
         <Instruction>Vous pouvez désormais donner la tablette au patient.</Instruction>
-        <p className="text-center text-base text-gray-700">Vous devez l’accompagner pour cette étape du test, en lui réexpliquant éventuellement les consignes, mais sans l’aider, afin de garantir la fiabilité du test.</p>
+        <p className="text-center text-base text-gray-700">Vous devez l’accompagner pour cette étape du test, en lui réexpliquant éventuellement les consignes, mais sans l’aider,<br />afin de garantir la fiabilité du test.</p>
         <PrimaryButton onClick={() => setScreen('clock-draw')}>Suite du test</PrimaryButton>
       </>}
 
@@ -149,14 +155,14 @@ export default function CodexTestPage() {
         <div className="text-lg text-gray-900">
           <p>Voici le cadran d’une horloge :</p>
           <ul className="list-disc pl-6 mt-1">
-            <li>placez les chiffres indiquant les heures dans le cadran ;</li>
+            <li>inscrivez les chiffres indiquant les heures dans le cadran ;</li>
             <li>puis indiquez 5h10 par des aiguilles.</li>
           </ul>
         </div>
         <div className="flex justify-center"><ClockFace strokes={strokes} onChange={setStrokes} /></div>
         <div className="grid grid-cols-2 gap-3">
           <button className="min-h-12 rounded-xl border font-medium disabled:opacity-40 touch-manipulation" disabled={!strokes.length} onClick={() => setStrokes(previous => previous.slice(0, -1))}>Effacer le dernier trait</button>
-          <button className="min-h-12 rounded-xl border font-medium disabled:opacity-40 touch-manipulation" disabled={!strokes.length} onClick={() => setStrokes([])}>Effacer les dessins</button>
+          <button className="min-h-12 rounded-xl border font-medium disabled:opacity-40 touch-manipulation" disabled={!strokes.length} onClick={() => setStrokes([])}>Effacer tout</button>
         </div>
         <PrimaryButton onClick={() => setScreen('clock-return')}>Suite du test</PrimaryButton>
       </>}
@@ -178,7 +184,7 @@ export default function CodexTestPage() {
       {screen === 'recall' && <>
         <Instruction>Merci de lire à voix haute cette consigne au patient :</Instruction>
         <Quote>« Pouvez-vous me dire quels étaient les 3 mots que je vous ai demandé de répéter et de retenir tout à l’heure ? »</Quote>
-        <p className="text-center text-sm text-gray-500">Mots attendus : {words.join(', ')}</p>
+        <p className="text-center text-sm text-gray-500">Mots attendus : {words.map(word => word.toLowerCase()).join(', ')}</p>
         <QuestionList labels={['Le patient peut répéter les 3 mots exacts :']} values={recall} onChange={setRecall} />
         {recall[0] !== null && <Verdict label="Test des 3 mots" passed={recallPassed} />}
         <PrimaryButton disabled={recall[0] === null} onClick={afterRecall}>Suite du test</PrimaryButton>
@@ -195,7 +201,7 @@ export default function CodexTestPage() {
         <div className="space-y-3">
           <Verdict label="Test de l’horloge" passed={clockPassed} />
           <Verdict label="Test des 3 mots" passed={recallPassed} />
-          {needsOrientation && <p className="rounded-xl bg-gray-50 px-4 py-3 text-lg">Résultat du test d’orientation dans l’espace : <strong>{orientationScore} / 5</strong></p>}
+          {needsOrientation && <Verdict label="Résultat du test d’orientation dans l’espace" passed={orientationScore >= 4} result={`${orientationScore} / 5`} />}
         </div>
         <p className={`rounded-2xl p-5 text-center text-2xl font-bold ${normal ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
           {needsOrientation ? `Résultat du test CODEX : ${normal ? 'Normal' : 'Anormal'}` : `Test CODEX ${normal ? 'normal' : 'anormal'}`}
@@ -216,7 +222,7 @@ export default function CodexTestPage() {
             {reasons?.member.filter(r => r.active).map(reason => (
               <label key={reason.id} className="flex min-h-11 cursor-pointer items-center gap-3">
                 <input type="checkbox" className="h-5 w-5 accent-[#004138]" checked={selectedReasons.includes(reason['@id'])}
-                  onChange={event => setSelectedReasons(current => event.target.checked ? [...current, reason['@id']] : current.filter(r => r !== reason['@id']))} />
+                  onChange={event => toggleReason(reason['@id'], event.target.checked)} />
                 {reason.label}
               </label>
             ))}
@@ -225,9 +231,10 @@ export default function CodexTestPage() {
             </label>
           </div>}
         </fieldset>
-        <PrimaryButton disabled={!decision || (decision === 'non_eligible' && !selectedReasons.length) || busy} onClick={() => void validate()}>
+        <PrimaryButton disabled={!!missing || busy} onClick={() => void validate()}>
           {busy ? <Loader2 className="mx-auto animate-spin" /> : 'Valider'}
         </PrimaryButton>
+        {missing && <p className="text-center text-sm text-gray-600">{missing}</p>}
         {error && <p role="alert" className="text-center text-red-600">{error}</p>}
       </>}
     </div>
@@ -235,7 +242,7 @@ export default function CodexTestPage() {
 }
 
 function WordList({ words }: { words: string[] }) {
-  return <div className="grid grid-cols-3 gap-3">{words.map(word => <div key={word} className="rounded-2xl bg-[#ECF5E9] py-6 text-center text-2xl font-bold text-[#004138]">{word}</div>)}</div>;
+  return <div className="grid grid-cols-3 gap-3">{words.map(word => <div key={word} className="rounded-2xl bg-[#ECF5E9] py-6 text-center text-2xl font-bold text-[#004138]">{capitalize(word)}</div>)}</div>;
 }
 
 function QuestionList({ labels, values, onChange, options = ['Oui', 'Non'] }: { labels: string[]; values: (boolean | null)[]; onChange: (values: (boolean | null)[]) => void; options?: [string, string] }) {
@@ -268,7 +275,7 @@ function IdeNotice({ children }: { children: React.ReactNode }) {
   return (
     <p className="flex items-start gap-3 text-left rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 p-4 text-base">
       <EyeOff className="w-5 h-5 flex-shrink-0 mt-0.5" />
-      <span>{children}</span>
+      <span className="text-justify">{children}</span>
     </p>
   );
 }
@@ -282,11 +289,11 @@ function PrimaryButton({ children, onClick, disabled }: { children: React.ReactN
 }
 
 /** Restitution automatique d'une épreuve */
-function Verdict({ label, passed }: { label: string; passed: boolean }) {
+function Verdict({ label, passed, result }: { label: string; passed: boolean; result?: string }) {
   return (
     <div role="status" className={`flex items-center justify-between rounded-xl px-4 py-3 text-lg font-semibold ${passed ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
       <span>{label}</span>
-      <span className="flex items-center gap-2">{passed ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}{passed ? 'RÉUSSI' : 'ÉCHOUÉ'}</span>
+      <span className="flex items-center gap-2">{passed ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}{result ?? (passed ? 'RÉUSSI' : 'ÉCHOUÉ')}</span>
     </div>
   );
 }

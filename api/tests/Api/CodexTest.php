@@ -57,7 +57,9 @@ final class CodexTest extends ApiTestCaseBase
     {
         $ide = $this->createUser(UserRole::Ide, [$this->createCenter()]);
         $labels = array_column($this->requestAs($ide, 'GET', '/api/eligibility_reasons')->toArray(), 'label');
-        self::assertContains('CODEX anormal', $labels);
+        self::assertSame('Test CODEX anormal', $labels[0]);
+        self::assertSame('Troubles cognitifs autres', $labels[1]);
+        self::assertSame('Autre (à préciser)', end($labels));
     }
 
     public static function invalidCases(): iterable
