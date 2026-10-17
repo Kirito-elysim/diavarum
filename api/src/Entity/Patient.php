@@ -33,7 +33,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * Patient en entraînement, rattaché à un centre de dialyse.
  *
  * Une IDE accède à tous les patients des centres où elle est affiliée (CenterScopeExtension).
- * La suppression le sort de la file active (removedAt) sans effacer son historique.
+ * L'archivage (DELETE, cadre ou administrateur) le sort de la file active (removedAt) sans effacer son historique ;
+ * il se réactive par POST /api/patients/{id}/restore.
  */
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
@@ -44,6 +45,10 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             'search' => new QueryParameter(filter: new PartialSearchFilter(), property: 'lastName'),
             'center' => new QueryParameter(filter: new IriFilter(), property: 'center'),
             'eligibilityStatus' => new QueryParameter(filter: new ExactFilter(), property: 'eligibilityStatus'),
+            'status' => new QueryParameter(
+                schema: ['type' => 'string', 'enum' => ['active', 'archived', 'all']],
+                description: 'active (défaut), archived ou all — appliqué par CenterScopeExtension',
+            ),
         ]),
         new Get(),
         new Post(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)"),
@@ -100,6 +105,11 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
     #[Groups(['patient:read', 'patient:write'])]
     private ?string $eligibilityNotes = null;
 
+    /** Date à laquelle l'éligibilité a été statuée (dernier changement de statut), null tant qu'elle ne l'est pas */
+    #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
+    #[Groups(['patient:read'])]
+    private ?\DateTimeImmutable $eligibilityDecidedAt = null;
+
     /** Réponses au questionnaire profil patient (données médicales) */
     #[ORM\Column(type: Types::JSON, options: ['jsonb' => true, 'default' => '{}'])]
     #[Groups(['patient:read', 'patient:write'])]
@@ -144,6 +154,9 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
     #[Assert\Callback]
     public function validateEligibility(ExecutionContextInterface $context): void
     {
+        if ($this->isArchived()) {
+            $context->buildViolation('Ce patient est archivé : réactivez-le avant de le modifier.')->addViolation();
+        }
         if (EligibilityStatus::NotEligible === $this->eligibilityStatus && $this->eligibilityReasons->isEmpty()) {
             $context->buildViolation('Un patient non éligible doit avoir au moins un motif.')
                 ->atPath('eligibilityReasons')
@@ -226,6 +239,9 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
 
     public function setEligibilityStatus(EligibilityStatus $eligibilityStatus): static
     {
+        if ($eligibilityStatus !== $this->eligibilityStatus) {
+            $this->eligibilityDecidedAt = EligibilityStatus::Registered === $eligibilityStatus ? null : new \DateTimeImmutable();
+        }
         $this->eligibilityStatus = $eligibilityStatus;
 
         return $this;
@@ -304,6 +320,11 @@ class Patient implements CenterScopedInterface, AuthoredInterface, ArchivableInt
     public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function getEligibilityDecidedAt(): ?\DateTimeImmutable
+    {
+        return $this->eligibilityDecidedAt;
     }
 
     public function getRemovedAt(): ?\DateTimeImmutable

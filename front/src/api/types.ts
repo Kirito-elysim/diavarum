@@ -95,6 +95,8 @@ export interface Patient extends Resource {
   createdAt: string;
   updatedAt: string;
   removedAt?: string | null;
+  /** Date du dernier changement de statut d'éligibilité */
+  eligibilityDecidedAt?: string | null;
 }
 
 export interface ChapterRef extends Resource {
@@ -237,6 +239,23 @@ export interface Statistics {
   nurses: { name: string; centers: string; validatedSessions: number; totalDurationSeconds: number; patients: number; averageScore: number | null }[];
   monthly: { month: string; validatedSessions: number; averageScore: number | null }[];
   interruptionReasons: { label: string; count: number }[];
+}
+
+/** Résultats personnels de l'IDE connectée (GET /statistics/me) */
+export interface NurseActivity {
+  period: { from: string | null; to: string | null };
+  totals: { validatedSessions: number; patients: number; averageScore: number | null; totalDurationSeconds: number; validatedCompetencies: number };
+  monthly: { month: string; validatedSessions: number; averageScore: number | null }[];
+  courses: { code: string; title: string; validations: number; averageScore: number | null }[];
+  patients: {
+    id: string;
+    name: string;
+    center: string;
+    lastSessionAt: string;
+    sessions: number;
+    averageScore: number | null;
+    program: { status: ProgramStatus; validated: number; selected: number } | null;
+  }[];
 }
 
 /* ─── Test CODEX ───────────────────────────────────────────────────────── */

@@ -185,12 +185,16 @@ final class ImportTest extends ApiTestCaseBase
         self::assertResponseStatusCodeSame(403);
         $this->upload($ide, 'users', [['Nom', 'Prénom', 'Email']], 'preview');
         self::assertResponseStatusCodeSame(403);
+        $this->upload($ide, 'patients', [['Nom', 'Prénom'], ['Martin', 'Louise']], 'preview');
+        self::assertResponseStatusCodeSame(403);
+        $this->requestAs($ide, 'GET', '/api/imports/patients/template.xlsx');
+        self::assertResponseStatusCodeSame(403);
     }
 
-    public function testIdeImportsPatientsInHerCenter(): void
+    public function testCadreImportsPatientsInHisCenter(): void
     {
         $center = $this->createCenter('Centre Patients');
-        $ide = $this->createUser(UserRole::Ide, [$center]);
+        $ide = $this->createUser(UserRole::Cadre, [$center]);
         $this->createPatient($center, $ide, 'Existant')->setFirstName('Paul')->setDateOfBirth(new \DateTimeImmutable('1950-01-01'));
         $this->em()->flush();
 
@@ -216,7 +220,7 @@ final class ImportTest extends ApiTestCaseBase
     public function testPatientsAreCreatedWithImporterAsAuthor(): void
     {
         $center = $this->createCenter('Centre Auteur');
-        $ide = $this->createUser(UserRole::Ide, [$center]);
+        $ide = $this->createUser(UserRole::Cadre, [$center]);
 
         $report = $this->upload($ide, 'patients', [['Nom', 'Prénom', 'Date de naissance'], ['Martin', 'Louise', '24/07/1955']])->toArray();
 
@@ -232,7 +236,7 @@ final class ImportTest extends ApiTestCaseBase
     {
         $paris = $this->createCenter('Paris Scope');
         $this->createCenter('Lyon Scope');
-        $ide = $this->createUser(UserRole::Ide, [$paris, $this->createCenter('Nice Scope')]);
+        $ide = $this->createUser(UserRole::Cadre, [$paris, $this->createCenter('Nice Scope')]);
 
         $report = $this->upload($ide, 'patients', [
             ['Nom', 'Prénom', 'Centre'],

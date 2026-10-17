@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import {
   AlertTriangle,
+  Archive,
   ArrowLeft,
   CheckCircle2,
   CirclePause,
@@ -38,6 +39,7 @@ import {
 } from '../components/ui/alert-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import {
+  useArchivePatient,
   useCodexTests,
   useCreateProgram,
   useEligibilityReasons,
@@ -64,8 +66,12 @@ import { eligibilityBadge, formatDate, formatDuration, programBadge, sessionLabe
 export default function PatientDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isCadre } = useAuth();
   const { data: patient, isLoading, error } = usePatient(id);
   const { data: program } = usePatientProgram(patient?.['@id']);
+  const [confirmArchive, setConfirmArchive] = useState(false);
+  const archivePatient = useArchivePatient();
+  const restorePatient = useArchivePatient(true);
 
   if (isLoading) {
     return <div className="flex justify-center py-24 text-gray-400"><Loader2 className="w-6 h-6 animate-spin" /></div>;
@@ -92,11 +98,29 @@ export default function PatientDetailPage() {
           Patients
         </Button>
         <div className="flex items-center gap-2">
+          {isCadre && !patient.removedAt && (
+            <Button variant="outline" size="sm" className="mr-2 gap-1.5 text-gray-600" onClick={() => setConfirmArchive(true)}>
+              <Archive className="w-4 h-4" />Archiver
+            </Button>
+          )}
           <span className="text-xs text-gray-400">Bilan :</span>
           <ExportButton path={`/exports/patients/${patient.id}.pdf`} format="pdf" />
           <ExportButton path={`/exports/patients.xlsx?patients[]=${patient.id}`} format="xlsx" />
         </div>
       </div>
+
+      {patient.removedAt && (
+        <div role="status" className="flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
+          <Archive className="w-5 h-5 text-gray-500" />
+          <span className="flex-1">Patient archivé le {formatDate(patient.removedAt, 'dd/MM/yyyy')} : sa fiche et son historique restent consultables, mais rien ne peut plus être modifié ni lancé.</span>
+          {isCadre && (
+            <Button size="sm" variant="outline" disabled={restorePatient.isPending} className="gap-1.5"
+              onClick={() => restorePatient.mutateAsync(patient).then(() => toast.success('Patient réactivé')).catch((err) => toast.error(err instanceof ApiError ? err.message : 'Réactivation impossible'))}>
+              <RotateCcw className="w-4 h-4" />Réactiver
+            </Button>
+          )}
+        </div>
+      )}
 
       <Card className="border-0 shadow-sm ring-1 ring-gray-100">
         <CardContent className="p-6">
@@ -111,11 +135,13 @@ export default function PatientDetailPage() {
                   <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-500">
                     <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-gray-400" />Né(e) le {formatDate(patient.dateOfBirth, 'dd/MM/yyyy')}</span>
                     <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-gray-400" />{patient.center.name}</span>
-                    <span className="flex items-center gap-1.5"><User className="w-4 h-4 text-gray-400" />Créé par {patient.createdBy.firstName} {patient.createdBy.lastName}</span>
+                    <span className="flex items-center gap-1.5"><User className="w-4 h-4 text-gray-400" />Enregistré le {formatDate(patient.createdAt, 'dd/MM/yyyy')} par {patient.createdBy.firstName} {patient.createdBy.lastName}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className={eligibilityBadge[patient.eligibilityStatus]}>{ELIGIBILITY_LABELS[patient.eligibilityStatus]}</Badge>
+                  <Badge variant="secondary" className={eligibilityBadge[patient.eligibilityStatus]}>
+                    {ELIGIBILITY_LABELS[patient.eligibilityStatus]}{patient.eligibilityDecidedAt && ` le ${formatDate(patient.eligibilityDecidedAt, 'dd/MM/yyyy')}`}
+                  </Badge>
                   {program && <Badge variant="secondary" className={programBadge[program.status]}>Parcours {PROGRAM_STATUS_LABELS[program.status].toLowerCase()}</Badge>}
                 </div>
               </div>
@@ -151,20 +177,42 @@ export default function PatientDetailPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile"><PatientProfile key={patient.id} patient={patient} /></TabsContent>
+        {/* Patient archivé : consultation seule (un fieldset désactivé neutralise boutons et champs) */}
+        <TabsContent value="profile"><fieldset disabled={!!patient.removedAt} className="contents"><PatientProfile key={patient.id} patient={patient} /></fieldset></TabsContent>
         <TabsContent value="parcours" className="space-y-4">
           <PatientProfileSummary patient={patient} />
-          <ProgramSection patient={patient} program={program ?? null} />
+          <fieldset disabled={!!patient.removedAt} className="contents"><ProgramSection patient={patient} program={program ?? null} /></fieldset>
         </TabsContent>
-        {program && <ResumePrompt patient={patient} program={program} />}
+        {program && !patient.removedAt && <ResumePrompt patient={patient} program={program} />}
         <TabsContent value="eligibility" className="space-y-5">
-          <CodexSection patient={patient} />
-          <EligibilitySection patient={patient} />
+          <fieldset disabled={!!patient.removedAt} className="contents">
+            <CodexSection patient={patient} />
+            <EligibilitySection patient={patient} />
+          </fieldset>
         </TabsContent>
         <TabsContent value="history">
           <SessionHistory patientIri={patient['@id']} />
         </TabsContent>
       </Tabs>
+
+      <AlertDialog open={confirmArchive} onOpenChange={setConfirmArchive}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Archiver {patient.firstName} {patient.lastName.toUpperCase()} ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Le patient sort de la file active : il n'apparaît plus dans les listes ni dans les statistiques, et plus rien ne peut être lancé pour lui.
+              Sa fiche, ses séances et ses bilans restent consultables (filtre « Archivés ») et il peut être réactivé à tout moment.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction className="bg-orange-500 hover:bg-orange-600" disabled={archivePatient.isPending}
+              onClick={() => archivePatient.mutateAsync(patient).then(() => toast.success('Patient archivé')).catch((err) => toast.error(err instanceof ApiError ? err.message : 'Archivage impossible'))}>
+              Archiver
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

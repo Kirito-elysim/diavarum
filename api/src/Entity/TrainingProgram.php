@@ -26,6 +26,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use App\Validator\ActivePatient;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -71,6 +72,7 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
     #[Groups(['program:read', 'program:list', 'program:create'])]
+    #[ActivePatient]
     private ?Patient $patient = null;
 
     #[ORM\Column(length: 20, enumType: ProgramStatus::class, options: ['default' => 'non_actif'])]

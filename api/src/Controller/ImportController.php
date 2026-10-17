@@ -84,14 +84,15 @@ final class ImportController
     }
 
     #[Route('/api/imports/patients/template.xlsx', name: 'api_import_patients_template', methods: ['GET'])]
-    #[IsGranted('ROLE_IDE')]
+    #[IsGranted('ROLE_CADRE')]
     public function patientsTemplate(#[CurrentUser] User $user): Response
     {
         return $this->file($this->templates->patients($user), 'modele-import-patients.xlsx');
     }
 
+    /** Import en masse réservé aux cadres et administrateurs : l'IDE enregistre ses patients un par un */
     #[Route('/api/imports/patients', name: 'api_import_patients', methods: ['POST'])]
-    #[IsGranted('ROLE_IDE')]
+    #[IsGranted('ROLE_CADRE')]
     public function patients(Request $request, #[CurrentUser] User $user, PatientImporter $importer, EntityManagerInterface $entityManager): JsonResponse
     {
         $center = $this->defaultCenter($request, $user, $entityManager);

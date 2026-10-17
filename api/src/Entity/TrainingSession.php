@@ -25,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use App\Validator\ActivePatient;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -75,6 +76,7 @@ class TrainingSession implements CenterScopedInterface, AuthoredInterface
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
     #[Groups(['session:read', 'session:create'])]
+    #[ActivePatient]
     private ?Patient $patient = null;
 
     #[ORM\ManyToOne]

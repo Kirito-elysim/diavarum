@@ -10,6 +10,7 @@ import type {
   Center,
   CenterInput,
   CodexTestResult,
+  NurseActivity,
   EligibilityStatus,
   ModuleDetail,
   Module,
@@ -45,10 +46,24 @@ export function useCenters(status: ArchiveStatus = 'active') {
   });
 }
 
-export function usePatients(params: { search?: string; center?: string; eligibilityStatus?: string } = {}) {
+export function usePatients(params: { search?: string; center?: string; eligibilityStatus?: string; status?: ArchiveStatus } = {}) {
   return useQuery({
     queryKey: ['patients', params],
     queryFn: () => api<Collection<Patient>>(`/patients${query({ ...params, itemsPerPage: '100' })}`),
+  });
+}
+
+/** Archivage (sortie de la file active) et réactivation d'un patient — cadre et administrateur */
+export function useArchivePatient(restore = false) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (patient: Patient) => api<void>(restore ? `/patients/${patient.id}/restore` : `/patients/${patient.id}`, { method: restore ? 'POST' : 'DELETE' }),
+    onSuccess: () => Promise.all([
+      client.invalidateQueries({ queryKey: ['patients'] }),
+      client.invalidateQueries({ queryKey: ['patient'] }),
+      client.invalidateQueries({ queryKey: ['dashboard'] }),
+      client.invalidateQueries({ queryKey: ['statistics'] }),
+    ]),
   });
 }
 
@@ -127,6 +142,13 @@ export function useStatistics(centerIds: string[], period: { from?: string | nul
     queryKey: ['statistics', centerIds, period.from ?? null, period.to ?? null],
     queryFn: () => api<Statistics>(`/statistics${statisticsQuery(centerIds, period)}`),
     enabled,
+  });
+}
+
+export function useMyActivity(period: { from?: string | null; to?: string | null }) {
+  return useQuery({
+    queryKey: ['statistics', 'me', period.from ?? null, period.to ?? null],
+    queryFn: () => api<NurseActivity>(`/statistics/me${statisticsQuery([], period)}`),
   });
 }
 

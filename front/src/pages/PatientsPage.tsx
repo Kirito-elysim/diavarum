@@ -9,8 +9,9 @@ import { Card, CardContent } from '../components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Search, Plus, Eye, Users, Filter, Loader2, Upload } from 'lucide-react';
-import { useCenters, useCreatePatient, usePatients } from '../api/hooks';
+import { Archive, Search, Plus, Eye, Users, Filter, Loader2, Upload } from 'lucide-react';
+import { useCenters, useCreatePatient, usePatients, type ArchiveStatus } from '../api/hooks';
+import { useAuth } from '../contexts/AuthContext';
 import { ELIGIBILITY_LABELS } from '../api/types';
 import { ApiError } from '../lib/api';
 import { ExportButton } from '../components/ExportButton';
@@ -32,9 +33,11 @@ export default function PatientsPage() {
   const [search, setSearch] = useState('');
   const [centerFilter, setCenterFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [archiveFilter, setArchiveFilter] = useState<ArchiveStatus>('active');
   const [creating, setCreating] = useState(false);
   const [importing, setImporting] = useState(false);
   const navigate = useNavigate();
+  const { isCadre } = useAuth();
   const debouncedSearch = useDebounced(search);
 
   const { data: centers } = useCenters();
@@ -42,6 +45,7 @@ export default function PatientsPage() {
     search: debouncedSearch || undefined,
     center: centerFilter === 'all' ? undefined : centerFilter,
     eligibilityStatus: statusFilter === 'all' ? undefined : statusFilter,
+    status: archiveFilter === 'active' ? undefined : archiveFilter,
   });
   const patients = data?.member ?? [];
   const showCenter = (centers?.member.length ?? 0) > 1;
@@ -51,14 +55,17 @@ export default function PatientsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
-          <p className="text-gray-500 text-sm mt-0.5">File active de vos centres</p>
+          <p className="text-gray-500 text-sm mt-0.5">{archiveFilter === 'archived' ? 'Patients archivés de vos centres' : 'File active de vos centres'}</p>
         </div>
         <div className="flex items-center gap-2">
           <ExportButton path="/exports/patients.xlsx" format="xlsx" label="Bilan des patients (Excel)" />
-          <Button variant="outline" onClick={() => setImporting(true)} className="h-10 px-4 gap-2">
-            <Upload className="w-4 h-4" />
-            Importer
-          </Button>
+          {/* Import en masse : cadres et administrateurs uniquement */}
+          {isCadre && (
+            <Button variant="outline" onClick={() => setImporting(true)} className="h-10 px-4 gap-2">
+              <Upload className="w-4 h-4" />
+              Importer
+            </Button>
+          )}
           <Button onClick={() => setCreating(true)} className="bg-orange-500 hover:bg-orange-600 text-white h-10 px-4 gap-2 shadow-sm shadow-orange-200">
             <Plus className="w-4 h-4" />
             Nouveau patient
@@ -104,6 +111,16 @@ export default function PatientsPage() {
                   ))}
                 </SelectContent>
               </Select>
+              <Select value={archiveFilter} onValueChange={(value) => setArchiveFilter(value as ArchiveStatus)}>
+                <SelectTrigger className="h-10 w-48 bg-gray-50 border-gray-100" aria-label="File active ou archivés">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">File active</SelectItem>
+                  <SelectItem value="archived">Archivés</SelectItem>
+                  <SelectItem value="all">Actifs et archivés</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="ml-auto flex items-center gap-2 text-sm text-gray-500">
               <Users className="w-4 h-4" />
@@ -120,6 +137,7 @@ export default function PatientsPage() {
               <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Patient</TableHead>
               <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Date de naissance</TableHead>
               {showCenter && <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Centre</TableHead>}
+              <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Enregistré le</TableHead>
               <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Éligibilité</TableHead>
               <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Créé par</TableHead>
               <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</TableHead>
@@ -129,7 +147,7 @@ export default function PatientsPage() {
             {patients.map((patient) => (
               <TableRow
                 key={patient.id}
-                className="border-gray-100 hover:bg-orange-50/30 transition-colors cursor-pointer"
+                className={`border-gray-100 hover:bg-orange-50/30 transition-colors cursor-pointer ${patient.removedAt ? 'bg-gray-50/60' : ''}`}
                 onClick={() => navigate(`/patients/${patient.id}`)}
               >
                 <TableCell>
@@ -138,17 +156,21 @@ export default function PatientsPage() {
                       {patient.firstName[0]}{patient.lastName[0]}
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{patient.lastName.toUpperCase()} {patient.firstName}</p>
-                      <p className="text-xs text-gray-400">Enregistré le {formatDate(patient.createdAt)}</p>
+                      <p className={`font-medium ${patient.removedAt ? 'text-gray-500' : 'text-gray-900'}`}>{patient.lastName.toUpperCase()} {patient.firstName}</p>
+                      {patient.removedAt && <p className="flex items-center gap-1 text-xs text-gray-500"><Archive className="w-3 h-3" />Archivé le {formatDate(patient.removedAt, 'dd/MM/yyyy')}</p>}
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="text-sm text-gray-700">{formatDate(patient.dateOfBirth, 'dd/MM/yyyy')}</TableCell>
                 {showCenter && <TableCell className="text-sm text-gray-700">{patient.center.name}</TableCell>}
+                <TableCell className="text-sm text-gray-700 whitespace-nowrap">{formatDate(patient.createdAt, 'dd/MM/yyyy')}</TableCell>
                 <TableCell>
-                  <Badge variant="secondary" className={`text-xs font-medium ${eligibilityBadge[patient.eligibilityStatus]}`}>
-                    {ELIGIBILITY_LABELS[patient.eligibilityStatus]}
-                  </Badge>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary" className={`text-xs font-medium ${eligibilityBadge[patient.eligibilityStatus]}`}>
+                      {ELIGIBILITY_LABELS[patient.eligibilityStatus]}
+                    </Badge>
+                    {patient.eligibilityDecidedAt && <span className="text-xs text-gray-500 whitespace-nowrap">le {formatDate(patient.eligibilityDecidedAt, 'dd/MM/yyyy')}</span>}
+                  </div>
                 </TableCell>
                 <TableCell className="text-sm text-gray-700">{patient.createdBy.firstName} {patient.createdBy.lastName}</TableCell>
                 <TableCell className="text-right">
@@ -160,14 +182,14 @@ export default function PatientsPage() {
             ))}
             {!isLoading && patients.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-12 text-gray-400">
+                <TableCell colSpan={7} className="text-center py-12 text-gray-400">
                   {isError ? 'Impossible de charger les patients.' : 'Aucun patient trouvé'}
                 </TableCell>
               </TableRow>
             )}
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-12 text-gray-400">
+                <TableCell colSpan={7} className="text-center py-12 text-gray-400">
                   <Loader2 className="w-5 h-5 animate-spin inline mr-2" />Chargement…
                 </TableCell>
               </TableRow>
@@ -177,7 +199,7 @@ export default function PatientsPage() {
       </Card>
 
       <NewPatientDialog open={creating} onOpenChange={setCreating} onCreated={(id) => navigate(`/patients/${id}`)} />
-      <ImportDialog type="patients" open={importing} onOpenChange={setImporting} />
+      {isCadre && <ImportDialog type="patients" open={importing} onOpenChange={setImporting} />}
     </div>
   );
 }

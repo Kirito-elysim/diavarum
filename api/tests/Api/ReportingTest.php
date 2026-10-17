@@ -4,8 +4,11 @@ namespace App\Tests\Api;
 
 use App\Entity\Center;
 use App\Entity\Module;
+use App\Entity\ModuleCompetency;
+use App\Entity\SessionCompetencyValidation;
 use App\Entity\Patient;
 use App\Entity\TrainingProgram;
+use App\Entity\TrainingSession;
 use App\Entity\User;
 use App\Enum\EligibilityStatus;
 use App\Enum\UserRole;
@@ -160,6 +163,48 @@ final class ReportingTest extends ApiTestCaseBase
         self::assertSame(0, $course($past)['validations']);
         self::assertSame(2, $past['total']['patients']['registered'], 'Effectifs à date, quelle que soit la période');
         self::assertSame(1, $past['total']['programs']['active']['count']);
+    }
+
+    public function testNurseSeesOnlyHerOwnSessionsInHerCenters(): void
+    {
+        $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S97']);
+        $program = $this->em()->getRepository(TrainingProgram::class)->findOneBy(['patient' => $this->dupont]);
+        $competency = (new ModuleCompetency())->setModule($module)->setLabel('Compétence de test');
+        $this->em()->persist($competency);
+        $colleague = $this->createUser(UserRole::Ide, [$this->paris]);
+        $lyonPatient = $this->em()->getRepository(Patient::class)->findOneBy(['lastName' => 'Lyonnais']);
+        $session = function (User $nurse, Patient $patient, bool $validated = true) use ($module, $program): TrainingSession {
+            $session = (new TrainingSession())->setPatient($patient)->setModule($module)->setProgram($program);
+            $session->setAuthor($nurse);
+            if ($validated) {
+                $session->markValidated(1800, 80, []);
+            }
+            $this->em()->persist($session);
+
+            return $session;
+        };
+        $mine = $session($this->ideParis, $this->dupont);
+        $validation = (new SessionCompetencyValidation())->setCompetency($competency)->setValidated(true);
+        $validation->setAuthor($this->ideParis);
+        $mine->addCompetencyValidation($validation);
+        $this->em()->persist($validation);
+        $session($colleague, $this->dupont);
+        $session($this->ideParis, $this->dupont, false);
+        $session($this->ideParis, $lyonPatient);
+        $this->em()->flush();
+
+        $today = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
+        $activity = $this->requestAs($this->ideParis, 'GET', "/api/statistics/me?from=$today&to=$today")->toArray();
+        self::assertSame(['validatedSessions' => 1, 'patients' => 1, 'averageScore' => 80, 'totalDurationSeconds' => 1800, 'validatedCompetencies' => 1], $activity['totals']);
+        self::assertSame([['month' => substr($today, 0, 7), 'validatedSessions' => 1, 'averageScore' => 80]], $activity['monthly']);
+        self::assertSame([['code' => 'S97', 'title' => 'Séance de test', 'validations' => 1, 'averageScore' => 80]], $activity['courses']);
+        self::assertSame('DUPONT Jean', $activity['patients'][0]['name']);
+        self::assertSame(['status' => 'actif', 'validated' => 1, 'selected' => 1], $activity['patients'][0]['program']);
+
+        $yesterday = (new \DateTimeImmutable('yesterday', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
+        self::assertSame(0, $this->requestAs($this->ideParis, 'GET', "/api/statistics/me?to=$yesterday")->toArray()['totals']['validatedSessions']);
+        $this->requestAs($this->ideParis, 'GET', '/api/statistics/me?from=2026-13-01');
+        self::assertResponseStatusCodeSame(400);
     }
 
     public function testInterruptionReasonsAreCounted(): void

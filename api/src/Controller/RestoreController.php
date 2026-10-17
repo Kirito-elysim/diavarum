@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Center;
+use App\Entity\Patient;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Réactivation d'un compte désactivé ou d'un centre archivé (inverse du DELETE logique).
+ * Réactivation d'un compte désactivé, d'un centre ou d'un patient archivé (inverse du DELETE logique).
  */
 final class RestoreController
 {
@@ -34,6 +35,18 @@ final class RestoreController
     public function restoreCenter(Center $center): Response
     {
         $center->restore();
+        $this->entityManager->flush();
+
+        return new Response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /** Le patient revient dans la file active de son centre */
+    #[Route('/api/patients/{id}/restore', name: 'api_patient_restore', methods: ['POST'])]
+    #[IsGranted('ROLE_CADRE')]
+    #[IsGranted('CENTER_SCOPE', subject: 'patient')]
+    public function restorePatient(Patient $patient): Response
+    {
+        $patient->restore();
         $this->entityManager->flush();
 
         return new Response(null, Response::HTTP_NO_CONTENT);

@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use App\Validator\ActivePatient;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -46,6 +47,7 @@ class CodexTest implements CenterScopedInterface, AuthoredInterface
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
     #[Groups(['codex_test:read', 'codex_test:write'])]
+    #[ActivePatient]
     private ?Patient $patient = null;
 
     #[ORM\ManyToOne]

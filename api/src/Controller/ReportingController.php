@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Patient;
 use App\Entity\User;
 use App\Reporting\Labels;
+use App\Reporting\NurseActivityBuilder;
 use App\Reporting\PatientReportBuilder;
 use App\Reporting\PdfWriter;
 use App\Reporting\ReportingScope;
@@ -36,6 +37,7 @@ final class ReportingController
         private readonly ReportingScope $scope,
         private readonly PatientReportBuilder $patientReports,
         private readonly StatisticsBuilder $statistics,
+        private readonly NurseActivityBuilder $nurseActivity,
         private readonly SpreadsheetWriter $spreadsheet,
         private readonly PdfWriter $pdf,
     ) {
@@ -70,6 +72,15 @@ final class ReportingController
         return new JsonResponse($stats);
     }
 
+    /** Résultats personnels de l'IDE connectée : séances qu'elle a menées pour les patients de ses centres */
+    #[Route('/api/statistics/me', name: 'api_statistics_me', methods: ['GET'])]
+    public function myActivity(Request $request, #[CurrentUser] User $user): JsonResponse
+    {
+        [$from, $to] = self::period($request);
+
+        return new JsonResponse($this->nurseActivity->build($user, $this->scope->centers($user, []), $from, $to));
+    }
+
     #[Route('/api/exports/statistics.xlsx', name: 'api_export_statistics_xlsx', methods: ['GET'])]
     #[IsGranted('ROLE_CADRE')]
     public function statisticsSpreadsheet(Request $request, #[CurrentUser] User $user): Response
@@ -95,13 +106,23 @@ final class ReportingController
     {
         $requested = $request->query->all('centers');
         $centers = $this->scope->centers($user, $requested);
+        [$from, $to] = self::period($request);
+
+        return $this->statistics->build($centers, $this->scope->isNationalAdmin() && [] === $requested, $from, $to);
+    }
+
+    /**
+     * @return array{?\DateTimeImmutable, ?\DateTimeImmutable}
+     */
+    private static function period(Request $request): array
+    {
         $from = self::day($request->query->getString('from'), '00:00:00');
         $to = self::day($request->query->getString('to'), '23:59:59');
         if (null !== $from && null !== $to && $from > $to) {
             throw new BadRequestHttpException('Période invalide : la date de début est postérieure à la date de fin.');
         }
 
-        return $this->statistics->build($centers, $this->scope->isNationalAdmin() && [] === $requested, $from, $to);
+        return [$from, $to];
     }
 
     /** « 2026-10-15 » → début ou fin de cette journée, heure de Paris */

@@ -69,7 +69,7 @@ final class CenterScopeExtension implements QueryCollectionExtensionInterface, Q
     }
 
     /**
-     * Comptes désactivés et centres archivés : listables sur demande (?status=archived|all)
+     * Comptes désactivés, centres et patients archivés : listables sur demande (?status=archived|all)
      * par ceux qui peuvent les réactiver — cadre et administrateur pour les comptes,
      * administrateur pour les centres. Partout ailleurs, seuls les éléments actifs sont listés.
      */
@@ -79,6 +79,8 @@ final class CenterScopeExtension implements QueryCollectionExtensionInterface, Q
         $allowed = match ($resourceClass) {
             User::class => $this->security->isGranted('ROLE_CADRE'),
             Center::class => $this->security->isGranted('ROLE_ADMIN_NATIONAL'),
+            // Patients archivés : consultables par tous les soignants de leurs centres
+            Patient::class => true,
             default => false,
         };
 
