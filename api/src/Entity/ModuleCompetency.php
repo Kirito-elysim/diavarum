@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * Compétence d'entraînement d'un cours (5 maximum par cours).
+ * Compétence d'entraînement d'un cours (Module::MAX_COMPETENCIES au plus par cours).
  */
 #[ORM\Entity]
 #[ApiResource(

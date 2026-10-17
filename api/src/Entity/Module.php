@@ -60,7 +60,8 @@ class Module implements ArchivableInterface
 {
     use ArchivableTrait;
 
-    public const MAX_COMPETENCIES = 5;
+    /** Le guide IDE EHD prévoit jusqu'à 6 critères d'évaluation par séance (séance 12) */
+    public const MAX_COMPETENCIES = 6;
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]

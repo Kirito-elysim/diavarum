@@ -87,9 +87,9 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         self::assertCount(2, $errors, 'Identifiant en double + type inconnu');
     }
 
-    public function testAtMostFiveCompetencies(): void
+    public function testAtMostSixCompetencies(): void
     {
-        $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6']]));
+        $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6', '7']]));
 
         self::assertResponseStatusCodeSame(422);
     }
