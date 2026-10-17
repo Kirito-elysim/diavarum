@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { cn } from '../lib/utils';
+import { DEFAULT_INSTRUCTIONS } from '../lib/courseVisuals';
 import { CheckCircle, XCircle, HelpCircle } from 'lucide-react';
 import type { QuizBlock, QuizOption, DragDropPair } from '../types';
 
@@ -271,13 +272,13 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
 
   return (
     <div className="space-y-6" onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
-      <QuestionHeader label="Association" text={block.question} />
+      <QuestionHeader label="Relier" text={block.question} />
 
       {/* Instructions */}
       {!submitted && (
         <div className="flex items-center gap-2.5 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
           <span className="text-xl">👆</span>
-          <p className="text-sm text-orange-300 font-medium">Faites glisser les définitions sur les concepts correspondants</p>
+          <p className="text-sm text-orange-300 font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.connect}</p>
         </div>
       )}
 

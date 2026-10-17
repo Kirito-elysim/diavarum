@@ -1,5 +1,5 @@
 import { CoursePageHeading } from '../components/CoursePageHeading';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useBlocker, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -39,6 +39,9 @@ function Editor({ initial }: { initial: ModuleContent }) {
   const [confirmSave, setConfirmSave] = useState(false);
   const [removePage, setRemovePage] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
+  const errorsRef = useRef<HTMLDivElement>(null);
+  // Enregistrement refusé : la liste des points à compléter est en haut de page, on l'amène à l'écran
+  useEffect(() => { if (errors.length) errorsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, [errors]);
   const [history, setHistory] = useState<ModuleContent[]>([]);
   const mutation = useImportModuleContent();
   const serialized = JSON.stringify(course);
@@ -83,13 +86,13 @@ function Editor({ initial }: { initial: ModuleContent }) {
         <Button variant="outline" disabled={!history.length || mutation.isPending} onClick={() => { const previous = history.at(-1); if (previous) { setCourse(previous); setHistory(h => h.slice(0, -1)); setErrors([]); if (!previous.content.some(p => p.id === selected)) setSelected(previous.content[0]?.id ?? null); } }}>Annuler la dernière modification</Button>
         <Button variant="outline" disabled={!course.content.length} onClick={() => setPreview(true)}>Aperçu apprenant</Button>
         <Button variant="outline" disabled={!course.content.length} onClick={() => setTabletPreview(true)}>Aperçu sur tablette</Button>
-        <Button disabled={mutation.isPending || !!recovery} className="bg-orange-600 hover:bg-orange-700" onClick={() => { const issues = validateCourse(course); setErrors(issues); if (!issues.length) setConfirmSave(true); }}>Enregistrer le cours</Button>
+        <Button disabled={mutation.isPending || !!recovery} className="bg-orange-600 hover:bg-orange-700" onClick={() => { const issues = validateCourse(course); setErrors(issues); if (issues.length) toast.error(`Cours non enregistré : ${issues.length} point${issues.length > 1 ? 's' : ''} à compléter`); else setConfirmSave(true); }}>Enregistrer le cours</Button>
       </div>
     </header>
     {recovery && <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 space-y-3"><p>Un brouillon non enregistré existe sur cet appareil. Souhaitez-vous le reprendre ?</p><div className="flex gap-3"><Button onClick={() => { setCourse(recovery); setSelected(recovery.content[0]?.id ?? null); setRecovery(null); }}>Reprendre le brouillon</Button><Button variant="outline" onClick={() => { localStorage.removeItem(draftKey); setRecovery(null); }}>Utiliser la version enregistrée</Button></div></div>}
     {draftError && <p role="alert" className="rounded-xl bg-amber-50 p-4">La sauvegarde du brouillon sur cet appareil est indisponible. Gardez cette page ouverte jusqu’à l’enregistrement du cours.</p>}
     {dirty && !draftError && !recovery && <p className="text-sm text-gray-500">Le brouillon est conservé sur cet appareil. Utilisez « Enregistrer le cours » pour le retrouver sur les autres appareils.</p>}
-    {errors.length > 0 && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-900"><p className="font-semibold">À compléter avant l’enregistrement</p><ul className="mt-2 list-disc pl-5 space-y-1">{errors.map((error, i) => <li key={i}>{error}</li>)}</ul></div>}
+    {errors.length > 0 && <div ref={errorsRef} role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-900"><p className="font-semibold">À compléter avant l’enregistrement</p><ul className="mt-2 list-disc pl-5 space-y-1">{errors.map((error, i) => <li key={i}>{error}</li>)}</ul></div>}
     <fieldset disabled={mutation.isPending || !!recovery} className="min-w-0 space-y-6">
       <details className="rounded-2xl border bg-white p-5" open={course.content.length === 0}>
         <summary className="cursor-pointer font-semibold text-emerald-950">Informations du cours et compétences IDE</summary>

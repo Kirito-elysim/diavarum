@@ -87,6 +87,34 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         self::assertCount(2, $errors, 'Identifiant en double + type inconnu');
     }
 
+    public function testAuthoringToolBlocksAreAccepted(): void
+    {
+        $payload = $this->payload();
+        $payload['content'][0]['blocks'] = [
+            ['id' => 'it', 'type' => 'image-text', 'imageUrl' => '/picto.png', 'alt' => '', 'content' => 'Texte', 'size' => 'picto'],
+            ['id' => 'ic', 'type' => 'info-card', 'title' => 'Définition', 'content' => 'Texte', 'variant' => 'definition'],
+            ['id' => 'fc', 'type' => 'flip-cards', 'question' => '', 'instruction' => 'Touchez une carte pour répondre à la question', 'cards' => [['id' => 'c', 'front' => 'R', 'back' => 'V']]],
+            ['id' => 'hs', 'type' => 'hotspot', 'imageUrl' => '/i.png', 'alt' => '', 'hotspots' => [['id' => 'h', 'x' => 1, 'y' => 2, 'label' => 'L', 'description' => 'D', 'icon' => 'heart']]],
+            ['id' => 'dd', 'type' => 'categorize', 'question' => '?', 'instruction' => 'Glissez', 'categories' => ['Panier'], 'items' => [
+                ['id' => 'a', 'label' => 'A', 'category' => 'Panier'], ['id' => 'b', 'label' => 'B', 'category' => 'Panier'],
+            ]],
+        ];
+
+        $this->put('S2', $payload);
+        self::assertResponseIsSuccessful();
+        self::assertSame(['dd' => 2], $this->scoreCalculator()->evaluatedBlocks($this->em()->getRepository(Module::class)->findOneBy(['code' => 'S2'])));
+
+        $payload['content'][0]['blocks'][4]['items'][1]['category'] = 'Zone inconnue';
+        $this->put('S2', $payload);
+        self::assertResponseStatusCodeSame(422);
+        self::assertStringContainsString('zone de destination', $this->client->getResponse()->toArray(false)['detail']);
+    }
+
+    private function scoreCalculator(): \App\Training\ScoreCalculator
+    {
+        return new \App\Training\ScoreCalculator();
+    }
+
     public function testAtMostSixCompetencies(): void
     {
         $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6', '7']]));

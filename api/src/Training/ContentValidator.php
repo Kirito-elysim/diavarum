@@ -13,7 +13,7 @@ final class ContentValidator
         'text', 'image', 'info-card', 'quiz', 'timeline', 'hotspot', 'iframe',
         'reorder', 'fill-blank', 'true-false', 'memory', 'slider', 'tap-sequence', 'flip-cards',
         'categorize', 'drawing', 'scenario', 'reveal-legends', 'pull-timeline', 'sort-bin',
-        'connect-dots', 'word-search', 'yes-no-path', 'carousel',
+        'connect-dots', 'word-search', 'yes-no-path', 'carousel', 'image-text',
     ];
 
     /**
@@ -93,6 +93,14 @@ final class ContentValidator
                     }
                     if ($invalidOption) {
                         continue;
+                    }
+                }
+                if ('categorize' === $block['type']) {
+                    $zones = $block['categories'] ?? null;
+                    if (!\is_array($zones) || [] === $zones || \count(array_unique($zones)) !== \count($zones)) {
+                        $errors[] = "$at : zones de destination manquantes ou en double.";
+                    } elseif (array_filter($block['items'] ?? [], static fn ($item) => !\in_array($item['category'] ?? null, $zones, true))) {
+                        $errors[] = "$at : chaque élément doit être rattaché à une zone de destination existante.";
                     }
                 }
                 if (0 === ScoreCalculator::expectedAnswers($block)) {

@@ -33,7 +33,7 @@ try {
  await page.route('**/api/training_programs?*', async route => {
   const response=await route.fetch();
   const data=await response.json();
-  for(const program of data.member ?? []) for(const item of program.modules) if(!item.module.mandatory) item.selected=false;
+  for(const program of data.member ?? []) for(const item of program.modules ?? []) if(!item.module.mandatory) item.selected=false;
   await route.fulfill({response,json:data});
  });
  let starts=0,interrupted=0,validation;

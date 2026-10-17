@@ -8,7 +8,7 @@ export type ContentBlockType =
   | 'reorder' | 'fill-blank' | 'true-false' | 'memory' | 'slider'
   | 'tap-sequence' | 'flip-cards' | 'categorize' | 'drawing' | 'scenario'
   | 'reveal-legends' | 'pull-timeline' | 'sort-bin'
-  | 'connect-dots' | 'word-search' | 'yes-no-path' | 'carousel';
+  | 'connect-dots' | 'word-search' | 'yes-no-path' | 'carousel' | 'image-text';
 
 export interface TextBlock {
   type: 'text';
@@ -24,12 +24,27 @@ export interface ImageBlock {
   alt: string;
 }
 
+/** Catégories d'encadré ; les anciennes valeurs (info, success, tip) restent lisibles */
+export type InfoCardVariant = 'important' | 'definition' | 'objective' | 'funfact' | 'warning';
+export type LegacyInfoCardVariant = 'info' | 'success' | 'tip';
+
 export interface InfoCardBlock {
   type: 'info-card';
   id: string;
   title: string;
   content: string;
-  variant: 'info' | 'warning' | 'success' | 'tip';
+  variant: InfoCardVariant | LegacyInfoCardVariant;
+}
+
+/** Image (ou picto) à gauche, texte à droite, sur une même ligne */
+export interface ImageTextBlock {
+  type: 'image-text';
+  id: string;
+  imageUrl: string;
+  alt: string;
+  content: string;
+  /** picto : petite icône ; image : vignette plus grande */
+  size: 'picto' | 'image';
 }
 
 export type QuestionType = 'qcu' | 'qcm' | 'drag-drop';
@@ -58,6 +73,8 @@ export interface QuizBlock {
   options?: QuizOption[];
   pairs?: DragDropPair[];
   explanation?: string;
+  /** Consigne de l'encadré au doigt (exercice « Relier ») ; texte par défaut si absente */
+  instruction?: string;
 }
 
 export type ContentBlock =
@@ -68,7 +85,7 @@ export type ContentBlock =
   | DrawingBlock | ScenarioBlock
   | RevealLegendsBlock | PullTimelineBlock
   | SortBinBlock | ConnectDotsBlock | WordSearchBlock | YesNoPathBlock
-  | CarouselBlock;
+  | CarouselBlock | ImageTextBlock;
 
 /* Carrousel : images défilantes accompagnées d'un texte (interactivité du cahier des charges) */
 export interface CarouselSlide {
@@ -185,6 +202,8 @@ export interface FlipCardsBlock {
   id: string;
   question: string;
   cards: FlipCard[];
+  /** Consigne de l'encadré au doigt ; texte par défaut si absente */
+  instruction?: string;
 }
 
 export interface CategorizeItem {
@@ -200,6 +219,8 @@ export interface CategorizeBlock {
   categories: string[];
   items: CategorizeItem[];
   explanation?: string;
+  /** Consigne de l'encadré au doigt ; texte par défaut si absente */
+  instruction?: string;
 }
 
 export interface DrawingBlock {
@@ -367,6 +388,9 @@ export interface HotspotPoint {
   y: number;
   label: string;
   description: string;
+  /** Repère affiché à la place du numéro : picto de la bibliothèque (clé) ou image importée */
+  icon?: string;
+  iconUrl?: string;
 }
 
 export interface HotspotBlock {

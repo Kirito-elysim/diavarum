@@ -10,7 +10,7 @@ drag.pairs.forEach((pair, i) => { pair.left = `Destination ${i}`; pair.right = `
 reorder.question = 'Ordonnez les étapes';
 reorder.items.forEach((item, i) => { item.label = `Étape ${i}`; });
 assert.deepEqual(validateCourse(course), []);
-assert.equal(blockLabel(drag), 'Glisser-déposer');
+assert.equal(blockLabel(drag), 'Relier');
 assert.equal(blockLabel(reorder), 'Remettre dans l’ordre');
 const reordered = move(reorder.items, 0, 1);
 assert.equal(reordered[1].id, reorder.items[0].id);
@@ -22,4 +22,4 @@ reorder.items.pop();
 const errors = validateCourse(course);
 assert.ok(errors.some(message => message.includes('deux associations')));
 assert.ok(errors.some(message => message.includes('deux éléments')));
-console.log('Glisser-déposer et remise en ordre : création, validation, doublons et ordre attendu OK');
+console.log('Relier et remise en ordre : création, validation, doublons et ordre attendu OK');

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { cn } from '../lib/utils';
+import { DEFAULT_INSTRUCTIONS } from '../lib/courseVisuals';
 import {
   CheckCircle, XCircle, HelpCircle, GripVertical,
   RefreshCw, Sparkles, ChevronRight,
@@ -610,7 +611,7 @@ export function FlipCardsView({ block }: { block: FlipCardsBlock }) {
 
       <div className="flex items-center gap-2 px-4 py-3 bg-sky-500/10 rounded-2xl border border-sky-500/20">
         <span className="text-base">👆</span>
-        <p className="text-sm text-sky-300 font-medium">Touchez une carte pour la retourner</p>
+        <p className="text-sm text-sky-300 font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.flipCards}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -629,13 +630,7 @@ export function FlipCardsView({ block }: { block: FlipCardsBlock }) {
               )}
             >
               <div>
-                <p className={cn(
-                  'text-sm font-bold mb-1 uppercase tracking-wider',
-                  isFlipped ? 'text-orange-400' : 'text-sky-400'
-                )}>
-                  {isFlipped ? 'Réponse' : 'Question'}
-                </p>
-                <p className="text-base font-medium text-white/90 leading-snug">
+                <p className="text-base font-medium text-white/90 leading-snug whitespace-pre-line">
                   {isFlipped ? card.back : card.front}
                 </p>
               </div>
@@ -654,6 +649,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
   const [submitted, setSubmitted] = useState(false);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [hoveredCat, setHoveredCat] = useState<string | null>(null);
+  const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   const zoneRefs = useRef<Map<string, HTMLElement>>(new Map());
   const itemRefs = useRef<Map<string, HTMLElement>>(new Map());
 
@@ -678,10 +674,12 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
     if (submitted || disabled) return;
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
     setDraggingId(id);
+    setPointer({ x: e.clientX, y: e.clientY });
   };
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!draggingId) return;
+    setPointer({ x: e.clientX, y: e.clientY });
     setHoveredCat(getHoveredCat(e.clientX, e.clientY));
   }, [draggingId, getHoveredCat]);
 
@@ -693,6 +691,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
     }
     setDraggingId(null);
     setHoveredCat(null);
+    setPointer(null);
   }, [draggingId, getHoveredCat]);
 
   const handleSubmit = () => {
@@ -706,7 +705,14 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
 
   return (
     <div className="space-y-5" onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
-      <BlockHeader label="Classer" text={block.question} />
+      <BlockHeader label="Glisser-déposer" text={block.question} />
+
+      {!submitted && (
+        <div className="flex items-center gap-2.5 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
+          <span className="text-xl">👆</span>
+          <p className="text-sm text-orange-300 font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.categorize}</p>
+        </div>
+      )}
 
       {/* Unassigned pool */}
       {unassigned.length > 0 && (
@@ -733,7 +739,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
       )}
 
       {/* Category zones */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className={cn('grid gap-3', block.categories.length > 1 && 'grid-cols-2')}>
         {block.categories.map((cat) => {
           const catItems = block.items.filter((it) => assignments[it.id] === cat);
           return (
@@ -756,17 +762,21 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
                   const isCorrect = submitted && it.category === cat;
                   const isWrong = submitted && it.category !== cat;
                   return (
-                    <span
+                    <button
+                      type="button"
                       key={it.id}
+                      disabled={submitted || disabled}
+                      title={submitted ? undefined : 'Toucher pour retirer'}
+                      onClick={() => setAssignments((prev) => ({ ...prev, [it.id]: null }))}
                       className={cn(
-                        'px-3 py-1.5 rounded-lg text-xs font-medium border',
+                        'px-3 py-1.5 rounded-lg text-sm font-medium border touch-manipulation',
                         isCorrect ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200' :
                         isWrong ? 'bg-red-500/20 border-red-400 text-red-200' :
                         'bg-white/8 border-white/15 text-white/70'
                       )}
                     >
                       {it.label}
-                    </span>
+                    </button>
                   );
                 })}
                 {catItems.length === 0 && <span className="text-xs text-white/20 italic py-2">Déposez ici</span>}
@@ -777,9 +787,9 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
       </div>
 
       {/* Floating ghost */}
-      {draggingId && (
+      {draggingId && pointer && (
         <div className="fixed pointer-events-none z-50 px-4 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-semibold shadow-2xl -translate-x-1/2 -translate-y-1/2"
-          style={{ left: 0, top: 0 }}>
+          style={{ left: pointer.x, top: pointer.y }}>
           {block.items.find((it) => it.id === draggingId)?.label}
         </div>
       )}

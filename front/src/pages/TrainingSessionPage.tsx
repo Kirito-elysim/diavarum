@@ -16,18 +16,20 @@ import {
   SortBinView, ConnectDotsView, WordSearchView, YesNoPathView,
 } from '../components/InteractiveBlocks';
 import {
-  ChevronLeft, ChevronRight, X, Info, AlertTriangle,
-  Lightbulb, CheckCircle2, BookOpen, ZoomIn, Pause, Play, Clock,
+  ChevronLeft, ChevronRight, X,
+  CheckCircle2, BookOpen, ZoomIn, Pause, Play, Clock,
   AlertCircle, Route, Shield, Delete, ArrowRight, MapPin, Maximize,
   ExternalLink, RefreshCw,
 } from 'lucide-react';
 import type {
   ModulePage,
-  ContentBlock, TextBlock, ImageBlock, InfoCardBlock,
+  ContentBlock, TextBlock, ImageBlock, InfoCardBlock, ImageTextBlock,
   TimelineBlock, HotspotBlock, IframeBlock, FlipCardsBlock,
 } from '../types';
 // New block types are imported by their component props; no extra type imports needed here.
 import { cn } from '../lib/utils';
+import { infoCardCategory } from '../lib/courseVisuals';
+import { HotspotMarker } from '../components/HotspotMarker';
 
 /* ─── Fullscreen helpers ──────────────────────────────────────────────────── */
 /** API plein écran préfixée des anciens WebKit (tablettes Android et iPad plus anciennes) */
@@ -112,13 +114,7 @@ function ImageBlockView({ block }: { block: ImageBlock }) {
 }
 
 function InfoCardView({ block }: { block: InfoCardBlock }) {
-  const configs = {
-    info:    { icon: Info,          bg: 'rgba(14,165,233,0.08)', border: 'rgba(14,165,233,0.25)', title: 'text-sky-300', body: 'text-sky-200/80' },
-    warning: { icon: AlertTriangle, bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.25)', title: 'text-amber-300', body: 'text-amber-200/80' },
-    success: { icon: CheckCircle2,  bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.25)', title: 'text-emerald-300', body: 'text-emerald-200/80' },
-    tip:     { icon: Lightbulb,     bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.25)', title: 'text-violet-300', body: 'text-violet-200/80' },
-  };
-  const c = configs[block.variant];
+  const c = infoCardCategory(block.variant);
   const Icon = c.icon;
   return (
     <div className="rounded-3xl p-6 flex gap-4" style={{ backgroundColor: c.bg, border: `1.5px solid ${c.border}` }}>
@@ -127,7 +123,7 @@ function InfoCardView({ block }: { block: InfoCardBlock }) {
       </div>
       <div>
         <p className={cn('font-bold text-lg mb-1.5', c.title)}>{block.title}</p>
-        <p className={cn('text-base leading-relaxed', c.body)}>{block.content}</p>
+        <p className={cn('text-base leading-relaxed whitespace-pre-line', c.body)}>{block.content}</p>
       </div>
     </div>
   );
@@ -254,7 +250,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
             aria-expanded={activeId === hs.id}
             style={{ left: `clamp(24px, ${hs.x}%, calc(100% - 24px))`, top: `clamp(24px, ${hs.y}%, calc(100% - 24px))`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
           >
-            {i + 1}
+            <HotspotMarker point={hs} index={i} />
             {hs.id !== activeId && (
               <span className="absolute inset-0 rounded-full bg-orange-400/40 animate-ping" style={{ animationDuration: `${1.5 + i * 0.4}s` }} />
             )}
@@ -275,7 +271,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
             <div className="flex items-start justify-between gap-3 mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-xs font-black">{block.hotspots.findIndex((h) => h.id === active.id) + 1}</span>
+                  <span className="flex h-full w-full items-center justify-center text-white text-xs font-black"><HotspotMarker point={active} index={block.hotspots.findIndex((h) => h.id === active.id)} /></span>
                 </div>
                 <p className="font-bold text-gray-900 text-sm">{active.label}</p>
               </div>
@@ -302,11 +298,25 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
             )}
           >
             <span className={cn('w-5 h-5 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0',
-              hs.id === activeId ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-600')}>{i + 1}</span>
+              hs.id === activeId ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-600')}><HotspotMarker point={hs} index={i} className="h-3.5 w-3.5" /></span>
             <span className="text-xs font-semibold truncate">{hs.label}</span>
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ─── Image (ou picto) à gauche, texte à droite ──────────────────────────── */
+function ImageTextView({ block }: { block: ImageTextBlock }) {
+  const picto = block.size === 'picto';
+  return (
+    <div className="rounded-3xl p-5 flex items-start gap-5" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      {block.imageUrl && (
+        <img src={block.imageUrl} alt={block.alt} loading="lazy"
+          className={cn('flex-shrink-0 object-contain', picto ? 'h-16 w-16' : 'w-[38%] max-w-[260px] rounded-2xl bg-white/5')} />
+      )}
+      <p className="min-w-0 flex-1 text-[18px] leading-[1.75] text-white/80 whitespace-pre-line">{block.content}</p>
     </div>
   );
 }
@@ -931,6 +941,8 @@ export function BlockCard({
     return <div className="rounded-3xl p-5" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><ImageBlockView block={block} /></div>;
   if (block.type === 'info-card')
     return <InfoCardView block={block} />;
+  if (block.type === 'image-text')
+    return <ImageTextView block={block} />;
   if (block.type === 'timeline')
     return <TimelineBlockView block={block} />;
   if (block.type === 'hotspot')

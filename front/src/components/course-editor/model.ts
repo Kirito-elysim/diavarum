@@ -3,9 +3,9 @@ import type { ModuleContent } from '../../api/types';
 
 export const uid = () => crypto.randomUUID();
 export const activities = [
-  ['text', 'Texte'], ['image', 'Image'], ['info-card', 'Encadré'], ['carousel', 'Carrousel'],
+  ['text', 'Texte'], ['image', 'Image'], ['image-text', 'Image ou picto + texte'], ['info-card', 'Encadré'], ['carousel', 'Carrousel'],
   ['hotspot', 'Image à légendes'], ['flip-cards', 'Cartes à retourner'], ['qcu', 'QCU — une réponse'], ['qcm', 'QCM — plusieurs réponses'],
-  ['drag-drop', 'Glisser-déposer'], ['reorder', 'Remettre dans l’ordre'],
+  ['drag-drop', 'Relier'], ['categorize', 'Glisser-déposer'], ['reorder', 'Remettre dans l’ordre'],
 ] as const;
 export type Activity = typeof activities[number][0];
 export function newBlock(type: Activity): ContentBlock {
@@ -13,7 +13,9 @@ export function newBlock(type: Activity): ContentBlock {
   switch (type) {
     case 'text': return { id, type, content: '' };
     case 'image': return { id, type, url: '', alt: '', caption: '' };
-    case 'info-card': return { id, type, title: 'Important', content: '', variant: 'info' };
+    case 'image-text': return { id, type, imageUrl: '', alt: '', content: '', size: 'picto' };
+    case 'info-card': return { id, type, title: 'Important', content: '', variant: 'important' };
+    case 'categorize': return { id, type, question: '', categories: ['Zone 1'], items: [0, 1].map(() => ({ id: uid(), label: '', category: 'Zone 1' })) };
     case 'carousel': return { id, type, question: '', slides: [{ id: uid(), imageUrl: '', alt: '', text: '' }] };
     case 'hotspot': return { id, type, imageUrl: '', alt: '', hotspots: [] };
     case 'flip-cards': return { id, type, question: '', cards: [{ id: uid(), front: '', back: '' }] };
@@ -57,6 +59,15 @@ export function validateCourse(course: ModuleContent): string[] {
         if (new Set(labels).size !== labels.length) errors.push(`${name} : les éléments à déplacer doivent avoir des textes différents.`);
       }
       if (b.type === 'image') missing(b.url, 'ajoutez une image');
+      if (b.type === 'image-text') { missing(b.imageUrl, 'ajoutez une image ou un picto'); missing(b.content, 'complétez le texte'); }
+      if (b.type === 'categorize') {
+        missing(b.question, 'complétez la consigne');
+        if (!b.categories.length) errors.push(`${name} : ajoutez au moins une zone de destination.`);
+        b.categories.forEach(c => missing(c, 'nommez chaque zone de destination'));
+        if (new Set(b.categories.map(c => c.trim())).size !== b.categories.length) errors.push(`${name} : les zones de destination doivent avoir des noms différents.`);
+        if (b.items.length < 2) errors.push(`${name} : ajoutez au moins deux éléments à déplacer.`);
+        b.items.forEach(item => { missing(item.label, 'complétez chaque élément à déplacer'); if (!b.categories.includes(item.category)) errors.push(`${name} : choisissez la zone de l’élément « ${item.label || 'sans texte'} ».`); });
+      }
       if (b.type === 'carousel') {
         if (!b.slides.length) errors.push(`${name} : ajoutez une image au carrousel.`);
         b.slides.forEach(s => missing(s.imageUrl, 'une image du carrousel manque'));
