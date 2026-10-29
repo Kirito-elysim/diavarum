@@ -1,0 +1,1693 @@
+{
+  "code": "S99",
+  "title": "Référence — Charte graphique des cours",
+  "description": "Référence interne : 35 compositions Adobe XD du 27 octobre 2026 et 3 pages de repères (utilisation, couleurs et typographie, encadrés). Contenus de démonstration modifiables, réservés aux concepteurs.",
+  "estimatedDuration": 30,
+  "published": false,
+  "competencies": [],
+  "content": [
+    {
+      "id": "s99-p01-0",
+      "title": "La charte graphique des cours",
+      "instruction": "Un cours de référence pour composer vos écrans.",
+      "blocks": [
+        {
+          "id": "s99-p01-1",
+          "type": "text",
+          "content": "Ce cours rassemble les **35 compositions de la maquette Adobe XD** et les principaux repères de la charte. Les exemples sont modifiables et les activités peuvent être essayées dans l’aperçu."
+        },
+        {
+          "id": "s99-p01-2",
+          "type": "info-card",
+          "variant": "objective",
+          "title": "Comment utiliser cette référence",
+          "content": "Parcourez les écrans puis retrouvez leur composition dans « Choisir un modèle XD » du constructeur."
+        },
+        {
+          "id": "s99-p01-3",
+          "type": "text",
+          "content": "Les contenus sont des démonstrations de mise en page. Les illustrations proviennent des ressources déjà présentes dans le projet. Cette référence est réservée à la préparation des cours."
+        }
+      ]
+    },
+    {
+      "id": "s99-p02-0",
+      "title": "Couleurs et styles de texte",
+      "instruction": "Euclid Circular A · Regular et Bold · 40, 25 et 20 px.",
+      "blocks": [
+        {
+          "id": "s99-p02-1",
+          "type": "text",
+          "content": "Titre de référence · 40 px",
+          "textStyle": {
+            "size": 40,
+            "weight": "bold",
+            "color": "#E86825"
+          }
+        },
+        {
+          "id": "s99-p02-2",
+          "type": "text",
+          "content": "Texte courant · 25 px · vert #004138. Un passage peut être mis en **gras**.",
+          "textStyle": {
+            "size": 25,
+            "weight": "regular",
+            "color": "#004138"
+          }
+        },
+        {
+          "id": "s99-p02-3",
+          "type": "text",
+          "content": "Texte dense ou légende · 20 px · vert #1C5335.",
+          "textStyle": {
+            "size": 20,
+            "weight": "regular",
+            "color": "#1C5335"
+          }
+        },
+        {
+          "id": "s99-p02-4",
+          "type": "text",
+          "content": "Fond : #ECF5E9\nBandeau : #1C5335\nTitres et actions : #E86825\nFond des illustrations et consignes : #FFE0D0\nBoxes : #FAFAFA\nTexte : #004138",
+          "textStyle": {
+            "size": 20
+          }
+        },
+        {
+          "id": "s99-p02-5",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Police de marque",
+          "content": "Euclid Circular A est prévue par la charte. Sans les fichiers de police, le navigateur utilise la police de remplacement."
+        }
+      ]
+    },
+    {
+      "id": "s99-p03-0",
+      "title": "Les cinq encadrés de la charte",
+      "instruction": "Choisissez le picto en fonction du rôle du message.",
+      "blocks": [
+        {
+          "id": "s99-p03-1",
+          "type": "info-card",
+          "variant": "objective",
+          "title": "Objectif",
+          "content": "Identifier ce que l’apprenant doit retenir de cet écran."
+        },
+        {
+          "id": "s99-p03-2",
+          "type": "info-card",
+          "variant": "definition",
+          "title": "Définition",
+          "content": "Expliquer un terme avec une phrase courte et accessible."
+        },
+        {
+          "id": "s99-p03-3",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle."
+        },
+        {
+          "id": "s99-p03-4",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun fact",
+          "content": "Apporter une information complémentaire qui éveille la curiosité."
+        },
+        {
+          "id": "s99-p03-5",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Alerte",
+          "content": "Signaler un point de vigilance avec le picto dédié."
+        }
+      ]
+    },
+    {
+      "id": "s99-p04-0",
+      "title": "01 · Carrousel + box dessous",
+      "instruction": "Faites défiler les images avec les textes associés.",
+      "blocks": [
+        {
+          "id": "s99-p04-1",
+          "type": "carousel",
+          "question": "Un visuel et son texte, étape par étape.",
+          "slides": [
+            {
+              "id": "s99-p04-2",
+              "imageUrl": "/courses/S1/confiance-majeure.png",
+              "alt": "Illustration d’une personne de confiance",
+              "text": "Découvrir le sujet avec une première illustration."
+            },
+            {
+              "id": "s99-p04-3",
+              "imageUrl": "/courses/S1/anticipees-intro.png",
+              "alt": "Illustration de discussion et d’accompagnement",
+              "text": "Faire défiler pour explorer un second exemple."
+            },
+            {
+              "id": "s99-p04-4",
+              "imageUrl": "/courses/S1/conclusion.png",
+              "alt": "Illustration de conclusion",
+              "text": "Terminer par une idée à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p04-5",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p05-0",
+      "title": "02 · Image légendée + box dessous",
+      "instruction": "Touchez chaque point pour révéler sa légende.",
+      "blocks": [
+        {
+          "id": "s99-p05-1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S1/confiance-majeure.png",
+          "alt": "Illustration d’une personne de confiance",
+          "hotspots": [
+            {
+              "id": "s99-p05-2",
+              "x": 25,
+              "y": 35,
+              "label": "Premier repère",
+              "description": "Une légende courte explique un élément de l’illustration.",
+              "icon": "info"
+            },
+            {
+              "id": "s99-p05-3",
+              "x": 70,
+              "y": 55,
+              "label": "Second repère",
+              "description": "Chaque repère possède un titre, un texte et une position modifiables.",
+              "icon": "star"
+            }
+          ],
+          "caption": "Touchez un repère pour afficher une information."
+        },
+        {
+          "id": "s99-p05-4",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p06-0",
+      "title": "03 · 4 cartes + box dessous",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p06-1",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p06-2",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p06-3",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p06-4",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p06-5",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            }
+          ],
+          "columns": 2
+        },
+        {
+          "id": "s99-p06-6",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p07-0",
+      "title": "04 · 6 cartes + box dessous",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p07-1",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p07-2",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p07-3",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p07-4",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p07-5",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p07-6",
+              "front": "ALERTE",
+              "back": "Signaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p07-7",
+              "front": "TEXTE",
+              "back": "Le texte courant utilise la taille 25 px. La taille 20 px convient aux contenus plus denses."
+            }
+          ],
+          "columns": 3
+        },
+        {
+          "id": "s99-p07-8",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p08-0",
+      "title": "05 · Image + texte + box dessous",
+      "instruction": "",
+      "blocks": [
+        {
+          "id": "s99-p08-1",
+          "type": "image-text",
+          "imageUrl": "/courses/S1/confiance-majeure.png",
+          "alt": "Illustration d’une personne de confiance",
+          "content": "**Associer une image et un texte.**\n\nL’image occupe la partie gauche de l’écran. Le texte développe une idée à droite, avec des paragraphes courts.\n\nCette composition convient à une introduction, une explication ou une synthèse. Les boxes peuvent être placées avant ou après ce contenu.",
+          "size": "image"
+        },
+        {
+          "id": "s99-p08-2",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p09-0",
+      "title": "06 · 6 pictos + box dessous",
+      "instruction": "Découvrez chaque repère et son rôle dans le cours.",
+      "blocks": [
+        {
+          "id": "s99-p09-1",
+          "type": "picto-grid",
+          "question": "Une idée par picto :",
+          "columns": 3,
+          "items": [
+            {
+              "id": "s99-p09-2",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Objectif\nIdentifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p09-3",
+              "imageUrl": "/pictos/definition.png",
+              "alt": "Définition",
+              "text": "Définition\nExpliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p09-4",
+              "imageUrl": "/pictos/important.png",
+              "alt": "Important",
+              "text": "Important\nMettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p09-5",
+              "imageUrl": "/pictos/funfact.png",
+              "alt": "Fun fact",
+              "text": "Fun fact\nApporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p09-6",
+              "imageUrl": "/pictos/warning.png",
+              "alt": "Alerte",
+              "text": "Alerte\nSignaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p09-7",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Synthèse\nRassembler les idées à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p09-8",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p10-0",
+      "title": "07 · 4 pictos + box dessous",
+      "instruction": "Découvrez chaque repère et son rôle dans le cours.",
+      "blocks": [
+        {
+          "id": "s99-p10-1",
+          "type": "picto-grid",
+          "question": "Une idée par picto :",
+          "columns": 2,
+          "items": [
+            {
+              "id": "s99-p10-2",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Objectif\nIdentifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p10-3",
+              "imageUrl": "/pictos/definition.png",
+              "alt": "Définition",
+              "text": "Définition\nExpliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p10-4",
+              "imageUrl": "/pictos/important.png",
+              "alt": "Important",
+              "text": "Important\nMettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p10-5",
+              "imageUrl": "/pictos/funfact.png",
+              "alt": "Fun fact",
+              "text": "Fun fact\nApporter une information complémentaire qui éveille la curiosité."
+            }
+          ]
+        },
+        {
+          "id": "s99-p10-6",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p11-0",
+      "title": "08 · QCU / QCM · 2 propositions",
+      "instruction": "Choisissez la réponse qui vous paraît exacte.",
+      "blocks": [
+        {
+          "id": "s99-p11-1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Quelle couleur est utilisée pour les titres et les actions ?",
+          "graded": false,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "s99-p11-2",
+              "label": "Orange #E86825",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p11-3",
+              "label": "Bleu #0000FF",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Les titres et les actions utilisent l’orange #E86825."
+        }
+      ]
+    },
+    {
+      "id": "s99-p12-0",
+      "title": "09 · Glisser-déposer · 6 éléments",
+      "instruction": "Faites glisser chaque élément dans la bonne zone.",
+      "blocks": [
+        {
+          "id": "s99-p12-1",
+          "type": "categorize",
+          "question": "Classez les éléments selon leur rôle.",
+          "categories": [
+            "CONTENU À LIRE",
+            "ACTION À EFFECTUER"
+          ],
+          "items": [
+            {
+              "id": "s99-p12-2",
+              "label": "Lire une définition",
+              "category": "CONTENU À LIRE"
+            },
+            {
+              "id": "s99-p12-3",
+              "label": "Retourner une carte",
+              "category": "ACTION À EFFECTUER"
+            },
+            {
+              "id": "s99-p12-4",
+              "label": "Lire une explication",
+              "category": "CONTENU À LIRE"
+            },
+            {
+              "id": "s99-p12-5",
+              "label": "Faire défiler une image",
+              "category": "ACTION À EFFECTUER"
+            },
+            {
+              "id": "s99-p12-6",
+              "label": "Lire une légende",
+              "category": "CONTENU À LIRE"
+            },
+            {
+              "id": "s99-p12-7",
+              "label": "Valider une réponse",
+              "category": "ACTION À EFFECTUER"
+            }
+          ],
+          "explanation": "Les textes transmettent une information ; les actions demandent une manipulation."
+        }
+      ]
+    },
+    {
+      "id": "s99-p13-0",
+      "title": "10 · Remettre les étiquettes dans l’ordre",
+      "instruction": "Déplacez les étiquettes pour remettre les étapes dans l’ordre.",
+      "blocks": [
+        {
+          "id": "s99-p13-1",
+          "type": "reorder",
+          "question": "Comment préparer un écran de cours ?",
+          "items": [
+            {
+              "id": "s99-p13-2",
+              "label": "Choisir un modèle"
+            },
+            {
+              "id": "s99-p13-3",
+              "label": "Rédiger les textes"
+            },
+            {
+              "id": "s99-p13-4",
+              "label": "Ajouter les images"
+            },
+            {
+              "id": "s99-p13-5",
+              "label": "Vérifier l’aperçu"
+            },
+            {
+              "id": "s99-p13-6",
+              "label": "Enregistrer le cours"
+            }
+          ],
+          "explanation": "On choisit une composition, on la complète, puis on la vérifie avant de l’enregistrer."
+        }
+      ]
+    },
+    {
+      "id": "s99-p14-0",
+      "title": "11 · Carrousel + box au-dessus",
+      "instruction": "Faites défiler les images avec les textes associés.",
+      "blocks": [
+        {
+          "id": "s99-p14-1",
+          "type": "info-card",
+          "title": "Alerte",
+          "content": "Signaler un point de vigilance avec le picto dédié.",
+          "variant": "warning"
+        },
+        {
+          "id": "s99-p14-2",
+          "type": "carousel",
+          "question": "Un visuel et son texte, étape par étape.",
+          "slides": [
+            {
+              "id": "s99-p14-3",
+              "imageUrl": "/courses/S1/confiance-majeure.png",
+              "alt": "Illustration d’une personne de confiance",
+              "text": "Découvrir le sujet avec une première illustration."
+            },
+            {
+              "id": "s99-p14-4",
+              "imageUrl": "/courses/S1/anticipees-intro.png",
+              "alt": "Illustration de discussion et d’accompagnement",
+              "text": "Faire défiler pour explorer un second exemple."
+            },
+            {
+              "id": "s99-p14-5",
+              "imageUrl": "/courses/S1/conclusion.png",
+              "alt": "Illustration de conclusion",
+              "text": "Terminer par une idée à retenir."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s99-p15-0",
+      "title": "12 · Image légendée + box au-dessus",
+      "instruction": "Touchez chaque point pour révéler sa légende.",
+      "blocks": [
+        {
+          "id": "s99-p15-1",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        },
+        {
+          "id": "s99-p15-2",
+          "type": "hotspot",
+          "imageUrl": "/courses/S1/confiance-majeure.png",
+          "alt": "Illustration d’une personne de confiance",
+          "hotspots": [
+            {
+              "id": "s99-p15-3",
+              "x": 25,
+              "y": 35,
+              "label": "Premier repère",
+              "description": "Une légende courte explique un élément de l’illustration.",
+              "icon": "info"
+            },
+            {
+              "id": "s99-p15-4",
+              "x": 70,
+              "y": 55,
+              "label": "Second repère",
+              "description": "Chaque repère possède un titre, un texte et une position modifiables.",
+              "icon": "star"
+            }
+          ],
+          "caption": "Touchez un repère pour afficher une information."
+        }
+      ]
+    },
+    {
+      "id": "s99-p16-0",
+      "title": "13 · 4 cartes + box au-dessus",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p16-1",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        },
+        {
+          "id": "s99-p16-2",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p16-3",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p16-4",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p16-5",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p16-6",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            }
+          ],
+          "columns": 2
+        }
+      ]
+    },
+    {
+      "id": "s99-p17-0",
+      "title": "14 · 6 cartes + box au-dessus",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p17-1",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        },
+        {
+          "id": "s99-p17-2",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p17-3",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p17-4",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p17-5",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p17-6",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p17-7",
+              "front": "ALERTE",
+              "back": "Signaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p17-8",
+              "front": "TEXTE",
+              "back": "Le texte courant utilise la taille 25 px. La taille 20 px convient aux contenus plus denses."
+            }
+          ],
+          "columns": 3
+        }
+      ]
+    },
+    {
+      "id": "s99-p18-0",
+      "title": "15 · Image + texte + box au-dessus",
+      "instruction": "",
+      "blocks": [
+        {
+          "id": "s99-p18-1",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        },
+        {
+          "id": "s99-p18-2",
+          "type": "image-text",
+          "imageUrl": "/courses/S1/confiance-majeure.png",
+          "alt": "Illustration d’une personne de confiance",
+          "content": "**Associer une image et un texte.**\n\nL’image occupe la partie gauche de l’écran. Le texte développe une idée à droite, avec des paragraphes courts.\n\nCette composition convient à une introduction, une explication ou une synthèse. Les boxes peuvent être placées avant ou après ce contenu.",
+          "size": "image"
+        }
+      ]
+    },
+    {
+      "id": "s99-p19-0",
+      "title": "16 · 6 pictos + box au-dessus",
+      "instruction": "Découvrez chaque repère et son rôle dans le cours.",
+      "blocks": [
+        {
+          "id": "s99-p19-1",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        },
+        {
+          "id": "s99-p19-2",
+          "type": "picto-grid",
+          "question": "Une idée par picto :",
+          "columns": 3,
+          "items": [
+            {
+              "id": "s99-p19-3",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Objectif\nIdentifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p19-4",
+              "imageUrl": "/pictos/definition.png",
+              "alt": "Définition",
+              "text": "Définition\nExpliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p19-5",
+              "imageUrl": "/pictos/important.png",
+              "alt": "Important",
+              "text": "Important\nMettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p19-6",
+              "imageUrl": "/pictos/funfact.png",
+              "alt": "Fun fact",
+              "text": "Fun fact\nApporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p19-7",
+              "imageUrl": "/pictos/warning.png",
+              "alt": "Alerte",
+              "text": "Alerte\nSignaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p19-8",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Synthèse\nRassembler les idées à retenir."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s99-p20-0",
+      "title": "17 · 5 pictos + box dessous",
+      "instruction": "Découvrez chaque repère et son rôle dans le cours.",
+      "blocks": [
+        {
+          "id": "s99-p20-1",
+          "type": "picto-grid",
+          "question": "Une idée par picto :",
+          "columns": 3,
+          "items": [
+            {
+              "id": "s99-p20-2",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Objectif\nIdentifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p20-3",
+              "imageUrl": "/pictos/definition.png",
+              "alt": "Définition",
+              "text": "Définition\nExpliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p20-4",
+              "imageUrl": "/pictos/important.png",
+              "alt": "Important",
+              "text": "Important\nMettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p20-5",
+              "imageUrl": "/pictos/funfact.png",
+              "alt": "Fun fact",
+              "text": "Fun fact\nApporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p20-6",
+              "imageUrl": "/pictos/warning.png",
+              "alt": "Alerte",
+              "text": "Alerte\nSignaler un point de vigilance avec le picto dédié."
+            }
+          ]
+        },
+        {
+          "id": "s99-p20-7",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p21-0",
+      "title": "18 · QCU / QCM · 3 propositions",
+      "instruction": "Choisissez toutes les réponses exactes.",
+      "blocks": [
+        {
+          "id": "s99-p21-1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Quelles couleurs font partie de la charte ?",
+          "graded": false,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "s99-p21-2",
+              "label": "Orange #E86825",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p21-3",
+              "label": "Vert #004138",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p21-4",
+              "label": "Rose #FF00AA",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "L’orange #E86825, le vert #004138 et le vert clair #ECF5E9 appartiennent à la palette."
+        }
+      ]
+    },
+    {
+      "id": "s99-p22-0",
+      "title": "19 · Glisser-déposer · 8 éléments",
+      "instruction": "Faites glisser chaque élément dans la bonne zone.",
+      "blocks": [
+        {
+          "id": "s99-p22-1",
+          "type": "categorize",
+          "question": "Classez les éléments selon leur rôle.",
+          "categories": [
+            "CONTENU À LIRE",
+            "ACTION À EFFECTUER"
+          ],
+          "items": [
+            {
+              "id": "s99-p22-2",
+              "label": "Lire une définition",
+              "category": "CONTENU À LIRE"
+            },
+            {
+              "id": "s99-p22-3",
+              "label": "Retourner une carte",
+              "category": "ACTION À EFFECTUER"
+            },
+            {
+              "id": "s99-p22-4",
+              "label": "Lire une explication",
+              "category": "CONTENU À LIRE"
+            },
+            {
+              "id": "s99-p22-5",
+              "label": "Faire défiler une image",
+              "category": "ACTION À EFFECTUER"
+            },
+            {
+              "id": "s99-p22-6",
+              "label": "Lire une légende",
+              "category": "CONTENU À LIRE"
+            },
+            {
+              "id": "s99-p22-7",
+              "label": "Valider une réponse",
+              "category": "ACTION À EFFECTUER"
+            },
+            {
+              "id": "s99-p22-8",
+              "label": "Lire une synthèse",
+              "category": "CONTENU À LIRE"
+            },
+            {
+              "id": "s99-p22-9",
+              "label": "Déplacer une étiquette",
+              "category": "ACTION À EFFECTUER"
+            }
+          ],
+          "explanation": "Les textes transmettent une information ; les actions demandent une manipulation."
+        }
+      ]
+    },
+    {
+      "id": "s99-p23-0",
+      "title": "20 · Remise en ordre · étiquette active",
+      "instruction": "Déplacez les étiquettes pour remettre les étapes dans l’ordre.",
+      "blocks": [
+        {
+          "id": "s99-p23-1",
+          "type": "reorder",
+          "question": "Comment préparer un écran de cours ?",
+          "items": [
+            {
+              "id": "s99-p23-2",
+              "label": "Choisir un modèle"
+            },
+            {
+              "id": "s99-p23-3",
+              "label": "Rédiger les textes"
+            },
+            {
+              "id": "s99-p23-4",
+              "label": "Ajouter les images"
+            },
+            {
+              "id": "s99-p23-5",
+              "label": "Vérifier l’aperçu"
+            },
+            {
+              "id": "s99-p23-6",
+              "label": "Enregistrer le cours"
+            }
+          ],
+          "explanation": "On choisit une composition, on la complète, puis on la vérifie avant de l’enregistrer."
+        }
+      ]
+    },
+    {
+      "id": "s99-p24-0",
+      "title": "21 · Carrousel + texte libre + box dessous",
+      "instruction": "Faites défiler les images avec les textes associés.",
+      "blocks": [
+        {
+          "id": "s99-p24-1",
+          "type": "text",
+          "content": "**Texte libre au-dessus de l’activité.** Il introduit le sujet, donne du contexte ou prépare la lecture. Utilisez des phrases courtes et aérez le contenu."
+        },
+        {
+          "id": "s99-p24-2",
+          "type": "carousel",
+          "question": "Un visuel et son texte, étape par étape.",
+          "slides": [
+            {
+              "id": "s99-p24-3",
+              "imageUrl": "/courses/S1/confiance-majeure.png",
+              "alt": "Illustration d’une personne de confiance",
+              "text": "Découvrir le sujet avec une première illustration."
+            },
+            {
+              "id": "s99-p24-4",
+              "imageUrl": "/courses/S1/anticipees-intro.png",
+              "alt": "Illustration de discussion et d’accompagnement",
+              "text": "Faire défiler pour explorer un second exemple."
+            },
+            {
+              "id": "s99-p24-5",
+              "imageUrl": "/courses/S1/conclusion.png",
+              "alt": "Illustration de conclusion",
+              "text": "Terminer par une idée à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p24-6",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p25-0",
+      "title": "22 · QCU / QCM · 4 propositions",
+      "instruction": "Choisissez la réponse qui vous paraît exacte.",
+      "blocks": [
+        {
+          "id": "s99-p25-1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Quelle couleur est utilisée pour les titres et les actions ?",
+          "graded": false,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "s99-p25-2",
+              "label": "Orange #E86825",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p25-3",
+              "label": "Bleu #0000FF",
+              "isCorrect": false
+            },
+            {
+              "id": "s99-p25-4",
+              "label": "Violet #6600CC",
+              "isCorrect": false
+            },
+            {
+              "id": "s99-p25-5",
+              "label": "Rose #FF00AA",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Les titres et les actions utilisent l’orange #E86825."
+        }
+      ]
+    },
+    {
+      "id": "s99-p26-0",
+      "title": "23 · 4 cartes + texte libre + box dessous",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p26-1",
+          "type": "text",
+          "content": "**Texte libre au-dessus de l’activité.** Il introduit le sujet, donne du contexte ou prépare la lecture. Utilisez des phrases courtes et aérez le contenu."
+        },
+        {
+          "id": "s99-p26-2",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p26-3",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p26-4",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p26-5",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p26-6",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            }
+          ],
+          "columns": 2
+        },
+        {
+          "id": "s99-p26-7",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p27-0",
+      "title": "24 · 6 cartes + texte libre + box dessous",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p27-1",
+          "type": "text",
+          "content": "**Texte libre au-dessus de l’activité.** Il introduit le sujet, donne du contexte ou prépare la lecture. Utilisez des phrases courtes et aérez le contenu."
+        },
+        {
+          "id": "s99-p27-2",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p27-3",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p27-4",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p27-5",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p27-6",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p27-7",
+              "front": "ALERTE",
+              "back": "Signaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p27-8",
+              "front": "TEXTE",
+              "back": "Le texte courant utilise la taille 25 px. La taille 20 px convient aux contenus plus denses."
+            }
+          ],
+          "columns": 3
+        },
+        {
+          "id": "s99-p27-9",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p28-0",
+      "title": "25 · Image + texte + boxes au-dessus et dessous",
+      "instruction": "",
+      "blocks": [
+        {
+          "id": "s99-p28-1",
+          "type": "info-card",
+          "title": "Définition",
+          "content": "Présenter l’objectif avant de découvrir l’activité.",
+          "variant": "definition"
+        },
+        {
+          "id": "s99-p28-2",
+          "type": "image-text",
+          "imageUrl": "/courses/S1/confiance-majeure.png",
+          "alt": "Illustration d’une personne de confiance",
+          "content": "**Associer une image et un texte.**\n\nL’image occupe la partie gauche de l’écran. Le texte développe une idée à droite, avec des paragraphes courts.\n\nCette composition convient à une introduction, une explication ou une synthèse. Les boxes peuvent être placées avant ou après ce contenu.",
+          "size": "image"
+        },
+        {
+          "id": "s99-p28-3",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p29-0",
+      "title": "26 · 6 pictos + texte libre + box dessous",
+      "instruction": "Découvrez chaque repère et son rôle dans le cours.",
+      "blocks": [
+        {
+          "id": "s99-p29-1",
+          "type": "text",
+          "content": "**Texte libre au-dessus de l’activité.** Il introduit le sujet, donne du contexte ou prépare la lecture. Utilisez des phrases courtes et aérez le contenu."
+        },
+        {
+          "id": "s99-p29-2",
+          "type": "picto-grid",
+          "question": "Une idée par picto :",
+          "columns": 3,
+          "items": [
+            {
+              "id": "s99-p29-3",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Objectif\nIdentifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p29-4",
+              "imageUrl": "/pictos/definition.png",
+              "alt": "Définition",
+              "text": "Définition\nExpliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p29-5",
+              "imageUrl": "/pictos/important.png",
+              "alt": "Important",
+              "text": "Important\nMettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p29-6",
+              "imageUrl": "/pictos/funfact.png",
+              "alt": "Fun fact",
+              "text": "Fun fact\nApporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p29-7",
+              "imageUrl": "/pictos/warning.png",
+              "alt": "Alerte",
+              "text": "Alerte\nSignaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p29-8",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Synthèse\nRassembler les idées à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p29-9",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p30-0",
+      "title": "27 · Image légendée + texte libre + box dessous",
+      "instruction": "Touchez chaque point pour révéler sa légende.",
+      "blocks": [
+        {
+          "id": "s99-p30-1",
+          "type": "text",
+          "content": "**Texte libre au-dessus de l’activité.** Il introduit le sujet, donne du contexte ou prépare la lecture. Utilisez des phrases courtes et aérez le contenu."
+        },
+        {
+          "id": "s99-p30-2",
+          "type": "hotspot",
+          "imageUrl": "/courses/S1/confiance-majeure.png",
+          "alt": "Illustration d’une personne de confiance",
+          "hotspots": [
+            {
+              "id": "s99-p30-3",
+              "x": 25,
+              "y": 35,
+              "label": "Premier repère",
+              "description": "Une légende courte explique un élément de l’illustration.",
+              "icon": "info"
+            },
+            {
+              "id": "s99-p30-4",
+              "x": 70,
+              "y": 55,
+              "label": "Second repère",
+              "description": "Chaque repère possède un titre, un texte et une position modifiables.",
+              "icon": "star"
+            }
+          ],
+          "caption": "Touchez un repère pour afficher une information."
+        },
+        {
+          "id": "s99-p30-5",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p31-0",
+      "title": "28 · QCU / QCM · 5 propositions",
+      "instruction": "Choisissez toutes les réponses exactes.",
+      "blocks": [
+        {
+          "id": "s99-p31-1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Quelles couleurs font partie de la charte ?",
+          "graded": false,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "s99-p31-2",
+              "label": "Orange #E86825",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p31-3",
+              "label": "Vert #004138",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p31-4",
+              "label": "Rose #FF00AA",
+              "isCorrect": false
+            },
+            {
+              "id": "s99-p31-5",
+              "label": "Bleu #0000FF",
+              "isCorrect": false
+            },
+            {
+              "id": "s99-p31-6",
+              "label": "Vert clair #ECF5E9",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "L’orange #E86825, le vert #004138 et le vert clair #ECF5E9 appartiennent à la palette."
+        }
+      ]
+    },
+    {
+      "id": "s99-p32-0",
+      "title": "29 · Carrousel + boxes au-dessus et dessous",
+      "instruction": "Faites défiler les images avec les textes associés.",
+      "blocks": [
+        {
+          "id": "s99-p32-1",
+          "type": "info-card",
+          "title": "Objectif",
+          "content": "Présenter l’objectif avant de découvrir l’activité.",
+          "variant": "objective"
+        },
+        {
+          "id": "s99-p32-2",
+          "type": "carousel",
+          "question": "Un visuel et son texte, étape par étape.",
+          "slides": [
+            {
+              "id": "s99-p32-3",
+              "imageUrl": "/courses/S1/confiance-majeure.png",
+              "alt": "Illustration d’une personne de confiance",
+              "text": "Découvrir le sujet avec une première illustration."
+            },
+            {
+              "id": "s99-p32-4",
+              "imageUrl": "/courses/S1/anticipees-intro.png",
+              "alt": "Illustration de discussion et d’accompagnement",
+              "text": "Faire défiler pour explorer un second exemple."
+            },
+            {
+              "id": "s99-p32-5",
+              "imageUrl": "/courses/S1/conclusion.png",
+              "alt": "Illustration de conclusion",
+              "text": "Terminer par une idée à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p32-6",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p33-0",
+      "title": "30 · 4 cartes + boxes au-dessus et dessous",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p33-1",
+          "type": "info-card",
+          "title": "Objectif",
+          "content": "Présenter l’objectif avant de découvrir l’activité.",
+          "variant": "objective"
+        },
+        {
+          "id": "s99-p33-2",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p33-3",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p33-4",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p33-5",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p33-6",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            }
+          ],
+          "columns": 2
+        },
+        {
+          "id": "s99-p33-7",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p34-0",
+      "title": "31 · 6 cartes + boxes au-dessus et dessous",
+      "instruction": "Touchez une carte pour la retourner.",
+      "blocks": [
+        {
+          "id": "s99-p34-1",
+          "type": "info-card",
+          "title": "Objectif",
+          "content": "Présenter l’objectif avant de découvrir l’activité.",
+          "variant": "objective"
+        },
+        {
+          "id": "s99-p34-2",
+          "type": "flip-cards",
+          "question": "Quels sont les repères de la charte ?",
+          "cards": [
+            {
+              "id": "s99-p34-3",
+              "front": "OBJECTIF",
+              "back": "Identifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p34-4",
+              "front": "DÉFINITION",
+              "back": "Expliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p34-5",
+              "front": "IMPORTANT",
+              "back": "Mettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p34-6",
+              "front": "FUN FACT",
+              "back": "Apporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p34-7",
+              "front": "ALERTE",
+              "back": "Signaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p34-8",
+              "front": "TEXTE",
+              "back": "Le texte courant utilise la taille 25 px. La taille 20 px convient aux contenus plus denses."
+            }
+          ],
+          "columns": 3
+        },
+        {
+          "id": "s99-p34-9",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p35-0",
+      "title": "32 · 6 pictos + boxes au-dessus et dessous",
+      "instruction": "Découvrez chaque repère et son rôle dans le cours.",
+      "blocks": [
+        {
+          "id": "s99-p35-1",
+          "type": "info-card",
+          "title": "Définition",
+          "content": "Présenter l’objectif avant de découvrir l’activité.",
+          "variant": "definition"
+        },
+        {
+          "id": "s99-p35-2",
+          "type": "picto-grid",
+          "question": "Une idée par picto :",
+          "columns": 3,
+          "items": [
+            {
+              "id": "s99-p35-3",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Objectif\nIdentifier ce que l’apprenant doit retenir de cet écran."
+            },
+            {
+              "id": "s99-p35-4",
+              "imageUrl": "/pictos/definition.png",
+              "alt": "Définition",
+              "text": "Définition\nExpliquer un terme avec une phrase courte et accessible."
+            },
+            {
+              "id": "s99-p35-5",
+              "imageUrl": "/pictos/important.png",
+              "alt": "Important",
+              "text": "Important\nMettre en évidence une information essentielle."
+            },
+            {
+              "id": "s99-p35-6",
+              "imageUrl": "/pictos/funfact.png",
+              "alt": "Fun fact",
+              "text": "Fun fact\nApporter une information complémentaire qui éveille la curiosité."
+            },
+            {
+              "id": "s99-p35-7",
+              "imageUrl": "/pictos/warning.png",
+              "alt": "Alerte",
+              "text": "Alerte\nSignaler un point de vigilance avec le picto dédié."
+            },
+            {
+              "id": "s99-p35-8",
+              "imageUrl": "/pictos/objective.png",
+              "alt": "Objectif",
+              "text": "Synthèse\nRassembler les idées à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p35-9",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Mettre en évidence une information essentielle.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s99-p36-0",
+      "title": "33 · Carrousel illustré + boxes + légende",
+      "instruction": "Faites défiler les images avec les textes associés.",
+      "blocks": [
+        {
+          "id": "s99-p36-1",
+          "type": "info-card",
+          "title": "Objectif",
+          "content": "Présenter l’objectif avant de découvrir l’activité.",
+          "variant": "objective"
+        },
+        {
+          "id": "s99-p36-2",
+          "type": "carousel",
+          "question": "Un visuel et son texte, étape par étape.",
+          "slides": [
+            {
+              "id": "s99-p36-3",
+              "imageUrl": "/courses/S1/confiance-majeure.png",
+              "alt": "Illustration d’une personne de confiance",
+              "text": "Découvrir le sujet avec une première illustration."
+            },
+            {
+              "id": "s99-p36-4",
+              "imageUrl": "/courses/S1/anticipees-intro.png",
+              "alt": "Illustration de discussion et d’accompagnement",
+              "text": "Faire défiler pour explorer un second exemple."
+            },
+            {
+              "id": "s99-p36-5",
+              "imageUrl": "/courses/S1/conclusion.png",
+              "alt": "Illustration de conclusion",
+              "text": "Terminer par une idée à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p36-6",
+          "type": "info-card",
+          "title": "Fun fact",
+          "content": "Apporter une information complémentaire qui éveille la curiosité.",
+          "variant": "funfact"
+        }
+      ]
+    },
+    {
+      "id": "s99-p37-0",
+      "title": "34 · QCU / QCM · 6 propositions",
+      "instruction": "Choisissez toutes les réponses exactes.",
+      "blocks": [
+        {
+          "id": "s99-p37-1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Quelles couleurs font partie de la charte ?",
+          "graded": false,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "s99-p37-2",
+              "label": "Orange #E86825",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p37-3",
+              "label": "Vert #004138",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p37-4",
+              "label": "Rose #FF00AA",
+              "isCorrect": false
+            },
+            {
+              "id": "s99-p37-5",
+              "label": "Bleu #0000FF",
+              "isCorrect": false
+            },
+            {
+              "id": "s99-p37-6",
+              "label": "Vert clair #ECF5E9",
+              "isCorrect": true
+            },
+            {
+              "id": "s99-p37-7",
+              "label": "Violet #6600CC",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "L’orange #E86825, le vert #004138 et le vert clair #ECF5E9 appartiennent à la palette."
+        }
+      ]
+    },
+    {
+      "id": "s99-p38-0",
+      "title": "35 · Carrousel illustré · objectif et fun fact",
+      "instruction": "Faites défiler les images avec les textes associés.",
+      "blocks": [
+        {
+          "id": "s99-p38-1",
+          "type": "info-card",
+          "title": "Objectif",
+          "content": "Présenter l’objectif avant de découvrir l’activité.",
+          "variant": "objective"
+        },
+        {
+          "id": "s99-p38-2",
+          "type": "carousel",
+          "question": "Un visuel et son texte, étape par étape.",
+          "slides": [
+            {
+              "id": "s99-p38-3",
+              "imageUrl": "/courses/S1/confiance-majeure.png",
+              "alt": "Illustration d’une personne de confiance",
+              "text": "Découvrir le sujet avec une première illustration."
+            },
+            {
+              "id": "s99-p38-4",
+              "imageUrl": "/courses/S1/anticipees-intro.png",
+              "alt": "Illustration de discussion et d’accompagnement",
+              "text": "Faire défiler pour explorer un second exemple."
+            },
+            {
+              "id": "s99-p38-5",
+              "imageUrl": "/courses/S1/conclusion.png",
+              "alt": "Illustration de conclusion",
+              "text": "Terminer par une idée à retenir."
+            }
+          ]
+        },
+        {
+          "id": "s99-p38-6",
+          "type": "info-card",
+          "title": "Fun fact",
+          "content": "Apporter une information complémentaire qui éveille la curiosité.",
+          "variant": "funfact"
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+import { courseTemplates, pageFromTemplate } from '../components/course-editor/templates';
+import { pageHeaderMeta } from '../lib/courseVisuals';
 import { CoursePageHeading } from '../components/CoursePageHeading';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -34,6 +36,8 @@ function Editor({ initial }: { initial: ModuleContent }) {
   });
   const [draftError, setDraftError] = useState(false);
   const [selected, setSelected] = useState<string | null>(initial.content[0]?.id ?? null);
+  const [templatesOpen, setTemplatesOpen] = useState(false);
+  const [templateSearch, setTemplateSearch] = useState('');
   const [preview, setPreview] = useState(false);
   const [tabletPreview, setTabletPreview] = useState(false);
   const [confirmSave, setConfirmSave] = useState(false);
@@ -109,7 +113,7 @@ function Editor({ initial }: { initial: ModuleContent }) {
       <div className="grid gap-6 xl:grid-cols-[260px_minmax(0,1fr)]">
         <aside className="min-w-0 space-y-3"><h2 className="font-semibold text-emerald-950">Déroulé du cours</h2><div className="flex gap-2 overflow-x-auto pb-2 xl:flex-col xl:max-h-[70vh] xl:overflow-y-auto">
           {course.content.map((p, i) => <button key={p.id} aria-current={p.id === selected ? 'step' : undefined} onClick={() => setSelected(p.id)} className={`flex shrink-0 items-start gap-3 rounded-xl border p-3 text-left w-56 xl:w-full ${p.id === selected ? 'bg-emerald-950 border-emerald-950 text-white' : 'bg-white text-gray-700'}`}><span className="font-bold text-orange-500">{String(i + 1).padStart(2, '0')}</span><span className="min-w-0 break-words"><span className="block text-sm font-medium">{p.title || 'Sans titre'}</span><span className="text-xs opacity-60">{p.blocks.length} activités</span></span></button>)}
-        </div><Button variant="outline" className="w-full" onClick={addPage}>Ajouter un écran</Button></aside>
+        </div><Button variant="outline" className="w-full" onClick={addPage}>Ajouter un écran</Button><Button className="w-full bg-[#1C5335]" onClick={() => setTemplatesOpen(true)}>Choisir un modèle XD</Button></aside>
         <main className="min-w-0 space-y-5">
           {!page ? <div className="rounded-2xl border border-dashed p-10 text-center"><h2 className="font-semibold">Composez votre premier écran</h2><p className="my-3 text-sm text-gray-500">Ajoutez un écran, puis les textes et activités qui le composent.</p><Button onClick={addPage}>Créer le premier écran</Button></div> : <>
             <section className="rounded-2xl border bg-white p-5 space-y-4">
@@ -126,6 +130,11 @@ function Editor({ initial }: { initial: ModuleContent }) {
         </main>
       </div>
     </fieldset>
+    <Dialog open={templatesOpen} onOpenChange={setTemplatesOpen}><DialogContent className="max-w-6xl max-h-[90dvh] overflow-y-auto"><DialogHeader><DialogTitle>Les 35 modèles de la charte</DialogTitle><DialogDescription>Choisissez une composition puis complétez ses textes, images et activités. Les vignettes sont les références Adobe XD.</DialogDescription></DialogHeader>
+      <Field label="Rechercher un modèle" value={templateSearch} onChange={setTemplateSearch} />
+      <div className="flex flex-wrap gap-3 text-xs">{['#ECF5E9', '#1C5335', '#E86825', '#FFE0D0', '#FAFAFA', '#004138'].map(color => <span key={color} className="flex items-center gap-1"><span className="h-5 w-5 rounded border" style={{ background: color }} />{color}</span>)}<span>Euclid Circular A · 40 / 25 / 20 px</span></div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{courseTemplates.filter(t => t.name.toLocaleLowerCase('fr').includes(templateSearch.toLocaleLowerCase('fr'))).map(t => <button key={t.id} className="rounded-xl border bg-white p-2 text-left hover:border-orange-500 focus-visible:outline-orange-500" onClick={() => { const next = pageFromTemplate(t); change({ ...course, content: [...course.content, next] }); setSelected(next.id); setTemplatesOpen(false); }}><img src={t.thumbnail} alt="" loading="lazy" className="w-full rounded-lg" /><span className="block p-2 text-sm font-semibold">{t.name}</span></button>)}</div>
+    </DialogContent></Dialog>
     <Dialog open={preview} onOpenChange={setPreview}><DialogContent className="max-w-5xl"><DialogHeader><DialogTitle>Aperçu apprenant</DialogTitle><DialogDescription>Essayez les activités du brouillon. Aucun résultat patient n’est enregistré.</DialogDescription></DialogHeader>{preview && <Preview pages={course.content} start={Math.max(0, pageIndex)} />}</DialogContent></Dialog>
     <Dialog open={tabletPreview} onOpenChange={setTabletPreview}><DialogContent className="max-w-7xl"><DialogHeader><DialogTitle>Aperçu sur tablette</DialogTitle><DialogDescription>Visualisez le cours sur la tablette proposée, en paysage ou en portrait.</DialogDescription></DialogHeader>{tabletPreview && <TabletPreview pages={course.content} start={Math.max(0, pageIndex)} />}</DialogContent></Dialog>
     <Dialog open={confirmSave} onOpenChange={open => { if (!mutation.isPending) setConfirmSave(open); }}><DialogContent><DialogHeader><DialogTitle>{course.published ? 'Publier les modifications ?' : 'Enregistrer sans publier ?'}</DialogTitle><DialogDescription>{course.published ? 'La version enregistrée sera remplacée et disponible pour les IDE.' : 'Le contenu sera enregistré, mais ce cours ne sera pas accessible aux IDE.'}</DialogDescription></DialogHeader><div className="flex gap-3"><Button disabled={mutation.isPending} onClick={save}>{mutation.isPending ? 'Enregistrement…' : 'Confirmer l’enregistrement'}</Button><Button variant="outline" disabled={mutation.isPending} onClick={() => setConfirmSave(false)}>Continuer la rédaction</Button></div></DialogContent></Dialog>
@@ -141,7 +150,7 @@ function Preview({ pages, start }: { pages: ModulePage[]; start: number }) {
   const page = pages[index];
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
   return <div className="space-y-4"><div className="flex items-center justify-between gap-2"><Button variant="outline" disabled={index === 0} onClick={() => setIndex(i => i - 1)}>Précédent</Button><Button variant="outline" disabled={index === pages.length - 1} onClick={() => setIndex(i => i + 1)}>Suivant</Button></div>
-    <div className="rounded-2xl bg-[#0b2420] p-5 sm:p-8 text-white space-y-5"><CoursePageHeading title={page.title} instruction={page.instruction} pageNumber={index + 1} totalPages={pages.length} level="h2" /><Suspense fallback={<p>Chargement de l’aperçu…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense></div>
+    <div className="course-theme rounded-2xl bg-[#ECF5E9] p-5 sm:p-8 space-y-5"><div className="rounded-3xl bg-[#1C5335] p-5"><CoursePageHeading title={page.title} instruction={pageHeaderMeta(page).instruction} pageNumber={index + 1} totalPages={pages.length} level="h2" /></div><Suspense fallback={<p>Chargement de l’aperçu…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense></div>
     <Button variant="ghost" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</Button>
   </div>;
 }

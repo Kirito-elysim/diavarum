@@ -1,8 +1,8 @@
 import {
-  Activity, AlertTriangle, Apple, Bed, BookOpen, CircleAlert, Clock, Droplet, Footprints, Hand, Heart, HeartPulse,
+  Activity, AlertTriangle, Apple, Bed, BookOpen, CircleAlert, Clock, Droplet, Footprints, Hand, HelpCircle, Heart, HeartPulse,
   Info, Lightbulb, Pill, ShieldCheck, Star, Stethoscope, Syringe, Target, Thermometer, Utensils, type LucideIcon,
 } from 'lucide-react';
-import type { InfoCardBlock, InfoCardVariant } from '../types';
+import type { InfoCardBlock, InfoCardVariant, ModulePage } from '../types';
 
 /** Consignes de l'encadré au doigt, utilisées tant que l'auteur ne les a pas personnalisées */
 export const DEFAULT_INSTRUCTIONS = {
@@ -11,17 +11,46 @@ export const DEFAULT_INSTRUCTIONS = {
   categorize: 'Faites glisser chaque élément dans la bonne zone',
 } as const;
 
+/** Encadrés de la charte Adobe XD du 27 octobre 2026. */
+export const INFO_CARD_CATEGORIES: { value: InfoCardVariant; label: string; icon: LucideIcon; iconUrl: string; bg: string; border: string; iconBg: string; title: string; body: string }[] = [
+  { value: 'important', label: 'Important', icon: CircleAlert },
+  { value: 'definition', label: 'Définition', icon: BookOpen },
+  { value: 'objective', label: 'Objectif', icon: Target },
+  { value: 'funfact', label: 'Fun fact', icon: Lightbulb },
+  { value: 'warning', label: 'Alerte', icon: AlertTriangle },
+].map(category => ({ ...category, value: category.value as InfoCardVariant, iconUrl: `/pictos/${category.value}.png`, bg: '#FAFAFA', border: 'transparent', iconBg: 'transparent', title: 'text-[#004138]', body: 'text-[#004138]' }));
+
 /**
- * Catégories d'encadré (recette du 18/10/2026). Pictos provisoires en attendant ceux de la charte :
- * il suffira de remplacer « icon » ici.
+ * Icône + consigne affichées dans le bandeau de l'écran. Le picto est toujours le point d'interrogation
+ * de la charte (confirmé sur quiz et cartes interactives dans le XD) ; seule la consigne varie selon le
+ * premier bloc interactif de la page.
  */
-export const INFO_CARD_CATEGORIES: { value: InfoCardVariant; label: string; icon: LucideIcon; bg: string; border: string; title: string; body: string }[] = [
-  { value: 'important', label: 'Important', icon: CircleAlert, bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.35)', title: 'text-orange-300', body: 'text-orange-100/85' },
-  { value: 'definition', label: 'Définition', icon: BookOpen, bg: 'rgba(14,165,233,0.08)', border: 'rgba(14,165,233,0.25)', title: 'text-sky-300', body: 'text-sky-100/85' },
-  { value: 'objective', label: 'Objectif', icon: Target, bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.25)', title: 'text-emerald-300', body: 'text-emerald-100/85' },
-  { value: 'funfact', label: 'Fun fact', icon: Lightbulb, bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.25)', title: 'text-violet-300', body: 'text-violet-100/85' },
-  { value: 'warning', label: 'Warning', icon: AlertTriangle, bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.30)', title: 'text-red-300', body: 'text-red-100/85' },
-];
+export function pageHeaderMeta(page: ModulePage): { icon: LucideIcon; instruction?: string } {
+  if (page.instruction?.trim()) return { icon: HelpCircle, instruction: page.instruction };
+  for (const block of page.blocks) {
+    switch (block.type) {
+      case 'quiz':
+        if (block.questionType === 'qcu') return { icon: HelpCircle, instruction: 'Choisissez la réponse qui vous paraît exacte.' };
+        if (block.questionType === 'qcm') return { icon: HelpCircle, instruction: 'Choisissez toutes les réponses qui vous paraissent exactes.' };
+        return { icon: HelpCircle, instruction: 'Associez chaque élément à son origine.' };
+      case 'true-false':
+        return { icon: HelpCircle, instruction: 'Indiquez si chaque affirmation est vraie ou fausse.' };
+      case 'carousel':
+        return { icon: HelpCircle, instruction: 'Faites défiler les images avec les textes associés.' };
+      case 'flip-cards':
+        return { icon: HelpCircle, instruction: 'Touchez une carte pour la retourner.' };
+      case 'reveal-legends':
+        return { icon: HelpCircle, instruction: 'Touchez chaque point pour révéler sa légende.' };
+      case 'hotspot':
+        return { icon: HelpCircle, instruction: 'Touchez chaque repère pour en savoir plus.' };
+      case 'reorder': case 'tap-sequence': case 'categorize': case 'sort-bin':
+      case 'connect-dots': case 'drawing': case 'scenario': case 'fill-blank':
+      case 'memory': case 'slider': case 'word-search': case 'yes-no-path': case 'pull-timeline':
+        return { icon: HelpCircle, instruction: page.instruction };
+    }
+  }
+  return { icon: HelpCircle, instruction: page.instruction };
+}
 
 /** Anciennes présentations des encadrés, rattachées aux nouvelles catégories */
 export function infoCardCategory(variant: InfoCardBlock['variant']) {

@@ -1,3 +1,6 @@
+import { PictoGridView } from '../components/PictoGridView';
+import { CourseText } from '../components/CourseText';
+import { courseTextStyle } from '../lib/courseTextStyle';
 import { CoursePageCounter, CoursePageHeading } from '../components/CoursePageHeading';
 import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useSearchParams, useNavigate, useBlocker, useLocation } from 'react-router-dom';
@@ -28,7 +31,7 @@ import type {
 } from '../types';
 // New block types are imported by their component props; no extra type imports needed here.
 import { cn } from '../lib/utils';
-import { infoCardCategory } from '../lib/courseVisuals';
+import { infoCardCategory, pageHeaderMeta } from '../lib/courseVisuals';
 import { HotspotMarker } from '../components/HotspotMarker';
 
 /* ─── Fullscreen helpers ──────────────────────────────────────────────────── */
@@ -83,7 +86,9 @@ function useStopwatch(running: boolean) {
 /* ─── Content block renderers ────────────────────────────────────────────── */
 function TextBlockView({ block }: { block: TextBlock }) {
   return (
-    <p className="text-[18px] leading-[1.75] text-white/80 tracking-[-0.01em] whitespace-pre-line">{block.content}</p>
+    <div className="course-free-text">
+      <p className="text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
+    </div>
   );
 }
 
@@ -92,13 +97,13 @@ function ImageBlockView({ block }: { block: ImageBlock }) {
   return (
     <>
       <figure className="space-y-3">
-        <div className="relative overflow-hidden rounded-2xl bg-white/5 cursor-zoom-in" onClick={() => setZoomed(true)}>
+        <div className="relative overflow-hidden rounded-2xl bg-[#FFE0D0]/50 cursor-zoom-in" onClick={() => setZoomed(true)}>
           <img src={block.url} alt={block.alt} className="w-full object-contain max-h-72 transition-transform duration-300 hover:scale-[1.02]" loading="lazy" />
-          <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm rounded-xl p-2">
-            <ZoomIn className="w-4 h-4 text-white/80" />
+          <div className="absolute top-3 right-3 bg-[#004138]/70 backdrop-blur-sm rounded-xl p-2">
+            <ZoomIn className="w-4 h-4 text-white" />
           </div>
         </div>
-        {block.caption && <figcaption className="text-sm text-white/40 text-center font-medium italic px-2">{block.caption}</figcaption>}
+        {block.caption && <figcaption className="text-sm text-[#1F3A34]/60 text-center font-medium italic px-2">{block.caption}</figcaption>}
       </figure>
       {zoomed && (
         <div className="fixed inset-0 z-[10000] bg-black/95 flex items-center justify-center p-4" onClick={() => setZoomed(false)}>
@@ -117,13 +122,13 @@ function InfoCardView({ block }: { block: InfoCardBlock }) {
   const c = infoCardCategory(block.variant);
   const Icon = c.icon;
   return (
-    <div className="rounded-3xl p-6 flex gap-4" style={{ backgroundColor: c.bg, border: `1.5px solid ${c.border}` }}>
-      <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: c.bg }}>
-        <Icon className={cn('w-5 h-5', c.title)} />
+    <div className="course-info-card rounded-3xl px-5 py-3 flex items-center gap-5" style={{ backgroundColor: c.bg, border: `1.5px solid ${c.border}` }}>
+      <div className="w-20 h-20 flex items-center justify-center flex-shrink-0" style={c.iconUrl ? undefined : { backgroundColor: c.iconBg }}>
+        {c.iconUrl ? <img src={c.iconUrl} alt="" className="w-full h-full object-contain" /> : <Icon className="w-5 h-5 text-white" />}
       </div>
       <div>
-        <p className={cn('font-bold text-lg mb-1.5', c.title)}>{block.title}</p>
-        <p className={cn('text-base leading-relaxed whitespace-pre-line', c.body)}>{block.content}</p>
+        {block.title && <p className={cn('font-bold text-[25px]', c.title)}>{block.title}</p>}
+        <p className={cn('text-[25px] leading-snug whitespace-pre-line break-words', c.body)} style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
       </div>
     </div>
   );
@@ -154,11 +159,11 @@ function TimelineBlockView({ block }: { block: TimelineBlock }) {
   }, [block.items.length]);
 
   return (
-    <div className="rounded-3xl overflow-hidden bg-gray-900 shadow-xl">
+    <div className="rounded-3xl overflow-hidden bg-white shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
       {block.title && (
         <div className="px-5 pt-5 pb-3 flex items-center gap-2">
-          <div className="w-1.5 h-6 rounded-full bg-orange-500" />
-          <span className="text-white font-bold text-base">{block.title}</span>
+          <div className="w-1.5 h-6 rounded-full bg-[#E86825]" />
+          <span className="text-[#004138] font-bold text-base">{block.title}</span>
         </div>
       )}
 
@@ -195,12 +200,12 @@ function TimelineBlockView({ block }: { block: TimelineBlock }) {
         ))}
       </div>
 
-      <div className="flex items-center justify-between px-5 py-4" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
+      <div className="flex items-center justify-between px-5 py-4" style={{ backgroundColor: 'rgba(0,65,56,0.05)' }}>
         <button
           onClick={() => scrollTo(Math.max(0, activeIdx - 1))}
           disabled={activeIdx === 0}
-          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white/60 disabled:opacity-30 transition-opacity touch-manipulation"
-          style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+          className="w-10 h-10 rounded-full flex items-center justify-center text-[#004138]/70 disabled:opacity-30 transition-opacity touch-manipulation"
+          style={{ backgroundColor: 'rgba(0,65,56,0.08)' }}
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -208,15 +213,15 @@ function TimelineBlockView({ block }: { block: TimelineBlock }) {
           {block.items.map((_, i) => (
             <button key={i} onClick={() => scrollTo(i)} className={cn(
               'rounded-full transition-all duration-300 touch-manipulation',
-              i === activeIdx ? 'w-6 h-2.5 bg-orange-500' : 'w-2.5 h-2.5 bg-white/25 hover:bg-white/40'
+              i === activeIdx ? 'w-6 h-2.5 bg-[#E86825]' : 'w-2.5 h-2.5 bg-[#004138]/15 hover:bg-[#004138]/30'
             )} />
           ))}
         </div>
         <button
           onClick={() => scrollTo(Math.min(block.items.length - 1, activeIdx + 1))}
           disabled={activeIdx === block.items.length - 1}
-          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white/60 disabled:opacity-30 transition-opacity touch-manipulation"
-          style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+          className="w-10 h-10 rounded-full flex items-center justify-center text-[#004138]/70 disabled:opacity-30 transition-opacity touch-manipulation"
+          style={{ backgroundColor: 'rgba(0,65,56,0.08)' }}
         >
           <ChevronRight className="w-5 h-5" />
         </button>
@@ -311,12 +316,9 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
 function ImageTextView({ block }: { block: ImageTextBlock }) {
   const picto = block.size === 'picto';
   return (
-    <div className="rounded-3xl p-5 flex items-start gap-5" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      {block.imageUrl && (
-        <img src={block.imageUrl} alt={block.alt} loading="lazy"
-          className={cn('flex-shrink-0 object-contain', picto ? 'h-16 w-16' : 'w-[38%] max-w-[260px] rounded-2xl bg-white/5')} />
-      )}
-      <p className="min-w-0 flex-1 text-[18px] leading-[1.75] text-white/80 whitespace-pre-line">{block.content}</p>
+    <div className={cn('course-image-text flex items-start gap-10', !picto && 'flex-col sm:flex-row', block.imageSide === 'right' && 'sm:flex-row-reverse')}>
+      {block.imageUrl ? <img src={block.imageUrl} alt={block.alt} loading="lazy" className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full sm:w-[48%] rounded-3xl bg-[#FFE0D0]')} /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
+      <p className="min-w-0 flex-1 text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
     </div>
   );
 }
@@ -331,24 +333,24 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
   const reload = () => { setKey((k) => k + 1); setLoaded(false); setError(false); };
 
   return (
-    <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+    <div className="rounded-3xl overflow-hidden bg-white shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
       {/* Header bar */}
-      <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.03)' }}>
+      <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: '1px solid rgba(0,65,56,0.1)', background: 'rgba(0,65,56,0.04)' }}>
         <div className="flex gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-red-500/50" />
-          <span className="w-3 h-3 rounded-full bg-amber-500/50" />
-          <span className="w-3 h-3 rounded-full bg-emerald-500/50" />
+          <span className="w-3 h-3 rounded-full bg-red-400" />
+          <span className="w-3 h-3 rounded-full bg-amber-400" />
+          <span className="w-3 h-3 rounded-full bg-emerald-400" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
-            <span className="text-xs text-white/40 truncate font-mono">{block.url}</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white" style={{ border: '1px solid rgba(0,65,56,0.1)' }}>
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+            <span className="text-xs text-[#004138]/50 truncate font-mono">{block.url}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={reload}
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-white/30 hover:text-white/60 hover:bg-white/8 transition-all touch-manipulation"
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-[#004138]/40 hover:text-[#004138]/70 hover:bg-[#004138]/8 transition-all touch-manipulation"
             title="Recharger"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -357,7 +359,7 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
             href={block.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-white/30 hover:text-white/60 hover:bg-white/8 transition-all touch-manipulation"
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-[#004138]/40 hover:text-[#004138]/70 hover:bg-[#004138]/8 transition-all touch-manipulation"
             title="Ouvrir dans un nouvel onglet"
           >
             <ExternalLink className="w-3.5 h-3.5" />
@@ -369,35 +371,35 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
       <div className="relative" style={{ height }}>
         {/* Loading skeleton */}
         {!loaded && !error && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{ background: 'rgba(0,38,31,0.8)' }}>
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/20 flex items-center justify-center animate-pulse">
-              <BookOpen className="w-6 h-6 text-orange-400" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{ background: '#ECF5E9' }}>
+            <div className="w-12 h-12 rounded-2xl bg-[#E86825]/15 flex items-center justify-center animate-pulse">
+              <BookOpen className="w-6 h-6 text-[#E86825]" />
             </div>
             <div className="space-y-2 w-48">
-              <div className="h-2 rounded-full bg-white/10 animate-pulse" />
-              <div className="h-2 rounded-full bg-white/8 animate-pulse w-3/4 mx-auto" />
+              <div className="h-2 rounded-full bg-[#004138]/10 animate-pulse" />
+              <div className="h-2 rounded-full bg-[#004138]/8 animate-pulse w-3/4 mx-auto" />
             </div>
-            <p className="text-white/30 text-xs">Chargement du contenu…</p>
+            <p className="text-[#004138]/40 text-xs">Chargement du contenu…</p>
           </div>
         )}
 
         {/* Error state */}
         {error && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center" style={{ background: 'rgba(0,38,31,0.95)' }}>
-            <div className="w-14 h-14 rounded-2xl bg-red-500/15 flex items-center justify-center">
-              <AlertCircle className="w-7 h-7 text-red-400" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center" style={{ background: '#ECF5E9' }}>
+            <div className="w-14 h-14 rounded-2xl bg-red-100 flex items-center justify-center">
+              <AlertCircle className="w-7 h-7 text-red-500" />
             </div>
             <div>
-              <p className="text-white font-semibold mb-1">Contenu inaccessible</p>
-              <p className="text-white/40 text-sm">Ce site bloque l'intégration dans une page.</p>
+              <p className="text-[#004138] font-semibold mb-1">Contenu inaccessible</p>
+              <p className="text-[#1F3A34]/60 text-sm">Ce site bloque l'intégration dans une page.</p>
             </div>
             <div className="flex gap-3">
-              <button onClick={reload} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/8 text-white/60 hover:bg-white/12 text-sm font-medium transition-all touch-manipulation">
+              <button onClick={reload} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#004138]/70 hover:bg-[#ECF5E9] text-sm font-medium transition-all touch-manipulation" style={{ border: '1px solid rgba(0,65,56,0.14)' }}>
                 <RefreshCw className="w-4 h-4" />
                 Réessayer
               </button>
               <a href={block.url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500/20 text-orange-300 hover:bg-orange-500/30 text-sm font-medium transition-all touch-manipulation">
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFF4ED] text-[#A64314] hover:bg-[#FFE0D0] text-sm font-medium transition-all touch-manipulation">
                 <ExternalLink className="w-4 h-4" />
                 Ouvrir
               </a>
@@ -419,7 +421,7 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
       </div>
 
       {block.caption && (
-        <p className="text-xs text-white/30 text-center px-5 py-3 italic" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <p className="text-xs text-[#004138]/40 text-center px-5 py-3 italic" style={{ borderTop: '1px solid rgba(0,65,56,0.08)' }}>
           {block.caption}
         </p>
       )}
@@ -445,62 +447,58 @@ function PreSessionScreen({
   };
 
   return (
-    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: 'radial-gradient(ellipse at top, #004138 0%, #001A16 70%)' }}>
-      {/* Ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-20 blur-3xl pointer-events-none" style={{ background: 'radial-gradient(circle, #E86825 0%, transparent 70%)' }} />
-
+    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: '#ECF5E9' }}>
       {/* Logo */}
-      <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-10 shadow-2xl shadow-orange-900/50">
+      <div className="relative w-20 h-20 rounded-3xl bg-[#E86825] flex items-center justify-center mb-10 shadow-xl shadow-orange-900/15">
         <BookOpen className="w-10 h-10 text-white" />
-        <div className="absolute -inset-1 rounded-3xl bg-orange-500/20 animate-pulse" />
       </div>
 
-      <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Prêt à commencer ?</h1>
-      <p className="text-white/40 text-lg mb-10">
+      <h1 className="text-4xl font-black text-[#004138] mb-2 tracking-tight">Prêt à commencer ?</h1>
+      <p className="text-[#1F3A34]/60 text-lg mb-10">
         {patientFirstName} {patientLastName}
       </p>
 
       {/* Module info card */}
-      <div className="w-full max-w-sm rounded-3xl p-6 mb-6 space-y-3 text-left backdrop-blur-sm" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
+      <div className="w-full max-w-sm rounded-3xl p-6 mb-6 space-y-3 text-left bg-white shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
         {parcoursTitle && (
-          <div className="flex items-center gap-2 text-orange-400 mb-4">
+          <div className="flex items-center gap-2 text-[#E86825] mb-4">
             <Route className="w-4 h-4 flex-shrink-0" />
             <span className="text-sm font-semibold truncate">{parcoursTitle}</span>
             {parcoursModuleIndex !== undefined && parcoursModuleTotal !== undefined && (
-              <span className="ml-auto text-white/30 text-xs whitespace-nowrap">
+              <span className="ml-auto text-[#004138]/40 text-xs whitespace-nowrap">
                 Module {parcoursModuleIndex + 1}/{parcoursModuleTotal}
               </span>
             )}
           </div>
         )}
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, rgba(249,115,22,0.3), rgba(249,115,22,0.1))' }}>
-            <BookOpen className="w-6 h-6 text-orange-400" />
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-[#FFF4ED]">
+            <BookOpen className="w-6 h-6 text-[#E86825]" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-white text-lg truncate">{moduleTitle}</p>
-            <p className="text-white/40 text-sm">{modulePages} pages · {moduleDuration} min</p>
+            <p className="font-bold text-[#004138] text-lg truncate">{moduleTitle}</p>
+            <p className="text-[#1F3A34]/50 text-sm">{modulePages} pages · {moduleDuration} min</p>
           </div>
         </div>
       </div>
 
       {/* Sortie protégée : le code n'est jamais affiché à l'écran (le patient pourrait le voir) */}
-      <div className="w-full max-w-sm rounded-3xl p-5 mb-10 backdrop-blur-sm flex items-start gap-3 text-left" style={{ backgroundColor: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)' }}>
-        <Shield className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-        <p className="text-sm" style={{ color: 'rgba(252,211,77,0.8)' }}>
+      <div className="w-full max-w-sm rounded-3xl p-5 mb-10 flex items-start gap-3 text-left bg-[#FFFBEB]" style={{ border: '1px solid rgba(245,158,11,0.3)' }}>
+        <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-amber-800">
           Pour quitter la séance, votre code de sécurité personnel vous sera demandé.
         </p>
       </div>
 
       <button
         onClick={handleStart}
-        className="w-full max-w-sm h-16 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-xl flex items-center justify-center gap-3 shadow-2xl shadow-orange-900/40 active:scale-[0.97] transition-transform touch-manipulation"
+        className="w-full max-w-sm h-16 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-xl flex items-center justify-center gap-3 shadow-xl shadow-orange-900/20 active:scale-[0.97] transition-transform touch-manipulation"
       >
-        <Maximize className="w-5 h-5 opacity-70" />
+        <Maximize className="w-5 h-5 opacity-80" />
         Commencer la séance
         <ArrowRight className="w-6 h-6" />
       </button>
-      <p className="text-white/20 text-xs mt-3">La séance s'ouvrira en plein écran</p>
+      <p className="text-[#004138]/35 text-xs mt-3">La séance s'ouvrira en plein écran</p>
     </div>
   );
 }
@@ -549,13 +547,13 @@ function PINExitModal({
   const keys = ['1','2','3','4','5','6','7','8','9','⌫','0','✓'];
 
   return (
-    <div className="session-overlay fixed inset-0 z-[10000] overflow-y-auto backdrop-blur-md flex flex-col items-center justify-center px-6 py-6 fade-scale-in" style={{ backgroundColor: 'rgba(0,26,22,0.98)' }}>
-      <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: 'rgba(245,158,11,0.2)', border: '1px solid rgba(245,158,11,0.3)' }}>
+    <div className="session-overlay fixed inset-0 z-[10000] overflow-y-auto backdrop-blur-md flex flex-col items-center justify-center px-6 py-6 fade-scale-in" style={{ backgroundColor: 'rgba(28,83,53,0.97)' }}>
+      <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)' }}>
         <Shield className="w-7 h-7 text-amber-400" />
       </div>
 
       <h2 className="text-2xl font-black text-white mb-1">{title}</h2>
-      <p className="text-white/40 text-sm mb-8 text-center max-w-xs">{subtitle}</p>
+      <p className="text-white/50 text-sm mb-8 text-center max-w-xs">{subtitle}</p>
 
       {/* Dots */}
       <div className={cn('flex items-center gap-4 mb-3', shake && 'shake')}>
@@ -564,13 +562,13 @@ function PINExitModal({
             key={i}
             className={cn(
               'w-5 h-5 rounded-full border-2 transition-all duration-150',
-              i < entered.length ? 'bg-orange-500 border-orange-500 scale-110' : 'bg-transparent border-white/30',
+              i < entered.length ? 'bg-[#E86825] border-[#E86825] scale-110' : 'bg-transparent border-white/30',
               i >= 4 && i >= entered.length && 'opacity-40'
             )}
           />
         ))}
       </div>
-      <p className="h-6 mb-4 text-sm text-red-400">{message}</p>
+      <p className="h-6 mb-4 text-sm text-red-300">{message}</p>
 
       {/* Keypad */}
       <div className="grid grid-cols-3 gap-3 w-full max-w-xs">
@@ -580,8 +578,8 @@ function PINExitModal({
               key={k}
               onClick={del}
               aria-label="Effacer"
-              className="h-16 rounded-2xl flex items-center justify-center text-white/50 active:opacity-70 transition-opacity touch-manipulation"
-              style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+              className="h-16 rounded-full flex items-center justify-center text-white/60 active:opacity-70 transition-opacity touch-manipulation"
+              style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
             >
               <Delete className="w-5 h-5" />
             </button>
@@ -592,7 +590,7 @@ function PINExitModal({
               onClick={submit}
               disabled={entered.length < 4 || checking}
               aria-label="Valider"
-              className="h-16 rounded-2xl flex items-center justify-center bg-orange-500 text-white disabled:opacity-30 active:scale-95 transition-all touch-manipulation"
+              className="h-16 rounded-full flex items-center justify-center bg-[#E86825] text-white disabled:opacity-30 active:scale-95 transition-all touch-manipulation"
             >
               {checking ? <RefreshCw className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-6 h-6" />}
             </button>
@@ -601,8 +599,8 @@ function PINExitModal({
             <button
               key={k}
               onClick={() => press(k)}
-              className="h-16 rounded-2xl text-white text-2xl font-bold active:opacity-70 active:scale-95 transition-all touch-manipulation"
-              style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+              className="h-16 rounded-full text-white text-2xl font-bold active:opacity-70 active:scale-95 transition-all touch-manipulation"
+              style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
             >
               {k}
             </button>
@@ -612,7 +610,7 @@ function PINExitModal({
 
       <button
         onClick={onCancel}
-        className="mt-8 text-white/30 text-sm hover:text-white/50 transition-colors touch-manipulation"
+        className="mt-8 text-white/50 text-sm hover:text-white/70 transition-colors touch-manipulation"
       >
         Annuler
       </button>
@@ -630,31 +628,32 @@ function PauseOverlay({
   onResume: () => void; onRequestExit: () => void;
 }) {
   return (
-    <div className="session-overlay fixed inset-0 z-[10000] bg-gray-900/95 backdrop-blur-md flex flex-col items-center justify-center px-8 fade-scale-in">
-      <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mb-8">
-        <Pause className="w-12 h-12 text-white" />
+    <div className="session-overlay fixed inset-0 z-[10000] flex flex-col items-center justify-center px-8 fade-scale-in" style={{ background: '#ECF5E9' }}>
+      <div className="w-24 h-24 rounded-full flex items-center justify-center mb-8 bg-[#FFF4ED]">
+        <Pause className="w-12 h-12 text-[#E86825]" />
       </div>
 
-      <h2 className="text-4xl font-black text-white mb-2">Séance en pause</h2>
-      <p className="text-white/50 text-base mb-10 text-center">{moduleName} · {patientName}</p>
+      <h2 className="text-4xl font-black text-[#004138] mb-2">Séance en pause</h2>
+      <p className="text-[#1F3A34]/60 text-base mb-10 text-center">{moduleName} · {patientName}</p>
 
-      <div className="flex items-center gap-3 bg-white/10 px-8 py-5 rounded-3xl mb-12">
-        <Clock className="w-6 h-6 text-white/60" />
-        <span className="text-5xl font-black text-white tracking-tight font-mono">{mm}:{ss}</span>
-        <span className="text-white/40 text-sm font-semibold">écoulé</span>
+      <div className="flex items-center gap-3 bg-white px-8 py-5 rounded-3xl mb-12 shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
+        <Clock className="w-6 h-6 text-[#004138]/60" />
+        <span className="text-5xl font-black text-[#004138] tracking-tight font-mono">{mm}:{ss}</span>
+        <span className="text-[#1F3A34]/40 text-sm font-semibold">écoulé</span>
       </div>
 
       <div className="w-full max-w-sm space-y-3">
         <button
           onClick={onResume}
-          className="w-full h-16 rounded-2xl bg-orange-500 text-white font-bold text-xl flex items-center justify-center gap-3 shadow-lg shadow-orange-900/30 active:scale-[0.98] transition-transform touch-manipulation"
+          className="w-full h-16 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-xl flex items-center justify-center gap-3 shadow-lg shadow-orange-900/15 active:scale-[0.98] transition-transform touch-manipulation"
         >
           <Play className="w-6 h-6" />
           Reprendre la séance
         </button>
         <button
           onClick={onRequestExit}
-          className="w-full h-14 rounded-2xl border border-white/20 text-white/60 font-semibold text-base hover:bg-white/5 active:bg-white/10 transition-colors touch-manipulation flex items-center justify-center gap-2"
+          className="w-full h-14 rounded-full border-2 font-semibold text-base hover:bg-[#ECF5E9] active:bg-[#dcebdd] transition-colors touch-manipulation flex items-center justify-center gap-2"
+          style={{ borderColor: 'rgba(0,65,56,0.18)', color: '#004138' }}
         >
           <Shield className="w-4 h-4" />
           Quitter (code IDE)
@@ -729,16 +728,16 @@ function ModuleCompletionScreen({
   const ss = String(elapsedSeconds % 60).padStart(2, '0');
 
   return (
-    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: 'radial-gradient(ellipse at center, #004138 0%, #001A16 80%)' }}>
+    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: '#1C5335' }}>
       <div className={cn(
         'w-28 h-28 rounded-full flex items-center justify-center mb-8 pop-in shadow-2xl',
-        isExcellent ? 'bg-emerald-500/20 shadow-emerald-500/20' : isGood ? 'bg-amber-500/20 shadow-amber-500/20' : 'bg-red-500/20 shadow-red-500/20'
+        isExcellent ? 'bg-emerald-500/20' : isGood ? 'bg-amber-500/20' : 'bg-red-500/20'
       )}>
         <CheckCircle2 className={cn('w-14 h-14 check-bounce', isExcellent ? 'text-emerald-400' : isGood ? 'text-amber-400' : 'text-red-400')} />
       </div>
 
       <h1 className="text-4xl font-black text-white mb-2">Cours validé</h1>
-      <p className="text-white/40 text-base mb-8">{patient.firstName} {patient.lastName} · {module.title}</p>
+      <p className="text-white/50 text-base mb-8">{patient.firstName} {patient.lastName} · {module.title}</p>
 
       {/* Score + time */}
       <div className="flex items-center gap-4 mb-6">
@@ -747,11 +746,11 @@ function ModuleCompletionScreen({
           isExcellent ? 'border-emerald-400/60 bg-emerald-500/10' : isGood ? 'border-amber-400/60 bg-amber-500/10' : 'border-red-400/60 bg-red-500/10'
         )}>
           <span className={cn('text-3xl font-black leading-none', isExcellent ? 'text-emerald-400' : isGood ? 'text-amber-400' : 'text-red-400')}>{score === null ? '—' : `${score}%`}</span>
-          <span className="text-xs font-semibold text-white/40 mt-1 uppercase tracking-wider">Score</span>
+          <span className="text-xs font-semibold text-white/50 mt-1 uppercase tracking-wider">Score</span>
         </div>
-        <div className="w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 border-white/10 bg-white/5">
+        <div className="w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 border-white/15 bg-white/5">
           <span className="text-2xl font-black text-white leading-none font-mono">{mm}:{ss}</span>
-          <span className="text-xs font-semibold text-white/40 mt-1 uppercase tracking-wider">Durée</span>
+          <span className="text-xs font-semibold text-white/50 mt-1 uppercase tracking-wider">Durée</span>
         </div>
       </div>
 
@@ -761,7 +760,7 @@ function ModuleCompletionScreen({
       {competencies && competencies.total > 0 && (
         <p className="text-white/70 text-sm mb-2">{competencies.validated} compétence(s) sur {competencies.total} validée(s)</p>
       )}
-      <p className="text-white/40 text-sm max-w-xs mb-10">
+      <p className="text-white/50 text-sm max-w-xs mb-10">
         {score === null ? 'Durée et compétences enregistrées.' : isExcellent ? 'Contenu parfaitement assimilé.' : isGood ? 'Certains points à revoir.' : 'Révision approfondie recommandée.'}
       </p>
 
@@ -769,7 +768,7 @@ function ModuleCompletionScreen({
         {onNext && nextModuleName && (
           <button
             onClick={onNext}
-            className="w-full h-16 px-5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-base flex items-center justify-center gap-3 shadow-2xl shadow-orange-500/20 active:scale-[0.98] transition-transform touch-manipulation"
+            className="w-full h-16 px-5 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-base flex items-center justify-center gap-3 shadow-lg shadow-orange-900/20 active:scale-[0.98] transition-transform touch-manipulation"
           >
             <div className="flex-1 min-w-0 text-left">
               <p className="text-xs font-normal opacity-75 mb-0.5">Cours suivant (rendre la tablette au patient)</p>
@@ -784,10 +783,10 @@ function ModuleCompletionScreen({
         <button
           onClick={onRequestExit}
           className={cn(
-            'w-full rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 transition-colors touch-manipulation',
+            'w-full rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-colors touch-manipulation',
             onNext
-              ? 'h-12 border border-white/10 text-white/50 hover:bg-white/5 active:bg-white/10'
-              : 'h-16 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-base shadow-2xl shadow-orange-500/20 active:scale-[0.98]'
+              ? 'h-12 border border-white/20 text-white/60 hover:bg-white/5 active:bg-white/10'
+              : 'h-16 bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-base shadow-lg shadow-orange-900/20 active:scale-[0.98]'
           )}
         >
           <ArrowRight className="w-4 h-4 rotate-180" />
@@ -805,7 +804,7 @@ function PatientScoreScreen({ score, onFinish }: { score: number | null; onFinis
   const celebrate = score !== null && score >= 75;
 
   return (
-    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, #004138 0%, #001A16 80%)' }}>
+    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-hidden" style={{ background: '#ECF5E9' }}>
       {celebrate && (
         <div className="pointer-events-none absolute inset-0" aria-hidden>
           {Array.from({ length: 40 }, (_, i) => (
@@ -822,16 +821,17 @@ function PatientScoreScreen({ score, onFinish }: { score: number | null; onFinis
           ))}
         </div>
       )}
-      <p className="text-white/60 text-lg font-semibold uppercase tracking-widest mb-4">Vous avez obtenu le score de</p>
-      <p className="text-8xl font-black text-white mb-4 pop-in">{score === null ? '—' : `${score} %`}</p>
-      <p className="text-white/50 text-base mb-12">{score === null ? 'Ce cours ne comporte pas de quiz noté.' : celebrate ? 'Bravo !' : 'Merci pour votre participation.'}</p>
+      <img src="/illustrations/fin-de-cours.png" alt="" className="w-40 h-40 object-contain mb-2" />
+      <p className="text-[#004138]/70 text-lg font-semibold uppercase tracking-widest mb-4">Vous avez obtenu le score de</p>
+      <p className="text-8xl font-black text-[#004138] mb-4 pop-in">{score === null ? '—' : `${score} %`}</p>
+      <p className="text-[#1F3A34]/60 text-base mb-12">{score === null ? 'Ce cours ne comporte pas de quiz noté.' : celebrate ? 'Bravo !' : 'Merci pour votre participation.'}</p>
       <button
         onClick={onFinish}
-        className="w-full max-w-sm h-16 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-xl shadow-2xl active:scale-[0.97] transition-transform touch-manipulation"
+        className="w-full max-w-sm h-16 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-xl shadow-xl shadow-orange-900/15 active:scale-[0.97] transition-transform touch-manipulation"
       >
         Fin du cours
       </button>
-      <p className="text-white/30 text-xs mt-3">Rendez la tablette à votre infirmière</p>
+      <p className="text-[#004138]/40 text-xs mt-3">Rendez la tablette à votre infirmière</p>
     </div>
   );
 }
@@ -855,8 +855,8 @@ function CompetencyValidationScreen({
   const validatedCount = competencies.filter((c) => choices[c.id]).length;
 
   return (
-    // Fond neutre, distinct des écrans patient (storyboard : l'IDE doit voir que cet écran ne s'adresse pas au patient)
-    <div className="fixed inset-0 z-[9999] overflow-auto" style={{ background: 'linear-gradient(180deg, #111827 0%, #1f2937 100%)' }}>
+    // Fond sombre volontairement distinct des écrans patient (storyboard : l'IDE doit voir que cet écran ne s'adresse pas au patient), mais mêmes couleurs de marque
+    <div className="fixed inset-0 z-[9999] overflow-auto" style={{ background: '#1C5335' }}>
       <div className="h-1.5 bg-amber-400" />
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="flex items-center gap-3 mb-2 text-amber-300">
@@ -872,7 +872,7 @@ function CompetencyValidationScreen({
 
         <div className="space-y-3 mb-10">
           {competencies.map((competency) => (
-            <div key={competency.id} className="rounded-2xl p-5" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div key={competency.id} className="rounded-2xl p-5" style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
               <p className="text-white text-base mb-4">{competency.label}</p>
               <div className="grid grid-cols-2 gap-3">
                 {[true, false].map((value) => (
@@ -880,10 +880,10 @@ function CompetencyValidationScreen({
                     key={String(value)}
                     onClick={() => onChoose(competency.id, value)}
                     className={cn(
-                      'h-12 rounded-xl font-semibold text-sm transition-all touch-manipulation',
+                      'h-12 rounded-full font-semibold text-sm transition-all touch-manipulation',
                       choices[competency.id] === value
                         ? value ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'
-                        : 'bg-white/5 text-white/60 border border-white/10'
+                        : 'bg-white/8 text-white/60 border border-white/15'
                     )}
                   >
                     {value ? 'Validée' : 'Non validée'}
@@ -894,21 +894,21 @@ function CompetencyValidationScreen({
           ))}
         </div>
 
-        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-        <p className="text-white/40 text-xs mb-3">
+        {error && <p className="text-red-300 text-sm mb-4">{error}</p>}
+        <p className="text-white/50 text-xs mb-3">
           Valider les compétences ne suffit pas : « Terminer le cours » enregistre la séance (durée, score, compétences).
         </p>
         {confirming && (
-          <div className="fixed inset-0 z-[10001] bg-black/70 flex items-center justify-center px-6">
-            <div className="w-full max-w-sm rounded-3xl bg-[#00261F] border border-white/10 p-6 text-center">
+          <div className="fixed inset-0 z-[10001] bg-black/60 flex items-center justify-center px-6">
+            <div className="w-full max-w-sm rounded-3xl bg-[#1C5335] border border-white/15 p-6 text-center shadow-2xl">
               <p className="text-white text-lg font-bold mb-2">Clôturer la séance ?</p>
               <p className="text-white/60 text-sm mb-6">
                 {competencies.length ? `${validatedCount} compétence(s) validée(s) sur ${competencies.length}. ` : ''}
                 La durée et le score seront enregistrés ; cette action est définitive.
               </p>
               <div className="grid grid-cols-2 gap-3">
-                <button onClick={() => setConfirming(false)} className="h-12 rounded-xl bg-white/10 text-white/70 font-semibold">Annuler</button>
-                <button onClick={() => { setConfirming(false); onFinish(); }} className="h-12 rounded-xl bg-emerald-500 text-white font-semibold">Confirmer</button>
+                <button onClick={() => setConfirming(false)} className="h-12 rounded-full bg-white/10 text-white/70 font-semibold">Annuler</button>
+                <button onClick={() => { setConfirming(false); onFinish(); }} className="h-12 rounded-full bg-emerald-500 text-white font-semibold">Confirmer</button>
               </div>
             </div>
           </div>
@@ -916,12 +916,12 @@ function CompetencyValidationScreen({
         <button
           onClick={() => setConfirming(true)}
           disabled={!complete || saving}
-          className="w-full h-16 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold text-lg flex items-center justify-center gap-3 disabled:opacity-30 active:scale-[0.98] transition-all touch-manipulation"
+          className="w-full h-16 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg flex items-center justify-center gap-3 disabled:opacity-30 active:scale-[0.98] transition-all touch-manipulation"
         >
           {saving ? <RefreshCw className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-6 h-6" />}
           Terminer le cours
         </button>
-        <button onClick={onBack} className="w-full mt-4 text-white/40 text-sm touch-manipulation">Revenir au contenu du cours</button>
+        <button onClick={onBack} className="w-full mt-4 text-white/50 text-sm touch-manipulation">Revenir au contenu du cours</button>
       </div>
     </div>
   );
@@ -935,10 +935,11 @@ export function BlockCard({
   quizAnswers: Record<string, { isCorrect: boolean; score: number; selected?: string[] }>;
   onQuizAnswer: (id: string, isCorrect: boolean, score: number, selected?: string[]) => void;
 }) {
+  if (block.type === 'picto-grid') return <PictoGridView block={block} />;
   if (block.type === 'text')
-    return <div className="rounded-3xl p-7" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><TextBlockView block={block} /></div>;
+    return <TextBlockView block={block} />;
   if (block.type === 'image')
-    return <div className="rounded-3xl p-5" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><ImageBlockView block={block} /></div>;
+    return <ImageBlockView block={block} />;
   if (block.type === 'info-card')
     return <InfoCardView block={block} />;
   if (block.type === 'image-text')
@@ -951,22 +952,16 @@ export function BlockCard({
     return <IframeBlockView block={block} />;
   if (block.type === 'quiz')
     return (
-      <div className="rounded-3xl p-7" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderTop: '3px solid rgba(249,115,22,0.6)' }}>
-        <QuizComponent
-          block={block}
-          onAnswer={(isCorrect, score, selected) => onQuizAnswer(block.id, isCorrect, score, selected)}
-          previousResult={quizAnswers[block.id]}
-          disabled={!!quizAnswers[block.id]}
-        />
-      </div>
+      <QuizComponent
+        block={block}
+        onAnswer={(isCorrect, score, selected) => onQuizAnswer(block.id, isCorrect, score, selected)}
+        previousResult={quizAnswers[block.id]}
+        disabled={!!quizAnswers[block.id]}
+      />
     );
 
-  /* ── New interactive blocks ── */
-  const interactiveWrapper = (children: React.ReactNode) => (
-    <div className="rounded-3xl p-7" style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderTop: '3px solid rgba(99,102,241,0.5)' }}>
-      {children}
-    </div>
-  );
+  /* ── New interactive blocks (chaque vue gère son propre fond ; pas de carte englobante) ── */
+  const interactiveWrapper = (children: React.ReactNode) => children;
 
   if (block.type === 'reorder')
     return interactiveWrapper(<ReorderView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
@@ -1043,10 +1038,10 @@ export default function TrainingSessionPage() {
   const failed = !moduleId || (!isPreview && !patientId) || moduleQuery.isError || patientQuery.isError;
   if (failed) {
     return (
-      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
-        <AlertCircle className="w-10 h-10 text-red-400" />
-        <p className="text-white/70">Impossible d'ouvrir ce cours pour ce patient.</p>
-        <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white/10 text-white font-semibold">Retour</button>
+      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
+        <AlertCircle className="w-10 h-10 text-red-500" />
+        <p className="text-[#1F3A34]/80">Impossible d'ouvrir ce cours pour ce patient.</p>
+        <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour</button>
       </div>
     );
   }
@@ -1056,18 +1051,18 @@ export default function TrainingSessionPage() {
   const loading = !module || (!isPreview && !patient) || (!!programId && programQuery.isLoading);
   if (loading) {
     return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
-        <RefreshCw className="w-8 h-8 text-white/40 animate-spin" />
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center" style={{ background: '#ECF5E9' }}>
+        <RefreshCw className="w-8 h-8 text-[#004138]/40 animate-spin" />
       </div>
     );
   }
 
   if (module.content.length === 0) {
     return (
-      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
-        <BookOpen className="w-10 h-10 text-white/40" />
-        <p className="text-white/70">Ce cours n'a pas encore de contenu.</p>
-        <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white/10 text-white font-semibold">Retour</button>
+      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
+        <BookOpen className="w-10 h-10 text-[#004138]/40" />
+        <p className="text-[#1F3A34]/80">Ce cours n'a pas encore de contenu.</p>
+        <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour</button>
       </div>
     );
   }
@@ -1151,6 +1146,7 @@ function SessionRunner({
   const totalPages  = module.pages.length;
   const currentPage = module.pages[pageIndex];
   const progress    = Math.round(((pageIndex + 1) / totalPages) * 100);
+  const headerMeta  = pageHeaderMeta(currentPage);
 
   // Le chronomètre ne tourne que pendant le cours côté patient (arrêté à la remise de la tablette à l'IDE)
   const { elapsed, mm, ss } = useStopwatch(module.code !== 'PT' && !isPreview && phase === 'active' && !!sessionId && !paused && blocker.state !== 'blocked' && !restoredExit);
@@ -1248,17 +1244,17 @@ function SessionRunner({
   if (phase === 'done') {
     if (isPreview) {
       return (
-        <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
-          <div className="w-16 h-16 rounded-3xl bg-emerald-500/20 flex items-center justify-center">
-            <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+        <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8" style={{ background: '#ECF5E9' }}>
+          <div className="w-16 h-16 rounded-3xl bg-emerald-100 flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
           </div>
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-white mb-2">Prévisualisation terminée</h2>
-            <p className="text-white/50 text-sm">Vous avez parcouru toutes les pages du cours « {module.title} »</p>
+            <h2 className="text-2xl font-bold text-[#004138] mb-2">Prévisualisation terminée</h2>
+            <p className="text-[#1F3A34]/70 text-sm">Vous avez parcouru toutes les pages du cours « {module.title} »</p>
           </div>
           <button
             onClick={() => navigate(-1)}
-            className="h-14 px-6 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-semibold flex items-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-orange-500/20"
+            className="h-14 px-6 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-semibold flex items-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-orange-900/10"
           >
             <BookOpen className="w-5 h-5" />
             Retour
@@ -1334,41 +1330,41 @@ function SessionRunner({
   // Séance en cours de création (ou refusée par le serveur)
   if (!isPreview && !sessionId) {
     return (
-      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
+      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
         {apiError ? (
           <>
-            <AlertCircle className="w-10 h-10 text-red-400" />
-            <p className="text-white/80 max-w-sm">{apiError}</p>
-            <button onClick={backToPatient} className="h-12 px-6 rounded-2xl bg-white/10 text-white font-semibold">Retour à la fiche patient</button>
+            <AlertCircle className="w-10 h-10 text-red-500" />
+            <p className="text-[#1F3A34]/80 max-w-sm">{apiError}</p>
+            <button onClick={backToPatient} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour à la fiche patient</button>
           </>
         ) : (
-          <RefreshCw className="w-8 h-8 text-white/40 animate-spin" />
+          <RefreshCw className="w-8 h-8 text-[#004138]/40 animate-spin" />
         )}
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col" style={{ userSelect: 'none', background: 'linear-gradient(180deg, #00261F 0%, #004138 100%)' }}>
+    <div className="course-theme fixed inset-0 z-[9999] flex flex-col" style={{ userSelect: 'none', background: '#ECF5E9' }}>
 
-      {/* ── Header ───────────────────────────────────────────────── */}
-      <header className="flex-shrink-0" style={{ background: 'rgba(0,38,31,0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      {/* ── Header (carte arrondie, flottante) ──────────────────────── */}
+      <header className="flex-shrink-0 mx-4 mt-4 rounded-3xl overflow-hidden shadow-sm" style={{ background: '#1C5335' }}>
         <div className="flex flex-wrap items-end gap-x-6 gap-y-3 px-5 py-4">
           <div className="min-w-0 flex-1 basis-72">
-            <CoursePageHeading title={currentPage.title} instruction={currentPage.instruction} showCounter={false} pageNumber={pageIndex + 1} totalPages={totalPages} />
+            <CoursePageHeading title={currentPage.title} instruction={headerMeta.instruction} icon={headerMeta.icon} showCounter={false} pageNumber={pageIndex + 1} totalPages={totalPages} />
           </div>
           <div className="flex items-center gap-2 flex-shrink-0 self-end">
             {isPreview ? (
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center gap-2 h-11 px-4 rounded-2xl bg-white/10 text-white/60 hover:bg-white/15 transition-all touch-manipulation"
+                className="flex items-center gap-2 h-11 px-4 rounded-full bg-white/10 text-white/60 hover:bg-white/15 transition-all touch-manipulation"
               >
                 <span className="text-sm font-medium">Fermer l’aperçu</span>
               </button>
             ) : (
               <>
                 {module.code !== 'PT' && <div
-                  className={cn('flex items-center gap-1.5 px-3.5 py-2 rounded-2xl transition-all', overEstimate ? 'bg-amber-500/20' : 'bg-white/10')}
+                  className={cn('flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-all', overEstimate ? 'bg-amber-500/20' : 'bg-white/10')}
                   title={`Durée indicative : ${module.estimatedDuration} min`}
                 >
                   <Clock className={cn('w-4 h-4', overEstimate ? 'text-amber-300' : 'text-white/80')} />
@@ -1377,7 +1373,7 @@ function SessionRunner({
                 <button
                   onClick={toggle}
                   className={cn(
-                    'h-11 px-3 rounded-xl flex items-center justify-center gap-2 text-sm font-medium transition-all touch-manipulation',
+                    'h-11 px-3 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-all touch-manipulation',
                     paused ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30' : 'bg-white/10 text-white/60 hover:bg-white/15'
                   )}
                 >
@@ -1391,29 +1387,18 @@ function SessionRunner({
         </div>
 
         {/* Progress bar */}
-        <div className="relative h-1 bg-white/5">
+        <div className="relative h-1 bg-white/10">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-orange-500 to-amber-400 transition-all duration-500 ease-out rounded-r-full"
             style={{ width: `${progress}%` }}
           />
         </div>
-
-        {/* Page dots */}
-        <div className="flex flex-wrap items-center justify-center gap-2 px-4 py-2.5">
-          {module.pages.map((_, i) => (
-            <div key={i} className={cn(
-              'rounded-full transition-all duration-300',
-              i === pageIndex ? 'w-8 h-2.5 bg-orange-500' :
-              i < pageIndex   ? 'w-2.5 h-2.5 bg-orange-400/60' : 'w-2.5 h-2.5 bg-white/15'
-            )} />
-          ))}
-        </div>
       </header>
 
-      {/* ── Content ──────────────────────────────────────────────── */}
+      {/* ── Content (défile ; la navigation reste fixée en bas, hors du défilement) ── */}
       <main ref={contentRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <div className={cn('max-w-2xl mx-auto px-5 py-8', slideClass)}>
-          <div className="space-y-5 pb-36">
+        <div className={cn('mx-4 sm:mx-10 py-5', slideClass)}>
+          <div className="space-y-5">
             {currentPage.blocks.map((block) => (
               <div key={`${currentPage.id}:${block.id}`}>
                 <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} />
@@ -1422,7 +1407,7 @@ function SessionRunner({
           </div>
 
           {pageIndex === 0 && totalPages > 1 && (
-            <div className="flex items-center justify-center gap-3 py-4 text-white/20">
+            <div className="flex items-center justify-center gap-3 pt-4 text-[#004138]/35">
               <ChevronLeft className="w-4 h-4" />
               <p className="text-xs font-medium">Glissez pour naviguer</p>
               <ChevronRight className="w-4 h-4" />
@@ -1431,44 +1416,42 @@ function SessionRunner({
         </div>
       </main>
 
-      {/* ── Bottom nav ───────────────────────────────────────────── */}
-      <footer className="flex-shrink-0" style={{ background: 'rgba(0,38,31,0.95)', backdropFilter: 'blur(12px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center gap-3">
-          <button
-            aria-label="Page précédente"
-            onClick={() => navigatePage('prev')}
-            disabled={pageIndex === 0 || animating || (!isPreview && paused)}
-            className="flex items-center gap-2 h-14 px-5 rounded-2xl border border-white/10 font-semibold text-white/50 hover:bg-white/5 active:bg-white/10 disabled:opacity-30 transition-all touch-manipulation flex-shrink-0"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="hidden sm:inline">Précédent</span>
-          </button>
+      {/* ── Navigation (toujours calée en bas, hors du contenu défilant) ── */}
+      <div className="flex-shrink-0 mx-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex items-center gap-3">
+        <button
+          aria-label="Page précédente"
+          onClick={() => navigatePage('prev')}
+          disabled={pageIndex === 0 || animating || (!isPreview && paused)}
+          className="flex items-center gap-2 h-14 px-5 rounded-full border-2 font-semibold hover:bg-[#dcebdd] active:bg-[#cfe3d1] disabled:opacity-30 transition-all touch-manipulation flex-shrink-0 bg-white"
+          style={{ borderColor: 'rgba(0,65,56,0.18)', color: '#004138' }}
+        >
+          <ChevronLeft className="w-5 h-5" />
+          <span className="hidden sm:inline">Précédent</span>
+        </button>
 
-          <button
-            onClick={() => navigatePage('next')}
-            disabled={(!allQuizAnswered && !isPreview) || animating || (!isPreview && paused)}
-            className={cn(
-              'flex-1 h-14 rounded-2xl font-bold text-base flex items-center justify-center gap-2 transition-all touch-manipulation shadow-lg',
-              paused && !isPreview
-                ? 'bg-white/5 text-white/30 shadow-none cursor-not-allowed'
-                : allQuizAnswered || isPreview
-                  ? pageIndex === totalPages - 1
-                    ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-emerald-500/20 active:scale-[0.98]'
-                    : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-orange-500/20 active:scale-[0.98]'
-                  : 'bg-white/5 text-white/30 shadow-none cursor-not-allowed'
-            )}
-          >
-            {paused && !isPreview ? (
-              <><Pause className="w-5 h-5" /> Séance en pause</>
-            ) : pageIndex === totalPages - 1 ? (
-              <>Terminer <CheckCircle2 className="w-5 h-5" /></>
-            ) : (
-              <>Page suivante <ChevronRight className="w-5 h-5" /></>
-            )}
-          </button>
-        </div>
-        <div className="h-safe-bottom" />
-      </footer>
+        <button
+          onClick={() => navigatePage('next')}
+          disabled={(!allQuizAnswered && !isPreview) || animating || (!isPreview && paused)}
+          className={cn(
+            'flex-1 h-14 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all touch-manipulation shadow-lg',
+            paused && !isPreview
+              ? 'bg-[#004138]/8 text-[#004138]/25 shadow-none cursor-not-allowed'
+              : allQuizAnswered || isPreview
+                ? pageIndex === totalPages - 1
+                  ? 'bg-emerald-500 text-white shadow-emerald-900/15 active:scale-[0.98]'
+                  : 'bg-[#E86825] text-white shadow-orange-900/15 active:scale-[0.98]'
+                : 'bg-[#004138]/8 text-[#004138]/25 shadow-none cursor-not-allowed'
+          )}
+        >
+          {paused && !isPreview ? (
+            <><Pause className="w-5 h-5" /> Séance en pause</>
+          ) : pageIndex === totalPages - 1 ? (
+            <>Terminer <CheckCircle2 className="w-5 h-5" /></>
+          ) : (
+            <>Page suivante <ChevronRight className="w-5 h-5" /></>
+          )}
+        </button>
+      </div>
 
       {/* ── Pause overlay ────────────────────────────────────────── */}
       {paused && !isPreview && (

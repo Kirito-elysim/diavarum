@@ -1,3 +1,4 @@
+import { TextStyleFields } from './TextStyleFields';
 import { useState } from 'react';
 import type { CategorizeBlock, ContentBlock, HotspotBlock, HotspotPoint } from '../../types';
 import { DEFAULT_INSTRUCTIONS, INFO_CARD_CATEGORIES, PICTOS, infoCardCategory } from '../../lib/courseVisuals';
@@ -7,6 +8,17 @@ import { Field, ImageField, ItemActions, Toggle } from './Fields';
 import { move, uid } from './model';
 
 export function BlockFields({ block: b, onChange }: { block: ContentBlock; onChange: (block: ContentBlock) => void }) {
+  if (b.type === 'picto-grid') return <>
+    <Field label="Introduction de la grille" value={b.question} onChange={question => onChange({ ...b, question })} />
+    <label className="block text-sm">Colonnes<select className="block w-full rounded-lg border p-3" value={b.columns ?? 3} onChange={e => onChange({ ...b, columns: Number(e.target.value) as 2 | 3 })}><option value={2}>2 colonnes</option><option value={3}>3 colonnes</option></select></label>
+    {b.items.map((item, index) => <section key={item.id} className="rounded-xl border p-4 space-y-3"><h4>Picto {index + 1}</h4>
+      <div className="flex flex-wrap gap-2">{INFO_CARD_CATEGORIES.map(c => <button type="button" key={c.value} title={c.label} aria-label={`Utiliser le picto ${c.label} pour l’élément ${index + 1}`} className="rounded-lg border p-2 hover:bg-orange-50" onClick={() => onChange({ ...b, items: b.items.map(i => i.id === item.id ? { ...i, imageUrl: c.iconUrl, alt: c.label } : i) })}><img src={c.iconUrl} alt={c.label} className="h-10 w-10 object-contain" /></button>)}</div>
+      <ImageField url={item.imageUrl} alt={item.alt} onChange={(imageUrl, alt) => onChange({ ...b, items: b.items.map(i => i.id === item.id ? { ...i, imageUrl, alt } : i) })} />
+      <Field label={`Texte du picto ${index + 1}`} multiline value={item.text} onChange={text => onChange({ ...b, items: b.items.map(i => i.id === item.id ? { ...i, text } : i) })} />
+      <ItemActions index={index} count={b.items.length} onMove={direction => onChange({ ...b, items: move(b.items, index, direction) })} onRemove={() => onChange({ ...b, items: b.items.filter(i => i.id !== item.id) })} />
+    </section>)}
+    <Button variant="outline" onClick={() => onChange({ ...b, items: [...b.items, { id: uid(), imageUrl: '', alt: '', text: '' }] })}>Ajouter un picto</Button>
+  </>;
   if (b.type === 'reorder') return <>
     <Field label="Consigne de remise en ordre" multiline value={b.question} onChange={question => onChange({ ...b, question })} />
     <p className="rounded-xl bg-orange-50 p-4 text-sm">Saisissez les éléments dans le bon ordre. Utilisez les flèches pour modifier cet ordre. Ils seront mélangés pour l’apprenant. L’activité est notée et affiche une correction.</p>
@@ -32,7 +44,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
     <Button variant="outline" onClick={() => onChange({ ...b, pairs: [...(b.pairs ?? []), { id: uid(), left: '', right: '' }] })}>Ajouter une association</Button>
     <Field label="Explication des associations" multiline value={b.explanation} onChange={explanation => onChange({ ...b, explanation })} />
   </>;
-  if (b.type === 'text') return <Field label="Texte" multiline value={b.content} onChange={content => onChange({ ...b, content })} />;
+  if (b.type === 'text') return <><Field label="Texte" multiline value={b.content} onChange={content => onChange({ ...b, content })} /><TextStyleFields value={b.textStyle} onChange={textStyle => onChange({ ...b, textStyle })} /></>;
   if (b.type === 'image') return <><ImageField url={b.url} alt={b.alt} onChange={(url, alt) => onChange({ ...b, url, alt })} /><Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} /></>;
   if (b.type === 'info-card') {
     const current = infoCardCategory(b.variant);
@@ -43,6 +55,9 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
         const title = !b.title.trim() || INFO_CARD_CATEGORIES.some(c => c.label === b.title) || b.title === 'Important' ? next.label : b.title;
         onChange({ ...b, variant: next.value, title });
       }}>{INFO_CARD_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}</select></label>
+      <img src={current.iconUrl} alt={current.label} className="h-20 w-20 object-contain" />
+      <p className="text-xs text-gray-500">Titre facultatif · privilégiez une ou deux lignes dans les boxes.</p>
+      <TextStyleFields value={b.textStyle} onChange={textStyle => onChange({ ...b, textStyle })} />
       <Field label="Titre de l’encadré" value={b.title} onChange={title => onChange({ ...b, title })} />
       <Field label="Texte de l’encadré" multiline value={b.content} onChange={content => onChange({ ...b, content })} />
     </>;
@@ -50,7 +65,9 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
   if (b.type === 'image-text') return <>
     <label className="block space-y-2"><span className="text-sm font-medium">Taille de l’image</span><select className="w-full rounded-lg border p-3" value={b.size} onChange={e => onChange({ ...b, size: e.target.value as typeof b.size })}><option value="picto">Picto — petite icône à gauche du texte</option><option value="image">Image — vignette à gauche du texte</option></select></label>
     <ImageField url={b.imageUrl} alt={b.alt} onChange={(imageUrl, alt) => onChange({ ...b, imageUrl, alt })} />
-    <Field label="Texte affiché à droite" multiline value={b.content} onChange={content => onChange({ ...b, content })} />
+    <TextStyleFields value={b.textStyle} onChange={textStyle => onChange({ ...b, textStyle })} />
+    <label className="block text-sm">Position de l’image<select className="block w-full rounded-lg border p-3" value={b.imageSide ?? 'left'} onChange={e => onChange({ ...b, imageSide: e.target.value as 'left' | 'right' })}><option value="left">À gauche</option><option value="right">À droite</option></select></label>
+    <Field label="Texte associé" multiline value={b.content} onChange={content => onChange({ ...b, content })} />
   </>;
   if (b.type === 'categorize') return <CategorizeFields block={b} onChange={onChange} />;
   if (b.type === 'carousel') return <>
@@ -63,6 +80,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
     <Button variant="outline" onClick={() => onChange({ ...b, slides: [...b.slides, { id: uid(), imageUrl: '', alt: '', text: '' }] })}>Ajouter une image au carrousel</Button>
   </>;
   if (b.type === 'flip-cards') return <>
+    <label className="block text-sm">Colonnes de cartes<select className="block w-full rounded-lg border p-3" value={b.columns ?? (b.cards.length >= 6 ? 3 : 2)} onChange={e => onChange({ ...b, columns: Number(e.target.value) as 2 | 3 })}><option value={2}>2 colonnes</option><option value={3}>3 colonnes</option></select></label>
     <Field label="Introduction des cartes" multiline value={b.question} onChange={question => onChange({ ...b, question })} />
     <Field label="Consigne de l’encadré au doigt" value={b.instruction ?? DEFAULT_INSTRUCTIONS.flipCards} onChange={instruction => onChange({ ...b, instruction })} />
     {b.cards.map((card, index) => <section key={card.id} className="rounded-xl border p-4 space-y-4"><h4 className="font-semibold">Carte {index + 1}</h4>

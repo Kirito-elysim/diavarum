@@ -4,13 +4,14 @@ import type { ModuleContent } from '../../api/types';
 export const uid = () => crypto.randomUUID();
 export const activities = [
   ['text', 'Texte'], ['image', 'Image'], ['image-text', 'Image ou picto + texte'], ['info-card', 'Encadré'], ['carousel', 'Carrousel'],
-  ['hotspot', 'Image à légendes'], ['flip-cards', 'Cartes à retourner'], ['qcu', 'QCU — une réponse'], ['qcm', 'QCM — plusieurs réponses'],
+  ['picto-grid', 'Grille de pictos'], ['hotspot', 'Image à légendes'], ['flip-cards', 'Cartes à retourner'], ['qcu', 'QCU — une réponse'], ['qcm', 'QCM — plusieurs réponses'],
   ['drag-drop', 'Relier'], ['categorize', 'Glisser-déposer'], ['reorder', 'Remettre dans l’ordre'],
 ] as const;
 export type Activity = typeof activities[number][0];
 export function newBlock(type: Activity): ContentBlock {
   const id = uid();
   switch (type) {
+    case 'picto-grid': return { id, type, question: '', columns: 3, items: Array.from({ length: 6 }, () => ({ id: uid(), imageUrl: '', alt: '', text: '' })) };
     case 'text': return { id, type, content: '' };
     case 'image': return { id, type, url: '', alt: '', caption: '' };
     case 'image-text': return { id, type, imageUrl: '', alt: '', content: '', size: 'picto' };
@@ -57,6 +58,10 @@ export function validateCourse(course: ModuleContent): string[] {
         b.pairs?.forEach(pair => { missing(pair.left, 'complétez chaque destination'); missing(pair.right, 'complétez chaque élément à déplacer'); });
         const labels = b.pairs?.map(pair => pair.right.trim()) ?? [];
         if (new Set(labels).size !== labels.length) errors.push(`${name} : les éléments à déplacer doivent avoir des textes différents.`);
+      }
+      if (b.type === 'picto-grid') {
+        if (!b.items.length) errors.push(`${name} : ajoutez un picto.`);
+        b.items.forEach(item => { missing(item.imageUrl, 'ajoutez chaque picto'); missing(item.text, 'complétez le texte de chaque picto'); });
       }
       if (b.type === 'image') missing(b.url, 'ajoutez une image');
       if (b.type === 'image-text') { missing(b.imageUrl, 'ajoutez une image ou un picto'); missing(b.content, 'complétez le texte'); }

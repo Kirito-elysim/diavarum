@@ -13,7 +13,7 @@ final class ContentValidator
         'text', 'image', 'info-card', 'quiz', 'timeline', 'hotspot', 'iframe',
         'reorder', 'fill-blank', 'true-false', 'memory', 'slider', 'tap-sequence', 'flip-cards',
         'categorize', 'drawing', 'scenario', 'reveal-legends', 'pull-timeline', 'sort-bin',
-        'connect-dots', 'word-search', 'yes-no-path', 'carousel', 'image-text',
+        'connect-dots', 'word-search', 'yes-no-path', 'carousel', 'image-text', 'picto-grid',
     ];
 
     /**
@@ -93,6 +93,24 @@ final class ContentValidator
                     }
                     if ($invalidOption) {
                         continue;
+                    }
+                }
+                if ('picto-grid' === $block['type']) {
+                    $items = $block['items'] ?? null;
+                    if (!\is_array($items) || !array_is_list($items) || [] === $items) {
+                        $errors[] = "$at : ajoutez au moins un picto.";
+                    } else {
+                        foreach ($items as $item) {
+                            foreach (['id', 'imageUrl', 'text'] as $field) {
+                                if (!\is_array($item) || !\is_string($item[$field] ?? null) || '' === trim($item[$field])) {
+                                    $errors[] = "$at : complétez chaque picto et son texte.";
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (isset($block['columns']) && !\in_array($block['columns'], [2, 3], true)) {
+                        $errors[] = "$at : choisissez deux ou trois colonnes.";
                     }
                 }
                 if ('categorize' === $block['type']) {

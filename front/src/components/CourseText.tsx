@@ -1,0 +1,4 @@
+/** Limited inline emphasis; course content is always rendered as text, never HTML. */
+export function CourseText({ text }: { text: string }) {
+  return <>{text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => part.startsWith('**') && part.endsWith('**') ? <strong key={index}>{part.slice(2, -2)}</strong> : part)}</>;
+}

@@ -8,12 +8,20 @@ export type ContentBlockType =
   | 'reorder' | 'fill-blank' | 'true-false' | 'memory' | 'slider'
   | 'tap-sequence' | 'flip-cards' | 'categorize' | 'drawing' | 'scenario'
   | 'reveal-legends' | 'pull-timeline' | 'sort-bin'
-  | 'connect-dots' | 'word-search' | 'yes-no-path' | 'carousel' | 'image-text';
+  | 'connect-dots' | 'word-search' | 'yes-no-path' | 'carousel' | 'image-text' | 'picto-grid';
+
+export interface CourseTextStyle {
+  size?: 20 | 25 | 40;
+  color?: '#004138' | '#1C5335' | '#E86825';
+  weight?: 'regular' | 'bold';
+  align?: 'left' | 'center';
+}
 
 export interface TextBlock {
   type: 'text';
   id: string;
   content: string;
+  textStyle?: CourseTextStyle;
 }
 
 export interface ImageBlock {
@@ -33,6 +41,7 @@ export interface InfoCardBlock {
   id: string;
   title: string;
   content: string;
+  textStyle?: CourseTextStyle;
   variant: InfoCardVariant | LegacyInfoCardVariant;
 }
 
@@ -43,8 +52,10 @@ export interface ImageTextBlock {
   imageUrl: string;
   alt: string;
   content: string;
+  textStyle?: CourseTextStyle;
   /** picto : petite icône ; image : vignette plus grande */
   size: 'picto' | 'image';
+  imageSide?: 'left' | 'right';
 }
 
 export type QuestionType = 'qcu' | 'qcm' | 'drag-drop';
@@ -85,7 +96,15 @@ export type ContentBlock =
   | DrawingBlock | ScenarioBlock
   | RevealLegendsBlock | PullTimelineBlock
   | SortBinBlock | ConnectDotsBlock | WordSearchBlock | YesNoPathBlock
-  | CarouselBlock | ImageTextBlock;
+  | CarouselBlock | ImageTextBlock | PictoGridBlock;
+
+export interface PictoGridBlock {
+  type: 'picto-grid';
+  id: string;
+  question?: string;
+  columns?: 2 | 3;
+  items: { id: string; imageUrl: string; alt: string; text: string }[];
+}
 
 /* Carrousel : images défilantes accompagnées d'un texte (interactivité du cahier des charges) */
 export interface CarouselSlide {
@@ -202,6 +221,7 @@ export interface FlipCardsBlock {
   id: string;
   question: string;
   cards: FlipCard[];
+  columns?: 2 | 3;
   /** Consigne de l'encadré au doigt ; texte par défaut si absente */
   instruction?: string;
 }

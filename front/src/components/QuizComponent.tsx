@@ -1,7 +1,7 @@
+import { CourseText } from './CourseText';
 import { useState, useRef, useCallback } from 'react';
 import { cn } from '../lib/utils';
-import { DEFAULT_INSTRUCTIONS } from '../lib/courseVisuals';
-import { CheckCircle, XCircle, HelpCircle } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 import type { QuizBlock, QuizOption, DragDropPair } from '../types';
 
 interface QuizProps {
@@ -45,40 +45,37 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
     <div className="space-y-6">
       {/* Question */}
       <QuestionHeader label="Question" text={block.question} />
-      {ungraded && <p className="text-sky-200">Question non notée.</p>}
+      {ungraded && <p className="text-[#1FABC7] font-medium">Question non notée.</p>}
 
       {/* Options */}
       <div className="space-y-3">
-        {block.options?.map((opt: QuizOption, idx: number) => {
+        {block.options?.map((opt: QuizOption) => {
           const isSelected = selected === opt.id;
           const isCorrect  = opt.isCorrect;
-          const letter     = String.fromCharCode(65 + idx);
 
-          let ringClass = '';
-          let bgClass   = '';
-          let textClass = '';
-          let letterBg  = 'bg-white/10 text-white/50';
+          let borderClass = 'border-[#1C5335]';
+          let bgClass   = 'bg-transparent hover:bg-[#FAFAFA]';
+          let textClass = 'text-[#1F3A34]';
+          let letterBg  = 'bg-[#004138]/8 text-[#004138]/50';
           let anim      = '';
 
           if (submitted && !showCorrection) {
             if (isSelected) {
-              ringClass = 'ring-2 ring-sky-400'; bgClass = 'bg-sky-500/10'; textClass = 'text-sky-200'; letterBg = 'bg-sky-400 text-white';
+              borderClass = 'border-[#1FABC7]'; bgClass = 'bg-[#1FABC7]/10'; textClass = 'text-[#0E6477]'; letterBg = 'bg-[#1FABC7] text-white';
             }
           } else if (submitted) {
             if (isCorrect) {
-              ringClass = 'ring-2 ring-emerald-400'; bgClass = 'bg-emerald-500/10'; textClass = 'text-emerald-300';
-              letterBg = 'bg-emerald-400 text-white'; anim = 'pop-in';
+              borderClass = 'border-emerald-500'; bgClass = 'bg-emerald-50'; textClass = 'text-emerald-800';
+              letterBg = 'bg-emerald-500 text-white'; anim = 'pop-in';
             } else if (isSelected) {
-              ringClass = 'ring-2 ring-red-400'; bgClass = 'bg-red-500/10'; textClass = 'text-red-300';
-              letterBg = 'bg-red-400 text-white'; anim = shake ? 'shake' : '';
+              borderClass = 'border-red-500'; bgClass = 'bg-red-50'; textClass = 'text-red-800';
+              letterBg = 'bg-red-500 text-white'; anim = shake ? 'shake' : '';
             } else {
-              bgClass = 'bg-white/3'; textClass = 'text-white/30 opacity-50';
+              borderClass = 'border-[#004138]/8'; bgClass = 'bg-[#ECF5E9]/60'; textClass = 'text-[#1F3A34]/40';
             }
           } else if (isSelected) {
-            ringClass = 'ring-2 ring-orange-400'; bgClass = 'bg-orange-500/10'; textClass = 'text-orange-200';
-            letterBg = 'bg-orange-400 text-white';
-          } else {
-            bgClass = 'bg-white/5 hover:bg-white/8'; textClass = 'text-white/80';
+            borderClass = 'border-[#E86825]'; bgClass = 'bg-[#FFF4ED]'; textClass = 'text-[#A64314]';
+            letterBg = 'bg-[#E86825] text-white';
           }
 
           return (
@@ -87,16 +84,16 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
               onClick={() => handleSelect(opt.id)}
               disabled={submitted || disabled}
               className={cn(
-                'w-full flex items-center gap-4 p-5 rounded-2xl transition-all text-left min-h-[68px] touch-manipulation touch-ripple',
-                ringClass, bgClass, textClass, anim
+                'w-full flex items-center gap-4 px-4 py-3 rounded-xl border transition-all text-left min-h-[68px] touch-manipulation touch-ripple',
+                borderClass, bgClass, textClass, anim
               )}
             >
-              <span className={cn('w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center text-sm font-black transition-all', letterBg)}>
-                {letter}
+              <span aria-hidden="true" className={cn('w-9 h-9 rounded-lg border border-current flex-shrink-0 flex items-center justify-center text-sm font-black transition-all', letterBg)}>
+                {isSelected ? '✓' : ''}
               </span>
-              <span className="flex-1 text-[17px] font-medium leading-snug">{opt.label}</span>
-              {submitted && showCorrection && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
-              {submitted && showCorrection && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
+              <span className="flex-1 font-normal leading-snug whitespace-pre-line" style={{ fontSize: (block.options?.length ?? 0) >= 5 ? 20 : 25 }}><CourseText text={opt.label} /></span>
+              {submitted && showCorrection && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 check-bounce" />}
+              {submitted && showCorrection && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-600 flex-shrink-0" />}
             </button>
           );
         })}
@@ -146,31 +143,29 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
   return (
     <div className="space-y-6">
       <QuestionHeader label="Plusieurs réponses" text={block.question} multi />
-      {ungraded && <p className="text-sky-200">Question non notée.</p>}
+      {ungraded && <p className="text-[#1FABC7] font-medium">Question non notée.</p>}
 
       <div className="space-y-3">
         {block.options?.map((opt: QuizOption) => {
           const isSelected = selected.has(opt.id);
           const isCorrect  = opt.isCorrect;
 
-          let ringClass = ''; let bgClass = ''; let textClass = ''; let checkClass = ''; let anim = '';
+          let borderClass = 'border-[#1C5335]'; let bgClass = 'bg-transparent hover:bg-[#FAFAFA]'; let textClass = 'text-[#1F3A34]'; let checkClass = 'border-[#004138]/25'; let anim = '';
           if (submitted && !showCorrection) {
-            if (isSelected) { ringClass = 'ring-2 ring-sky-400'; bgClass = 'bg-sky-500/10'; textClass = 'text-sky-200'; checkClass = 'border-sky-400 bg-sky-400'; }
+            if (isSelected) { borderClass = 'border-[#1FABC7]'; bgClass = 'bg-[#1FABC7]/10'; textClass = 'text-[#0E6477]'; checkClass = 'border-[#1FABC7] bg-[#1FABC7]'; }
           } else if (submitted) {
             if (isCorrect) {
-              ringClass = 'ring-2 ring-emerald-400'; bgClass = 'bg-emerald-500/10'; textClass = 'text-emerald-300';
-              checkClass = 'border-emerald-400 bg-emerald-400'; anim = 'pop-in';
+              borderClass = 'border-emerald-500'; bgClass = 'bg-emerald-50'; textClass = 'text-emerald-800';
+              checkClass = 'border-emerald-500 bg-emerald-500'; anim = 'pop-in';
             } else if (isSelected) {
-              ringClass = 'ring-2 ring-red-400'; bgClass = 'bg-red-500/10'; textClass = 'text-red-300';
-              checkClass = 'border-red-400 bg-red-400';
+              borderClass = 'border-red-500'; bgClass = 'bg-red-50'; textClass = 'text-red-800';
+              checkClass = 'border-red-500 bg-red-500';
             } else {
-              bgClass = 'bg-white/3'; textClass = 'text-white/30 opacity-50'; checkClass = 'border-white/20';
+              borderClass = 'border-[#004138]/8'; bgClass = 'bg-[#ECF5E9]/60'; textClass = 'text-[#1F3A34]/40'; checkClass = 'border-[#1C5335]';
             }
           } else if (isSelected) {
-            ringClass = 'ring-2 ring-orange-400'; bgClass = 'bg-orange-500/10'; textClass = 'text-orange-200';
-            checkClass = 'border-orange-400 bg-orange-400';
-          } else {
-            bgClass = 'bg-white/5 hover:bg-white/8'; textClass = 'text-white/80'; checkClass = 'border-white/20';
+            borderClass = 'border-[#E86825]'; bgClass = 'bg-[#FFF4ED]'; textClass = 'text-[#A64314]';
+            checkClass = 'border-[#E86825] bg-[#E86825]';
           }
 
           return (
@@ -179,8 +174,8 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
               onClick={() => toggle(opt.id)}
               disabled={submitted || disabled}
               className={cn(
-                'w-full flex items-center gap-4 p-5 rounded-2xl transition-all text-left min-h-[68px] touch-manipulation touch-ripple',
-                ringClass, bgClass, textClass, anim
+                'w-full flex items-center gap-4 px-4 py-3 rounded-xl border transition-all text-left min-h-[68px] touch-manipulation touch-ripple',
+                borderClass, bgClass, textClass, anim
               )}
             >
               <span className={cn(
@@ -191,9 +186,9 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
                   <span className="w-3.5 h-3.5 bg-white rounded-sm block" />
                 )}
               </span>
-              <span className="flex-1 text-[17px] font-medium leading-snug">{opt.label}</span>
-              {submitted && showCorrection && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 check-bounce" />}
-              {submitted && showCorrection && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
+              <span className="flex-1 font-normal leading-snug whitespace-pre-line" style={{ fontSize: (block.options?.length ?? 0) >= 5 ? 20 : 25 }}><CourseText text={opt.label} /></span>
+              {submitted && showCorrection && isCorrect && <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 check-bounce" />}
+              {submitted && showCorrection && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-red-600 flex-shrink-0" />}
             </button>
           );
         })}
@@ -274,18 +269,10 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
     <div className="space-y-6" onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
       <QuestionHeader label="Relier" text={block.question} />
 
-      {/* Instructions */}
-      {!submitted && (
-        <div className="flex items-center gap-2.5 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
-          <span className="text-xl">👆</span>
-          <p className="text-sm text-orange-300 font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.connect}</p>
-        </div>
-      )}
-
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/* Left — drop zones */}
         <div className="space-y-3">
-          <p className="text-xs font-bold text-white/40 uppercase tracking-widest px-1">Concepts</p>
+          <p className="text-xs font-bold text-[#004138]/50 uppercase tracking-widest px-1">Concepts</p>
           {block.pairs?.map((pair: DragDropPair) => {
             const matched    = matches[pair.id];
             const isCorrect  = submitted && matched === pair.right;
@@ -298,22 +285,22 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
                 ref={(el) => { if (el) dropZoneRefs.current.set(pair.id, el); else dropZoneRefs.current.delete(pair.id); }}
                 className={cn(
                   'flex items-center justify-between p-4 rounded-2xl border-2 min-h-[64px] transition-all',
-                  isCorrect ? 'border-emerald-400 bg-emerald-500/10' :
-                  isWrong   ? 'border-red-400 bg-red-500/10' :
-                  isHovered ? 'border-orange-400 bg-orange-500/10 scale-[1.02] shadow-md shadow-orange-500/10' :
-                  matched   ? 'border-orange-400/50 bg-orange-500/5' :
-                              'border-dashed border-white/15 bg-white/3'
+                  isCorrect ? 'border-emerald-500 bg-emerald-50' :
+                  isWrong   ? 'border-red-500 bg-red-50' :
+                  isHovered ? 'border-[#E86825] bg-[#FFF4ED] scale-[1.02] shadow-md shadow-orange-900/10' :
+                  matched   ? 'border-[#E86825]/50 bg-[#FFF4ED]/60' :
+                              'border-dashed border-[#004138]/20 bg-white'
                 )}
               >
-                <span className="font-bold text-white text-base">{pair.left}</span>
+                <span className="font-bold text-[#004138] text-base">{pair.left}</span>
                 {matched && (
                   <button
                     onClick={() => !submitted && removeMatch(pair.id)}
                     className={cn(
                       'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition-all touch-manipulation',
                       submitted
-                        ? isCorrect ? 'text-emerald-300 bg-emerald-500/20' : 'text-red-300 bg-red-500/20'
-                        : 'text-orange-300 bg-orange-500/20 hover:bg-orange-500/30 active:scale-95'
+                        ? isCorrect ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100'
+                        : 'text-[#A64314] bg-[#FFE0D0] hover:bg-[#FCC6A8] active:scale-95'
                     )}
                   >
                     <span>{matched}</span>
@@ -324,7 +311,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
                   </button>
                 )}
                 {!matched && (
-                  <span className="text-xs text-white/20 font-medium">Déposez ici</span>
+                  <span className="text-xs text-[#004138]/30 font-medium">Déposez ici</span>
                 )}
               </div>
             );
@@ -333,7 +320,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
 
         {/* Right — draggable chips */}
         <div className="space-y-3">
-          <p className="text-xs font-bold text-white/40 uppercase tracking-widest px-1">Définitions</p>
+          <p className="text-xs font-bold text-[#004138]/50 uppercase tracking-widest px-1">Définitions</p>
           {shuffled.map((item: string) => {
             const isUsed = Object.values(matches).includes(item);
             const isDraggingThis = dragging === item;
@@ -344,28 +331,28 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
                 className={cn(
                   'p-4 rounded-2xl border-2 min-h-[64px] flex items-center transition-all select-none',
                   isUsed
-                    ? 'border-white/5 bg-white/3 opacity-40'
+                    ? 'border-[#004138]/5 bg-[#ECF5E9]/60 opacity-40'
                     : isDraggingThis
-                    ? 'border-orange-400 bg-orange-500/10 opacity-40'
+                    ? 'border-[#E86825] bg-[#FFF4ED] opacity-40'
                     : submitted
-                    ? 'border-white/5 bg-white/3'
-                    : 'border-white/10 bg-white/5 cursor-grab active:cursor-grabbing hover:border-orange-400/40 hover:bg-white/8 active:scale-95 touch-manipulation'
+                    ? 'border-[#004138]/5 bg-[#ECF5E9]/60'
+                    : 'border-[#004138]/15 bg-white cursor-grab active:cursor-grabbing hover:border-[#E86825]/40 hover:bg-[#FFF4ED]/50 active:scale-95 touch-manipulation'
                 )}
                 style={{ touchAction: isUsed || submitted ? 'auto' : 'none' }}
               >
                 {!isUsed && !submitted && (
-                  <span className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="w-6 h-6 rounded-lg bg-[#004138]/8 flex items-center justify-center mr-3 flex-shrink-0">
                     <svg width="10" height="14" viewBox="0 0 10 14" fill="none">
-                      <circle cx="3" cy="2.5" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                      <circle cx="7" cy="2.5" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                      <circle cx="3" cy="7"   r="1.5" fill="rgba(255,255,255,0.3)"/>
-                      <circle cx="7" cy="7"   r="1.5" fill="rgba(255,255,255,0.3)"/>
-                      <circle cx="3" cy="11.5"r="1.5" fill="rgba(255,255,255,0.3)"/>
-                      <circle cx="7" cy="11.5"r="1.5" fill="rgba(255,255,255,0.3)"/>
+                      <circle cx="3" cy="2.5" r="1.5" fill="rgba(0,65,56,0.35)"/>
+                      <circle cx="7" cy="2.5" r="1.5" fill="rgba(0,65,56,0.35)"/>
+                      <circle cx="3" cy="7"   r="1.5" fill="rgba(0,65,56,0.35)"/>
+                      <circle cx="7" cy="7"   r="1.5" fill="rgba(0,65,56,0.35)"/>
+                      <circle cx="3" cy="11.5"r="1.5" fill="rgba(0,65,56,0.35)"/>
+                      <circle cx="7" cy="11.5"r="1.5" fill="rgba(0,65,56,0.35)"/>
                     </svg>
                   </span>
                 )}
-                <span className="text-base text-white/80 font-medium leading-snug">{item}</span>
+                <span className="text-base text-[#1F3A34] font-medium leading-snug">{item}</span>
               </div>
             );
           })}
@@ -375,7 +362,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
       {/* Floating drag ghost */}
       {dragging && (
         <div
-          className="fixed pointer-events-none z-50 px-5 py-3 rounded-2xl bg-orange-500 text-white text-base font-semibold shadow-2xl shadow-orange-300 -translate-x-1/2 -translate-y-1/2 max-w-[200px] text-center"
+          className="fixed pointer-events-none z-50 px-5 py-3 rounded-2xl bg-[#E86825] text-white text-base font-semibold shadow-2xl shadow-orange-900/20 -translate-x-1/2 -translate-y-1/2 max-w-[200px] text-center"
           style={{ left: dragPos.x, top: dragPos.y }}
         >
           {dragging}
@@ -387,11 +374,11 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
       )}
 
       {submitted && (
-        <div className="p-5 bg-sky-500/10 border border-sky-500/20 rounded-2xl">
-          <p className="text-base font-bold text-sky-300">
+        <div className="p-5 bg-[#1FABC7]/10 border border-[#1FABC7]/25 rounded-2xl">
+          <p className="text-base font-bold text-[#0E6477]">
             {block.pairs?.filter((p: DragDropPair) => matches[p.id] === p.right).length} / {block.pairs?.length} associations correctes
           </p>
-          {block.explanation && <p className="mt-3 whitespace-pre-line text-sky-200">{block.explanation}</p>}
+          {block.explanation && <p className="mt-3 whitespace-pre-line text-[#0E6477]/80">{block.explanation}</p>}
         </div>
       )}
     </div>
@@ -399,19 +386,11 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
 }
 
 /* ─── Shared sub-components ──────────────────────────────────────────────── */
-function QuestionHeader({ label, text, multi }: { label: string; text: string; multi?: boolean }) {
+function QuestionHeader({ text, multi }: { label?: string; text: string; multi?: boolean }) {
   return (
-    <div className="flex items-start gap-3">
-      <div className="w-9 h-9 rounded-2xl bg-orange-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-        <HelpCircle className="w-5 h-5 text-orange-400" />
-      </div>
-      <div className="flex-1">
-        <span className="inline-flex items-center gap-1 text-xs font-bold text-orange-400 uppercase tracking-widest mb-1.5">
-          {label}
-          {multi && <span className="bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded-md text-[10px] font-bold">Multiple</span>}
-        </span>
-        <p className="text-[18px] font-semibold text-white leading-snug">{text}</p>
-      </div>
+    <div className="flex items-start gap-2">
+      <p className="flex-1 text-[25px] font-bold text-[#004138] leading-snug">{text}</p>
+      {multi && <span className="flex-shrink-0 mt-1 bg-[#E86825]/15 text-[#E86825] px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide">Plusieurs réponses</span>}
     </div>
   );
 }
@@ -422,10 +401,10 @@ function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disab
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'w-full h-16 rounded-2xl text-lg font-bold transition-all touch-manipulation',
+        'w-full h-16 rounded-full text-lg font-bold transition-all touch-manipulation',
         disabled
-          ? 'bg-white/5 text-white/20 cursor-not-allowed'
-          : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/20 active:scale-[0.98] hover:from-orange-600 hover:to-orange-700'
+          ? 'bg-[#004138]/8 text-[#004138]/25 cursor-not-allowed'
+          : 'bg-[#E86825] text-white shadow-lg shadow-orange-900/15 active:scale-[0.98] hover:bg-[#CC5518]'
       )}
     >
       {label}
@@ -436,13 +415,13 @@ function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disab
 function Explanation({ text, isCorrect }: { text: string; isCorrect: boolean }) {
   return (
     <div className={cn(
-      'flex gap-3 p-5 rounded-2xl fade-scale-in',
-      isCorrect ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-sky-500/10 border border-sky-500/20'
+      'flex gap-3 p-5 rounded-2xl fade-scale-in border',
+      isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-[#1FABC7]/10 border-[#1FABC7]/25'
     )}>
       <span className="text-2xl flex-shrink-0">{isCorrect ? '🎉' : '💡'}</span>
       <div>
-        <p className={cn('text-sm font-bold mb-1', isCorrect ? 'text-emerald-300' : 'text-sky-300')}>Explication</p>
-        <p className={cn('text-base leading-relaxed', isCorrect ? 'text-emerald-200/80' : 'text-sky-200/80')}>{text}</p>
+        <p className={cn('text-sm font-bold mb-1', isCorrect ? 'text-emerald-700' : 'text-[#0E6477]')}>Explication</p>
+        <p className={cn('text-base leading-relaxed', isCorrect ? 'text-emerald-800/80' : 'text-[#0E6477]/80')}>{text}</p>
       </div>
     </div>
   );

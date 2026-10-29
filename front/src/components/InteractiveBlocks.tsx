@@ -14,20 +14,8 @@ import type {
 } from '../types';
 
 /* Shared sub-components (mirror QuizComponent styles) ──────────────────── */
-function BlockHeader({ label, text }: { label: string; text: string }) {
-  return (
-    <div className="flex items-start gap-3">
-      <div className="w-9 h-9 rounded-2xl bg-orange-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-        <HelpCircle className="w-5 h-5 text-orange-400" />
-      </div>
-      <div className="flex-1">
-        <span className="inline-flex items-center gap-1 text-xs font-bold text-orange-400 uppercase tracking-widest mb-1.5">
-          {label}
-        </span>
-        <p className="text-[18px] font-semibold text-white leading-snug">{text}</p>
-      </div>
-    </div>
-  );
+function BlockHeader({ text }: { label?: string; text: string }) {
+  return <p className="text-[25px] font-bold text-[#004138] leading-snug">{text}</p>;
 }
 
 function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disabled: boolean; label: string }) {
@@ -36,10 +24,10 @@ function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disab
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'w-full h-14 rounded-2xl text-base font-bold transition-all touch-manipulation',
+        'w-full h-14 rounded-full text-base font-bold transition-all touch-manipulation',
         disabled
-          ? 'bg-white/5 text-white/20 cursor-not-allowed'
-          : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/20 active:scale-[0.98] hover:from-orange-600 hover:to-orange-700'
+          ? 'bg-[#004138]/8 text-[#004138]/25 cursor-not-allowed'
+          : 'bg-[#E86825] text-white shadow-lg shadow-orange-900/15 active:scale-[0.98] hover:bg-[#CC5518]'
       )}
     >
       {label}
@@ -49,11 +37,11 @@ function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disab
 
 function Explanation({ text }: { text: string }) {
   return (
-    <div className="flex gap-3 p-4 rounded-2xl bg-sky-500/10 border border-sky-500/20 fade-scale-in">
-      <Sparkles className="w-5 h-5 text-sky-400 flex-shrink-0 mt-0.5" />
+    <div className="flex gap-3 p-4 rounded-2xl bg-[#1FABC7]/10 border border-[#1FABC7]/25 fade-scale-in">
+      <Sparkles className="w-5 h-5 text-[#1FABC7] flex-shrink-0 mt-0.5" />
       <div>
-        <p className="text-sm font-bold text-sky-300 mb-1">Explication</p>
-        <p className="text-base leading-relaxed text-sky-200/80">{text}</p>
+        <p className="text-sm font-bold text-[#0E6477] mb-1">Explication</p>
+        <p className="text-base leading-relaxed text-[#0E6477]/80">{text}</p>
       </div>
     </div>
   );
@@ -121,24 +109,24 @@ export function ReorderView({ block, onAnswer, disabled }: { block: ReorderBlock
               className={cn(
                 'flex items-center gap-3 p-4 rounded-2xl border-2 min-h-[60px] transition-all select-none',
                 submitted
-                  ? isCorrectPos ? 'border-emerald-400 bg-emerald-500/10' : 'border-red-400 bg-red-500/10'
-                  : hoveredIdx === i && draggingIdx !== null ? 'border-orange-400 bg-orange-500/10 scale-[1.02]'
-                  : draggingIdx === i ? 'border-orange-400/50 bg-orange-500/5 opacity-60'
-                  : 'border-white/10 bg-white/5 touch-manipulation active:scale-[0.98]'
+                  ? isCorrectPos ? 'border-emerald-500 bg-emerald-50' : 'border-red-500 bg-red-50'
+                  : hoveredIdx === i && draggingIdx !== null ? 'border-[#E86825] bg-[#FFF4ED] scale-[1.02]'
+                  : draggingIdx === i ? 'border-[#E86825]/50 bg-[#FFF4ED]/60 opacity-60'
+                  : 'border-[#004138]/15 bg-white touch-manipulation active:scale-[0.98]'
               )}
               style={{ touchAction: submitted || disabled ? 'auto' : 'none' }}
             >
               <div className="flex items-center gap-2 flex-shrink-0">
                 {submitted ? (
                   isCorrectPos
-                    ? <CheckCircle className="w-5 h-5 text-emerald-400" />
-                    : <XCircle className="w-5 h-5 text-red-400" />
+                    ? <CheckCircle className="w-5 h-5 text-emerald-600" />
+                    : <XCircle className="w-5 h-5 text-red-600" />
                 ) : (
-                  <GripVertical className="w-5 h-5 text-white/30" />
+                  <GripVertical className="w-5 h-5 text-[#004138]/30" />
                 )}
               </div>
-              <span className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-sm font-black text-white/50 flex-shrink-0">{i + 1}</span>
-              <span className={cn('text-base font-medium flex-1', submitted ? (isCorrectPos ? 'text-emerald-200' : 'text-red-200') : 'text-white/80')}>{it.label}</span>
+              <span className="w-7 h-7 rounded-lg bg-[#004138]/8 flex items-center justify-center text-sm font-black text-[#004138]/50 flex-shrink-0">{i + 1}</span>
+              <span className={cn('text-[25px] font-normal flex-1', submitted ? (isCorrectPos ? 'text-emerald-800' : 'text-red-800') : 'text-[#1F3A34]')}>{it.label}</span>
             </div>
           );
         })}
@@ -171,7 +159,7 @@ export function FillBlankView({ block, onAnswer, disabled }: { block: FillBlankB
     <div className="space-y-5">
       <BlockHeader label="Texte à compléter" text={block.question} />
 
-      <div className="p-5 rounded-2xl bg-white/5 border border-white/10 leading-[1.9] text-[18px] text-white/80">
+      <div className="p-5 rounded-2xl bg-white border border-[#004138]/15 leading-[1.9] text-[18px] text-[#1F3A34]">
         {parts.map((part, i) => (
           <span key={i}>
             {part}
@@ -185,15 +173,15 @@ export function FillBlankView({ block, onAnswer, disabled }: { block: FillBlankB
                   'inline-block mx-1 px-3 py-1 rounded-xl border-2 text-center font-bold min-w-[100px] outline-none transition-all',
                   submitted
                     ? values[i]?.trim().toLowerCase() === block.answers[i].toLowerCase()
-                      ? 'border-emerald-400 bg-emerald-500/10 text-emerald-200'
-                      : 'border-red-400 bg-red-500/10 text-red-200'
-                    : 'border-orange-400/40 bg-orange-500/5 text-orange-200 focus:border-orange-400'
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-800'
+                      : 'border-red-500 bg-red-50 text-red-800'
+                    : 'border-[#E86825]/40 bg-[#FFF4ED] text-[#A64314] focus:border-[#E86825]'
                 )}
                 style={{ width: `${Math.max(block.answers[i].length * 12 + 30, 80)}px` }}
               />
             )}
             {submitted && i < blankCount && values[i]?.trim().toLowerCase() !== block.answers[i].toLowerCase() && (
-              <span className="text-emerald-400 text-sm font-medium ml-1">({block.answers[i]})</span>
+              <span className="text-emerald-700 text-sm font-medium ml-1">({block.answers[i]})</span>
             )}
           </span>
         ))}
@@ -253,8 +241,8 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
             onClick={() => goTo(i)}
             className={cn(
               'w-3 h-3 rounded-full transition-all',
-              i === idx ? 'bg-orange-500 scale-125' :
-              answers[s.id] !== null && answers[s.id] !== undefined ? 'bg-orange-400/60' : 'bg-white/15'
+              i === idx ? 'bg-[#E86825] scale-125' :
+              answers[s.id] !== null && answers[s.id] !== undefined ? 'bg-[#E86825]/50' : 'bg-[#004138]/15'
             )}
           />
         ))}
@@ -269,12 +257,12 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
           'translate-x-0 opacity-100',
           submitted
             ? answers[current.id] === current.isTrue
-              ? 'border-emerald-400 bg-emerald-500/10'
-              : 'border-red-400 bg-red-500/10'
-            : 'border-white/10 bg-white/5'
+              ? 'border-emerald-500 bg-emerald-50'
+              : 'border-red-500 bg-red-50'
+            : 'border-[#004138]/15 bg-white'
         )}
       >
-        <p className="text-xl font-semibold text-white leading-relaxed">{current.statement}</p>
+        <p className="text-xl font-semibold text-[#004138] leading-relaxed">{current.statement}</p>
       </div>
 
       {/* True / False buttons */}
@@ -284,10 +272,10 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
             onClick={() => answer(false)}
             disabled={disabled}
             className={cn(
-              'h-16 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all touch-manipulation',
+              'h-16 rounded-full font-bold text-lg flex items-center justify-center gap-2 transition-all touch-manipulation',
               answers[current.id] === false
-                ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
-                : 'bg-white/5 text-white/60 border-2 border-red-400/30 active:scale-95'
+                ? 'bg-red-500 text-white shadow-lg shadow-red-900/15'
+                : 'bg-white text-[#1F3A34]/70 border-2 border-red-400/40 active:scale-95'
             )}
           >
             <XCircle className="w-5 h-5" /> Faux
@@ -296,10 +284,10 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
             onClick={() => answer(true)}
             disabled={disabled}
             className={cn(
-              'h-16 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all touch-manipulation',
+              'h-16 rounded-full font-bold text-lg flex items-center justify-center gap-2 transition-all touch-manipulation',
               answers[current.id] === true
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                : 'bg-white/5 text-white/60 border-2 border-emerald-400/30 active:scale-95'
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-900/15'
+                : 'bg-white text-[#1F3A34]/70 border-2 border-emerald-400/40 active:scale-95'
             )}
           >
             <CheckCircle className="w-5 h-5" /> Vrai
@@ -312,13 +300,13 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
           {block.statements.map((s) => (
             <div key={s.id} className={cn(
               'flex items-center gap-3 p-3 rounded-2xl border',
-              answers[s.id] === s.isTrue ? 'border-emerald-400/30 bg-emerald-500/5' : 'border-red-400/30 bg-red-500/5'
+              answers[s.id] === s.isTrue ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50'
             )}>
               {answers[s.id] === s.isTrue
-                ? <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                : <XCircle className="w-5 h-5 text-red-400 flex-shrink-0" />}
-              <p className="text-sm text-white/70 flex-1">{s.statement}</p>
-              <span className={cn('text-xs font-bold', s.isTrue ? 'text-emerald-400' : 'text-red-400')}>
+                ? <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                : <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />}
+              <p className="text-sm text-[#1F3A34]/80 flex-1">{s.statement}</p>
+              <span className={cn('text-xs font-bold', s.isTrue ? 'text-emerald-700' : 'text-red-700')}>
                 {s.isTrue ? 'Vrai' : 'Faux'}
               </span>
             </div>
@@ -383,8 +371,8 @@ export function MemoryView({ block, onAnswer, disabled }: { block: MemoryBlock; 
       <BlockHeader label="Jeu de mémoire" text={block.question} />
 
       <div className="flex items-center justify-between text-sm">
-        <span className="text-white/40">Coups : <span className="text-white/70 font-bold">{moves}</span></span>
-        <span className="text-white/40">Paires : <span className="text-emerald-400 font-bold">{matched.size}/{block.cards.length / 2}</span></span>
+        <span className="text-[#004138]/50">Coups : <span className="text-[#004138]/80 font-bold">{moves}</span></span>
+        <span className="text-[#004138]/50">Paires : <span className="text-emerald-600 font-bold">{matched.size}/{block.cards.length / 2}</span></span>
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -399,19 +387,19 @@ export function MemoryView({ block, onAnswer, disabled }: { block: MemoryBlock; 
               className={cn(
                 'aspect-square rounded-2xl flex items-center justify-center p-2 text-center transition-all touch-manipulation',
                 isFlipped
-                  ? isWrong ? 'bg-red-500/20 border-2 border-red-400' : 'bg-emerald-500/15 border-2 border-emerald-400'
-                  : 'bg-gradient-to-br from-orange-500/20 to-orange-600/10 border-2 border-orange-500/30 active:scale-95'
+                  ? isWrong ? 'bg-red-50 border-2 border-red-400' : 'bg-emerald-50 border-2 border-emerald-400'
+                  : 'bg-[#E86825] border-2 border-[#E86825] active:scale-95'
               )}
               style={{ perspective: '1000px' }}
             >
               {isFlipped ? (
                 <span className={cn(
                   'text-sm font-semibold leading-tight',
-                  isWrong ? 'text-red-200' : 'text-emerald-200'
+                  isWrong ? 'text-red-700' : 'text-emerald-700'
                 )}>{card.content}</span>
               ) : (
-                <div className="w-8 h-8 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                  <HelpCircle className="w-5 h-5 text-orange-400/50" />
+                <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+                  <HelpCircle className="w-5 h-5 text-white/70" />
                 </div>
               )}
             </button>
@@ -420,8 +408,8 @@ export function MemoryView({ block, onAnswer, disabled }: { block: MemoryBlock; 
       </div>
 
       {submitted && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 fade-scale-in">
-          <p className="text-base font-bold text-emerald-300 flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
+          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Toutes les paires trouvées en {moves} coups !
           </p>
         </div>
@@ -452,12 +440,12 @@ export function SliderView({ block, onAnswer, disabled }: { block: SliderBlock; 
     <div className="space-y-6">
       <BlockHeader label="Estimation" text={block.question} />
 
-      <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+      <div className="p-6 rounded-2xl bg-white border border-[#004138]/15">
         <div className={cn(
           'text-5xl font-black text-center mb-6 transition-colors',
           submitted
-            ? withinTolerance ? 'text-emerald-400' : 'text-red-400'
-            : 'text-orange-400'
+            ? withinTolerance ? 'text-emerald-600' : 'text-red-600'
+            : 'text-[#E86825]'
         )}>
           {value}<span className="text-2xl ml-1 font-bold">{block.unit}</span>
         </div>
@@ -472,12 +460,12 @@ export function SliderView({ block, onAnswer, disabled }: { block: SliderBlock; 
           className="w-full h-3 rounded-full appearance-none cursor-pointer touch-manipulation"
           style={{
             background: submitted
-              ? `linear-gradient(to right, rgba(16,185,129,0.3) 0%, rgba(16,185,129,0.3) ${((block.correctValue - block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(16,185,129,0.5) ${((block.correctValue - block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(16,185,129,0.5) ${((block.correctValue + block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(16,185,129,0.3) ${((block.correctValue + block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(255,255,255,0.08) 100%)`
-              : `linear-gradient(to right, #f97316 0%, #f97316 ${((value - block.min) / (block.max - block.min)) * 100}%, rgba(255,255,255,0.08) ${((value - block.min) / (block.max - block.min)) * 100}%, rgba(255,255,255,0.08) 100%)`
+              ? `linear-gradient(to right, rgba(16,185,129,0.25) 0%, rgba(16,185,129,0.25) ${((block.correctValue - block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(16,185,129,0.5) ${((block.correctValue - block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(16,185,129,0.5) ${((block.correctValue + block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(16,185,129,0.25) ${((block.correctValue + block.tolerance - block.min) / (block.max - block.min)) * 100}%, rgba(0,65,56,0.1) 100%)`
+              : `linear-gradient(to right, #E86825 0%, #E86825 ${((value - block.min) / (block.max - block.min)) * 100}%, rgba(0,65,56,0.1) ${((value - block.min) / (block.max - block.min)) * 100}%, rgba(0,65,56,0.1) 100%)`
           }}
         />
 
-        <div className="flex items-center justify-between mt-3 text-xs text-white/40 font-medium">
+        <div className="flex items-center justify-between mt-3 text-xs text-[#004138]/50 font-medium">
           <span>{block.minLabel ?? block.min}{block.unit}</span>
           <span>{block.maxLabel ?? block.max}{block.unit}</span>
         </div>
@@ -486,9 +474,9 @@ export function SliderView({ block, onAnswer, disabled }: { block: SliderBlock; 
       {submitted && (
         <div className={cn(
           'p-4 rounded-2xl border fade-scale-in',
-          withinTolerance ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-red-500/10 border-red-500/20'
+          withinTolerance ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'
         )}>
-          <p className={cn('text-base font-bold', withinTolerance ? 'text-emerald-300' : 'text-red-300')}>
+          <p className={cn('text-base font-bold', withinTolerance ? 'text-emerald-700' : 'text-red-700')}>
             {withinTolerance ? 'Bien estimé ! ' : 'Pas tout à fait. '}
             La bonne réponse : {block.correctValue}{block.unit}
           </p>
@@ -537,10 +525,10 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
       <BlockHeader label="Ordre des étapes" text={block.question} />
 
       {!submitted && (
-        <div className="flex items-center gap-2 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
+        <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
           <span className="text-base">👆</span>
-          <p className="text-sm text-orange-300 font-medium">Touchez les étapes dans le bon ordre</p>
-          <span className="ml-auto text-sm font-bold text-orange-400">{tapped.length}/{shuffled.length}</span>
+          <p className="text-sm text-[#A64314] font-medium">Touchez les étapes dans le bon ordre</p>
+          <span className="ml-auto text-sm font-bold text-[#E86825]">{tapped.length}/{shuffled.length}</span>
         </div>
       )}
 
@@ -555,20 +543,20 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
               disabled={disabled || isTapped || submitted}
               className={cn(
                 'relative p-4 rounded-2xl border-2 min-h-[80px] flex items-center justify-center text-center transition-all touch-manipulation',
-                error && !isTapped ? 'border-red-400 bg-red-500/10 shake' :
-                isTapped ? 'border-emerald-400 bg-emerald-500/10' :
-                submitted ? 'border-white/5 bg-white/3 opacity-50' :
-                'border-white/10 bg-white/5 active:scale-95 hover:border-orange-400/40'
+                error && !isTapped ? 'border-red-500 bg-red-50 shake' :
+                isTapped ? 'border-emerald-500 bg-emerald-50' :
+                submitted ? 'border-[#004138]/8 bg-[#ECF5E9]/60 opacity-50' :
+                'border-[#004138]/15 bg-white active:scale-95 hover:border-[#E86825]/40'
               )}
             >
               {isTapped && (
-                <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-emerald-400 text-white text-xs font-black flex items-center justify-center">
+                <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-emerald-500 text-white text-xs font-black flex items-center justify-center">
                   {tapIdx + 1}
                 </span>
               )}
               <span className={cn(
                 'text-sm font-semibold leading-tight',
-                isTapped ? 'text-emerald-200' : 'text-white/80'
+                isTapped ? 'text-emerald-800' : 'text-[#1F3A34]'
               )}>{step.label}</span>
             </button>
           );
@@ -576,15 +564,15 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
       </div>
 
       {submitted && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 fade-scale-in">
-          <p className="text-base font-bold text-emerald-300 flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
+          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Séquence correcte !
           </p>
         </div>
       )}
       {submitted && block.explanation && <Explanation text={block.explanation} />}
       {!submitted && tapped.length > 0 && (
-        <button onClick={reset} className="flex items-center gap-2 text-sm text-white/40 hover:text-white/60 transition-colors touch-manipulation mx-auto">
+        <button onClick={reset} className="flex items-center gap-2 text-sm text-[#004138]/40 hover:text-[#004138]/60 transition-colors touch-manipulation mx-auto">
           <RefreshCw className="w-4 h-4" /> Recommencer
         </button>
       )}
@@ -609,12 +597,7 @@ export function FlipCardsView({ block }: { block: FlipCardsBlock }) {
     <div className="space-y-5">
       <BlockHeader label="Cartes interactives" text={block.question} />
 
-      <div className="flex items-center gap-2 px-4 py-3 bg-sky-500/10 rounded-2xl border border-sky-500/20">
-        <span className="text-base">👆</span>
-        <p className="text-sm text-sky-300 font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.flipCards}</p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-5", (block.columns ?? (block.cards.length >= 6 ? 3 : 2)) === 3 && "md:grid-cols-3")}>
         {block.cards.map((card) => {
           const isFlipped = flipped.has(card.id);
           return (
@@ -623,14 +606,17 @@ export function FlipCardsView({ block }: { block: FlipCardsBlock }) {
               onClick={() => toggle(card.id)}
               aria-pressed={isFlipped}
               className={cn(
-                'relative min-h-[140px] rounded-2xl p-5 flex items-center justify-center text-center transition-all touch-manipulation',
+                'relative min-h-[160px] rounded-2xl p-5 flex items-center justify-center text-center transition-all touch-manipulation shadow-sm',
                 isFlipped
-                  ? 'bg-gradient-to-br from-orange-500/15 to-orange-600/5 border-2 border-orange-400/50'
-                  : 'bg-gradient-to-br from-sky-500/15 to-sky-600/5 border-2 border-sky-400/30 active:scale-95'
+                  ? 'bg-[#1C5335]'
+                  : 'bg-[#E86825] active:scale-95'
               )}
             >
               <div>
-                <p className="text-base font-medium text-white/90 leading-snug whitespace-pre-line">
+                <p className={cn(
+                  'leading-snug whitespace-pre-line',
+                  isFlipped ? 'text-[25px] font-normal text-[#FAFAFA]' : 'text-[25px] font-bold text-[#FAFAFA]'
+                )}>
                   {isFlipped ? card.back : card.front}
                 </p>
               </div>
@@ -708,16 +694,16 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
       <BlockHeader label="Glisser-déposer" text={block.question} />
 
       {!submitted && (
-        <div className="flex items-center gap-2.5 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
+        <div className="flex items-center gap-2.5 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
           <span className="text-xl">👆</span>
-          <p className="text-sm text-orange-300 font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.categorize}</p>
+          <p className="text-sm text-[#A64314] font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.categorize}</p>
         </div>
       )}
 
       {/* Unassigned pool */}
       {unassigned.length > 0 && (
-        <div className="p-4 rounded-2xl bg-white/5 border border-dashed border-white/15">
-          <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-3">À classer</p>
+        <div className="p-4 rounded-2xl bg-[#ECF5E9]/60 border border-dashed border-[#004138]/20">
+          <p className="text-xs font-bold text-[#004138]/50 uppercase tracking-widest mb-3">À classer</p>
           <div className="flex flex-wrap gap-2">
             {unassigned.map((it) => (
               <div
@@ -726,8 +712,8 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
                 onPointerDown={(e) => onPointerDown(it.id, e)}
                 className={cn(
                   'px-4 py-2.5 rounded-xl border-2 font-medium text-sm transition-all select-none touch-manipulation',
-                  draggingId === it.id ? 'border-orange-400 bg-orange-500/10 opacity-50' :
-                  'border-white/10 bg-white/5 text-white/80 active:scale-95 cursor-grab'
+                  draggingId === it.id ? 'border-[#E86825] bg-[#FFF4ED] opacity-50' :
+                  'border-[#004138]/15 bg-white text-[#1F3A34] active:scale-95 cursor-grab'
                 )}
                 style={{ touchAction: submitted || disabled ? 'auto' : 'none' }}
               >
@@ -748,14 +734,14 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
               ref={(el) => { if (el) zoneRefs.current.set(cat, el); else zoneRefs.current.delete(cat); }}
               className={cn(
                 'min-h-[100px] rounded-2xl border-2 border-dashed p-3 transition-all',
-                hoveredCat === cat && draggingId ? 'border-orange-400 bg-orange-500/10 scale-[1.02]' :
-                submitted ? 'border-white/10 bg-white/5' :
-                'border-white/15 bg-white/3'
+                hoveredCat === cat && draggingId ? 'border-[#E86825] bg-[#FFF4ED] scale-[1.02]' :
+                submitted ? 'border-[#004138]/15 bg-white' :
+                'border-[#004138]/20 bg-[#ECF5E9]/40'
               )}
             >
               <p className={cn(
                 'text-xs font-bold uppercase tracking-widest mb-2 text-center',
-                hoveredCat === cat && draggingId ? 'text-orange-400' : 'text-white/40'
+                hoveredCat === cat && draggingId ? 'text-[#E86825]' : 'text-[#004138]/50'
               )}>{cat}</p>
               <div className="flex flex-wrap gap-1.5 justify-center">
                 {catItems.map((it) => {
@@ -770,16 +756,16 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
                       onClick={() => setAssignments((prev) => ({ ...prev, [it.id]: null }))}
                       className={cn(
                         'px-3 py-1.5 rounded-lg text-sm font-medium border touch-manipulation',
-                        isCorrect ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200' :
-                        isWrong ? 'bg-red-500/20 border-red-400 text-red-200' :
-                        'bg-white/8 border-white/15 text-white/70'
+                        isCorrect ? 'bg-emerald-50 border-emerald-400 text-emerald-800' :
+                        isWrong ? 'bg-red-50 border-red-400 text-red-800' :
+                        'bg-[#ECF5E9] border-[#004138]/15 text-[#1F3A34]/80'
                       )}
                     >
                       {it.label}
                     </button>
                   );
                 })}
-                {catItems.length === 0 && <span className="text-xs text-white/20 italic py-2">Déposez ici</span>}
+                {catItems.length === 0 && <span className="text-xs text-[#004138]/25 italic py-2">Déposez ici</span>}
               </div>
             </div>
           );
@@ -788,7 +774,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
 
       {/* Floating ghost */}
       {draggingId && pointer && (
-        <div className="fixed pointer-events-none z-50 px-4 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-semibold shadow-2xl -translate-x-1/2 -translate-y-1/2"
+        <div className="fixed pointer-events-none z-50 px-4 py-2.5 rounded-xl bg-[#E86825] text-white text-sm font-semibold shadow-2xl -translate-x-1/2 -translate-y-1/2"
           style={{ left: pointer.x, top: pointer.y }}>
           {block.items.find((it) => it.id === draggingId)?.label}
         </div>
@@ -862,9 +848,9 @@ export function DrawingView({ block, onAnswer, disabled }: { block: DrawingBlock
     <div className="space-y-5">
       <BlockHeader label="Dessiner / Tracer" text={block.question} />
 
-      <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-        <p className="text-sm text-white/60 mb-3 font-medium">{block.prompt}</p>
-        <div className="rounded-2xl overflow-hidden bg-white" style={{ touchAction: 'none' }}>
+      <div className="p-4 rounded-2xl bg-white border border-[#004138]/15">
+        <p className="text-sm text-[#1F3A34]/70 mb-3 font-medium">{block.prompt}</p>
+        <div className="rounded-2xl overflow-hidden bg-[#ECF5E9]" style={{ touchAction: 'none', border: '1px solid rgba(0,65,56,0.1)' }}>
           <canvas
             ref={canvasRef}
             width={600}
@@ -884,7 +870,7 @@ export function DrawingView({ block, onAnswer, disabled }: { block: DrawingBlock
           <button
             onClick={clear}
             disabled={!hasDrawn || disabled}
-            className="flex items-center gap-2 px-5 h-12 rounded-2xl border border-white/10 text-white/60 font-semibold text-sm hover:bg-white/5 active:bg-white/10 transition-colors touch-manipulation disabled:opacity-30"
+            className="flex items-center gap-2 px-5 h-12 rounded-full border border-[#004138]/15 text-[#004138]/60 font-semibold text-sm hover:bg-[#ECF5E9] active:bg-[#ECF5E9] transition-colors touch-manipulation disabled:opacity-30"
           >
             <RefreshCw className="w-4 h-4" /> Effacer
           </button>
@@ -897,8 +883,8 @@ export function DrawingView({ block, onAnswer, disabled }: { block: DrawingBlock
       </div>
 
       {submitted && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 fade-scale-in">
-          <p className="text-base font-bold text-emerald-300 flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
+          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Dessin enregistré !
           </p>
         </div>
@@ -945,10 +931,10 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
     return (
       <div className="space-y-5">
         <BlockHeader label="Scénario" text={block.question} />
-        <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center fade-scale-in">
-          <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-          <p className="text-lg font-bold text-emerald-300 mb-1">Scénario réussi !</p>
-          <p className="text-sm text-emerald-200/70">Vous avez pris les bonnes décisions.</p>
+        <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center fade-scale-in">
+          <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
+          <p className="text-lg font-bold text-emerald-700 mb-1">Scénario réussi !</p>
+          <p className="text-sm text-emerald-700/70">Vous avez pris les bonnes décisions.</p>
         </div>
       </div>
     );
@@ -963,20 +949,20 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
         {block.steps.map((_, i) => (
           <div key={i} className={cn(
             'h-2 rounded-full flex-1 transition-all',
-            i < stepIdx ? 'bg-emerald-400/60' :
-            i === stepIdx ? 'bg-orange-500' : 'bg-white/10'
+            i < stepIdx ? 'bg-emerald-400' :
+            i === stepIdx ? 'bg-[#E86825]' : 'bg-[#004138]/10'
           )} />
         ))}
       </div>
 
       {/* Situation */}
-      <div className="p-5 rounded-2xl bg-sky-500/10 border border-sky-500/20">
-        <p className="text-xs font-bold text-sky-400 uppercase tracking-widest mb-2">Situation</p>
-        <p className="text-base text-white/90 leading-relaxed">{current.situation}</p>
+      <div className="p-5 rounded-2xl bg-[#1FABC7]/10 border border-[#1FABC7]/25">
+        <p className="text-xs font-bold text-[#0E6477] uppercase tracking-widest mb-2">Situation</p>
+        <p className="text-base text-[#1F3A34] leading-relaxed">{current.situation}</p>
       </div>
 
       {/* Question */}
-      <p className="text-[17px] font-semibold text-white/80 px-1">{current.question}</p>
+      <p className="text-[17px] font-semibold text-[#004138] px-1">{current.question}</p>
 
       {/* Choices */}
       <div className="space-y-3">
@@ -992,17 +978,17 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
                 'w-full flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all touch-manipulation min-h-[56px]',
                 showResult
                   ? choice.isCorrect
-                    ? 'border-emerald-400 bg-emerald-500/10'
-                    : 'border-red-400 bg-red-500/10'
+                    ? 'border-emerald-500 bg-emerald-50'
+                    : 'border-red-500 bg-red-50'
                   : feedback !== null
-                    ? 'border-white/5 bg-white/3 opacity-50'
-                    : 'border-white/10 bg-white/5 text-white/80 hover:border-orange-400/40 active:scale-[0.98]'
+                    ? 'border-[#004138]/8 bg-[#ECF5E9]/60 opacity-50'
+                    : 'border-[#004138]/15 bg-white text-[#1F3A34] hover:border-[#E86825]/40 active:scale-[0.98]'
               )}
             >
               <span className="flex-1 text-base font-medium">{choice.label}</span>
               {showResult && (choice.isCorrect
-                ? <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                : <XCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                ? <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                : <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
               )}
             </button>
           );
@@ -1014,17 +1000,17 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
         <div className={cn(
           'p-4 rounded-2xl border fade-scale-in',
           current.choices.find((c) => c.id === choices[choices.length - 1])?.isCorrect
-            ? 'bg-emerald-500/10 border-emerald-500/20'
-            : 'bg-amber-500/10 border-amber-500/20'
+            ? 'bg-emerald-50 border-emerald-200'
+            : 'bg-amber-50 border-amber-200'
         )}>
           <p className={cn(
             'text-sm font-bold mb-1',
             current.choices.find((c) => c.id === choices[choices.length - 1])?.isCorrect
-              ? 'text-emerald-300' : 'text-amber-300'
+              ? 'text-emerald-700' : 'text-amber-700'
           )}>
             {current.choices.find((c) => c.id === choices[choices.length - 1])?.isCorrect ? 'Bonne décision !' : 'Réfléchissez à nouveau...'}
           </p>
-          <p className="text-base text-white/80 leading-relaxed">{feedback}</p>
+          <p className="text-base text-[#1F3A34]/80 leading-relaxed">{feedback}</p>
         </div>
       )}
     </div>
@@ -1062,15 +1048,12 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
 
   return (
     <div className="space-y-5">
-      <BlockHeader label="Révéler les légendes" text={block.question} />
-
-      <div className="flex items-center gap-2 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
-        <span className="text-base">👆</span>
-        <p className="text-sm text-orange-300 font-medium">Touchez chaque point pour révéler sa légende</p>
-        <span className="ml-auto text-sm font-bold text-orange-400">{revealed.size}/{block.points.length}</span>
+      <div className="flex items-center justify-between gap-3">
+        <BlockHeader label="Révéler les légendes" text={block.question} />
+        <span className="flex-shrink-0 text-sm font-bold text-[#E86825]">{revealed.size}/{block.points.length}</span>
       </div>
 
-      <div className="rounded-3xl overflow-hidden bg-white ring-1 ring-gray-100/80 shadow-sm">
+      <div className="rounded-3xl overflow-hidden bg-[#FFE0D0]/35 shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.12)' }}>
         <div className="relative select-none">
           <img src={block.imageUrl} alt={block.alt} className="w-full object-cover" style={{ maxHeight: 300 }} loading="lazy" />
           {block.points.map((pt, i) => {
@@ -1101,20 +1084,20 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
         </div>
 
         {block.caption && (
-          <p className="text-xs text-gray-400 text-center px-5 pt-3 pb-1 font-medium italic">{block.caption}</p>
+          <p className="text-xs text-[#1F3A34]/45 text-center px-5 pt-3 pb-1 font-medium italic">{block.caption}</p>
         )}
 
         {/* Info panel */}
         <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-none opacity-100' : 'max-h-0 opacity-0')}>
           {active && (
-            <div className="mx-4 mb-4 mt-2 rounded-2xl p-4" style={{ backgroundColor: '#fff7ed', border: '1.5px solid #fed7aa' }}>
+            <div className="mx-4 mb-4 mt-2 rounded-2xl p-4 bg-white" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[#E86825] flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-sm font-black">{block.points.findIndex((p) => p.id === active.id) + 1}</span>
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900 text-base mb-1">{active.label}</p>
-                  <p className="text-gray-600 text-sm leading-relaxed">{active.description}</p>
+                  <p className="font-bold text-[#004138] text-base mb-1">{active.label}</p>
+                  <p className="text-[#1F3A34]/70 text-sm leading-relaxed">{active.description}</p>
                 </div>
               </div>
             </div>
@@ -1134,9 +1117,9 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
                   'flex items-center gap-2 px-3 py-2 rounded-xl text-left transition-all',
                   isRevealed
                     ? activeId === pt.id
-                      ? 'bg-orange-500 text-white shadow-md'
-                      : 'bg-orange-50 text-gray-700 ring-1 ring-orange-100'
-                    : 'bg-gray-50 text-gray-300 ring-1 ring-gray-100'
+                      ? 'bg-[#E86825] text-white shadow-md'
+                      : 'bg-white text-[#1F3A34] ring-1 ring-[#004138]/10'
+                    : 'bg-white/50 text-[#1F3A34]/30 ring-1 ring-[#004138]/5'
                 )}
               >
                 <span className={cn(
@@ -1192,22 +1175,22 @@ export function PullTimelineView({ block }: {
     <div className="space-y-5" onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
       <BlockHeader label="Frise à dérouler" text={block.question} />
 
-      <div className="flex items-center gap-2 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
+      <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
         <span className="text-base">👈</span>
-        <p className="text-sm text-orange-300 font-medium">Tirez la flèche le long de la frise pour découvrir les dates</p>
+        <p className="text-sm text-[#A64314] font-medium">Tirez la flèche le long de la frise pour découvrir les dates</p>
       </div>
 
       {/* Timeline track */}
       <div className="pt-8 pb-4 px-4">
         <div
           ref={trackRef}
-          className="relative h-3 rounded-full bg-white/10 cursor-pointer"
+          className="relative h-3 rounded-full bg-[#004138]/10 cursor-pointer"
           onPointerDown={onPointerDown}
           style={{ touchAction: 'none' }}
         >
           {/* Progress fill */}
           <div
-            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 transition-[width] duration-75"
+            className="absolute inset-y-0 left-0 rounded-full bg-[#E86825] transition-[width] duration-75"
             style={{ width: `${pos}%` }}
           />
 
@@ -1220,8 +1203,8 @@ export function PullTimelineView({ block }: {
                 className="absolute -top-1 w-5 h-5 rounded-full border-2 transition-all"
                 style={{
                   left: `calc(${ev.position}% - 10px)`,
-                  backgroundColor: isRevealed ? '#f97316' : 'rgba(255,255,255,0.15)',
-                  borderColor: isRevealed ? '#fb923c' : 'rgba(255,255,255,0.1)',
+                  backgroundColor: isRevealed ? '#E86825' : 'rgba(0,65,56,0.15)',
+                  borderColor: isRevealed ? '#FCC6A8' : 'rgba(0,65,56,0.1)',
                 }}
               />
             );
@@ -1230,7 +1213,7 @@ export function PullTimelineView({ block }: {
           {/* Drag handle */}
           <div
             onPointerDown={onPointerDown}
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30 cursor-grab active:cursor-grabbing touch-manipulation z-10"
+            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-[#E86825] flex items-center justify-center shadow-lg shadow-orange-900/20 cursor-grab active:cursor-grabbing touch-manipulation z-10"
             style={{ left: `${pos}%`, touchAction: 'none' }}
           >
             <ChevronRight className="w-6 h-6 text-white" />
@@ -1246,7 +1229,7 @@ export function PullTimelineView({ block }: {
                 key={ev.id}
                 className={cn(
                   'absolute -translate-x-1/2 text-xs font-bold transition-opacity',
-                  isRevealed ? 'text-orange-400 opacity-100' : 'text-white/20 opacity-0'
+                  isRevealed ? 'text-[#E86825] opacity-100' : 'text-[#004138]/20 opacity-0'
                 )}
                 style={{ left: `${ev.position}%` }}
               >
@@ -1259,19 +1242,19 @@ export function PullTimelineView({ block }: {
 
       {/* Event detail card */}
       {closestEvent && closestEvent.position <= pos + 5 && (
-        <div className="rounded-2xl p-5 bg-white/5 border border-white/10 fade-scale-in">
+        <div className="rounded-2xl p-5 bg-white border border-[#004138]/15 fade-scale-in">
           <div className="flex items-center gap-3 mb-2">
-            <div className="px-3 py-1 rounded-lg bg-orange-500/20 text-orange-400 text-sm font-black">
+            <div className="px-3 py-1 rounded-lg bg-[#FFF4ED] text-[#E86825] text-sm font-black">
               {closestEvent.date}
             </div>
-            <h3 className="text-white font-bold text-lg">{closestEvent.title}</h3>
+            <h3 className="text-[#004138] font-bold text-lg">{closestEvent.title}</h3>
           </div>
-          <p className="text-white/70 text-sm leading-relaxed">{closestEvent.content}</p>
+          <p className="text-[#1F3A34]/80 text-sm leading-relaxed">{closestEvent.content}</p>
         </div>
       )}
 
       {/* Revealed count */}
-      <div className="text-center text-sm text-white/40">
+      <div className="text-center text-sm text-[#004138]/50">
         {revealedEvents.length} / {block.events.length} événements révélés
       </div>
 
@@ -1318,10 +1301,10 @@ export function SortBinView({ block, onAnswer, disabled }: {
     return (
       <div className="space-y-5">
         <BlockHeader label="Trier" text={block.question} />
-        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
-          <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-          <p className="text-white font-bold text-lg mb-1">Tous les éléments ont été triés !</p>
-          <p className="text-white/50 text-sm">Validez pour voir le résultat</p>
+        <div className="p-6 rounded-2xl bg-white border border-[#004138]/15 text-center">
+          <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
+          <p className="text-[#004138] font-bold text-lg mb-1">Tous les éléments ont été triés !</p>
+          <p className="text-[#1F3A34]/50 text-sm">Validez pour voir le résultat</p>
         </div>
         <SubmitButton onClick={handleSubmit} disabled={disabled ?? false} label="Valider" />
       </div>
@@ -1337,7 +1320,7 @@ export function SortBinView({ block, onAnswer, disabled }: {
         {shuffled.map((it, i) => (
           <div key={it.id} className={cn(
             'h-2 rounded-full flex-1 transition-all',
-            i < idx ? 'bg-orange-400/60' : i === idx ? 'bg-orange-500' : 'bg-white/10'
+            i < idx ? 'bg-[#E86825]/50' : i === idx ? 'bg-[#E86825]' : 'bg-[#004138]/10'
           )} />
         ))}
       </div>
@@ -1347,19 +1330,19 @@ export function SortBinView({ block, onAnswer, disabled }: {
         'min-h-[140px] rounded-3xl p-6 flex items-center justify-center text-center border-2 transition-all',
         feedback
           ? feedback.correct
-            ? 'border-emerald-400 bg-emerald-500/10 pop-in'
-            : 'border-red-400 bg-red-500/10 shake'
-          : 'border-white/10 bg-white/5'
+            ? 'border-emerald-500 bg-emerald-50 pop-in'
+            : 'border-red-500 bg-red-50 shake'
+          : 'border-[#004138]/15 bg-white'
       )}>
         <div>
           {feedback && (
             <div className="mb-2">
               {feedback.correct
-                ? <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto" />
-                : <XCircle className="w-8 h-8 text-red-400 mx-auto" />}
+                ? <CheckCircle className="w-8 h-8 text-emerald-600 mx-auto" />
+                : <XCircle className="w-8 h-8 text-red-600 mx-auto" />}
             </div>
           )}
-          <p className="text-xl font-semibold text-white leading-relaxed">{current?.label}</p>
+          <p className="text-xl font-semibold text-[#004138] leading-relaxed">{current?.label}</p>
         </div>
       </div>
 
@@ -1371,8 +1354,8 @@ export function SortBinView({ block, onAnswer, disabled }: {
           className={cn(
             'h-20 rounded-2xl font-bold text-lg flex flex-col items-center justify-center gap-1 transition-all touch-manipulation border-2',
             feedback && feedback.correct === false && choices[current?.id ?? ''] === false
-              ? 'bg-red-500 text-white border-red-400'
-              : 'bg-white/5 text-white/70 border-red-400/30 active:scale-95'
+              ? 'bg-red-500 text-white border-red-500'
+              : 'bg-white text-[#1F3A34]/70 border-red-400/40 active:scale-95'
           )}
         >
           <XCircle className="w-6 h-6" />
@@ -1384,8 +1367,8 @@ export function SortBinView({ block, onAnswer, disabled }: {
           className={cn(
             'h-20 rounded-2xl font-bold text-lg flex flex-col items-center justify-center gap-1 transition-all touch-manipulation border-2',
             feedback && feedback.correct === false && choices[current?.id ?? ''] === true
-              ? 'bg-emerald-500 text-white border-emerald-400'
-              : 'bg-white/5 text-white/70 border-emerald-400/30 active:scale-95'
+              ? 'bg-emerald-500 text-white border-emerald-500'
+              : 'bg-white text-[#1F3A34]/70 border-emerald-400/40 active:scale-95'
           )}
         >
           <CheckCircle className="w-6 h-6" />
@@ -1441,10 +1424,10 @@ export function ConnectDotsView({ block, onAnswer, disabled }: {
     <div className="space-y-5">
       <BlockHeader label="Relier les points" text={block.question} />
 
-      <div className="flex items-center gap-2 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
+      <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
         <span className="text-base">👆</span>
-        <p className="text-sm text-orange-300 font-medium">Touchez les points dans le bon ordre pour tracer le chemin</p>
-        <span className="ml-auto text-sm font-bold text-orange-400">{connected.length}/{block.dots.length}</span>
+        <p className="text-sm text-[#A64314] font-medium">Touchez les points dans le bon ordre pour tracer le chemin</p>
+        <span className="ml-auto text-sm font-bold text-[#E86825]">{connected.length}/{block.dots.length}</span>
       </div>
 
       <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-white ring-1 ring-gray-100/80" style={{ touchAction: 'none' }}>
@@ -1498,15 +1481,15 @@ export function ConnectDotsView({ block, onAnswer, disabled }: {
 
       {/* Info popup for last connected dot */}
       {activeInfo && !submitted && (
-        <div className="rounded-2xl p-4 bg-orange-500/10 border border-orange-500/20 fade-scale-in">
-          <p className="font-bold text-orange-300 text-sm mb-1">{activeInfo.label}</p>
-          <p className="text-white/70 text-sm leading-relaxed">{activeInfo.info}</p>
+        <div className="rounded-2xl p-4 bg-[#FFF4ED] border border-[#E86825]/25 fade-scale-in">
+          <p className="font-bold text-[#A64314] text-sm mb-1">{activeInfo.label}</p>
+          <p className="text-[#1F3A34]/70 text-sm leading-relaxed">{activeInfo.info}</p>
         </div>
       )}
 
       {submitted && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 fade-scale-in">
-          <p className="text-base font-bold text-emerald-300 flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
+          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Chemin complété !
           </p>
         </div>
@@ -1571,10 +1554,10 @@ export function WordSearchView({ block, onAnswer, disabled }: {
     <div className="space-y-5" onPointerLeave={handleUp}>
       <BlockHeader label="Mots cachés" text={block.question} />
 
-      <div className="flex items-center gap-2 px-4 py-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
+      <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
         <span className="text-base">👆</span>
-        <p className="text-sm text-orange-300 font-medium">Glissez votre doigt sur les lettres pour former un mot</p>
-        <span className="ml-auto text-sm font-bold text-orange-400">{found.size}/{block.words.length}</span>
+        <p className="text-sm text-[#A64314] font-medium">Glissez votre doigt sur les lettres pour former un mot</p>
+        <span className="ml-auto text-sm font-bold text-[#E86825]">{found.size}/{block.words.length}</span>
       </div>
 
       {/* Word clues */}
@@ -1583,8 +1566,8 @@ export function WordSearchView({ block, onAnswer, disabled }: {
           <span key={w.id} className={cn(
             'px-3 py-1.5 rounded-xl text-xs font-medium border transition-all',
             found.has(w.id)
-              ? 'bg-emerald-500/15 border-emerald-400/30 text-emerald-200 line-through'
-              : 'bg-white/5 border-white/10 text-white/60'
+              ? 'bg-emerald-50 border-emerald-300 text-emerald-700 line-through'
+              : 'bg-white border-[#004138]/15 text-[#1F3A34]/70'
           )}>
             {w.clue}
           </span>
@@ -1626,10 +1609,10 @@ export function WordSearchView({ block, onAnswer, disabled }: {
               className={cn(
                 'w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-bold text-base transition-all touch-none',
                 isSelected
-                  ? 'bg-orange-500 text-white scale-110 shadow-lg'
+                  ? 'bg-[#E86825] text-white scale-110 shadow-lg'
                   : isFound
-                    ? 'bg-emerald-500/20 text-emerald-200'
-                    : 'bg-white/5 text-white/70'
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : 'bg-white text-[#1F3A34]/70 border border-[#004138]/10'
               )}
             >
               {letter}
@@ -1641,15 +1624,15 @@ export function WordSearchView({ block, onAnswer, disabled }: {
       {/* Current selection preview */}
       {selected.length > 0 && (
         <div className="text-center">
-          <span className="inline-block px-4 py-2 rounded-xl bg-orange-500/20 text-orange-300 font-bold text-lg tracking-widest">
+          <span className="inline-block px-4 py-2 rounded-xl bg-[#FFF4ED] text-[#A64314] font-bold text-lg tracking-widest">
             {selectedWord}
           </span>
         </div>
       )}
 
       {submitted && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 fade-scale-in">
-          <p className="text-base font-bold text-emerald-300 flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
+          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Tous les mots ont été trouvés !
           </p>
         </div>
@@ -1718,18 +1701,18 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
         <div className={cn(
           'p-6 rounded-3xl border-2 text-center fade-scale-in',
           current.isCorrectEnd
-            ? 'bg-emerald-500/10 border-emerald-400'
-            : 'bg-amber-500/10 border-amber-400'
+            ? 'bg-emerald-50 border-emerald-500'
+            : 'bg-amber-50 border-amber-500'
         )}>
           <div className={cn(
             'w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4',
-            current.isCorrectEnd ? 'bg-emerald-500/20' : 'bg-amber-500/20'
+            current.isCorrectEnd ? 'bg-emerald-100' : 'bg-amber-100'
           )}>
             {current.isCorrectEnd
-              ? <CheckCircle className="w-7 h-7 text-emerald-400" />
-              : <HelpCircle className="w-7 h-7 text-amber-400" />}
+              ? <CheckCircle className="w-7 h-7 text-emerald-600" />
+              : <HelpCircle className="w-7 h-7 text-amber-600" />}
           </div>
-          <p className="text-lg font-bold text-white mb-2">{current.result}</p>
+          <p className="text-lg font-bold text-[#004138] mb-2">{current.result}</p>
         </div>
       </div>
     );
@@ -1739,9 +1722,9 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
     return (
       <div className="space-y-5">
         <BlockHeader label="Parcours de décision" text={block.question} />
-        <div className="p-6 rounded-3xl bg-emerald-500/10 border-2 border-emerald-400 text-center fade-scale-in">
-          <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-          <p className="text-lg font-bold text-white">Parcours terminé !</p>
+        <div className="p-6 rounded-3xl bg-emerald-50 border-2 border-emerald-500 text-center fade-scale-in">
+          <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
+          <p className="text-lg font-bold text-[#004138]">Parcours terminé !</p>
         </div>
       </div>
     );
@@ -1758,23 +1741,23 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
             <div key={stepId} className="flex items-center gap-1.5">
               <div className={cn(
                 'w-2.5 h-2.5 rounded-full',
-                i === path.length - 1 ? 'bg-orange-500 scale-150' : 'bg-orange-400/40'
+                i === path.length - 1 ? 'bg-[#E86825] scale-150' : 'bg-[#E86825]/40'
               )} />
-              {i < path.length - 1 && <div className="w-4 h-0.5 bg-white/10" />}
+              {i < path.length - 1 && <div className="w-4 h-0.5 bg-[#004138]/10" />}
             </div>
           );
         })}
       </div>
 
       {/* Question card */}
-      <div className="min-h-[120px] rounded-3xl p-6 bg-white/5 border-2 border-white/10 flex items-center justify-center text-center">
-        <p className="text-xl font-semibold text-white leading-relaxed">{current?.question}</p>
+      <div className="min-h-[120px] rounded-3xl p-6 bg-white border-2 border-[#004138]/15 flex items-center justify-center text-center">
+        <p className="text-xl font-semibold text-[#004138] leading-relaxed">{current?.question}</p>
       </div>
 
       {/* Feedback */}
       {feedback && (
-        <div className="p-4 rounded-2xl bg-sky-500/10 border border-sky-500/20 fade-scale-in">
-          <p className="text-base text-sky-200/90 leading-relaxed">{feedback}</p>
+        <div className="p-4 rounded-2xl bg-[#1FABC7]/10 border border-[#1FABC7]/25 fade-scale-in">
+          <p className="text-base text-[#0E6477] leading-relaxed">{feedback}</p>
         </div>
       )}
 
@@ -1784,14 +1767,14 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
           <button
             onClick={() => handleAnswer(false)}
             disabled={disabled}
-            className="h-20 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 bg-white/5 text-white/70 border-2 border-red-400/30 active:scale-95 transition-all touch-manipulation"
+            className="h-20 rounded-full font-bold text-xl flex items-center justify-center gap-2 bg-white text-[#1F3A34]/70 border-2 border-red-400/40 active:scale-95 transition-all touch-manipulation"
           >
             <XCircle className="w-7 h-7" /> Non
           </button>
           <button
             onClick={() => handleAnswer(true)}
             disabled={disabled}
-            className="h-20 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 bg-white/5 text-white/70 border-2 border-emerald-400/30 active:scale-95 transition-all touch-manipulation"
+            className="h-20 rounded-full font-bold text-xl flex items-center justify-center gap-2 bg-white text-[#1F3A34]/70 border-2 border-emerald-400/40 active:scale-95 transition-all touch-manipulation"
           >
             <CheckCircle className="w-7 h-7" /> Oui
           </button>
