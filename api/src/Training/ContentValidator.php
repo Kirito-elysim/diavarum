@@ -96,6 +96,9 @@ final class ContentValidator
                     }
                 }
                 if ('picto-grid' === $block['type']) {
+                    if (isset($block['layout']) && !\in_array($block['layout'], ['grid', 'stacked'], true)) {
+                        $errors[] = "$at : disposition de pictogrammes inconnue.";
+                    }
                     $items = $block['items'] ?? null;
                     if (!\is_array($items) || !array_is_list($items) || [] === $items) {
                         $errors[] = "$at : ajoutez au moins un picto.";

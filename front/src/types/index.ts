@@ -100,6 +100,7 @@ export type ContentBlock =
 
 export interface PictoGridBlock {
   type: 'picto-grid';
+  layout?: 'grid' | 'stacked';
   id: string;
   question?: string;
   columns?: 2 | 3;

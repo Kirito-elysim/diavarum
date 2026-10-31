@@ -7,7 +7,7 @@ const vite = await createServer({ root: new URL('../front', import.meta.url).pat
 try {
  const { courseTemplates, pageFromTemplate } = await vite.ssrLoadModule('/src/components/course-editor/templates.ts');
  const { validateCourse } = await vite.ssrLoadModule('/src/components/course-editor/model.ts');
- assert.equal(courseTemplates.length, 35);
+ assert.equal(courseTemplates.length, 37);
  const ids = new Set();
  const pages = courseTemplates.map(t => {
   assert.ok(existsSync(new URL(`../front/public${t.thumbnail}`, import.meta.url)));
@@ -28,6 +28,9 @@ try {
   if (t.composition === 'text-below') assert.equal(page.blocks[0].type,'text');
   return page;
  });
+ assert.equal(pages.find(p=>p.blocks.some(b=>b.layout==='stacked')).blocks.filter(b=>b.type==='picto-grid')[0].items.length,6);
+ const grouped=pages.find(p=>p.blocks.filter(b=>b.type==='flip-cards').length===2);
+ assert.deepEqual(grouped.blocks.map(b=>b.type),['text','flip-cards','flip-cards']);
  const course = { code:'S2',title:'Charte graphique',description:'Démonstration locale',estimatedDuration:30,published:false,competencies:[],content:pages };
  assert.deepEqual(validateCourse(course), []);
  const roundTrip = JSON.parse(JSON.stringify(course));
@@ -36,5 +39,5 @@ try {
  grid.items[0].imageUrl='';
  assert.ok(validateCourse(roundTrip).some(e=>e.includes('chaque picto')));
  writeFileSync('/tmp/diaverum-charter-fixture.json', JSON.stringify(course));
- console.log('35 modèles : création, identifiants uniques, compositions, images, validation et sérialisation OK');
+ console.log('37 modèles : création, identifiants uniques, compositions, images, validation et sérialisation OK');
 } finally { await vite.close(); }

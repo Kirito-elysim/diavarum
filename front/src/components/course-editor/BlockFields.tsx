@@ -9,6 +9,7 @@ import { move, uid } from './model';
 
 export function BlockFields({ block: b, onChange }: { block: ContentBlock; onChange: (block: ContentBlock) => void }) {
   if (b.type === 'picto-grid') return <>
+    <label className="block text-sm">Disposition<select className="block w-full rounded-lg border p-3" value={b.layout ?? 'grid'} onChange={e => onChange({ ...b, layout: e.target.value as 'grid' | 'stacked' })}><option value="grid">Grille</option><option value="stacked">Pictogrammes empilés · texte à droite</option></select></label>
     <Field label="Introduction de la grille" value={b.question} onChange={question => onChange({ ...b, question })} />
     <label className="block text-sm">Colonnes<select className="block w-full rounded-lg border p-3" value={b.columns ?? 3} onChange={e => onChange({ ...b, columns: Number(e.target.value) as 2 | 3 })}><option value={2}>2 colonnes</option><option value={3}>3 colonnes</option></select></label>
     {b.items.map((item, index) => <section key={item.id} className="rounded-xl border p-4 space-y-3"><h4>Picto {index + 1}</h4>

@@ -104,7 +104,7 @@ en production : `docker compose exec php bin/console app:content:import content/
 
 ### Cours de référence de la charte (S99)
 
-`S99 — Référence — Charte graphique des cours` contient 38 écrans : 3 pages de repères et les 35 compositions Adobe XD, remplies avec des exemples interactifs. Il est non publié et non obligatoire, réservé aux administrateurs dans « Contenus des séances ». Les ressources graphiques sont celles du projet ; la police Euclid nécessite toujours ses fichiers sous licence.
+`S99 — Référence — Charte graphique des cours` contient 40 écrans : 3 pages de repères et les 37 compositions Adobe XD corrigées du 29 octobre 2026, remplies avec des exemples interactifs. Il est non publié et non obligatoire, réservé aux administrateurs dans « Contenus des séances ». Les ressources graphiques sont celles du projet ; la police Euclid nécessite toujours ses fichiers sous licence.
 
 Création sur une nouvelle installation : `docker compose exec php bin/console app:content:reference`. Cette commande conserve un S99 déjà existant. Le contenu source est `api/content/S99.json` ; le générateur `node front/scripts/create-reference-course.mjs` permet de reconstruire ce fichier à partir des modèles, sans modifier la base. Pour conserver les retouches manuelles, exporter le cours depuis l’éditeur avant toute régénération ou réimportation.
 

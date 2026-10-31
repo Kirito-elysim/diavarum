@@ -1,3 +1,4 @@
+import { CourseNavigation } from '../CourseNavigation';
 import { CoursePageCounter, CoursePageHeading } from '../CoursePageHeading';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -66,6 +67,6 @@ function TabletContent({ pages, start }: { pages: ModulePage[]; start: number })
       <div className="flex items-center gap-3 self-end"><button className="min-h-11 px-4 rounded-full bg-white/10 text-sm" onClick={() => { setIndex(start); setAnswers({}); setAttempt(a => a + 1); }}>Recommencer</button><CoursePageCounter pageNumber={index + 1} totalPages={pages.length} /></div>
     </header>
     <main ref={scroll} className="flex-1 min-h-0 overflow-y-auto overscroll-contain"><div className="space-y-5 px-4 sm:px-10 py-5"><Suspense fallback={<p>Chargement…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense></div></main>
-    <footer className="shrink-0 mx-4 sm:mx-10 pt-4 pb-4 flex justify-between gap-10"><button disabled={index === 0} onClick={() => setIndex(i => i - 1)} className="flex-1 h-12 px-6 rounded-full bg-white font-semibold disabled:opacity-30" style={{ border: '2px solid rgba(0,65,56,0.18)', color: '#004138' }}>Précédent</button><button disabled={index === pages.length - 1} onClick={() => setIndex(i => i + 1)} className="flex-1 h-12 px-6 rounded-full bg-[#E86825] text-white font-semibold disabled:opacity-30">Suivant</button></footer>
+    <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />
   </div>;
 }

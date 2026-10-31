@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { CarouselBlock } from '../types';
+import { CourseText } from './CourseText';
 import { cn } from '../lib/utils';
 
 /**
@@ -37,18 +38,18 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
       >
         <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="w-full h-64 sm:h-[400px] object-contain fade-scale-in" draggable={false} />
         {index > 0 && (
-          <button onClick={() => go(index - 1)} aria-label="Image précédente" className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#E86825] text-white flex items-center justify-center shadow-lg touch-manipulation">
-            <ChevronLeft className="w-6 h-6" />
+          <button onClick={() => go(index - 1)} aria-label="Image précédente" className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 text-[#E86825] flex items-center justify-center touch-manipulation">
+            <ChevronLeft className="w-11 h-11" />
           </button>
         )}
         {index < last && (
-          <button onClick={() => go(index + 1)} aria-label="Image suivante" className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#E86825] text-white flex items-center justify-center shadow-lg touch-manipulation">
-            <ChevronRight className="w-6 h-6" />
+          <button onClick={() => go(index + 1)} aria-label="Image suivante" className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 text-[#E86825] flex items-center justify-center touch-manipulation">
+            <ChevronRight className="w-11 h-11" />
           </button>
         )}
       </div>
 
-      <p key={`t-${slide.id}`} className="rounded-xl px-5 py-4 text-[20px] text-[#004138] leading-snug text-center min-h-[3.5rem] whitespace-pre-line fade-scale-in" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>{slide.text}</p>
+      <p key={`t-${slide.id}`} className="rounded-xl px-5 py-4 text-[25px] text-[#004138] leading-snug text-center min-h-[3.5rem] whitespace-pre-line fade-scale-in" style={{ border: '2px solid #1C5335' }}><CourseText text={slide.text} /></p>
 
       <div className="flex items-center justify-center gap-2">
         {block.slides.map((s, i) => (

@@ -2,7 +2,7 @@ import type { ContentBlock, ModulePage } from '../../types';
 import { newBlock, uid, type Activity } from './model';
 
 type Composition = 'below' | 'above' | 'text-below' | 'both' | 'plain';
-export interface CourseTemplate { id: string; name: string; activity: Activity; composition: Composition; count?: number; thumbnail: string }
+export interface CourseTemplate { id: string; name: string; activity: Activity; composition: Composition; count?: number; thumbnail: string; layout?: 'stacked'; groups?: 2 }
 const rows: [string, Activity, Composition, number | undefined, string][] = [
   ['Carrousel + box dessous', 'carousel', 'below', undefined, 'da6a83eeed31b776'],
   ['Image légendée + box dessous', 'hotspot', 'below', undefined, '8343a50b2e59b08d'],
@@ -41,19 +41,27 @@ const rows: [string, Activity, Composition, number | undefined, string][] = [
   ['Carrousel illustré · objectif et fun fact', 'carousel', 'both', undefined, '69b6dde0160f0c72'],
 ];
 export const courseTemplates: CourseTemplate[] = rows.map(([name, activity, composition, count, asset], index) => ({ id: `xd-${index + 1}`, name, activity, composition, count, thumbnail: `/course-templates/${asset}.png` }));
+// IDs of the original models stay stable when the revised XD order changes.
+courseTemplates.splice(7, 0, { id: 'xd-36', name: '6 pictos empilés + boxes au-dessus et dessous', activity: 'picto-grid', composition: 'both', count: 6, layout: 'stacked', thumbnail: '/course-templates/pictos-empiles.svg' });
+courseTemplates.splice(courseTemplates.length - 1, 0, { id: 'xd-37', name: 'Deux groupes de cartes + texte au-dessus', activity: 'flip-cards', composition: 'text-below', count: 2, groups: 2, thumbnail: '/course-templates/deux-groupes-cartes.svg' });
+const revisedOrder = [1,2,3,4,5,6,7,36,8,9,10,12,13,14,15,16,17,18,19,20,11,22,23,24,25,26,27,21,28,30,31,32,29,33,34,37,35].map(n => `xd-${n}`);
+courseTemplates.sort((a, b) => revisedOrder.indexOf(a.id) - revisedOrder.indexOf(b.id));
 export function pageFromTemplate(template: CourseTemplate): ModulePage {
   const block = newBlock(template.activity);
   const count = template.count ?? 4;
   if (block.type === 'image-text') block.size = 'image';
   if (block.type === 'flip-cards') { block.columns = count === 6 ? 3 : 2; block.cards = Array.from({ length: count }, () => ({ id: uid(), front: '', back: '' })); }
-  if (block.type === 'picto-grid') { block.columns = count === 4 ? 2 : 3; block.items = Array.from({ length: count }, () => ({ id: uid(), imageUrl: '', alt: '', text: '' })); }
+  if (block.type === 'picto-grid') { if (template.layout) block.layout = template.layout; block.columns = count === 4 ? 2 : 3; block.items = Array.from({ length: count }, () => ({ id: uid(), imageUrl: '', alt: '', text: '' })); }
   if (block.type === 'quiz') block.options = Array.from({ length: count }, () => ({ id: uid(), label: '', isCorrect: false }));
   if (block.type === 'reorder') block.items = Array.from({ length: count }, () => ({ id: uid(), label: '' }));
   if (block.type === 'categorize') { block.categories = ['Zone 1', 'Zone 2']; block.items = Array.from({ length: count }, (_, index) => ({ id: uid(), label: '', category: block.categories[index % 2] })); }
   const blocks: ContentBlock[] = [];
   if (template.composition === 'text-below') blocks.push(newBlock('text'));
-  if (template.composition === 'above' || template.composition === 'both') blocks.push({ id: uid(), type: 'info-card', title: '', content: '', variant: ['xd-25', 'xd-32'].includes(template.id) ? 'definition' : template.composition === 'both' ? 'objective' : 'important' });
+  if (template.composition === 'above' || template.composition === 'both') blocks.push({ id: uid(), type: 'info-card', title: '', content: '', variant: ['xd-25', 'xd-32', 'xd-36'].includes(template.id) ? 'definition' : template.composition === 'both' ? 'objective' : 'important' });
   blocks.push(block);
-  if (template.composition !== 'above' && template.composition !== 'plain') blocks.push({ id: uid(), type: 'info-card', title: '', content: '', variant: ['xd-33', 'xd-35'].includes(template.id) ? 'funfact' : 'important' });
+  if (template.groups === 2 && block.type === 'flip-cards') {
+    blocks.push({ ...block, id: uid(), cards: block.cards.map(card => ({ ...card, id: uid() })) });
+  }
+  if (!template.groups && template.composition !== 'above' && template.composition !== 'plain') blocks.push({ id: uid(), type: 'info-card', title: '', content: '', variant: ['xd-33', 'xd-35'].includes(template.id) ? 'funfact' : 'important' });
   return { id: uid(), title: template.name, instruction: '', blocks };
 }

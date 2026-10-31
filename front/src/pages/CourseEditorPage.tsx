@@ -1,3 +1,4 @@
+import { CourseNavigation } from '../components/CourseNavigation';
 import { courseTemplates, pageFromTemplate } from '../components/course-editor/templates';
 import { pageHeaderMeta } from '../lib/courseVisuals';
 import { CoursePageHeading } from '../components/CoursePageHeading';
@@ -130,7 +131,7 @@ function Editor({ initial }: { initial: ModuleContent }) {
         </main>
       </div>
     </fieldset>
-    <Dialog open={templatesOpen} onOpenChange={setTemplatesOpen}><DialogContent className="max-w-6xl max-h-[90dvh] overflow-y-auto"><DialogHeader><DialogTitle>Les 35 modèles de la charte</DialogTitle><DialogDescription>Choisissez une composition puis complétez ses textes, images et activités. Les vignettes sont les références Adobe XD.</DialogDescription></DialogHeader>
+    <Dialog open={templatesOpen} onOpenChange={setTemplatesOpen}><DialogContent className="max-w-6xl max-h-[90dvh] overflow-y-auto"><DialogHeader><DialogTitle>Les 37 modèles de la charte</DialogTitle><DialogDescription>Choisissez une composition puis complétez ses textes, images et activités. Compositions de la maquette Adobe XD corrigée du 29 octobre 2026.</DialogDescription></DialogHeader>
       <Field label="Rechercher un modèle" value={templateSearch} onChange={setTemplateSearch} />
       <div className="flex flex-wrap gap-3 text-xs">{['#ECF5E9', '#1C5335', '#E86825', '#FFE0D0', '#FAFAFA', '#004138'].map(color => <span key={color} className="flex items-center gap-1"><span className="h-5 w-5 rounded border" style={{ background: color }} />{color}</span>)}<span>Euclid Circular A · 40 / 25 / 20 px</span></div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{courseTemplates.filter(t => t.name.toLocaleLowerCase('fr').includes(templateSearch.toLocaleLowerCase('fr'))).map(t => <button key={t.id} className="rounded-xl border bg-white p-2 text-left hover:border-orange-500 focus-visible:outline-orange-500" onClick={() => { const next = pageFromTemplate(t); change({ ...course, content: [...course.content, next] }); setSelected(next.id); setTemplatesOpen(false); }}><img src={t.thumbnail} alt="" loading="lazy" className="w-full rounded-lg" /><span className="block p-2 text-sm font-semibold">{t.name}</span></button>)}</div>
@@ -149,8 +150,11 @@ function Preview({ pages, start }: { pages: ModulePage[]; start: number }) {
   const [answers, setAnswers] = useState<Record<string, { isCorrect: boolean; score: number; selected?: string[] }>>({});
   const page = pages[index];
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
-  return <div className="space-y-4"><div className="flex items-center justify-between gap-2"><Button variant="outline" disabled={index === 0} onClick={() => setIndex(i => i - 1)}>Précédent</Button><Button variant="outline" disabled={index === pages.length - 1} onClick={() => setIndex(i => i + 1)}>Suivant</Button></div>
-    <div className="course-theme rounded-2xl bg-[#ECF5E9] p-5 sm:p-8 space-y-5"><div className="rounded-3xl bg-[#1C5335] p-5"><CoursePageHeading title={page.title} instruction={pageHeaderMeta(page).instruction} pageNumber={index + 1} totalPages={pages.length} level="h2" /></div><Suspense fallback={<p>Chargement de l’aperçu…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense></div>
-    <Button variant="ghost" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</Button>
+  return <div className="course-theme rounded-2xl bg-[#ECF5E9] flex flex-col h-[70dvh] min-h-0">
+    <header className="shrink-0 bg-[#1C5335] p-5"><CoursePageHeading title={page.title} instruction={pageHeaderMeta(page).instruction} icon={pageHeaderMeta(page).icon} pageNumber={index + 1} totalPages={pages.length} level="h2" /></header>
+    <main key={page.id} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-10 py-5 space-y-5"><Suspense fallback={<p>Chargement de l’aperçu…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense>
+      <Button variant="ghost" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</Button>
+    </main>
+    <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />
   </div>;
 }

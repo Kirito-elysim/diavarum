@@ -1,3 +1,4 @@
+import { CourseNavigation } from '../components/CourseNavigation';
 import { PictoGridView } from '../components/PictoGridView';
 import { CourseText } from '../components/CourseText';
 import { courseTextStyle } from '../lib/courseTextStyle';
@@ -447,7 +448,7 @@ function PreSessionScreen({
   };
 
   return (
-    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: '#ECF5E9' }}>
+    <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: '#ECF5E9' }}>
       {/* Logo */}
       <div className="relative w-20 h-20 rounded-3xl bg-[#E86825] flex items-center justify-center mb-10 shadow-xl shadow-orange-900/15">
         <BookOpen className="w-10 h-10 text-white" />
@@ -547,7 +548,7 @@ function PINExitModal({
   const keys = ['1','2','3','4','5','6','7','8','9','⌫','0','✓'];
 
   return (
-    <div className="session-overlay fixed inset-0 z-[10000] overflow-y-auto backdrop-blur-md flex flex-col items-center justify-center px-6 py-6 fade-scale-in" style={{ backgroundColor: 'rgba(28,83,53,0.97)' }}>
+    <div className="course-theme session-overlay fixed inset-0 z-[10000] overflow-y-auto backdrop-blur-md flex flex-col items-center justify-center px-6 py-6 fade-scale-in" style={{ backgroundColor: 'rgba(28,83,53,0.97)' }}>
       <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)' }}>
         <Shield className="w-7 h-7 text-amber-400" />
       </div>
@@ -628,7 +629,7 @@ function PauseOverlay({
   onResume: () => void; onRequestExit: () => void;
 }) {
   return (
-    <div className="session-overlay fixed inset-0 z-[10000] flex flex-col items-center justify-center px-8 fade-scale-in" style={{ background: '#ECF5E9' }}>
+    <div className="course-theme session-overlay fixed inset-0 z-[10000] flex flex-col items-center justify-center px-8 fade-scale-in" style={{ background: '#ECF5E9' }}>
       <div className="w-24 h-24 rounded-full flex items-center justify-center mb-8 bg-[#FFF4ED]">
         <Pause className="w-12 h-12 text-[#E86825]" />
       </div>
@@ -728,7 +729,7 @@ function ModuleCompletionScreen({
   const ss = String(elapsedSeconds % 60).padStart(2, '0');
 
   return (
-    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: '#1C5335' }}>
+    <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: '#1C5335' }}>
       <div className={cn(
         'w-28 h-28 rounded-full flex items-center justify-center mb-8 pop-in shadow-2xl',
         isExcellent ? 'bg-emerald-500/20' : isGood ? 'bg-amber-500/20' : 'bg-red-500/20'
@@ -804,7 +805,7 @@ function PatientScoreScreen({ score, onFinish }: { score: number | null; onFinis
   const celebrate = score !== null && score >= 75;
 
   return (
-    <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-hidden" style={{ background: '#ECF5E9' }}>
+    <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-hidden" style={{ background: '#ECF5E9' }}>
       {celebrate && (
         <div className="pointer-events-none absolute inset-0" aria-hidden>
           {Array.from({ length: 40 }, (_, i) => (
@@ -856,7 +857,7 @@ function CompetencyValidationScreen({
 
   return (
     // Fond sombre volontairement distinct des écrans patient (storyboard : l'IDE doit voir que cet écran ne s'adresse pas au patient), mais mêmes couleurs de marque
-    <div className="fixed inset-0 z-[9999] overflow-auto" style={{ background: '#1C5335' }}>
+    <div className="course-theme fixed inset-0 z-[9999] overflow-auto" style={{ background: '#1C5335' }}>
       <div className="h-1.5 bg-amber-400" />
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="flex items-center gap-3 mb-2 text-amber-300">
@@ -1038,7 +1039,7 @@ export default function TrainingSessionPage() {
   const failed = !moduleId || (!isPreview && !patientId) || moduleQuery.isError || patientQuery.isError;
   if (failed) {
     return (
-      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
+      <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
         <AlertCircle className="w-10 h-10 text-red-500" />
         <p className="text-[#1F3A34]/80">Impossible d'ouvrir ce cours pour ce patient.</p>
         <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour</button>
@@ -1059,7 +1060,7 @@ export default function TrainingSessionPage() {
 
   if (module.content.length === 0) {
     return (
-      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
+      <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
         <BookOpen className="w-10 h-10 text-[#004138]/40" />
         <p className="text-[#1F3A34]/80">Ce cours n'a pas encore de contenu.</p>
         <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour</button>
@@ -1244,7 +1245,7 @@ function SessionRunner({
   if (phase === 'done') {
     if (isPreview) {
       return (
-        <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8" style={{ background: '#ECF5E9' }}>
+        <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8" style={{ background: '#ECF5E9' }}>
           <div className="w-16 h-16 rounded-3xl bg-emerald-100 flex items-center justify-center">
             <CheckCircle2 className="w-8 h-8 text-emerald-600" />
           </div>
@@ -1330,7 +1331,7 @@ function SessionRunner({
   // Séance en cours de création (ou refusée par le serveur)
   if (!isPreview && !sessionId) {
     return (
-      <div className="session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
+      <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
         {apiError ? (
           <>
             <AlertCircle className="w-10 h-10 text-red-500" />
@@ -1417,41 +1418,13 @@ function SessionRunner({
       </main>
 
       {/* ── Navigation (toujours calée en bas, hors du contenu défilant) ── */}
-      <div className="flex-shrink-0 mx-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex items-center gap-3">
-        <button
-          aria-label="Page précédente"
-          onClick={() => navigatePage('prev')}
-          disabled={pageIndex === 0 || animating || (!isPreview && paused)}
-          className="flex items-center gap-2 h-14 px-5 rounded-full border-2 font-semibold hover:bg-[#dcebdd] active:bg-[#cfe3d1] disabled:opacity-30 transition-all touch-manipulation flex-shrink-0 bg-white"
-          style={{ borderColor: 'rgba(0,65,56,0.18)', color: '#004138' }}
-        >
-          <ChevronLeft className="w-5 h-5" />
-          <span className="hidden sm:inline">Précédent</span>
-        </button>
-
-        <button
-          onClick={() => navigatePage('next')}
-          disabled={(!allQuizAnswered && !isPreview) || animating || (!isPreview && paused)}
-          className={cn(
-            'flex-1 h-14 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all touch-manipulation shadow-lg',
-            paused && !isPreview
-              ? 'bg-[#004138]/8 text-[#004138]/25 shadow-none cursor-not-allowed'
-              : allQuizAnswered || isPreview
-                ? pageIndex === totalPages - 1
-                  ? 'bg-emerald-500 text-white shadow-emerald-900/15 active:scale-[0.98]'
-                  : 'bg-[#E86825] text-white shadow-orange-900/15 active:scale-[0.98]'
-                : 'bg-[#004138]/8 text-[#004138]/25 shadow-none cursor-not-allowed'
-          )}
-        >
-          {paused && !isPreview ? (
-            <><Pause className="w-5 h-5" /> Séance en pause</>
-          ) : pageIndex === totalPages - 1 ? (
-            <>Terminer <CheckCircle2 className="w-5 h-5" /></>
-          ) : (
-            <>Page suivante <ChevronRight className="w-5 h-5" /></>
-          )}
-        </button>
-      </div>
+      <CourseNavigation
+        onPrevious={() => navigatePage('prev')}
+        onNext={() => navigatePage('next')}
+        previousDisabled={pageIndex === 0 || animating || (!isPreview && paused)}
+        nextDisabled={(!allQuizAnswered && !isPreview) || animating || (!isPreview && paused)}
+        nextLabel={paused && !isPreview ? 'Séance en pause' : pageIndex === totalPages - 1 ? 'Terminer' : 'Page suivante'}
+      />
 
       {/* ── Pause overlay ────────────────────────────────────────── */}
       {paused && !isPreview && (
