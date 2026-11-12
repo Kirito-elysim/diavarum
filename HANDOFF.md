@@ -136,3 +136,7 @@ Décision : pas d'export des connexions/déconnexions. Reste du lot 1 : comptage
 ## Recette des droits sur les exports — J-027
 
 Tests de droits par rôle sur tous les exports (IDE, cadre, administrateur national, hors centre, archivés, anonymes) ; défaut corrigé pour un utilisateur sans centre. Non commité (depuis dd3f925). Reste du lot 1 : doublons en production, rapprochement et revue visuelle des PDF.
+
+## Suppression définitive — J-028
+
+Décisions : six compétences ; suppression définitive d'un patient archivé (cadre/admin, confirmation par nom et prénom, effacement complet, trace sans donnée de santé), implémentée et testée. Reste au lot 2 : aligner éditeur/import sur six compétences, parcours de bout en bout, ratio de progression. Anonymisation : question ouverte (avis DPO). Non commité (depuis b5b6e65).

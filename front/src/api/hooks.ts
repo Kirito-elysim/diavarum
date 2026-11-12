@@ -70,6 +70,16 @@ export function useArchivePatient(restore = false) {
   });
 }
 
+/** Suppression définitive d'un patient archivé (cadre, administrateur) : confirmation par nom et prénom */
+export function useErasePatient() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: ({ patient, confirmation }: { patient: Patient; confirmation: string }) =>
+      api<void>(`/patients/${patient.id}/erase`, { method: 'POST', body: { confirmation } }),
+    onSuccess: () => Promise.all(['patients', 'dashboard', 'statistics', 'programs', 'sessions', 'centers'].map((key) => client.invalidateQueries({ queryKey: [key] }))),
+  });
+}
+
 export function usePatient(id: string | null | undefined) {
   return useQuery({
     queryKey: ['patient', id],

@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Checkbox } from '../components/ui/checkbox';
+import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Progress } from '../components/ui/progress';
 import { Textarea } from '../components/ui/textarea';
@@ -32,6 +33,7 @@ import {
   Play,
   Route,
   ShieldCheck,
+  Trash2,
   User,
 } from 'lucide-react';
 import { useCourseLaunch } from '../components/CourseLaunchConfirmation';
@@ -45,6 +47,7 @@ import {
   useArchivePatient,
   useCodexTests,
   useCreateProgram,
+  useErasePatient,
   useEligibilityReasons,
   useInterruptionReasons,
   useModules,
@@ -80,6 +83,9 @@ export default function PatientDetailPage() {
   const [editing, setEditing] = useState(false);
   const archivePatient = useArchivePatient();
   const restorePatient = useArchivePatient(true);
+  const erasePatient = useErasePatient();
+  const [confirmErase, setConfirmErase] = useState(false);
+  const [eraseText, setEraseText] = useState('');
 
   if (isLoading) {
     return <div className="flex justify-center py-24 text-gray-400"><Loader2 className="w-6 h-6 animate-spin" /></div>;
@@ -130,6 +136,11 @@ export default function PatientDetailPage() {
             <Button size="sm" variant="outline" disabled={restorePatient.isPending} className="gap-1.5"
               onClick={() => restorePatient.mutateAsync(patient).then(() => toast.success('Patient réactivé')).catch((err) => toast.error(err instanceof ApiError ? err.message : 'Réactivation impossible'))}>
               <RotateCcw className="w-4 h-4" />Réactiver
+            </Button>
+          )}
+          {isCadre && (
+            <Button size="sm" variant="outline" className="gap-1.5 border-red-200 text-red-700 hover:bg-red-50" onClick={() => setConfirmErase(true)}>
+              <Trash2 className="w-4 h-4" />Supprimer définitivement
             </Button>
           )}
         </div>
@@ -217,6 +228,35 @@ export default function PatientDetailPage() {
       </Tabs>
 
       {editing && <PatientDialog open patient={patient} onOpenChange={setEditing} />}
+
+      <Dialog open={confirmErase} onOpenChange={(open) => { setConfirmErase(open); if (!open) setEraseText(''); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Supprimer définitivement {patient.firstName} {patient.lastName.toUpperCase()} ?</DialogTitle>
+            <DialogDescription>
+              Le dossier, les parcours, les séances (réponses et compétences) et les tests CODEX de ce patient seront effacés de la base. Cette action est irréversible
+              et ne peut pas être annulée. Une trace sans donnée de santé (qui, quand, centre) est conservée. Le patient reste présent dans les sauvegardes jusqu'à leur rotation.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <Label htmlFor="erase-confirm">Pour confirmer, saisissez : <strong>{patient.lastName.toUpperCase()} {patient.firstName}</strong></Label>
+            <Input id="erase-confirm" value={eraseText} autoComplete="off" onChange={(e) => setEraseText(e.target.value)} />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmErase(false)}>Annuler</Button>
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={erasePatient.isPending || eraseText.trim().toLowerCase() !== `${patient.lastName} ${patient.firstName}`.toLowerCase()}
+              onClick={() => erasePatient.mutateAsync({ patient, confirmation: eraseText }).then(
+                () => { toast.success('Patient supprimé définitivement'); navigate('/patients'); },
+                (err) => toast.error(err instanceof ApiError ? (err.violations[0]?.message ?? err.message) : 'Suppression impossible'),
+              )}
+            >
+              Supprimer définitivement
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={confirmArchive} onOpenChange={setConfirmArchive}>
         <AlertDialogContent>
