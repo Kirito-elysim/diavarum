@@ -87,6 +87,25 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         self::assertCount(2, $errors, 'Identifiant en double + type inconnu');
     }
 
+    public function testMalformedActivityIsRejectedByBothWriteEndpoints(): void
+    {
+        $payload = $this->payload();
+        $payload['content'][0]['blocks'] = [['id' => 'broken', 'type' => 'reorder', 'items' => 'invalid']];
+        $this->put('S2', $payload);
+        self::assertResponseStatusCodeSame(422);
+
+        $admin = $this->createUser(UserRole::AdminNational);
+        $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S2']);
+        $this->requestAs($admin, 'PATCH', '/api/modules/'.$module->getId(), ['content' => $payload['content']]);
+        self::assertResponseStatusCodeSame(422);
+    }
+
+    public function testEmptyPublishedCourseIsRejected(): void
+    {
+        $this->put('S2', $this->payload(['content' => [], 'published' => true]));
+        self::assertResponseStatusCodeSame(422);
+    }
+
     public function testAuthoringToolBlocksAreAccepted(): void
     {
         $payload = $this->payload();

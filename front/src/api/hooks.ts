@@ -49,7 +49,7 @@ export function useCenters(status: ArchiveStatus = 'active') {
 export function usePatients(params: { search?: string; center?: string; eligibilityStatus?: string; status?: ArchiveStatus } = {}) {
   return useQuery({
     queryKey: ['patients', params],
-    queryFn: () => api<Collection<Patient>>(`/patients${query({ ...params, itemsPerPage: '100' })}`),
+    queryFn: () => allPages<Patient>(`/patients${query(params)}`),
   });
 }
 
@@ -63,6 +63,9 @@ export function useArchivePatient(restore = false) {
       client.invalidateQueries({ queryKey: ['patient'] }),
       client.invalidateQueries({ queryKey: ['dashboard'] }),
       client.invalidateQueries({ queryKey: ['statistics'] }),
+      client.invalidateQueries({ queryKey: ['programs'] }),
+      client.invalidateQueries({ queryKey: ['sessions'] }),
+      client.invalidateQueries({ queryKey: ['centers'] }),
     ]),
   });
 }
@@ -163,7 +166,7 @@ export function useUsers(enabled = true, status: ArchiveStatus = 'active') {
 export function useSessions(params: { patient?: string } = {}) {
   return useQuery({
     queryKey: ['sessions', params],
-    queryFn: () => api<Collection<TrainingSession>>(`/sessions${query({ ...params, itemsPerPage: '50' })}`),
+    queryFn: () => allPages<TrainingSession>(`/sessions${query(params)}`),
   });
 }
 
@@ -220,7 +223,7 @@ export function useSessionSummary(filters: SessionFilters) {
 
 export interface ProgramFilters { search?: string; center?: string; status?: string }
 
-const PROGRAM_SORT: Record<string, string> = { patient: 'patient', status: 'status', start: 'startedAt', created: 'createdAt' };
+const PROGRAM_SORT: Record<string, string> = { patient: 'patient', status: 'activityStatus', start: 'startedAt', created: 'createdAt' };
 
 export function useProgramList(filters: ProgramFilters, sort: ListSort, page: number, itemsPerPage = 25) {
   return useQuery({
@@ -228,7 +231,7 @@ export function useProgramList(filters: ProgramFilters, sort: ListSort, page: nu
     queryFn: () => api<Collection<TrainingProgramListItem>>(`/training_programs${query({
       search: filters.search || undefined,
       center: filters.center,
-      status: filters.status,
+      activityStatus: filters.status,
       [`order[${PROGRAM_SORT[sort.key] ?? 'createdAt'}]`]: sort.desc ? 'desc' : 'asc',
       page: String(page),
       itemsPerPage: String(itemsPerPage),
@@ -241,7 +244,7 @@ export function useProgramList(filters: ProgramFilters, sort: ListSort, page: nu
 export function useProgramSummary(filters: Omit<ProgramFilters, 'status'>) {
   return useQuery({
     queryKey: ['programs', 'summary', filters],
-    queryFn: () => api<{ total: number; byStatus: Record<ProgramStatus, number> }>(`/summaries/training_programs${query({ search: filters.search || undefined, center: filters.center })}`),
+    queryFn: () => api<{ total: number; byStatus: Record<ProgramStatus, number>; activityByStatus?: Record<ProgramStatus | 'non_demarre', number> }>(`/summaries/training_programs${query({ search: filters.search || undefined, center: filters.center })}`),
     placeholderData: (previous) => previous,
   });
 }
@@ -457,7 +460,7 @@ export function useInterruptSession() {
 export function useProgramAction() {
   const invalidate = useInvalidateProgress();
   return useMutation({
-    mutationFn: ({ programId, action, body }: { programId: string; action: 'complete' | 'interrupt' | 'resume'; body?: unknown }) =>
+    mutationFn: ({ programId, action, body }: { programId: string; action: 'complete' | 'interrupt' | 'resume' | 'reopen'; body?: unknown }) =>
       api<{ status: string }>(`/training_programs/${programId}/${action}`, { method: 'POST', body: body ?? {} }),
     onSuccess: invalidate,
   });

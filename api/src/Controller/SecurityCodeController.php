@@ -30,7 +30,7 @@ final class SecurityCodeController
 
     /** L'IDE définit (première connexion) ou change son code personnel */
     #[Route('/api/me/security-code', name: 'api_me_security_code', methods: ['PUT'])]
-    public function setOwnCode(#[CurrentUser] User $user, #[MapRequestPayload] SetSecurityCodeRequest $request): Response
+    public function setOwnCode(#[CurrentUser] User $user, #[MapRequestPayload(acceptFormat: ['json', 'jsonld'])] SetSecurityCodeRequest $request): Response
     {
         $this->assertPassword($user, $request->password);
         $this->securityCodes->setUserCode($user, $request->code);
@@ -45,7 +45,7 @@ final class SecurityCodeController
     #[Route('/api/security-code/verify', name: 'api_security_code_verify', methods: ['POST'])]
     public function verify(
         #[CurrentUser] User $user,
-        #[MapRequestPayload] VerifySecurityCodeRequest $request,
+        #[MapRequestPayload(acceptFormat: ['json', 'jsonld'])] VerifySecurityCodeRequest $request,
         #[Target('security_code')] RateLimiterFactoryInterface $limiterFactory,
     ): Response {
         $limiter = $limiterFactory->create($user->getId()->toRfc4122());
@@ -66,7 +66,7 @@ final class SecurityCodeController
     /** Un administrateur national change le code garde-fou (transmis par email aux autres administrateurs) */
     #[Route('/api/national-security-code', name: 'api_national_security_code', methods: ['PUT'])]
     #[IsGranted('ROLE_ADMIN_NATIONAL')]
-    public function setNationalCode(#[CurrentUser] User $user, #[MapRequestPayload] SetSecurityCodeRequest $request): Response
+    public function setNationalCode(#[CurrentUser] User $user, #[MapRequestPayload(acceptFormat: ['json', 'jsonld'])] SetSecurityCodeRequest $request): Response
     {
         $this->assertPassword($user, $request->password);
         $this->securityCodes->changeNationalCode($request->code, $user);

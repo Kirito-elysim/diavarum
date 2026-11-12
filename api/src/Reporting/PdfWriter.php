@@ -26,10 +26,15 @@ final class PdfWriter
         $options->set('isRemoteEnabled', false);
 
         $pdf = new Dompdf($options);
-        $pdf->loadHtml($this->twig->render($template, $context));
+        $pdf->loadHtml($this->twig->render($template, $context + ['logo' => $this->logo()]));
         $pdf->setPaper('A4', $orientation);
         $pdf->render();
 
         return (string) $pdf->output();
+    }
+
+    private function logo(): string
+    {
+        return 'data:image/svg+xml;base64,'.base64_encode((string) file_get_contents(__DIR__.'/../../templates/reports/diaverum-logo.svg'));
     }
 }

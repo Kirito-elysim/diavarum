@@ -28,5 +28,5 @@ export function CoursePageHeading({ title, instruction, pageNumber, totalPages, 
 }
 
 export function CoursePageCounter({ pageNumber, totalPages }: { pageNumber: number; totalPages: number }) {
-  return <span aria-label={`Page ${pageNumber} sur ${totalPages}`} className="shrink-0 inline-flex items-center min-h-11 pl-3 border-l border-white/15 font-sans text-base font-medium tabular-nums tracking-normal text-white/75">{pageNumber}/{totalPages}</span>;
+  return <span aria-label={`Page ${pageNumber} sur ${totalPages}`} className="shrink-0 inline-flex items-center min-h-11 pl-3 border-l border-white/15 font-sans course-label font-medium tabular-nums tracking-normal text-white/75">{pageNumber}/{totalPages}</span>;
 }

@@ -38,7 +38,7 @@ final class ContentIntegrationController
     }
 
     #[Route('/api/content/modules/{code}', name: 'api_content_module_put', requirements: ['code' => '[A-Z0-9]{1,10}'], methods: ['PUT'])]
-    public function put(string $code, Request $request, #[MapRequestPayload] ModuleContentRequest $payload): JsonResponse
+    public function put(string $code, Request $request, #[MapRequestPayload(acceptFormat: ['json', 'jsonld'])] ModuleContentRequest $payload): JsonResponse
     {
         $this->assertAllowed($request);
         $module = $this->importer->find($code);

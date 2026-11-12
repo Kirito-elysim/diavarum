@@ -2,6 +2,7 @@
 
 namespace App\Dto;
 
+use App\Entity\Module;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,7 +23,7 @@ final class ValidateSessionRequest
             'total' => [new Assert\NotNull(), new Assert\Type('int')],
         ])])]
         public readonly array $answers = [],
-        #[Assert\Count(max: 5)]
+        #[Assert\Count(max: Module::MAX_COMPETENCIES)]
         #[Assert\All([new Assert\Collection([
             'id' => [new Assert\NotBlank(), new Assert\Uuid()],
             'validated' => [new Assert\NotNull(), new Assert\Type('bool')],

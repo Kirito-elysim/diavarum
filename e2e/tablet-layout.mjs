@@ -59,7 +59,7 @@ try {
    await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:cell.x+cell.width/2,y:cell.y+cell.height/2}]});
   }
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  await page.getByText('1/1',{exact:true}).waitFor();
+  await page.getByRole('main').getByText('1/1',{exact:true}).waitFor();
   console.log('Mots cachés au doigt — OK');
   await context.close();
  }

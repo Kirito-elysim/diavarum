@@ -34,6 +34,21 @@ final class ModuleContentImporter
     public function import(Module $module, string $title, string $description, int $estimatedDuration, bool $published, array $content, array $competencies): array
     {
         $errors = $this->validator->validate($content);
+        if ('' === trim($title) || mb_strlen($title) > 255) {
+            $errors[] = 'Le titre doit contenir entre 1 et 255 caractères.';
+        }
+        if ($estimatedDuration < 5 || $estimatedDuration > 120) {
+            $errors[] = 'La durée doit être comprise entre 5 et 120 minutes.';
+        }
+        if ($published && [] === $content) {
+            $errors[] = 'Un cours publié doit contenir au moins un écran.';
+        }
+        foreach ($competencies as $label) {
+            if (!\is_string($label) || '' === trim($label)) {
+                $errors[] = 'Complétez ou retirez les compétences vides.';
+                break;
+            }
+        }
         if (\count($competencies) > Module::MAX_COMPETENCIES) {
             $errors[] = \sprintf('Une séance compte au plus %d compétences.', Module::MAX_COMPETENCIES);
         }

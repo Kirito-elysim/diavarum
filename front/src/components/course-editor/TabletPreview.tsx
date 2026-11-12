@@ -1,10 +1,9 @@
 import { CourseNavigation } from '../CourseNavigation';
-import { CoursePageCounter, CoursePageHeading } from '../CoursePageHeading';
+import { CourseHeader } from '../CourseHeader';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { ModulePage } from '../../types';
 import { Button } from '../ui/button';
-import { pageHeaderMeta } from '../../lib/courseVisuals';
 
 const PreviewBlock = lazy(() => import('../../pages/TrainingSessionPage').then(module => ({ default: module.BlockCard })));
 const frameDocument = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="margin:0"><div id="tablet-root"></div></body></html>';
@@ -60,12 +59,8 @@ function TabletContent({ pages, start }: { pages: ModulePage[]; start: number })
   const page = pages[index];
   useEffect(() => { scroll.current?.scrollTo({ top: 0 }); }, [index]);
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
-  const meta = pageHeaderMeta(page);
-  return <div className="course-theme h-dvh flex flex-col" style={{ background: '#ECF5E9' }}>
-    <header className="shrink-0 mx-4 mt-4 rounded-3xl overflow-hidden shadow-sm text-white flex flex-wrap items-end gap-x-6 gap-y-3 px-6 py-4" style={{ background: '#1C5335' }}>
-      <div className="min-w-0 flex-1 basis-72"><CoursePageHeading title={page.title} instruction={meta.instruction} icon={meta.icon} showCounter={false} pageNumber={index + 1} totalPages={pages.length} /></div>
-      <div className="flex items-center gap-3 self-end"><button className="min-h-11 px-4 rounded-full bg-white/10 text-sm" onClick={() => { setIndex(start); setAnswers({}); setAttempt(a => a + 1); }}>Recommencer</button><CoursePageCounter pageNumber={index + 1} totalPages={pages.length} /></div>
-    </header>
+  return <div className="course-theme h-dvh flex flex-col">
+    <CourseHeader page={page} pageNumber={index + 1} totalPages={pages.length} actions={<button className="min-h-11 px-4 rounded-full bg-white/10 course-label" onClick={() => { setIndex(start); setAnswers({}); setAttempt(a => a + 1); }}>Recommencer</button>} />
     <main ref={scroll} className="flex-1 min-h-0 overflow-y-auto overscroll-contain"><div className="space-y-5 px-4 sm:px-10 py-5"><Suspense fallback={<p>Chargement…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense></div></main>
     <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />
   </div>;

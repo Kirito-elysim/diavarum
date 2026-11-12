@@ -11,6 +11,7 @@ use App\Enum\EligibilityStatus;
 use App\Enum\ProgramStatus;
 use App\Enum\SessionStatus;
 use App\Exception\WorkflowException;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -47,6 +48,7 @@ final class TrainingWorkflow
         if (EligibilityStatus::Eligible !== $patient->getEligibilityStatus()) {
             throw new WorkflowException('Le patient n\'est pas éligible au parcours.');
         }
+        $this->entityManager->refresh($program, LockMode::PESSIMISTIC_WRITE);
         if (!$program->acceptsSessions()) {
             throw new WorkflowException(ProgramStatus::Completed === $program->getStatus()
                 ? 'Le parcours est achevé.'
@@ -56,6 +58,11 @@ final class TrainingWorkflow
         $selection = $program->findModule($module);
         if (null === $selection || !$selection->isSelected()) {
             throw new WorkflowException('Ce cours ne fait pas partie des séances sélectionnées du parcours.');
+        }
+
+        $this->entityManager->refresh($selection);
+        if (null !== $selection->getValidatedAt()) {
+            throw new WorkflowException('Ce cours est déjà validé pour ce parcours.');
         }
 
         if ('PT' === $module->getCode()) {
@@ -76,6 +83,7 @@ final class TrainingWorkflow
 
         $selection->markStarted();
         $program->markActive();
+        $program->recordActivity();
     }
 
     /**
@@ -86,12 +94,28 @@ final class TrainingWorkflow
      */
     public function validate(TrainingSession $session, int $durationSeconds, array $answers, array $competencies, User $nurse): void
     {
+        $this->entityManager->getConnection()->transactional(function () use ($session, $durationSeconds, $answers, $competencies, $nurse): void {
+            $this->entityManager->refresh($session->getProgram(), LockMode::PESSIMISTIC_WRITE);
+            $this->entityManager->refresh($session);
+            $this->recordValidation($session, $durationSeconds, $answers, $competencies, $nurse);
+        });
+    }
+
+    private function recordValidation(TrainingSession $session, int $durationSeconds, array $answers, array $competencies, User $nurse): void
+    {
         $this->assertInProgress($session);
         if ($durationSeconds < 0 || $durationSeconds > self::MAX_DURATION_SECONDS) {
             throw new WorkflowException('Durée de séance invalide.');
         }
 
         $module = $session->getModule();
+        $selection = $session->getProgram()->findModule($module);
+        if (null !== $selection) {
+            $this->entityManager->refresh($selection);
+            if (null !== $selection->getValidatedAt()) {
+                throw new WorkflowException('Ce cours est déjà validé pour ce parcours.');
+            }
+        }
         $expected = [];
         foreach ($module->getActiveCompetencies() as $competency) {
             $expected[$competency->getId()->toRfc4122()] = $competency;
@@ -115,15 +139,20 @@ final class TrainingWorkflow
         }
 
         // Le cours passe « validé » dans le parcours (même s'il a été désélectionné depuis)
-        $session->getProgram()->findModule($module)?->markValidated($score, $durationSeconds);
+        $selection?->markValidated($score, $durationSeconds);
+        $session->getProgram()->recordActivity($session->getCompletedAt());
         $this->entityManager->flush();
     }
 
     public function interrupt(TrainingSession $session): void
     {
-        $this->assertInProgress($session);
-        $session->markInterrupted();
-        $this->entityManager->flush();
+        $this->entityManager->getConnection()->transactional(function () use ($session): void {
+            $this->entityManager->refresh($session->getProgram(), LockMode::PESSIMISTIC_WRITE);
+            $this->entityManager->refresh($session);
+            $this->assertInProgress($session);
+            $session->markInterrupted();
+            $this->entityManager->flush();
+        });
     }
 
     /** Validation du parcours par un cadre : le parcours passe « achevé » et n'est plus modifiable */
@@ -138,6 +167,17 @@ final class TrainingWorkflow
 
         $this->interruptOpenSessions($program);
         $program->markCompleted($cadre);
+        $this->entityManager->flush();
+    }
+
+    /** Annulation, par un cadre, de la validation d'un parcours achevé (erreur de clôture) */
+    public function reopen(TrainingProgram $program): void
+    {
+        if (ProgramStatus::Completed !== $program->getStatus()) {
+            throw new WorkflowException('Seul un parcours achevé peut voir sa validation annulée.');
+        }
+
+        $program->reopen();
         $this->entityManager->flush();
     }
 

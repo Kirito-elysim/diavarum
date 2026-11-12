@@ -41,6 +41,11 @@ export function setSessionExpiredHandler(handler: () => void) {
   onSessionExpired = handler;
 }
 
+function expireSession() {
+  accessToken = null;
+  onSessionExpired();
+}
+
 async function refreshAccessToken(): Promise<boolean> {
   // Plusieurs requêtes peuvent expirer en même temps : un seul refresh (le jeton est à usage unique)
   refreshInFlight ??= fetch('/api/auth/refresh', { method: 'POST', credentials: 'same-origin' })
@@ -98,8 +103,9 @@ export async function api<T>(path: string, { method = 'GET', body }: RequestOpti
     if (await refreshAccessToken()) {
       return api<T>(path, { method, body }, false);
     }
-    onSessionExpired();
   }
+
+  if (response.status === 401) expireSession();
 
   if (!response.ok) {
     throw await toApiError(response);
@@ -121,6 +127,7 @@ export async function downloadFile(path: string, retry = true): Promise<void> {
   if (response.status === 401 && retry && (await refreshAccessToken())) {
     return downloadFile(path, false);
   }
+  if (response.status === 401) expireSession();
   if (!response.ok) {
     throw await toApiError(response);
   }

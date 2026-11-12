@@ -44,10 +44,12 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         new GetCollection(parameters: [
             'patient' => new QueryParameter(filter: new IriFilter(), property: 'patient'),
             'status' => new QueryParameter(filter: new ExactFilter(), property: 'status'),
+            'activityStatus' => new QueryParameter(filter: new \App\Doctrine\Filter\ProgramActivityFilter(), property: 'status'),
             'center' => new QueryParameter(filter: new IriFilter(), property: 'patient.center'),
             'search' => new QueryParameter(filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())), properties: ['patient.lastName', 'patient.firstName']),
             'order[patient]' => new QueryParameter(filter: new SortFilter(), property: 'patient.lastName'),
             'order[status]' => new QueryParameter(filter: new SortFilter(), property: 'status'),
+            'order[activityStatus]' => new QueryParameter(filter: new \App\Doctrine\Filter\ProgramActivityOrderFilter(), property: 'status'),
             'order[startedAt]' => new QueryParameter(filter: new SortFilter(nullsComparison: 'nulls_always_last'), property: 'startedAt'),
             'order[createdAt]' => new QueryParameter(filter: new SortFilter(), property: 'createdAt'),
         ], normalizationContext: ['groups' => ['program:list', 'author:read']]),
@@ -129,6 +131,41 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
     #[Groups(['program:read', 'program:list'])]
     private ?\DateTimeImmutable $interruptedAt = null;
 
+    #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
+    #[Groups(['program:read', 'program:list'])]
+    private ?\DateTimeImmutable $lastActivityAt = null;
+
+    public function recordActivity(?\DateTimeImmutable $at = null): void
+    {
+        $at ??= new \DateTimeImmutable();
+        if (null === $this->lastActivityAt || $at > $this->lastActivityAt) {
+            $this->lastActivityAt = $at;
+        }
+    }
+
+    public function getLastActivityAt(): ?\DateTimeImmutable
+    {
+        return $this->lastActivityAt ?? $this->startedAt;
+    }
+
+    /** Statut de suivi à date ; le statut métier historique reste inchangé. */
+    #[Groups(['program:read', 'program:list'])]
+    public function getActivityStatus(): string
+    {
+        return $this->activityStatusAt(new \DateTimeImmutable());
+    }
+
+    public function activityStatusAt(\DateTimeImmutable $now): string
+    {
+        if (\in_array($this->status, [ProgramStatus::Completed, ProgramStatus::Interrupted], true)) {
+            return $this->status->value;
+        }
+        $last = $this->getLastActivityAt();
+        if (null === $last) return 'non_demarre';
+
+        return $last <= $now->modify('-15 days') ? 'non_actif' : 'actif';
+    }
+
     public function __construct()
     {
         $this->id = Uuid::v7();
@@ -173,6 +210,15 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
         $this->status = ProgramStatus::Completed;
         $this->completedAt = new \DateTimeImmutable();
         $this->markValidated($validatedBy);
+    }
+
+    /** Annulation de la validation par un cadre : le parcours redevient « en cours » */
+    public function reopen(): void
+    {
+        $this->status = ProgramStatus::Active;
+        $this->completedAt = null;
+        $this->validatedBy = null;
+        $this->validatedAt = null;
     }
 
     /** Reprise d'un parcours interrompu */

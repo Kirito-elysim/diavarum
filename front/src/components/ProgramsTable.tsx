@@ -9,7 +9,7 @@ import { ListPagination } from './ListPagination';
 import { SearchableSelect } from './SearchableSelect';
 import { EmptyState, HEAD, ProgressBar, ScoreBar, SortableHead } from './ListParts';
 import { useCenters, useInterruptionReasons, useProgramList, useProgramSummary, type ListSort } from '../api/hooks';
-import { PROGRAM_STATUS_LABELS, type ProgramStatus } from '../api/types';
+import { PROGRAM_ACTIVITY_LABELS, type ProgramActivityStatus } from '../api/types';
 import { cn } from '../lib/utils';
 import { formatDate, programBadge } from '../lib/format';
 import { useDebounced } from '../lib/useDebounced';
@@ -17,8 +17,8 @@ import { useDebounced } from '../lib/useDebounced';
 const PAGE_SIZE = 25;
 
 /** Libellés des parcours tels qu'affichés dans les listes (« Clôturé » = interrompu par l'équipe) */
-const PROGRAM_LIST_LABELS: Record<ProgramStatus, string> = { ...PROGRAM_STATUS_LABELS, interrompu: 'Clôturé' };
-const STATUS_ORDER: ProgramStatus[] = ['actif', 'non_actif', 'acheve', 'interrompu'];
+const PROGRAM_LIST_LABELS: Record<ProgramActivityStatus, string> = { ...PROGRAM_ACTIVITY_LABELS, interrompu: 'Clôturé' };
+const STATUS_ORDER: ProgramActivityStatus[] = ['actif', 'non_demarre', 'non_actif', 'acheve', 'interrompu'];
 
 /**
  * Parcours paginés côté serveur : pastilles de statut avec leurs effectifs, recherche, centre, tri.
@@ -30,7 +30,7 @@ export function ProgramsTable({ centerId }: { centerId?: string | null } = {}) {
   const { data: reasons } = useInterruptionReasons();
   const [search, setSearch] = useState('');
   const [center, setCenter] = useState('all');
-  const [status, setStatus] = useState<'all' | ProgramStatus>('all');
+  const [status, setStatus] = useState<'all' | ProgramActivityStatus>('all');
   const [sort, setSort] = useState<ListSort>({ key: 'created', desc: true });
   const [page, setPage] = useState(1);
 
@@ -51,9 +51,9 @@ export function ProgramsTable({ centerId }: { centerId?: string | null } = {}) {
   }, [reasons]);
   const toggleSort = (key: string) => setSort((current) => ({ key, desc: current.key === key ? !current.desc : key === 'created' || key === 'start' }));
 
-  const chips: { value: 'all' | ProgramStatus; label: string; count?: number }[] = [
+  const chips: { value: 'all' | ProgramActivityStatus; label: string; count?: number }[] = [
     { value: 'all', label: 'Tous', count: summary?.total },
-    ...STATUS_ORDER.map((s) => ({ value: s, label: PROGRAM_LIST_LABELS[s], count: summary?.byStatus[s] })),
+    ...STATUS_ORDER.map((s) => ({ value: s, label: PROGRAM_LIST_LABELS[s], count: summary?.activityByStatus?.[s] ?? (s === 'non_demarre' ? undefined : summary?.byStatus[s]) })),
   ];
 
   return (
@@ -133,7 +133,7 @@ export function ProgramsTable({ centerId }: { centerId?: string | null } = {}) {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell><Badge variant="secondary" className={`text-xs ${programBadge[program.status]}`}>{PROGRAM_LIST_LABELS[program.status]}</Badge></TableCell>
+                        <TableCell><Badge variant="secondary" className={`text-xs ${(program.activityStatus === 'non_demarre' ? programBadge.non_actif : programBadge[program.activityStatus ?? program.status])}`}>{PROGRAM_LIST_LABELS[program.activityStatus ?? program.status]}</Badge></TableCell>
                         <TableCell><ProgressBar value={program.validatedCount} total={program.selectedCount} /></TableCell>
                         <TableCell className="text-right text-sm"><ScoreBar score={program.averageScore} /></TableCell>
                         <TableCell className="text-sm text-gray-600 whitespace-nowrap">{program.startedAt ? formatDate(program.startedAt) : <span className="text-gray-400">Non démarré</span>}</TableCell>
@@ -148,6 +148,8 @@ export function ProgramsTable({ centerId }: { centerId?: string | null } = {}) {
                           {(program.status === 'actif' || program.status === 'non_actif') && (
                             <>
                               {next ? <span className="line-clamp-1" title={next.title}>Prochaine : <strong>{next.code}</strong> {next.title}</span> : <span className="text-gray-400">Toutes les séances sont validées</span>}
+                              {program.activityStatus === 'non_actif' && <p className="text-xs text-amber-700">Sans activité depuis 15 jours</p>}
+                              {program.lastActivityAt && <p className="text-xs text-gray-400">Dernière activité le {formatDate(program.lastActivityAt)}</p>}
                               {program.lastValidatedAt && <p className="text-xs text-gray-400">Dernière séance le {formatDate(program.lastValidatedAt)}</p>}
                             </>
                           )}

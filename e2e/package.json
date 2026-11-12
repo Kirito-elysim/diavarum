@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scenario.mjs"
+    "test": "node scenario.mjs",
+    "test:unit": "node course-editor-model.mjs && node course-charter.mjs && node api-session.mjs && node list-completeness.mjs",
+    "test:courses": "node course-routing.mjs && node course-theme.mjs && node course-editor.mjs && node learner-workflow.mjs"
   },
   "devDependencies": {
     "playwright": "^1.55.0"

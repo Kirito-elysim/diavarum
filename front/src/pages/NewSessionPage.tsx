@@ -24,10 +24,12 @@ export default function NewSessionPage() {
   const patient = patients?.member.find((p) => p.id === patientId);
   const { data: program, isLoading: programLoading } = usePatientProgram(patient?.['@id']);
   const { launch, confirmation } = useCourseLaunch(patientId, program);
-  const selection = program?.modules.filter((m) => m.selected) ?? [];
+  const selection = program?.modules.filter((m) => m.selected && m.status !== 'valide') ?? [];
+
+  const canLaunch = selection.some((m) => m.module.id === moduleId);
 
   const start = () => {
-    if (patient && program && moduleId) {
+    if (patient && program && canLaunch) {
       launch(moduleId);
     }
   };
@@ -96,7 +98,7 @@ export default function NewSessionPage() {
 
           <Button
             className="w-full h-12 text-base font-semibold bg-orange-500 hover:bg-orange-600 text-white shadow-sm shadow-orange-200 gap-2"
-            disabled={!patient || !program || !moduleId}
+            disabled={!patient || !program || !canLaunch}
             onClick={start}
           >
             <Play className="w-5 h-5" />

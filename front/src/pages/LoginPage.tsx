@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { Loader2, Activity, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 import { ApiError } from '../lib/api';
 
 /**
@@ -30,7 +30,8 @@ export default function LoginPage() {
   const { login, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname ?? '/dashboard';
+  const destination = (location.state as { from?: { pathname: string; search?: string; hash?: string } } | null)?.from;
+  const from = destination ? `${destination.pathname}${destination.search ?? ''}${destination.hash ?? ''}` : '/dashboard';
 
   if (!isLoading && user) return <Navigate to={from} replace />;
 
@@ -53,10 +54,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-500 rounded-2xl mb-4 shadow-lg shadow-orange-200">
-            <Activity className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-diaverum-green tracking-tight">Diaverum</h1>
+          <h1><img src="/brand/diaverum-logo-primary.svg" alt="Diaverum" width="510" height="152" className="mx-auto mb-4 h-auto w-64 max-w-full" /></h1>
           <p className="text-gray-500 mt-1">Parcours d'entraînement des patients</p>
         </div>
 

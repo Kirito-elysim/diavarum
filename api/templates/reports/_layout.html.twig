@@ -7,7 +7,7 @@
     @page { margin: 22mm 16mm 18mm; }
     body { font-family: 'DejaVu Sans', sans-serif; font-size: 9pt; color: #1f2937; }
     header { position: fixed; top: -16mm; left: 0; right: 0; border-bottom: 2px solid #E86825; padding-bottom: 2mm; }
-    header .brand { color: #004138; font-weight: bold; font-size: 11pt; }
+    header .brand { color: #004138; font-weight: bold; font-size: 11pt; margin-left: 3mm; }
     header .doc { float: right; color: #6b7280; font-size: 8pt; margin-top: 1mm; }
     footer { position: fixed; bottom: -12mm; left: 0; right: 0; font-size: 7pt; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 1.5mm; }
     h1 { color: #004138; font-size: 16pt; margin: 0 0 1mm; }
@@ -29,7 +29,7 @@
 </style>
 </head>
 <body>
-<header><span class="brand">Diaverum · Parcours d'entraînement des patients</span><span class="doc">{% block doc %}{% endblock %}</span></header>
+<header><img src="{{ logo }}" alt="Diaverum" style="height: 9mm"> <span class="brand">Parcours d'entraînement des patients</span><span class="doc">{% block doc %}{% endblock %}</span></header>
 <footer>Document confidentiel — données de santé. Édité le {{ 'now'|date('d/m/Y à H:i') }}.</footer>
 {% block body %}{% endblock %}
 </body>

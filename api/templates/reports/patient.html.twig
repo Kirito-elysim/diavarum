@@ -10,6 +10,8 @@
 
 {% if r.program is null %}
     <p>Aucun parcours d'entraînement.</p>
+{% elseif r.neverStarted %}
+    <p>Statut du parcours : <strong>{{ r.program.status }}</strong>. Aucune séance n'a encore été lancée.</p>
 {% else %}
     {% set p = r.program %}
     <table class="kpis"><tr>
@@ -20,13 +22,13 @@
     </tr></table>
     <p class="muted small">
         {% if p.startedAt %}Démarré le {{ p.startedAt|date('d/m/Y') }}.{% endif %}
-        {% if p.completed %}Achevé le {{ p.completedAt|date('d/m/Y') }}{% if p.validatedBy %}, validé par {{ p.validatedBy }}{% endif %}.{% endif %}
+        {% if p.completed %}Achevé le {{ p.completedAt|date('d/m/Y') }}{% if p.validatedBy %}, clôturé par {{ p.validatedBy }}{% endif %}.{% endif %}
     </p>
 
     <h2>Séances du parcours</h2>
     <table>
-        <colgroup><col style="width: 34%"><col style="width: 13%"><col style="width: 8%"><col style="width: 9%"><col style="width: 14%"><col style="width: 22%"></colgroup>
-        <thead><tr><th>Séance</th><th>Statut</th><th class="num">Score</th><th class="num">Durée</th><th>Validée le</th><th>Compétences validées</th></tr></thead>
+        <colgroup><col style="width: 28%"><col style="width: 11%"><col style="width: 7%"><col style="width: 8%"><col style="width: 12%"><col style="width: 13%"><col style="width: 21%"></colgroup>
+        <thead><tr><th>Séance</th><th>Statut</th><th class="num">Score</th><th class="num">Durée</th><th>Validée le</th><th>IDE</th><th>Compétences validées</th></tr></thead>
         <tbody>
         {% for c in r.courses %}
             <tr>
@@ -35,6 +37,7 @@
                 <td class="num">{{ c.score is not null ? c.score ~ ' %' : '—' }}</td>
                 <td class="num">{{ c.durationSeconds is not null ? (c.durationSeconds / 60)|round ~ ' min' : '—' }}</td>
                 <td>{{ c.validatedAt ? c.validatedAt|date('d/m/Y H:i') : '—' }}</td>
+                <td class="small">{{ c.nurse ?? '—' }}</td>
                 <td class="small">
                     {{ c.competencies|join(' ; ') }}
                     {% if c.competenciesNotValidated is not empty %}<br><span class="muted">Non validées : {{ c.competenciesNotValidated|join(' ; ') }}</span>{% endif %}

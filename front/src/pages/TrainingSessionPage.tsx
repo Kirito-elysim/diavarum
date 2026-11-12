@@ -2,7 +2,7 @@ import { CourseNavigation } from '../components/CourseNavigation';
 import { PictoGridView } from '../components/PictoGridView';
 import { CourseText } from '../components/CourseText';
 import { courseTextStyle } from '../lib/courseTextStyle';
-import { CoursePageCounter, CoursePageHeading } from '../components/CoursePageHeading';
+import { CourseHeader } from '../components/CourseHeader';
 import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useSearchParams, useNavigate, useBlocker, useLocation } from 'react-router-dom';
 import { useInterruptSession, useModule, usePatient, useProgram, useStartSession, useValidateSession, verifySecurityCode } from '../api/hooks';
@@ -32,7 +32,7 @@ import type {
 } from '../types';
 // New block types are imported by their component props; no extra type imports needed here.
 import { cn } from '../lib/utils';
-import { infoCardCategory, pageHeaderMeta } from '../lib/courseVisuals';
+import { infoCardCategory } from '../lib/courseVisuals';
 import { HotspotMarker } from '../components/HotspotMarker';
 
 /* ─── Fullscreen helpers ──────────────────────────────────────────────────── */
@@ -104,7 +104,7 @@ function ImageBlockView({ block }: { block: ImageBlock }) {
             <ZoomIn className="w-4 h-4 text-white" />
           </div>
         </div>
-        {block.caption && <figcaption className="text-sm text-[#1F3A34]/60 text-center font-medium italic px-2">{block.caption}</figcaption>}
+        {block.caption && <figcaption className="course-label text-[#004138]/60 text-center font-medium italic px-2">{block.caption}</figcaption>}
       </figure>
       {zoomed && (
         <div className="fixed inset-0 z-[10000] bg-black/95 flex items-center justify-center p-4" onClick={() => setZoomed(false)}>
@@ -112,7 +112,7 @@ function ImageBlockView({ block }: { block: ImageBlock }) {
             <X className="w-6 h-6" />
           </button>
           <img src={block.url} alt={block.alt} className="max-w-full max-h-[90vh] rounded-2xl object-contain fade-scale-in" onClick={(e) => e.stopPropagation()} />
-          {block.caption && <p className="absolute bottom-6 left-0 right-0 text-center text-white/60 text-sm">{block.caption}</p>}
+          {block.caption && <p className="absolute bottom-6 left-0 right-0 text-center text-white/60 course-label">{block.caption}</p>}
         </div>
       )}
     </>
@@ -164,7 +164,7 @@ function TimelineBlockView({ block }: { block: TimelineBlock }) {
       {block.title && (
         <div className="px-5 pt-5 pb-3 flex items-center gap-2">
           <div className="w-1.5 h-6 rounded-full bg-[#E86825]" />
-          <span className="text-[#004138] font-bold text-base">{block.title}</span>
+          <span className="text-[#004138] font-bold course-label">{block.title}</span>
         </div>
       )}
 
@@ -181,19 +181,19 @@ function TimelineBlockView({ block }: { block: TimelineBlock }) {
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(3,7,18,0.97) 0%, rgba(3,7,18,0.6) 55%, rgba(3,7,18,0.25) 100%)' }} />
             <div className="relative h-full flex flex-col justify-end px-6 pb-6 pt-16" style={{ minHeight: 340 }}>
               {item.tag && (
-                <span className="inline-flex self-start px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-3"
-                  style={{ backgroundColor: 'rgba(249,115,22,0.25)', color: '#fb923c', border: '1px solid rgba(249,115,22,0.4)' }}>
+                <span className="inline-flex self-start px-3 py-1 rounded-full course-caption font-bold uppercase tracking-widest mb-3"
+                  style={{ backgroundColor: 'rgba(232,104,37,0.25)', color: '#FCC6A8', border: '1px solid rgba(232,104,37,0.4)' }}>
                   {item.tag}
                 </span>
               )}
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 text-orange-400 font-black text-lg"
-                  style={{ backgroundColor: 'rgba(249,115,22,0.2)', border: '2px solid rgba(249,115,22,0.5)' }}>
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 text-orange-400 font-black course-copy"
+                  style={{ backgroundColor: 'rgba(232,104,37,0.2)', border: '2px solid rgba(232,104,37,0.5)' }}>
                   {item.step}
                 </div>
                 <div>
-                  <h3 className="text-white font-black text-xl leading-tight mb-1.5">{item.title}</h3>
-                  <p className="text-white/70 text-sm leading-relaxed">{item.content}</p>
+                  <h3 className="text-white font-black course-copy leading-tight mb-1.5">{item.title}</h3>
+                  <p className="text-white/70 course-label leading-relaxed">{item.content}</p>
                 </div>
               </div>
             </div>
@@ -247,7 +247,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
             key={hs.id}
             onClick={(e) => { e.stopPropagation(); setActiveId(hs.id === activeId ? null : hs.id); }}
             className={cn(
-              'absolute flex items-center justify-center rounded-full font-black text-xs shadow-lg transition-all duration-200 touch-manipulation',
+              'absolute flex items-center justify-center rounded-full font-black course-caption shadow-lg transition-all duration-200 touch-manipulation',
               hs.id === activeId
                 ? 'w-12 h-12 bg-orange-500 text-white scale-110 ring-4 ring-orange-300/60'
                 : 'w-12 h-12 bg-white/90 text-orange-600 hover:scale-110 ring-2 ring-orange-400/60'
@@ -265,7 +265,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
       </div>
 
       {block.caption && (
-        <p className="text-xs text-gray-400 text-center px-5 pt-3 pb-1 font-medium italic flex items-center justify-center gap-1.5">
+        <p className="course-caption text-gray-400 text-center px-5 pt-3 pb-1 font-medium italic flex items-center justify-center gap-1.5">
           <MapPin className="w-3 h-3 flex-shrink-0" />{block.caption}
         </p>
       )}
@@ -273,19 +273,19 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
       {/* Info panel */}
       <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-none opacity-100' : 'max-h-0 opacity-0')}>
         {active && (
-          <div className="mx-4 mb-4 mt-2 rounded-2xl p-4" style={{ backgroundColor: '#fff7ed', border: '1.5px solid #fed7aa' }}>
+          <div className="mx-4 mb-4 mt-2 rounded-2xl p-4" style={{ backgroundColor: '#FFF4ED', border: '1.5px solid #FCC6A8' }}>
             <div className="flex items-start justify-between gap-3 mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
-                  <span className="flex h-full w-full items-center justify-center text-white text-xs font-black"><HotspotMarker point={active} index={block.hotspots.findIndex((h) => h.id === active.id)} /></span>
+                  <span className="flex h-full w-full items-center justify-center text-white course-caption font-black"><HotspotMarker point={active} index={block.hotspots.findIndex((h) => h.id === active.id)} /></span>
                 </div>
-                <p className="font-bold text-gray-900 text-sm">{active.label}</p>
+                <p className="font-bold text-[#004138] course-label">{active.label}</p>
               </div>
               <button aria-label="Fermer la légende" onClick={() => setActiveId(null)} className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors flex-shrink-0 touch-manipulation">
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
-            <p className="text-gray-600 text-sm leading-relaxed pl-9">{active.description}</p>
+            <p className="text-[#004138] course-copy leading-relaxed pl-9">{active.description}</p>
           </div>
         )}
       </div>
@@ -300,12 +300,12 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
               'flex items-center gap-2 px-3 py-2.5 rounded-xl text-left transition-all touch-manipulation',
               hs.id === activeId
                 ? 'bg-orange-500 text-white shadow-md shadow-orange-200'
-                : 'bg-gray-50 text-gray-700 hover:bg-orange-50 ring-1 ring-gray-100'
+                : 'bg-[#FAFAFA] text-[#004138] hover:bg-orange-50 ring-1 ring-[#004138]/15'
             )}
           >
-            <span className={cn('w-5 h-5 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0',
+            <span className={cn('w-5 h-5 rounded-lg flex items-center justify-center course-caption font-black flex-shrink-0',
               hs.id === activeId ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-600')}><HotspotMarker point={hs} index={i} className="h-3.5 w-3.5" /></span>
-            <span className="text-xs font-semibold truncate">{hs.label}</span>
+            <span className="course-label font-semibold break-words min-w-0">{hs.label}</span>
           </button>
         ))}
       </div>
@@ -345,7 +345,7 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white" style={{ border: '1px solid rgba(0,65,56,0.1)' }}>
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-            <span className="text-xs text-[#004138]/50 truncate font-mono">{block.url}</span>
+            <span className="course-caption text-[#004138]/50 truncate font-mono">{block.url}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -380,7 +380,7 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
               <div className="h-2 rounded-full bg-[#004138]/10 animate-pulse" />
               <div className="h-2 rounded-full bg-[#004138]/8 animate-pulse w-3/4 mx-auto" />
             </div>
-            <p className="text-[#004138]/40 text-xs">Chargement du contenu…</p>
+            <p className="text-[#004138]/40 course-caption">Chargement du contenu…</p>
           </div>
         )}
 
@@ -392,15 +392,15 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
             </div>
             <div>
               <p className="text-[#004138] font-semibold mb-1">Contenu inaccessible</p>
-              <p className="text-[#1F3A34]/60 text-sm">Ce site bloque l'intégration dans une page.</p>
+              <p className="text-[#004138]/60 course-label">Ce site bloque l'intégration dans une page.</p>
             </div>
             <div className="flex gap-3">
-              <button onClick={reload} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#004138]/70 hover:bg-[#ECF5E9] text-sm font-medium transition-all touch-manipulation" style={{ border: '1px solid rgba(0,65,56,0.14)' }}>
+              <button onClick={reload} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#004138]/70 hover:bg-[#ECF5E9] course-label font-medium transition-all touch-manipulation" style={{ border: '1px solid rgba(0,65,56,0.14)' }}>
                 <RefreshCw className="w-4 h-4" />
                 Réessayer
               </button>
               <a href={block.url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFF4ED] text-[#A64314] hover:bg-[#FFE0D0] text-sm font-medium transition-all touch-manipulation">
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFF4ED] text-[#A64314] hover:bg-[#FFE0D0] course-label font-medium transition-all touch-manipulation">
                 <ExternalLink className="w-4 h-4" />
                 Ouvrir
               </a>
@@ -422,7 +422,7 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
       </div>
 
       {block.caption && (
-        <p className="text-xs text-[#004138]/40 text-center px-5 py-3 italic" style={{ borderTop: '1px solid rgba(0,65,56,0.08)' }}>
+        <p className="course-caption text-[#004138]/40 text-center px-5 py-3 italic" style={{ borderTop: '1px solid rgba(0,65,56,0.08)' }}>
           {block.caption}
         </p>
       )}
@@ -455,7 +455,7 @@ function PreSessionScreen({
       </div>
 
       <h1 className="text-4xl font-black text-[#004138] mb-2 tracking-tight">Prêt à commencer ?</h1>
-      <p className="text-[#1F3A34]/60 text-lg mb-10">
+      <p className="text-[#004138]/60 text-lg mb-10">
         {patientFirstName} {patientLastName}
       </p>
 
@@ -464,9 +464,9 @@ function PreSessionScreen({
         {parcoursTitle && (
           <div className="flex items-center gap-2 text-[#E86825] mb-4">
             <Route className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm font-semibold truncate">{parcoursTitle}</span>
+            <span className="course-label font-semibold truncate">{parcoursTitle}</span>
             {parcoursModuleIndex !== undefined && parcoursModuleTotal !== undefined && (
-              <span className="ml-auto text-[#004138]/40 text-xs whitespace-nowrap">
+              <span className="ml-auto text-[#004138]/40 course-caption whitespace-nowrap">
                 Module {parcoursModuleIndex + 1}/{parcoursModuleTotal}
               </span>
             )}
@@ -478,7 +478,7 @@ function PreSessionScreen({
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-bold text-[#004138] text-lg truncate">{moduleTitle}</p>
-            <p className="text-[#1F3A34]/50 text-sm">{modulePages} pages · {moduleDuration} min</p>
+            <p className="text-[#004138]/50 course-label">{modulePages} pages · {moduleDuration} min</p>
           </div>
         </div>
       </div>
@@ -486,7 +486,7 @@ function PreSessionScreen({
       {/* Sortie protégée : le code n'est jamais affiché à l'écran (le patient pourrait le voir) */}
       <div className="w-full max-w-sm rounded-3xl p-5 mb-10 flex items-start gap-3 text-left bg-[#FFFBEB]" style={{ border: '1px solid rgba(245,158,11,0.3)' }}>
         <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-        <p className="text-sm text-amber-800">
+        <p className="course-label text-amber-800">
           Pour quitter la séance, votre code de sécurité personnel vous sera demandé.
         </p>
       </div>
@@ -499,7 +499,7 @@ function PreSessionScreen({
         Commencer la séance
         <ArrowRight className="w-6 h-6" />
       </button>
-      <p className="text-[#004138]/35 text-xs mt-3">La séance s'ouvrira en plein écran</p>
+      <p className="text-[#004138]/35 course-caption mt-3">La séance s'ouvrira en plein écran</p>
     </div>
   );
 }
@@ -554,7 +554,7 @@ function PINExitModal({
       </div>
 
       <h2 className="text-2xl font-black text-white mb-1">{title}</h2>
-      <p className="text-white/50 text-sm mb-8 text-center max-w-xs">{subtitle}</p>
+      <p className="text-white/50 course-label mb-8 text-center max-w-xs">{subtitle}</p>
 
       {/* Dots */}
       <div className={cn('flex items-center gap-4 mb-3', shake && 'shake')}>
@@ -569,7 +569,7 @@ function PINExitModal({
           />
         ))}
       </div>
-      <p className="h-6 mb-4 text-sm text-red-300">{message}</p>
+      <p className="h-6 mb-4 course-label text-red-300">{message}</p>
 
       {/* Keypad */}
       <div className="grid grid-cols-3 gap-3 w-full max-w-xs">
@@ -611,7 +611,7 @@ function PINExitModal({
 
       <button
         onClick={onCancel}
-        className="mt-8 text-white/50 text-sm hover:text-white/70 transition-colors touch-manipulation"
+        className="mt-8 text-white/50 course-label hover:text-white/70 transition-colors touch-manipulation"
       >
         Annuler
       </button>
@@ -635,12 +635,12 @@ function PauseOverlay({
       </div>
 
       <h2 className="text-4xl font-black text-[#004138] mb-2">Séance en pause</h2>
-      <p className="text-[#1F3A34]/60 text-base mb-10 text-center">{moduleName} · {patientName}</p>
+      <p className="text-[#004138]/60 course-label mb-10 text-center">{moduleName} · {patientName}</p>
 
       <div className="flex items-center gap-3 bg-white px-8 py-5 rounded-3xl mb-12 shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
         <Clock className="w-6 h-6 text-[#004138]/60" />
-        <span className="text-5xl font-black text-[#004138] tracking-tight font-mono">{mm}:{ss}</span>
-        <span className="text-[#1F3A34]/40 text-sm font-semibold">écoulé</span>
+        <span className="text-5xl font-black text-[#004138] tracking-tight font-sans tabular-nums">{mm}:{ss}</span>
+        <span className="text-[#004138]/40 course-label font-semibold">écoulé</span>
       </div>
 
       <div className="w-full max-w-sm space-y-3">
@@ -653,7 +653,7 @@ function PauseOverlay({
         </button>
         <button
           onClick={onRequestExit}
-          className="w-full h-14 rounded-full border-2 font-semibold text-base hover:bg-[#ECF5E9] active:bg-[#dcebdd] transition-colors touch-manipulation flex items-center justify-center gap-2"
+          className="w-full h-14 rounded-full border-2 font-semibold course-label hover:bg-[#ECF5E9] active:bg-[#dcebdd] transition-colors touch-manipulation flex items-center justify-center gap-2"
           style={{ borderColor: 'rgba(0,65,56,0.18)', color: '#004138' }}
         >
           <Shield className="w-4 h-4" />
@@ -738,7 +738,7 @@ function ModuleCompletionScreen({
       </div>
 
       <h1 className="text-4xl font-black text-white mb-2">Cours validé</h1>
-      <p className="text-white/50 text-base mb-8">{patient.firstName} {patient.lastName} · {module.title}</p>
+      <p className="text-white/50 course-label mb-8">{patient.firstName} {patient.lastName} · {module.title}</p>
 
       {/* Score + time */}
       <div className="flex items-center gap-4 mb-6">
@@ -747,21 +747,21 @@ function ModuleCompletionScreen({
           isExcellent ? 'border-emerald-400/60 bg-emerald-500/10' : isGood ? 'border-amber-400/60 bg-amber-500/10' : 'border-red-400/60 bg-red-500/10'
         )}>
           <span className={cn('text-3xl font-black leading-none', isExcellent ? 'text-emerald-400' : isGood ? 'text-amber-400' : 'text-red-400')}>{score === null ? '—' : `${score}%`}</span>
-          <span className="text-xs font-semibold text-white/50 mt-1 uppercase tracking-wider">Score</span>
+          <span className="course-caption font-semibold text-white/50 mt-1 uppercase tracking-wider">Score</span>
         </div>
         <div className="w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 border-white/15 bg-white/5">
-          <span className="text-2xl font-black text-white leading-none font-mono">{mm}:{ss}</span>
-          <span className="text-xs font-semibold text-white/50 mt-1 uppercase tracking-wider">Durée</span>
+          <span className="text-2xl font-black text-white leading-none font-sans tabular-nums">{mm}:{ss}</span>
+          <span className="course-caption font-semibold text-white/50 mt-1 uppercase tracking-wider">Durée</span>
         </div>
       </div>
 
-      <p className={cn('text-base font-semibold mb-1', isExcellent ? 'text-emerald-400' : isGood ? 'text-amber-400' : 'text-red-400')}>
+      <p className={cn('course-label font-semibold mb-1', isExcellent ? 'text-emerald-400' : isGood ? 'text-amber-400' : 'text-red-400')}>
         {score === null ? 'Cours sans exercice noté' : isExcellent ? 'Excellent résultat !' : isGood ? 'Bon résultat' : 'À améliorer'}
       </p>
       {competencies && competencies.total > 0 && (
-        <p className="text-white/70 text-sm mb-2">{competencies.validated} compétence(s) sur {competencies.total} validée(s)</p>
+        <p className="text-white/70 course-label mb-2">{competencies.validated} compétence(s) sur {competencies.total} validée(s)</p>
       )}
-      <p className="text-white/50 text-sm max-w-xs mb-10">
+      <p className="text-white/50 course-label max-w-xs mb-10">
         {score === null ? 'Durée et compétences enregistrées.' : isExcellent ? 'Contenu parfaitement assimilé.' : isGood ? 'Certains points à revoir.' : 'Révision approfondie recommandée.'}
       </p>
 
@@ -769,14 +769,14 @@ function ModuleCompletionScreen({
         {onNext && nextModuleName && (
           <button
             onClick={onNext}
-            className="w-full h-16 px-5 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-base flex items-center justify-center gap-3 shadow-lg shadow-orange-900/20 active:scale-[0.98] transition-transform touch-manipulation"
+            className="w-full h-16 px-5 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold course-label flex items-center justify-center gap-3 shadow-lg shadow-orange-900/20 active:scale-[0.98] transition-transform touch-manipulation"
           >
             <div className="flex-1 min-w-0 text-left">
-              <p className="text-xs font-normal opacity-75 mb-0.5">Cours suivant (rendre la tablette au patient)</p>
+              <p className="course-caption font-normal opacity-75 mb-0.5">Cours suivant (rendre la tablette au patient)</p>
               <p className="truncate">{nextModuleName}</p>
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
-              {nextModuleDuration && <span className="text-xs opacity-75">{nextModuleDuration} min</span>}
+              {nextModuleDuration && <span className="course-caption opacity-75">{nextModuleDuration} min</span>}
               <ArrowRight className="w-5 h-5" />
             </div>
           </button>
@@ -784,10 +784,10 @@ function ModuleCompletionScreen({
         <button
           onClick={onRequestExit}
           className={cn(
-            'w-full rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-colors touch-manipulation',
+            'w-full rounded-full font-semibold course-label flex items-center justify-center gap-2 transition-colors touch-manipulation',
             onNext
               ? 'h-12 border border-white/20 text-white/60 hover:bg-white/5 active:bg-white/10'
-              : 'h-16 bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-base shadow-lg shadow-orange-900/20 active:scale-[0.98]'
+              : 'h-16 bg-[#E86825] hover:bg-[#CC5518] text-white font-bold course-label shadow-lg shadow-orange-900/20 active:scale-[0.98]'
           )}
         >
           <ArrowRight className="w-4 h-4 rotate-180" />
@@ -825,14 +825,14 @@ function PatientScoreScreen({ score, onFinish }: { score: number | null; onFinis
       <img src="/illustrations/fin-de-cours.png" alt="" className="w-40 h-40 object-contain mb-2" />
       <p className="text-[#004138]/70 text-lg font-semibold uppercase tracking-widest mb-4">Vous avez obtenu le score de</p>
       <p className="text-8xl font-black text-[#004138] mb-4 pop-in">{score === null ? '—' : `${score} %`}</p>
-      <p className="text-[#1F3A34]/60 text-base mb-12">{score === null ? 'Ce cours ne comporte pas de quiz noté.' : celebrate ? 'Bravo !' : 'Merci pour votre participation.'}</p>
+      <p className="text-[#004138]/60 course-label mb-12">{score === null ? 'Ce cours ne comporte pas de quiz noté.' : celebrate ? 'Bravo !' : 'Merci pour votre participation.'}</p>
       <button
         onClick={onFinish}
         className="w-full max-w-sm h-16 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold text-xl shadow-xl shadow-orange-900/15 active:scale-[0.97] transition-transform touch-manipulation"
       >
         Fin du cours
       </button>
-      <p className="text-[#004138]/40 text-xs mt-3">Rendez la tablette à votre infirmière</p>
+      <p className="text-[#004138]/40 course-caption mt-3">Rendez la tablette à votre infirmière</p>
     </div>
   );
 }
@@ -862,7 +862,7 @@ function CompetencyValidationScreen({
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="flex items-center gap-3 mb-2 text-amber-300">
           <Shield className="w-5 h-5" />
-          <span className="text-sm font-semibold uppercase tracking-wider">Espace IDE</span>
+          <span className="course-label font-semibold uppercase tracking-wider">Espace IDE</span>
         </div>
         <h1 className="text-3xl font-black text-white">Compétences d'entraînement</h1>
         <p className="text-white/50 mt-1 mb-8">{moduleTitle} · {patientName}</p>
@@ -874,14 +874,14 @@ function CompetencyValidationScreen({
         <div className="space-y-3 mb-10">
           {competencies.map((competency) => (
             <div key={competency.id} className="rounded-2xl p-5" style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              <p className="text-white text-base mb-4">{competency.label}</p>
+              <p className="text-white course-label mb-4">{competency.label}</p>
               <div className="grid grid-cols-2 gap-3">
                 {[true, false].map((value) => (
                   <button
                     key={String(value)}
                     onClick={() => onChoose(competency.id, value)}
                     className={cn(
-                      'h-12 rounded-full font-semibold text-sm transition-all touch-manipulation',
+                      'h-12 rounded-full font-semibold course-label transition-all touch-manipulation',
                       choices[competency.id] === value
                         ? value ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'
                         : 'bg-white/8 text-white/60 border border-white/15'
@@ -895,15 +895,15 @@ function CompetencyValidationScreen({
           ))}
         </div>
 
-        {error && <p className="text-red-300 text-sm mb-4">{error}</p>}
-        <p className="text-white/50 text-xs mb-3">
+        {error && <p className="text-red-300 course-label mb-4">{error}</p>}
+        <p className="text-white/50 course-caption mb-3">
           Valider les compétences ne suffit pas : « Terminer le cours » enregistre la séance (durée, score, compétences).
         </p>
         {confirming && (
           <div className="fixed inset-0 z-[10001] bg-black/60 flex items-center justify-center px-6">
             <div className="w-full max-w-sm rounded-3xl bg-[#1C5335] border border-white/15 p-6 text-center shadow-2xl">
               <p className="text-white text-lg font-bold mb-2">Clôturer la séance ?</p>
-              <p className="text-white/60 text-sm mb-6">
+              <p className="text-white/60 course-label mb-6">
                 {competencies.length ? `${validatedCount} compétence(s) validée(s) sur ${competencies.length}. ` : ''}
                 La durée et le score seront enregistrés ; cette action est définitive.
               </p>
@@ -922,7 +922,7 @@ function CompetencyValidationScreen({
           {saving ? <RefreshCw className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-6 h-6" />}
           Terminer le cours
         </button>
-        <button onClick={onBack} className="w-full mt-4 text-white/50 text-sm touch-manipulation">Revenir au contenu du cours</button>
+        <button onClick={onBack} className="w-full mt-4 text-white/50 course-label touch-manipulation">Revenir au contenu du cours</button>
       </div>
     </div>
   );
@@ -1036,12 +1036,12 @@ export default function TrainingSessionPage() {
     navigate('/patients');
   }} />;
 
-  const failed = !moduleId || (!isPreview && !patientId) || moduleQuery.isError || patientQuery.isError;
+  const failed = !moduleId || (!isPreview && (!patientId || !programId)) || moduleQuery.isError || patientQuery.isError || programQuery.isError;
   if (failed) {
     return (
       <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
         <AlertCircle className="w-10 h-10 text-red-500" />
-        <p className="text-[#1F3A34]/80">Impossible d'ouvrir ce cours pour ce patient.</p>
+        <p className="text-[#004138]/80">Impossible d'ouvrir ce cours pour ce patient.</p>
         <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour</button>
       </div>
     );
@@ -1052,7 +1052,7 @@ export default function TrainingSessionPage() {
   const loading = !module || (!isPreview && !patient) || (!!programId && programQuery.isLoading);
   if (loading) {
     return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center" style={{ background: '#ECF5E9' }}>
+      <div className="course-theme fixed inset-0 z-[9999] flex items-center justify-center" role="status" aria-label="Chargement du cours">
         <RefreshCw className="w-8 h-8 text-[#004138]/40 animate-spin" />
       </div>
     );
@@ -1062,7 +1062,7 @@ export default function TrainingSessionPage() {
     return (
       <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 p-8 text-center" style={{ background: '#ECF5E9' }}>
         <BookOpen className="w-10 h-10 text-[#004138]/40" />
-        <p className="text-[#1F3A34]/80">Ce cours n'a pas encore de contenu.</p>
+        <p className="text-[#004138]/80">Ce cours n'a pas encore de contenu.</p>
         <button onClick={leaveUnavailableCourse} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour</button>
       </div>
     );
@@ -1071,11 +1071,11 @@ export default function TrainingSessionPage() {
   // Cours suivant : prochain cours sélectionné du parcours
   const selection = programQuery.data?.modules.filter((m) => m.selected) ?? [];
   const currentIndex = selection.findIndex((m) => m.module.id === module.id);
-  const next = currentIndex >= 0 ? selection[currentIndex + 1] : undefined;
+  const next = currentIndex >= 0 ? selection.slice(currentIndex + 1).find((item) => item.status !== 'valide') : undefined;
 
   return (
     <SessionRunner
-      key={module.id}
+      key={`${module.id}:${patientId}:${programId}:${isPreview}`}
       module={{
         id: module.id,
         code: module.code,
@@ -1146,8 +1146,6 @@ function SessionRunner({
 
   const totalPages  = module.pages.length;
   const currentPage = module.pages[pageIndex];
-  const progress    = Math.round(((pageIndex + 1) / totalPages) * 100);
-  const headerMeta  = pageHeaderMeta(currentPage);
 
   // Le chronomètre ne tourne que pendant le cours côté patient (arrêté à la remise de la tablette à l'IDE)
   const { elapsed, mm, ss } = useStopwatch(module.code !== 'PT' && !isPreview && phase === 'active' && !!sessionId && !paused && blocker.state !== 'blocked' && !restoredExit);
@@ -1251,7 +1249,7 @@ function SessionRunner({
           </div>
           <div className="text-center">
             <h2 className="text-2xl font-bold text-[#004138] mb-2">Prévisualisation terminée</h2>
-            <p className="text-[#1F3A34]/70 text-sm">Vous avez parcouru toutes les pages du cours « {module.title} »</p>
+            <p className="text-[#004138]/70 course-label">Vous avez parcouru toutes les pages du cours « {module.title} »</p>
           </div>
           <button
             onClick={() => navigate(-1)}
@@ -1335,7 +1333,7 @@ function SessionRunner({
         {apiError ? (
           <>
             <AlertCircle className="w-10 h-10 text-red-500" />
-            <p className="text-[#1F3A34]/80 max-w-sm">{apiError}</p>
+            <p className="text-[#004138]/80 max-w-sm">{apiError}</p>
             <button onClick={backToPatient} className="h-12 px-6 rounded-2xl bg-white border-2 border-[#004138]/15 text-[#004138] font-semibold">Retour à la fiche patient</button>
           </>
         ) : (
@@ -1349,18 +1347,13 @@ function SessionRunner({
     <div className="course-theme fixed inset-0 z-[9999] flex flex-col" style={{ userSelect: 'none', background: '#ECF5E9' }}>
 
       {/* ── Header (carte arrondie, flottante) ──────────────────────── */}
-      <header className="flex-shrink-0 mx-4 mt-4 rounded-3xl overflow-hidden shadow-sm" style={{ background: '#1C5335' }}>
-        <div className="flex flex-wrap items-end gap-x-6 gap-y-3 px-5 py-4">
-          <div className="min-w-0 flex-1 basis-72">
-            <CoursePageHeading title={currentPage.title} instruction={headerMeta.instruction} icon={headerMeta.icon} showCounter={false} pageNumber={pageIndex + 1} totalPages={totalPages} />
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0 self-end">
+      <CourseHeader page={currentPage} pageNumber={pageIndex + 1} totalPages={totalPages} actions={<>
             {isPreview ? (
               <button
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2 h-11 px-4 rounded-full bg-white/10 text-white/60 hover:bg-white/15 transition-all touch-manipulation"
               >
-                <span className="text-sm font-medium">Fermer l’aperçu</span>
+                <span className="course-label font-medium">Fermer l’aperçu</span>
               </button>
             ) : (
               <>
@@ -1369,12 +1362,12 @@ function SessionRunner({
                   title={`Durée indicative : ${module.estimatedDuration} min`}
                 >
                   <Clock className={cn('w-4 h-4', overEstimate ? 'text-amber-300' : 'text-white/80')} />
-                  <span className={cn('font-medium text-base font-sans leading-none tabular-nums', overEstimate ? 'text-amber-300' : 'text-white/80')}>{mm}:{ss}</span>
+                  <span className={cn('font-medium course-label font-sans leading-none tabular-nums', overEstimate ? 'text-amber-300' : 'text-white/80')}>{mm}:{ss}</span>
                 </div>}
                 <button
                   onClick={toggle}
                   className={cn(
-                    'h-11 px-3 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-all touch-manipulation',
+                    'h-11 px-3 rounded-full flex items-center justify-center gap-2 course-label font-medium transition-all touch-manipulation',
                     paused ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30' : 'bg-white/10 text-white/60 hover:bg-white/15'
                   )}
                 >
@@ -1383,18 +1376,7 @@ function SessionRunner({
                 </button>
               </>
             )}
-            <CoursePageCounter pageNumber={pageIndex + 1} totalPages={totalPages} />
-          </div>
-        </div>
-
-        {/* Progress bar */}
-        <div className="relative h-1 bg-white/10">
-          <div
-            className="absolute inset-y-0 left-0 bg-gradient-to-r from-orange-500 to-amber-400 transition-all duration-500 ease-out rounded-r-full"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </header>
+      </>} />
 
       {/* ── Content (défile ; la navigation reste fixée en bas, hors du défilement) ── */}
       <main ref={contentRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
@@ -1410,7 +1392,7 @@ function SessionRunner({
           {pageIndex === 0 && totalPages > 1 && (
             <div className="flex items-center justify-center gap-3 pt-4 text-[#004138]/35">
               <ChevronLeft className="w-4 h-4" />
-              <p className="text-xs font-medium">Glissez pour naviguer</p>
+              <p className="course-caption font-medium">Glissez pour naviguer</p>
               <ChevronRight className="w-4 h-4" />
             </div>
           )}

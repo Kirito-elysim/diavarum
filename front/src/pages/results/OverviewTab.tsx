@@ -6,20 +6,21 @@ import { formatDate } from '../../lib/format';
 import { DIAVERUM_GREEN, ORANGE } from './shared';
 import { EmptyState } from '../../components/ListParts';
 
-const STATUS_COLORS = { inactive: '#d1d5db', active: '#3b82f6', interrupted: '#f59e0b', completed: '#22c55e' };
+const STATUS_COLORS = { notStarted: '#d1d5db', inactive: '#f97316', active: '#3b82f6', interrupted: '#f59e0b', completed: '#22c55e' };
 
 /** Vue d'ensemble : entonnoir des patients, statut des parcours, activité mensuelle, motifs de clôture */
 export function OverviewTab({ stats }: { stats: Statistics }) {
   const { patients, programs } = stats.total;
-  const inProgram = programs.active.count + programs.interrupted.count + programs.completed.count;
+  const inProgram = programs.active.count + (programs.notStarted ? programs.inactive.count : 0) + programs.interrupted.count + programs.completed.count;
   const funnel = [
-    { label: 'Patients enregistrés', value: patients.registered },
+    { label: 'Patients non archivés', value: patients.registered },
     { label: 'Éligibles', value: patients.eligible.count },
     { label: 'Parcours démarrés', value: inProgram },
     { label: 'Parcours achevés', value: programs.completed.count },
   ];
   const statuses = [
-    { key: 'inactive', label: 'Non démarrés', value: programs.inactive.count },
+    { key: 'notStarted', label: 'Non démarrés', value: programs.notStarted?.count ?? programs.inactive.count },
+    { key: 'inactive', label: 'Inactifs (15 jours)', value: programs.notStarted ? programs.inactive.count : 0 },
     { key: 'active', label: 'En cours', value: programs.active.count },
     { key: 'interrupted', label: 'Clôturés', value: programs.interrupted.count },
     { key: 'completed', label: 'Achevés', value: programs.completed.count },
@@ -46,7 +47,10 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
               </div>
             );
           })}
-          <p className="text-xs text-gray-400 pt-1">Effectifs à date, en pourcentage des patients enregistrés.</p>
+          <div className="border-t border-gray-100 pt-3 space-y-2">
+            {[{label: 'Éligibles', share: patients.eligible}, {label: 'Non éligibles', share: patients.notEligible}, {label: 'En attente de décision', share: patients.pending}].map(({label, share}) => <div key={label} className="flex justify-between text-sm"><span className="text-gray-600">{label}</span><span className="tabular-nums font-medium">{share.count} <span className="font-normal text-gray-400">({share.percent != null ? `${share.percent} %` : '—'})</span></span></div>)}
+          </div>
+          <p className="text-xs text-gray-400 pt-1">Effectifs à date, en pourcentage des patients non archivés.</p>
         </CardContent>
       </Card>
 
@@ -54,7 +58,7 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
         <CardHeader className="pb-2"><CardTitle className="text-base">Parcours par statut</CardTitle></CardHeader>
         <CardContent>
           {programs.total === 0 ? <EmptyState icon={<BarChart2 className="w-8 h-8" />}>Aucun parcours</EmptyState> : (
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center gap-6">
               <div className="w-44 h-44 flex-shrink-0">
                 <ResponsiveContainer>
                   <PieChart>

@@ -85,6 +85,12 @@ class SessionCompetencyValidation implements CenterScopedInterface, AuthoredInte
         return $this->session->getModule()->getId()->equals($this->competency->getModule()->getId());
     }
 
+    #[Assert\IsTrue(message: 'Les compétences d’une séance terminée sont verrouillées.')]
+    public function isSessionEditable(): bool
+    {
+        return null === $this->session || $this->session->isInProgress();
+    }
+
     public function getScopeCenter(): ?Center
     {
         return $this->session?->getScopeCenter();

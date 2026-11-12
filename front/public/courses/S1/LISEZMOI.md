@@ -1,5 +1,3 @@
-Illustrations **provisoires** du cours S1 (droits et devoirs du patient – personne de confiance – directives anticipées).
-
-Elles sont reprises du storyboard (`doc/storybord_cours_1.pptx`), qui les utilise comme références : le graphiste
-doit produire les visuels définitifs selon les consignes « GRAPHISME » de chaque diapositive. Il suffira alors de
-remplacer ces fichiers (mêmes noms) — ou de réimporter le contenu avec de nouvelles adresses d'images.
+Illustrations **définitives** du cours S1 (droits et devoirs du patient – personne de confiance – directives
+anticipées), fournies par le graphiste (dossier `illustration seance 1/` à la racine du projet) et nommées
+d'après l'écran du storyboard (`doc/storybord_cours_1.pptx`) qu'elles illustrent.

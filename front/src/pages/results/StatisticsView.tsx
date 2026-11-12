@@ -92,7 +92,7 @@ export function StatisticsView() {
       ) : (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <Kpi icon={<Users className="w-5 h-5 text-orange-600" />} bg="bg-orange-50" label="Patients enregistrés" value={`${stats.total.patients.registered}`} hint="à date" />
+            <Kpi icon={<Users className="w-5 h-5 text-orange-600" />} bg="bg-orange-50" label="Patients non archivés" value={`${stats.total.patients.registered}`} hint="à date" />
             <Kpi icon={<Route className="w-5 h-5 text-blue-600" />} bg="bg-blue-50" label="Parcours en cours" value={`${stats.total.programs.active.count}`} hint="à date" />
             <Kpi icon={<Activity className="w-5 h-5 text-orange-600" />} bg="bg-orange-50" label="Séances validées" value={`${stats.total.activity.validatedSessions}`} hint="sur la période" />
             <Kpi icon={<Trophy className="w-5 h-5 text-amber-500" />} bg="bg-amber-50" label="Score moyen des séances" value={stats.total.activity.averageSessionScore != null ? `${stats.total.activity.averageSessionScore}%` : '—'} hint="sur la période" />

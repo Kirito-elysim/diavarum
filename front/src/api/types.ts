@@ -6,6 +6,7 @@ import type { ModulePage } from '../types';
 
 export type UserRole = 'ide' | 'cadre' | 'admin_national';
 export type EligibilityStatus = 'enregistre' | 'eligible' | 'non_eligible';
+export type ProgramActivityStatus = ProgramStatus | 'non_demarre';
 export type ProgramStatus = 'non_actif' | 'actif' | 'interrompu' | 'acheve';
 export type SessionStatus = 'en_cours' | 'validee' | 'interrompue';
 
@@ -154,6 +155,8 @@ export interface ProgramModule extends Resource {
 }
 
 export interface TrainingProgram extends Resource {
+  activityStatus?: ProgramActivityStatus;
+  lastActivityAt?: string | null;
   patient: Author & { center?: { id: string; name: string } };
   status: ProgramStatus;
   modules: ProgramModule[];
@@ -181,6 +184,7 @@ export type TrainingProgramListItem = Omit<TrainingProgram, 'modules'> & {
 };
 
 export interface TrainingSession extends Resource {
+  competencyValidations?: { id: string; competency: string; validated: boolean }[];
   patient: Author & { center?: { id: string; name: string } };
   module: { '@id': string; id: string; code: string; title: string };
   program?: string | null;
@@ -204,6 +208,8 @@ export const ELIGIBILITY_LABELS: Record<EligibilityStatus, string> = {
   non_eligible: 'Non éligible',
 };
 
+export const PROGRAM_ACTIVITY_LABELS: Record<ProgramActivityStatus, string> = {non_demarre: 'Non démarré', non_actif: 'Inactif', actif: 'En cours', interrompu: 'Interrompu', acheve: 'Achevé'};
+
 export const PROGRAM_STATUS_LABELS: Record<ProgramStatus, string> = {
   non_actif: 'Non actif',
   actif: 'En cours',
@@ -221,7 +227,7 @@ export interface Share {
 export interface AreaStatistics {
   center: string;
   patients: { registered: number; eligible: Share; notEligible: Share; pending: Share };
-  programs: { total: number; inactive: Share; active: Share; interrupted: Share; completed: Share };
+  programs: { total: number; notStarted?: Share; inactive: Share; active: Share; interrupted: Share; completed: Share };
   averageProgramScore: number | null;
   averageCompletedProgramDurationSeconds: number | null;
   /** Activité sur la période demandée (toute l'activité sans période) */
@@ -254,7 +260,7 @@ export interface NurseActivity {
     lastSessionAt: string;
     sessions: number;
     averageScore: number | null;
-    program: { status: ProgramStatus; validated: number; selected: number } | null;
+    program: { status: ProgramStatus; activityStatus?: ProgramActivityStatus; validated: number; selected: number } | null;
   }[];
 }
 

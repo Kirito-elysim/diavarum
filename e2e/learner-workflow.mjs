@@ -30,13 +30,17 @@ try {
  await page.route('**/api/modules/*',r=>r.fulfill({json:module}));
  await page.route('**/api/patients/learner-test',r=>r.fulfill({json:{id:'learner-test',firstName:'Patient',lastName:'TEST'}}));
  await page.route('**/api/training_programs/learner-test',r=>r.fulfill({json:{id:'learner-test',modules:[]}}));
- await page.route('**/api/training_programs?*', async route => {
-  const response=await route.fetch();
-  const data=await response.json();
-  for(const program of data.member ?? []) for(const item of program.modules ?? []) if(!item.module.mandatory) item.selected=false;
-  await route.fulfill({response,json:data});
- });
  let starts=0,interrupted=0,validation;
+ await page.route(/\/api\/training_programs\/[0-9a-f-]{36}$/, async route => {
+  const response = await route.fetch();
+  const program = await response.json();
+  for (const item of program.modules ?? []) {
+   if (!item.module.mandatory) item.selected = false;
+   if (!validation) { item.startedAt = null; item.status = 'non_demarre'; }
+   if (item.module.code === 'S1') item.status = validation ? 'valide' : 'non_demarre';
+  }
+  await route.fulfill({response, json:program});
+ });
  await page.route('**/api/sessions',r=>{assert.equal(r.request().method(),'POST');starts++;return r.fulfill({status:201,json:{id:'learner-test'}});});
  await page.route('**/api/sessions/learner-test/interrupt',r=>{interrupted++;return r.fulfill({json:{status:'interrompue'}});});
  await page.route('**/api/sessions/learner-test/validate',r=>{validation=r.request().postDataJSON();return r.fulfill({json:{status:'validee',score:67,durationSeconds:validation.durationSeconds}});});
@@ -48,11 +52,11 @@ try {
  try { await prompt.waitFor({timeout:3000}); } catch {}
  if(await prompt.isVisible()) await prompt.getByRole('button',{name:/^(Fermer|Non)$/}).tap();
  await page.getByRole('tab',{name:'Parcours',exact:true}).tap();
- await page.locator('div.p-3.rounded-xl',{hasText:'Droits et devoirs du patient'}).getByRole('button',{name:/Lancer|Reprendre|Refaire/}).tap();
+ await page.locator('div.p-3.rounded-xl',{hasText:'Droits et devoirs du patient'}).getByRole('button',{name:/Lancer|Reprendre/}).tap();
  await page.getByRole('alertdialog').getByRole('heading',{name:'Aucun cours optionnel sélectionné'}).waitFor();
  await page.getByRole('button',{name:'Revoir le parcours',exact:true}).tap();
  assert.equal(starts,0);
- await page.locator('div.p-3.rounded-xl',{hasText:'Droits et devoirs du patient'}).getByRole('button',{name:/Lancer|Reprendre|Refaire/}).tap();
+ await page.locator('div.p-3.rounded-xl',{hasText:'Droits et devoirs du patient'}).getByRole('button',{name:/Lancer|Reprendre/}).tap();
  await page.getByRole('alertdialog').getByRole('button',{name:'Lancer le cours',exact:true}).tap();
  await page.getByRole('button',{name:/Commencer la séance/}).tap();
  await page.getByRole('heading',{name:'Découvrir',exact:true}).waitFor();
@@ -83,7 +87,7 @@ try {
  await page.getByRole('button',{name:/Réponse correcte/}).tap();
  await page.getByRole('button',{name:'Valider ma réponse',exact:true}).tap();
  await next('Choix multiples');
- await page.getByRole('button',{name:/Page précédente/}).tap();
+ await page.getByRole('button',{name:'Précédent',exact:true}).tap();
  await page.getByRole('heading',{name:'Choix unique',exact:true}).waitFor();
  assert.equal(await page.getByRole('button',{name:/Réponse correcte/}).isDisabled(),true);
  assert.equal(await page.getByRole('button',{name:'Valider ma réponse',exact:true}).count(),0);
@@ -117,6 +121,10 @@ try {
  await page.getByRole('button',{name:'Valider',exact:true}).tap();
  await page.waitForURL(patientUrl);
  assert.equal(await page.evaluate(()=>sessionStorage.getItem('diaverum:learner-session')),null);
+ await page.getByRole('tab',{name:'Parcours',exact:true}).tap();
+ const lockedCourse = page.locator('div.p-3.rounded-xl',{hasText:'Droits et devoirs du patient'});
+ await lockedCourse.getByText(/Validée/).waitFor();
+ assert.equal(await lockedCourse.getByRole('button',{name:/Lancer|Reprendre|Refaire|Prévisualiser/}).count(),0);
  assert.equal(interrupted,0,'Aucune nouvelle séance démarrée pour quitter après rechargement');
  assert.deepEqual(errors,[]);
  console.log('Retour au back-office après saisie du code uniquement — OK');

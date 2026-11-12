@@ -3,15 +3,18 @@
 namespace App\Controller;
 
 use App\Dto\InterruptProgramRequest;
+use App\Dto\ReopenProgramRequest;
 use App\Dto\ValidateSessionRequest;
 use App\Entity\InterruptionReason;
 use App\Entity\TrainingProgram;
 use App\Entity\TrainingSession;
 use App\Entity\User;
+use App\EventListener\AccessLogSubscriber;
 use App\Training\TrainingWorkflow;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
@@ -34,7 +37,7 @@ final class TrainingWorkflowController
     #[IsGranted('CENTER_SCOPE', subject: 'session')]
     public function validateSession(
         #[MapEntity] TrainingSession $session,
-        #[MapRequestPayload] ValidateSessionRequest $request,
+        #[MapRequestPayload(acceptFormat: ['json', 'jsonld'])] ValidateSessionRequest $request,
         #[CurrentUser] User $user,
     ): JsonResponse {
         $this->workflow->validate($session, $request->durationSeconds, $request->answers, $request->competencyMap(), $user);
@@ -67,12 +70,34 @@ final class TrainingWorkflowController
         return new JsonResponse(['status' => $program->getStatus()->value]);
     }
 
+    /** Annulation de la validation d'un parcours achevé : motif obligatoire, tracé au journal d'accès */
+    #[Route('/api/training_programs/{id}/reopen', name: 'api_program_reopen', requirements: ['id' => Requirement::UUID], methods: ['POST'])]
+    #[IsGranted('ROLE_CADRE')]
+    #[IsGranted('CENTER_SCOPE', subject: 'program')]
+    public function reopenProgram(
+        #[MapEntity] TrainingProgram $program,
+        #[MapRequestPayload(acceptFormat: ['json', 'jsonld'])] ReopenProgramRequest $payload,
+        Request $request,
+    ): JsonResponse {
+        $previous = $program->getValidatedBy()?->getFullName();
+        $previousAt = $program->getCompletedAt()?->setTimezone(new \DateTimeZone('Europe/Paris'))->format('d/m/Y H:i');
+        $this->workflow->reopen($program);
+        $request->attributes->set(AccessLogSubscriber::OVERRIDE, [
+            'action' => 'action',
+            'resourceType' => 'training_program',
+            'resourceId' => $program->getId()->toRfc4122(),
+            'detail' => mb_substr(\sprintf('Validation annulée (validée par %s le %s) : %s', $previous ?? '—', $previousAt ?? '—', $payload->reason), 0, 255),
+        ]);
+
+        return new JsonResponse(['status' => $program->getStatus()->value]);
+    }
+
     /** Clôture anticipée d'un parcours, avec motifs */
     #[Route('/api/training_programs/{id}/interrupt', name: 'api_program_interrupt', requirements: ['id' => Requirement::UUID], methods: ['POST'])]
     #[IsGranted('CENTER_SCOPE', subject: 'program')]
     public function interruptProgram(
         #[MapEntity] TrainingProgram $program,
-        #[MapRequestPayload] InterruptProgramRequest $request,
+        #[MapRequestPayload(acceptFormat: ['json', 'jsonld'])] InterruptProgramRequest $request,
         #[CurrentUser] User $user,
         EntityManagerInterface $entityManager,
     ): JsonResponse {

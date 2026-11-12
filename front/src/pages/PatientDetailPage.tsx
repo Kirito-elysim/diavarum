@@ -1,3 +1,4 @@
+import { PatientProgramBis, PatientCompetencies } from '../components/PatientProgramBis';
 import { PatientProfile, PatientProfileSummary } from '../components/PatientProfile';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import {
+  Award,
   AlertTriangle,
   Archive,
   ArrowLeft,
@@ -55,6 +57,7 @@ import {
 import {
   ELIGIBILITY_LABELS,
   PROGRAM_STATUS_LABELS,
+  PROGRAM_ACTIVITY_LABELS,
   type EligibilityStatus,
   type Patient,
   type ProgramModule,
@@ -95,12 +98,12 @@ export default function PatientDetailPage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Button variant="ghost" size="sm" onClick={() => navigate('/patients')} className="text-gray-500 hover:text-gray-900 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-1.5" />
           Patients
         </Button>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {!patient.removedAt && (
             <Button variant="outline" size="sm" className="gap-1.5 text-gray-600" onClick={() => setEditing(true)}>
               <Pencil className="w-4 h-4" />Modifier
@@ -136,7 +139,7 @@ export default function PatientDetailPage() {
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-orange-700 text-2xl font-bold flex-shrink-0">
               {patient.firstName[0]}{patient.lastName[0]}
             </div>
-            <div className="flex-1 space-y-3">
+            <div className="min-w-0 flex-1 space-y-3">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">{patient.lastName.toUpperCase()} {patient.firstName}</h1>
@@ -146,16 +149,16 @@ export default function PatientDetailPage() {
                     <span className="flex items-center gap-1.5"><User className="w-4 h-4 text-gray-400" />Enregistré le {formatDate(patient.createdAt, 'dd/MM/yyyy')} par {patient.createdBy.firstName} {patient.createdBy.lastName}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary" className={eligibilityBadge[patient.eligibilityStatus]}>
                     {ELIGIBILITY_LABELS[patient.eligibilityStatus]}{patient.eligibilityDecidedAt && ` le ${formatDate(patient.eligibilityDecidedAt, 'dd/MM/yyyy')}`}
                   </Badge>
-                  {program && <Badge variant="secondary" className={programBadge[program.status]}>Parcours {PROGRAM_STATUS_LABELS[program.status].toLowerCase()}</Badge>}
+                  {program && <Badge variant="secondary" className={programBadge[program.status]}>Parcours {(program.activityStatus ? PROGRAM_ACTIVITY_LABELS[program.activityStatus] : PROGRAM_STATUS_LABELS[program.status]).toLowerCase()}</Badge>}
                 </div>
               </div>
               {program && (
                 <div className="pt-2">
-                  <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                     <span className="text-sm font-medium text-gray-700">
                       Progression du parcours
                       {program.averageScore != null && <span className="text-gray-400 font-normal"> · score moyen {program.averageScore}%</span>}
@@ -172,17 +175,19 @@ export default function PatientDetailPage() {
       </Card>
 
       <Tabs defaultValue={patient.eligibilityStatus === 'eligible' ? 'parcours' : 'eligibility'} className="space-y-4">
-        <TabsList className="bg-gray-100 p-1 h-auto rounded-xl">
+        <TabsList className="patient-detail-tabs w-full border-b border-slate-200 bg-transparent p-0 h-auto rounded-none">
           <TabsTrigger value="profile" className="rounded-lg px-4 py-2 text-sm"><User className="w-4 h-4 mr-2" />Profil patient</TabsTrigger>
           <TabsTrigger value="parcours" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Route className="w-4 h-4 mr-2" />Parcours
           </TabsTrigger>
+          <TabsTrigger value="parcours-bis" className="rounded-lg px-4 py-2 text-sm"><Route className="w-4 h-4 mr-2" />Parcours bis</TabsTrigger>
           <TabsTrigger value="eligibility" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <ShieldCheck className="w-4 h-4 mr-2" />Éligibilité
           </TabsTrigger>
           <TabsTrigger value="history" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Activity className="w-4 h-4 mr-2" />Séances
           </TabsTrigger>
+          <TabsTrigger value="competencies" className="rounded-lg px-4 py-2 text-sm"><Award className="w-4 h-4 mr-2" />Compétences</TabsTrigger>
         </TabsList>
 
         {/* Patient archivé : consultation seule (un fieldset désactivé neutralise boutons et champs) */}
@@ -190,6 +195,12 @@ export default function PatientDetailPage() {
         <TabsContent value="parcours" className="space-y-4">
           <PatientProfileSummary patient={patient} />
           <fieldset disabled={!!patient.removedAt} className="contents"><ProgramSection patient={patient} program={program ?? null} /></fieldset>
+        </TabsContent>
+        <TabsContent value="parcours-bis">
+          {program && patient.eligibilityStatus === 'eligible' ? <PatientProgramBis key={program.id} patient={patient} program={program} actions={<ProgramActions program={program} />} /> : <fieldset disabled={!!patient.removedAt} className="contents"><ProgramSection patient={patient} program={program ?? null} /></fieldset>}
+        </TabsContent>
+        <TabsContent value="competencies">
+          {program ? <PatientCompetencies patient={patient} program={program} /> : <p className="p-6 text-gray-500">Aucun parcours : aucune compétence évaluée.</p>}
         </TabsContent>
         {program && !patient.removedAt && <ResumePrompt patient={patient} program={program} />}
         <TabsContent value="eligibility" className="space-y-5">
@@ -340,22 +351,23 @@ function ModuleGroup({
             </label>
             <CourseStatusBadge item={item} />
             <div className="flex items-center gap-1.5">
-              <Button
-                variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-500" aria-label="Prévisualiser"
-                title="Prévisualiser (sans démarrer de séance)"
-                onClick={() => navigate(`/sessions/run?moduleId=${item.module.id}&preview=1`)}
-              >
-                <Eye className="w-4 h-4" />
-              </Button>
-              {item.selected && canStart && (
+              {item.status !== 'valide' && (
+                <Button
+                  variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-500" aria-label="Prévisualiser"
+                  title="Prévisualiser (sans démarrer de séance)"
+                  onClick={() => navigate(`/sessions/run?moduleId=${item.module.id}&preview=1`)}
+                >
+                  <Eye className="w-4 h-4" />
+                </Button>
+              )}
+              {item.selected && canStart && item.status !== 'valide' && (
                 <Button
                   size="sm"
-                  variant={item.status === 'valide' ? 'outline' : 'default'}
-                  className={item.status === 'valide' ? 'h-8 px-3 text-xs gap-1.5' : 'h-8 px-3 bg-orange-500 hover:bg-orange-600 text-white text-xs gap-1.5'}
+                  className="h-8 px-3 bg-orange-500 hover:bg-orange-600 text-white text-xs gap-1.5"
                   onClick={() => onLaunch(item.module.id)}
                 >
                   <Play className="w-3 h-3" />
-                  {item.status === 'valide' ? 'Refaire' : item.status === 'non_termine' ? 'Reprendre' : 'Lancer'}
+                  {item.status === 'non_termine' ? 'Reprendre' : 'Lancer'}
                 </Button>
               )}
             </div>
@@ -393,8 +405,10 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
   const [confirmComplete, setConfirmComplete] = useState(false);
   const [checked, setChecked] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
+  const [reopening, setReopening] = useState(false);
+  const [reopenReason, setReopenReason] = useState('');
 
-  const run = (kind: 'complete' | 'interrupt' | 'resume', body: unknown, success: string) =>
+  const run = (kind: 'complete' | 'interrupt' | 'resume' | 'reopen', body: unknown, success: string) =>
     action.mutateAsync({ programId: program.id, action: kind, body }).then(
       () => toast.success(success),
       (err) => toast.error(err instanceof ApiError ? (err.violations[0]?.message ?? err.message) : 'Action impossible'),
@@ -406,11 +420,42 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
     return (
       <div className="flex items-start gap-3 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-sm">
         <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
-        <p>
+        <p className="flex-1">
           <strong>Parcours achevé</strong>
           {program.validatedBy && <> — validé par {program.validatedBy.firstName} {program.validatedBy.lastName}</>} le {formatDate(program.completedAt)}.
-          Il n'est plus modifiable.
+          Il n'est plus modifiable{isCadre && <> sauf si vous annulez la validation</>}.
         </p>
+        {isCadre && (
+          <>
+            <Button size="sm" variant="outline" className="gap-1.5 bg-white" onClick={() => setReopening(true)}>
+              <RotateCcw className="w-4 h-4" />Annuler la validation
+            </Button>
+            <Dialog open={reopening} onOpenChange={(open) => { setReopening(open); if (!open) setReopenReason(''); }}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Annuler la validation du parcours ?</DialogTitle>
+                  <DialogDescription>
+                    Le parcours redeviendra « en cours ». Les cours déjà validés restent verrouillés. L'annulation est tracée (qui, quand, motif).
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-1.5">
+                  <Label htmlFor="reopen-reason">Motif (obligatoire)</Label>
+                  <Textarea id="reopen-reason" rows={3} maxLength={500} value={reopenReason} onChange={(e) => setReopenReason(e.target.value)} />
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setReopening(false)}>Retour</Button>
+                  <Button
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                    disabled={reopenReason.trim() === '' || action.isPending}
+                    onClick={() => run('reopen', { reason: reopenReason.trim() }, 'Validation annulée').then(() => setReopening(false))}
+                  >
+                    Annuler la validation
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
       </div>
     );
   }
@@ -464,7 +509,7 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
           </DialogHeader>
           <div className="space-y-2">
             {reasons?.member.filter((r) => r.active).map((reason) => (
-              <div key={reason.id} className="flex items-center gap-2">
+              <div key={reason.id} className="flex flex-wrap items-center gap-2">
                 <Checkbox
                   id={`ir-${reason.id}`}
                   checked={checked.includes(reason.id)}
@@ -674,7 +719,7 @@ function EligibilitySection({ patient }: { patient: Patient }) {
             <div className="space-y-2">
               <Label>Motifs (au moins un)</Label>
               {reasons?.member.filter((r) => r.active).map((reason) => (
-                <div key={reason.id} className="flex items-center gap-2">
+                <div key={reason.id} className="flex flex-wrap items-center gap-2">
                   <Checkbox
                     id={reason.id}
                     checked={selectedReasons.includes(reason['@id'])}

@@ -157,6 +157,7 @@ final class NurseActivityBuilder
                     'scores' => [],
                     'program' => null === $program ? null : [
                         'status' => $program->getStatus()->value,
+                        'activityStatus' => $program->getActivityStatus(),
                         'validated' => $program->getValidatedCount(),
                         'selected' => $program->getSelectedCount(),
                     ],

@@ -94,14 +94,9 @@ export default function Sidebar({ onNavigate, drawer = false }: { onNavigate?: (
 
   return (
     <aside className={cn("flex flex-col bg-white border-r border-gray-100 shadow-sm", drawer ? "h-full w-full" : "fixed inset-y-0 left-0 z-40 hidden xl:flex w-64")}>
-      <div className="flex items-center gap-3 px-6 py-5 pr-14 border-b border-gray-100">
-        <div className="flex items-center justify-center w-9 h-9 bg-orange-500 rounded-xl shadow-sm shadow-orange-200">
-          <GraduationCap className="w-5 h-5 text-white" />
-        </div>
-        <div>
-          <span className="font-bold text-diaverum-green text-base leading-tight block">Diaverum</span>
-          <span className="text-xs text-orange-500 font-medium">Parcours d'entraînement</span>
-        </div>
+      <div className="px-6 py-5 pr-12 border-b border-gray-100">
+        <img src="/brand/diaverum-logo-primary.svg" alt="Diaverum" width="510" height="152" className="h-auto w-44 max-w-full" />
+        <p className="mt-2 text-xs text-orange-500 font-medium">Parcours d'entraînement</p>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">

@@ -23,12 +23,7 @@ function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disab
     <button
       onClick={onClick}
       disabled={disabled}
-      className={cn(
-        'w-full h-14 rounded-full text-base font-bold transition-all touch-manipulation',
-        disabled
-          ? 'bg-[#004138]/8 text-[#004138]/25 cursor-not-allowed'
-          : 'bg-[#E86825] text-white shadow-lg shadow-orange-900/15 active:scale-[0.98] hover:bg-[#CC5518]'
-      )}
+      className="course-action w-full transition-colors"
     >
       {label}
     </button>
@@ -40,8 +35,8 @@ function Explanation({ text }: { text: string }) {
     <div className="flex gap-3 p-4 rounded-2xl bg-[#1FABC7]/10 border border-[#1FABC7]/25 fade-scale-in">
       <Sparkles className="w-5 h-5 text-[#1FABC7] flex-shrink-0 mt-0.5" />
       <div>
-        <p className="text-sm font-bold text-[#0E6477] mb-1">Explication</p>
-        <p className="text-base leading-relaxed text-[#0E6477]/80">{text}</p>
+        <p className="course-label font-bold text-[#0E6477] mb-1">Explication</p>
+        <p className="course-label leading-relaxed text-[#0E6477]/80">{text}</p>
       </div>
     </div>
   );
@@ -125,8 +120,8 @@ export function ReorderView({ block, onAnswer, disabled }: { block: ReorderBlock
                   <GripVertical className="w-5 h-5 text-[#004138]/30" />
                 )}
               </div>
-              <span className="w-7 h-7 rounded-lg bg-[#004138]/8 flex items-center justify-center text-sm font-black text-[#004138]/50 flex-shrink-0">{i + 1}</span>
-              <span className={cn('text-[25px] font-normal flex-1', submitted ? (isCorrectPos ? 'text-emerald-800' : 'text-red-800') : 'text-[#1F3A34]')}>{it.label}</span>
+              <span className="w-7 h-7 rounded-lg bg-[#004138]/8 flex items-center justify-center course-label font-black text-[#004138]/50 flex-shrink-0">{i + 1}</span>
+              <span className={cn('text-[25px] font-normal flex-1', submitted ? (isCorrectPos ? 'text-emerald-800' : 'text-red-800') : 'text-[#004138]')}>{it.label}</span>
             </div>
           );
         })}
@@ -159,7 +154,7 @@ export function FillBlankView({ block, onAnswer, disabled }: { block: FillBlankB
     <div className="space-y-5">
       <BlockHeader label="Texte à compléter" text={block.question} />
 
-      <div className="p-5 rounded-2xl bg-white border border-[#004138]/15 leading-[1.9] text-[18px] text-[#1F3A34]">
+      <div className="p-5 rounded-2xl bg-white border border-[#004138]/15 leading-[1.9] course-copy text-[#004138]">
         {parts.map((part, i) => (
           <span key={i}>
             {part}
@@ -181,7 +176,7 @@ export function FillBlankView({ block, onAnswer, disabled }: { block: FillBlankB
               />
             )}
             {submitted && i < blankCount && values[i]?.trim().toLowerCase() !== block.answers[i].toLowerCase() && (
-              <span className="text-emerald-700 text-sm font-medium ml-1">({block.answers[i]})</span>
+              <span className="text-emerald-700 course-label font-medium ml-1">({block.answers[i]})</span>
             )}
           </span>
         ))}
@@ -262,7 +257,7 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
             : 'border-[#004138]/15 bg-white'
         )}
       >
-        <p className="text-xl font-semibold text-[#004138] leading-relaxed">{current.statement}</p>
+        <p className="course-copy font-semibold text-[#004138] leading-relaxed">{current.statement}</p>
       </div>
 
       {/* True / False buttons */}
@@ -272,10 +267,10 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
             onClick={() => answer(false)}
             disabled={disabled}
             className={cn(
-              'h-16 rounded-full font-bold text-lg flex items-center justify-center gap-2 transition-all touch-manipulation',
+              'h-16 rounded-full font-bold course-copy flex items-center justify-center gap-2 transition-all touch-manipulation',
               answers[current.id] === false
                 ? 'bg-red-500 text-white shadow-lg shadow-red-900/15'
-                : 'bg-white text-[#1F3A34]/70 border-2 border-red-400/40 active:scale-95'
+                : 'bg-white text-[#004138]/70 border-2 border-red-400/40 active:scale-95'
             )}
           >
             <XCircle className="w-5 h-5" /> Faux
@@ -284,10 +279,10 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
             onClick={() => answer(true)}
             disabled={disabled}
             className={cn(
-              'h-16 rounded-full font-bold text-lg flex items-center justify-center gap-2 transition-all touch-manipulation',
+              'h-16 rounded-full font-bold course-copy flex items-center justify-center gap-2 transition-all touch-manipulation',
               answers[current.id] === true
                 ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-900/15'
-                : 'bg-white text-[#1F3A34]/70 border-2 border-emerald-400/40 active:scale-95'
+                : 'bg-white text-[#004138]/70 border-2 border-emerald-400/40 active:scale-95'
             )}
           >
             <CheckCircle className="w-5 h-5" /> Vrai
@@ -305,8 +300,8 @@ export function TrueFalseView({ block, onAnswer, disabled }: { block: TrueFalseB
               {answers[s.id] === s.isTrue
                 ? <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                 : <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />}
-              <p className="text-sm text-[#1F3A34]/80 flex-1">{s.statement}</p>
-              <span className={cn('text-xs font-bold', s.isTrue ? 'text-emerald-700' : 'text-red-700')}>
+              <p className="course-label text-[#004138]/80 flex-1">{s.statement}</p>
+              <span className={cn('course-caption font-bold', s.isTrue ? 'text-emerald-700' : 'text-red-700')}>
                 {s.isTrue ? 'Vrai' : 'Faux'}
               </span>
             </div>
@@ -370,7 +365,7 @@ export function MemoryView({ block, onAnswer, disabled }: { block: MemoryBlock; 
     <div className="space-y-5">
       <BlockHeader label="Jeu de mémoire" text={block.question} />
 
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-between course-label">
         <span className="text-[#004138]/50">Coups : <span className="text-[#004138]/80 font-bold">{moves}</span></span>
         <span className="text-[#004138]/50">Paires : <span className="text-emerald-600 font-bold">{matched.size}/{block.cards.length / 2}</span></span>
       </div>
@@ -394,7 +389,7 @@ export function MemoryView({ block, onAnswer, disabled }: { block: MemoryBlock; 
             >
               {isFlipped ? (
                 <span className={cn(
-                  'text-sm font-semibold leading-tight',
+                  'course-label font-semibold leading-tight',
                   isWrong ? 'text-red-700' : 'text-emerald-700'
                 )}>{card.content}</span>
               ) : (
@@ -409,7 +404,7 @@ export function MemoryView({ block, onAnswer, disabled }: { block: MemoryBlock; 
 
       {submitted && (
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
-          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
+          <p className="course-label font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Toutes les paires trouvées en {moves} coups !
           </p>
         </div>
@@ -465,7 +460,7 @@ export function SliderView({ block, onAnswer, disabled }: { block: SliderBlock; 
           }}
         />
 
-        <div className="flex items-center justify-between mt-3 text-xs text-[#004138]/50 font-medium">
+        <div className="flex items-center justify-between mt-3 course-caption text-[#004138]/50 font-medium">
           <span>{block.minLabel ?? block.min}{block.unit}</span>
           <span>{block.maxLabel ?? block.max}{block.unit}</span>
         </div>
@@ -476,7 +471,7 @@ export function SliderView({ block, onAnswer, disabled }: { block: SliderBlock; 
           'p-4 rounded-2xl border fade-scale-in',
           withinTolerance ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'
         )}>
-          <p className={cn('text-base font-bold', withinTolerance ? 'text-emerald-700' : 'text-red-700')}>
+          <p className={cn('course-label font-bold', withinTolerance ? 'text-emerald-700' : 'text-red-700')}>
             {withinTolerance ? 'Bien estimé ! ' : 'Pas tout à fait. '}
             La bonne réponse : {block.correctValue}{block.unit}
           </p>
@@ -526,9 +521,9 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
 
       {!submitted && (
         <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
-          <span className="text-base">👆</span>
-          <p className="text-sm text-[#A64314] font-medium">Touchez les étapes dans le bon ordre</p>
-          <span className="ml-auto text-sm font-bold text-[#E86825]">{tapped.length}/{shuffled.length}</span>
+          <span className="course-label">👆</span>
+          <p className="course-label text-[#A64314] font-medium">Touchez les étapes dans le bon ordre</p>
+          <span className="ml-auto course-label font-bold text-[#E86825]">{tapped.length}/{shuffled.length}</span>
         </div>
       )}
 
@@ -550,13 +545,13 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
               )}
             >
               {isTapped && (
-                <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-emerald-500 text-white text-xs font-black flex items-center justify-center">
+                <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-emerald-500 text-white course-caption font-black flex items-center justify-center">
                   {tapIdx + 1}
                 </span>
               )}
               <span className={cn(
-                'text-sm font-semibold leading-tight',
-                isTapped ? 'text-emerald-800' : 'text-[#1F3A34]'
+                'course-label font-semibold leading-tight',
+                isTapped ? 'text-emerald-800' : 'text-[#004138]'
               )}>{step.label}</span>
             </button>
           );
@@ -565,14 +560,14 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
 
       {submitted && (
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
-          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
+          <p className="course-label font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Séquence correcte !
           </p>
         </div>
       )}
       {submitted && block.explanation && <Explanation text={block.explanation} />}
       {!submitted && tapped.length > 0 && (
-        <button onClick={reset} className="flex items-center gap-2 text-sm text-[#004138]/40 hover:text-[#004138]/60 transition-colors touch-manipulation mx-auto">
+        <button onClick={reset} className="flex items-center gap-2 course-label text-[#004138]/40 hover:text-[#004138]/60 transition-colors touch-manipulation mx-auto">
           <RefreshCw className="w-4 h-4" /> Recommencer
         </button>
       )}
@@ -695,15 +690,15 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
 
       {!submitted && (
         <div className="flex items-center gap-2.5 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
-          <span className="text-xl">👆</span>
-          <p className="text-sm text-[#A64314] font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.categorize}</p>
+          <span className="course-copy">👆</span>
+          <p className="course-label text-[#A64314] font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.categorize}</p>
         </div>
       )}
 
       {/* Unassigned pool */}
       {unassigned.length > 0 && (
         <div className="p-4 rounded-2xl bg-[#ECF5E9]/60 border border-dashed border-[#004138]/20">
-          <p className="text-xs font-bold text-[#004138]/50 uppercase tracking-widest mb-3">À classer</p>
+          <p className="course-caption font-bold text-[#004138]/50 uppercase tracking-widest mb-3">À classer</p>
           <div className="flex flex-wrap gap-2">
             {unassigned.map((it) => (
               <div
@@ -711,9 +706,9 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
                 ref={(el) => { if (el) itemRefs.current.set(it.id, el); else itemRefs.current.delete(it.id); }}
                 onPointerDown={(e) => onPointerDown(it.id, e)}
                 className={cn(
-                  'px-4 py-2.5 rounded-xl border-2 font-medium text-sm transition-all select-none touch-manipulation',
+                  'px-4 py-2.5 rounded-xl border-2 font-medium course-label transition-all select-none touch-manipulation',
                   draggingId === it.id ? 'border-[#E86825] bg-[#FFF4ED] opacity-50' :
-                  'border-[#004138]/15 bg-white text-[#1F3A34] active:scale-95 cursor-grab'
+                  'border-[#004138]/15 bg-white text-[#004138] active:scale-95 cursor-grab'
                 )}
                 style={{ touchAction: submitted || disabled ? 'auto' : 'none' }}
               >
@@ -740,7 +735,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
               )}
             >
               <p className={cn(
-                'text-xs font-bold uppercase tracking-widest mb-2 text-center',
+                'course-caption font-bold uppercase tracking-widest mb-2 text-center',
                 hoveredCat === cat && draggingId ? 'text-[#E86825]' : 'text-[#004138]/50'
               )}>{cat}</p>
               <div className="flex flex-wrap gap-1.5 justify-center">
@@ -755,17 +750,17 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
                       title={submitted ? undefined : 'Toucher pour retirer'}
                       onClick={() => setAssignments((prev) => ({ ...prev, [it.id]: null }))}
                       className={cn(
-                        'px-3 py-1.5 rounded-lg text-sm font-medium border touch-manipulation',
+                        'px-3 py-1.5 rounded-lg course-label font-medium border touch-manipulation',
                         isCorrect ? 'bg-emerald-50 border-emerald-400 text-emerald-800' :
                         isWrong ? 'bg-red-50 border-red-400 text-red-800' :
-                        'bg-[#ECF5E9] border-[#004138]/15 text-[#1F3A34]/80'
+                        'bg-[#ECF5E9] border-[#004138]/15 text-[#004138]/80'
                       )}
                     >
                       {it.label}
                     </button>
                   );
                 })}
-                {catItems.length === 0 && <span className="text-xs text-[#004138]/25 italic py-2">Déposez ici</span>}
+                {catItems.length === 0 && <span className="course-caption text-[#004138]/25 italic py-2">Déposez ici</span>}
               </div>
             </div>
           );
@@ -774,7 +769,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
 
       {/* Floating ghost */}
       {draggingId && pointer && (
-        <div className="fixed pointer-events-none z-50 px-4 py-2.5 rounded-xl bg-[#E86825] text-white text-sm font-semibold shadow-2xl -translate-x-1/2 -translate-y-1/2"
+        <div className="fixed pointer-events-none z-50 px-4 py-2.5 rounded-xl bg-[#E86825] text-white course-label font-semibold shadow-2xl -translate-x-1/2 -translate-y-1/2"
           style={{ left: pointer.x, top: pointer.y }}>
           {block.items.find((it) => it.id === draggingId)?.label}
         </div>
@@ -849,7 +844,7 @@ export function DrawingView({ block, onAnswer, disabled }: { block: DrawingBlock
       <BlockHeader label="Dessiner / Tracer" text={block.question} />
 
       <div className="p-4 rounded-2xl bg-white border border-[#004138]/15">
-        <p className="text-sm text-[#1F3A34]/70 mb-3 font-medium">{block.prompt}</p>
+        <p className="course-label text-[#004138]/70 mb-3 font-medium">{block.prompt}</p>
         <div className="rounded-2xl overflow-hidden bg-[#ECF5E9]" style={{ touchAction: 'none', border: '1px solid rgba(0,65,56,0.1)' }}>
           <canvas
             ref={canvasRef}
@@ -870,7 +865,7 @@ export function DrawingView({ block, onAnswer, disabled }: { block: DrawingBlock
           <button
             onClick={clear}
             disabled={!hasDrawn || disabled}
-            className="flex items-center gap-2 px-5 h-12 rounded-full border border-[#004138]/15 text-[#004138]/60 font-semibold text-sm hover:bg-[#ECF5E9] active:bg-[#ECF5E9] transition-colors touch-manipulation disabled:opacity-30"
+            className="flex items-center gap-2 px-5 h-12 rounded-full border border-[#004138]/15 text-[#004138]/60 font-semibold course-label hover:bg-[#ECF5E9] active:bg-[#ECF5E9] transition-colors touch-manipulation disabled:opacity-30"
           >
             <RefreshCw className="w-4 h-4" /> Effacer
           </button>
@@ -884,7 +879,7 @@ export function DrawingView({ block, onAnswer, disabled }: { block: DrawingBlock
 
       {submitted && (
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
-          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
+          <p className="course-label font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Dessin enregistré !
           </p>
         </div>
@@ -933,8 +928,8 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
         <BlockHeader label="Scénario" text={block.question} />
         <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center fade-scale-in">
           <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
-          <p className="text-lg font-bold text-emerald-700 mb-1">Scénario réussi !</p>
-          <p className="text-sm text-emerald-700/70">Vous avez pris les bonnes décisions.</p>
+          <p className="course-copy font-bold text-emerald-700 mb-1">Scénario réussi !</p>
+          <p className="course-label text-emerald-700/70">Vous avez pris les bonnes décisions.</p>
         </div>
       </div>
     );
@@ -957,12 +952,12 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
 
       {/* Situation */}
       <div className="p-5 rounded-2xl bg-[#1FABC7]/10 border border-[#1FABC7]/25">
-        <p className="text-xs font-bold text-[#0E6477] uppercase tracking-widest mb-2">Situation</p>
-        <p className="text-base text-[#1F3A34] leading-relaxed">{current.situation}</p>
+        <p className="course-caption font-bold text-[#0E6477] uppercase tracking-widest mb-2">Situation</p>
+        <p className="course-label text-[#004138] leading-relaxed">{current.situation}</p>
       </div>
 
       {/* Question */}
-      <p className="text-[17px] font-semibold text-[#004138] px-1">{current.question}</p>
+      <p className="course-copy font-semibold text-[#004138] px-1">{current.question}</p>
 
       {/* Choices */}
       <div className="space-y-3">
@@ -982,10 +977,10 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
                     : 'border-red-500 bg-red-50'
                   : feedback !== null
                     ? 'border-[#004138]/8 bg-[#ECF5E9]/60 opacity-50'
-                    : 'border-[#004138]/15 bg-white text-[#1F3A34] hover:border-[#E86825]/40 active:scale-[0.98]'
+                    : 'border-[#004138]/15 bg-white text-[#004138] hover:border-[#E86825]/40 active:scale-[0.98]'
               )}
             >
-              <span className="flex-1 text-base font-medium">{choice.label}</span>
+              <span className="flex-1 course-label font-medium">{choice.label}</span>
               {showResult && (choice.isCorrect
                 ? <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                 : <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
@@ -1004,13 +999,13 @@ export function ScenarioView({ block, onAnswer, disabled }: { block: ScenarioBlo
             : 'bg-amber-50 border-amber-200'
         )}>
           <p className={cn(
-            'text-sm font-bold mb-1',
+            'course-label font-bold mb-1',
             current.choices.find((c) => c.id === choices[choices.length - 1])?.isCorrect
               ? 'text-emerald-700' : 'text-amber-700'
           )}>
             {current.choices.find((c) => c.id === choices[choices.length - 1])?.isCorrect ? 'Bonne décision !' : 'Réfléchissez à nouveau...'}
           </p>
-          <p className="text-base text-[#1F3A34]/80 leading-relaxed">{feedback}</p>
+          <p className="course-label text-[#004138]/80 leading-relaxed">{feedback}</p>
         </div>
       )}
     </div>
@@ -1050,7 +1045,7 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
         <BlockHeader label="Révéler les légendes" text={block.question} />
-        <span className="flex-shrink-0 text-sm font-bold text-[#E86825]">{revealed.size}/{block.points.length}</span>
+        <span className="flex-shrink-0 course-label font-bold text-[#E86825]">{revealed.size}/{block.points.length}</span>
       </div>
 
       <div className="rounded-3xl overflow-hidden bg-[#FFE0D0]/35 shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.12)' }}>
@@ -1084,7 +1079,7 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
         </div>
 
         {block.caption && (
-          <p className="text-xs text-[#1F3A34]/45 text-center px-5 pt-3 pb-1 font-medium italic">{block.caption}</p>
+          <p className="course-caption text-[#004138]/45 text-center px-5 pt-3 pb-1 font-medium italic">{block.caption}</p>
         )}
 
         {/* Info panel */}
@@ -1093,11 +1088,11 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
             <div className="mx-4 mb-4 mt-2 rounded-2xl p-4 bg-white" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-[#E86825] flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-sm font-black">{block.points.findIndex((p) => p.id === active.id) + 1}</span>
+                  <span className="text-white course-label font-black">{block.points.findIndex((p) => p.id === active.id) + 1}</span>
                 </div>
                 <div>
-                  <p className="font-bold text-[#004138] text-base mb-1">{active.label}</p>
-                  <p className="text-[#1F3A34]/70 text-sm leading-relaxed">{active.description}</p>
+                  <p className="font-bold text-[#004138] course-label mb-1">{active.label}</p>
+                  <p className="text-[#004138]/70 course-label leading-relaxed">{active.description}</p>
                 </div>
               </div>
             </div>
@@ -1118,15 +1113,15 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
                   isRevealed
                     ? activeId === pt.id
                       ? 'bg-[#E86825] text-white shadow-md'
-                      : 'bg-white text-[#1F3A34] ring-1 ring-[#004138]/10'
-                    : 'bg-white/50 text-[#1F3A34]/30 ring-1 ring-[#004138]/5'
+                      : 'bg-white text-[#004138] ring-1 ring-[#004138]/10'
+                    : 'bg-white/50 text-[#004138]/30 ring-1 ring-[#004138]/5'
                 )}
               >
                 <span className={cn(
-                  'w-5 h-5 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0',
+                  'w-5 h-5 rounded-lg flex items-center justify-center course-caption font-black flex-shrink-0',
                   isRevealed ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-400'
                 )}>{i + 1}</span>
-                <span className="text-xs font-semibold">{isRevealed ? pt.label : '—'}</span>
+                <span className="course-caption font-semibold">{isRevealed ? pt.label : '—'}</span>
               </button>
             );
           })}
@@ -1176,8 +1171,8 @@ export function PullTimelineView({ block }: {
       <BlockHeader label="Frise à dérouler" text={block.question} />
 
       <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
-        <span className="text-base">👈</span>
-        <p className="text-sm text-[#A64314] font-medium">Tirez la flèche le long de la frise pour découvrir les dates</p>
+        <span className="course-label">👈</span>
+        <p className="course-label text-[#A64314] font-medium">Tirez la flèche le long de la frise pour découvrir les dates</p>
       </div>
 
       {/* Timeline track */}
@@ -1228,7 +1223,7 @@ export function PullTimelineView({ block }: {
               <span
                 key={ev.id}
                 className={cn(
-                  'absolute -translate-x-1/2 text-xs font-bold transition-opacity',
+                  'absolute -translate-x-1/2 course-caption font-bold transition-opacity',
                   isRevealed ? 'text-[#E86825] opacity-100' : 'text-[#004138]/20 opacity-0'
                 )}
                 style={{ left: `${ev.position}%` }}
@@ -1244,17 +1239,17 @@ export function PullTimelineView({ block }: {
       {closestEvent && closestEvent.position <= pos + 5 && (
         <div className="rounded-2xl p-5 bg-white border border-[#004138]/15 fade-scale-in">
           <div className="flex items-center gap-3 mb-2">
-            <div className="px-3 py-1 rounded-lg bg-[#FFF4ED] text-[#E86825] text-sm font-black">
+            <div className="px-3 py-1 rounded-lg bg-[#FFF4ED] text-[#E86825] course-label font-black">
               {closestEvent.date}
             </div>
-            <h3 className="text-[#004138] font-bold text-lg">{closestEvent.title}</h3>
+            <h3 className="text-[#004138] font-bold course-copy">{closestEvent.title}</h3>
           </div>
-          <p className="text-[#1F3A34]/80 text-sm leading-relaxed">{closestEvent.content}</p>
+          <p className="text-[#004138]/80 course-label leading-relaxed">{closestEvent.content}</p>
         </div>
       )}
 
       {/* Revealed count */}
-      <div className="text-center text-sm text-[#004138]/50">
+      <div className="text-center course-label text-[#004138]/50">
         {revealedEvents.length} / {block.events.length} événements révélés
       </div>
 
@@ -1303,8 +1298,8 @@ export function SortBinView({ block, onAnswer, disabled }: {
         <BlockHeader label="Trier" text={block.question} />
         <div className="p-6 rounded-2xl bg-white border border-[#004138]/15 text-center">
           <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
-          <p className="text-[#004138] font-bold text-lg mb-1">Tous les éléments ont été triés !</p>
-          <p className="text-[#1F3A34]/50 text-sm">Validez pour voir le résultat</p>
+          <p className="text-[#004138] font-bold course-copy mb-1">Tous les éléments ont été triés !</p>
+          <p className="text-[#004138]/50 course-label">Validez pour voir le résultat</p>
         </div>
         <SubmitButton onClick={handleSubmit} disabled={disabled ?? false} label="Valider" />
       </div>
@@ -1342,7 +1337,7 @@ export function SortBinView({ block, onAnswer, disabled }: {
                 : <XCircle className="w-8 h-8 text-red-600 mx-auto" />}
             </div>
           )}
-          <p className="text-xl font-semibold text-[#004138] leading-relaxed">{current?.label}</p>
+          <p className="course-copy font-semibold text-[#004138] leading-relaxed">{current?.label}</p>
         </div>
       </div>
 
@@ -1352,10 +1347,10 @@ export function SortBinView({ block, onAnswer, disabled }: {
           onClick={() => handleChoice(false)}
           disabled={disabled || feedback !== null}
           className={cn(
-            'h-20 rounded-2xl font-bold text-lg flex flex-col items-center justify-center gap-1 transition-all touch-manipulation border-2',
+            'h-20 rounded-2xl font-bold course-copy flex flex-col items-center justify-center gap-1 transition-all touch-manipulation border-2',
             feedback && feedback.correct === false && choices[current?.id ?? ''] === false
               ? 'bg-red-500 text-white border-red-500'
-              : 'bg-white text-[#1F3A34]/70 border-red-400/40 active:scale-95'
+              : 'bg-white text-[#004138]/70 border-red-400/40 active:scale-95'
           )}
         >
           <XCircle className="w-6 h-6" />
@@ -1365,10 +1360,10 @@ export function SortBinView({ block, onAnswer, disabled }: {
           onClick={() => handleChoice(true)}
           disabled={disabled || feedback !== null}
           className={cn(
-            'h-20 rounded-2xl font-bold text-lg flex flex-col items-center justify-center gap-1 transition-all touch-manipulation border-2',
+            'h-20 rounded-2xl font-bold course-copy flex flex-col items-center justify-center gap-1 transition-all touch-manipulation border-2',
             feedback && feedback.correct === false && choices[current?.id ?? ''] === true
               ? 'bg-emerald-500 text-white border-emerald-500'
-              : 'bg-white text-[#1F3A34]/70 border-emerald-400/40 active:scale-95'
+              : 'bg-white text-[#004138]/70 border-emerald-400/40 active:scale-95'
           )}
         >
           <CheckCircle className="w-6 h-6" />
@@ -1425,14 +1420,14 @@ export function ConnectDotsView({ block, onAnswer, disabled }: {
       <BlockHeader label="Relier les points" text={block.question} />
 
       <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
-        <span className="text-base">👆</span>
-        <p className="text-sm text-[#A64314] font-medium">Touchez les points dans le bon ordre pour tracer le chemin</p>
-        <span className="ml-auto text-sm font-bold text-[#E86825]">{connected.length}/{block.dots.length}</span>
+        <span className="course-label">👆</span>
+        <p className="course-label text-[#A64314] font-medium">Touchez les points dans le bon ordre pour tracer le chemin</p>
+        <span className="ml-auto course-label font-bold text-[#E86825]">{connected.length}/{block.dots.length}</span>
       </div>
 
       <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-white ring-1 ring-gray-100/80" style={{ touchAction: 'none' }}>
         <img src={block.imageUrl} alt={block.alt} className="w-full object-cover" style={{ maxHeight: 300 }} loading="lazy" />
-        {block.caption && <p className="text-xs text-gray-400 text-center px-5 py-2 font-medium italic">{block.caption}</p>}
+        {block.caption && <p className="course-caption text-gray-400 text-center px-5 py-2 font-medium italic">{block.caption}</p>}
 
         {/* SVG overlay for lines */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ top: 0, height: '100%' }} viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -1440,7 +1435,7 @@ export function ConnectDotsView({ block, onAnswer, disabled }: {
             <polyline
               points={pathPoints.map((p) => `${p.x},${p.y}`).join(' ')}
               fill="none"
-              stroke="#f97316"
+              stroke="#E86825"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -1482,14 +1477,14 @@ export function ConnectDotsView({ block, onAnswer, disabled }: {
       {/* Info popup for last connected dot */}
       {activeInfo && !submitted && (
         <div className="rounded-2xl p-4 bg-[#FFF4ED] border border-[#E86825]/25 fade-scale-in">
-          <p className="font-bold text-[#A64314] text-sm mb-1">{activeInfo.label}</p>
-          <p className="text-[#1F3A34]/70 text-sm leading-relaxed">{activeInfo.info}</p>
+          <p className="font-bold text-[#A64314] course-label mb-1">{activeInfo.label}</p>
+          <p className="text-[#004138]/70 course-label leading-relaxed">{activeInfo.info}</p>
         </div>
       )}
 
       {submitted && (
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
-          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
+          <p className="course-label font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Chemin complété !
           </p>
         </div>
@@ -1555,19 +1550,19 @@ export function WordSearchView({ block, onAnswer, disabled }: {
       <BlockHeader label="Mots cachés" text={block.question} />
 
       <div className="flex items-center gap-2 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
-        <span className="text-base">👆</span>
-        <p className="text-sm text-[#A64314] font-medium">Glissez votre doigt sur les lettres pour former un mot</p>
-        <span className="ml-auto text-sm font-bold text-[#E86825]">{found.size}/{block.words.length}</span>
+        <span className="course-label">👆</span>
+        <p className="course-label text-[#A64314] font-medium">Glissez votre doigt sur les lettres pour former un mot</p>
+        <span className="ml-auto course-label font-bold text-[#E86825]">{found.size}/{block.words.length}</span>
       </div>
 
       {/* Word clues */}
       <div className="flex flex-wrap gap-2">
         {block.words.map((w) => (
           <span key={w.id} className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-medium border transition-all',
+            'px-3 py-1.5 rounded-xl course-caption font-medium border transition-all',
             found.has(w.id)
               ? 'bg-emerald-50 border-emerald-300 text-emerald-700 line-through'
-              : 'bg-white border-[#004138]/15 text-[#1F3A34]/70'
+              : 'bg-white border-[#004138]/15 text-[#004138]/70'
           )}>
             {w.clue}
           </span>
@@ -1607,12 +1602,12 @@ export function WordSearchView({ block, onAnswer, disabled }: {
               }}
               disabled={submitted || disabled}
               className={cn(
-                'w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-bold text-base transition-all touch-none',
+                'w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-bold course-label transition-all touch-none',
                 isSelected
                   ? 'bg-[#E86825] text-white scale-110 shadow-lg'
                   : isFound
                     ? 'bg-emerald-100 text-emerald-700'
-                    : 'bg-white text-[#1F3A34]/70 border border-[#004138]/10'
+                    : 'bg-white text-[#004138]/70 border border-[#004138]/10'
               )}
             >
               {letter}
@@ -1624,7 +1619,7 @@ export function WordSearchView({ block, onAnswer, disabled }: {
       {/* Current selection preview */}
       {selected.length > 0 && (
         <div className="text-center">
-          <span className="inline-block px-4 py-2 rounded-xl bg-[#FFF4ED] text-[#A64314] font-bold text-lg tracking-widest">
+          <span className="inline-block px-4 py-2 rounded-xl bg-[#FFF4ED] text-[#A64314] font-bold course-copy tracking-widest">
             {selectedWord}
           </span>
         </div>
@@ -1632,7 +1627,7 @@ export function WordSearchView({ block, onAnswer, disabled }: {
 
       {submitted && (
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 fade-scale-in">
-          <p className="text-base font-bold text-emerald-700 flex items-center gap-2">
+          <p className="course-label font-bold text-emerald-700 flex items-center gap-2">
             <CheckCircle className="w-5 h-5" /> Tous les mots ont été trouvés !
           </p>
         </div>
@@ -1712,7 +1707,7 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
               ? <CheckCircle className="w-7 h-7 text-emerald-600" />
               : <HelpCircle className="w-7 h-7 text-amber-600" />}
           </div>
-          <p className="text-lg font-bold text-[#004138] mb-2">{current.result}</p>
+          <p className="course-copy font-bold text-[#004138] mb-2">{current.result}</p>
         </div>
       </div>
     );
@@ -1724,7 +1719,7 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
         <BlockHeader label="Parcours de décision" text={block.question} />
         <div className="p-6 rounded-3xl bg-emerald-50 border-2 border-emerald-500 text-center fade-scale-in">
           <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
-          <p className="text-lg font-bold text-[#004138]">Parcours terminé !</p>
+          <p className="course-copy font-bold text-[#004138]">Parcours terminé !</p>
         </div>
       </div>
     );
@@ -1751,13 +1746,13 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
 
       {/* Question card */}
       <div className="min-h-[120px] rounded-3xl p-6 bg-white border-2 border-[#004138]/15 flex items-center justify-center text-center">
-        <p className="text-xl font-semibold text-[#004138] leading-relaxed">{current?.question}</p>
+        <p className="course-copy font-semibold text-[#004138] leading-relaxed">{current?.question}</p>
       </div>
 
       {/* Feedback */}
       {feedback && (
         <div className="p-4 rounded-2xl bg-[#1FABC7]/10 border border-[#1FABC7]/25 fade-scale-in">
-          <p className="text-base text-[#0E6477] leading-relaxed">{feedback}</p>
+          <p className="course-label text-[#0E6477] leading-relaxed">{feedback}</p>
         </div>
       )}
 
@@ -1767,14 +1762,14 @@ export function YesNoPathView({ block, onAnswer, disabled }: {
           <button
             onClick={() => handleAnswer(false)}
             disabled={disabled}
-            className="h-20 rounded-full font-bold text-xl flex items-center justify-center gap-2 bg-white text-[#1F3A34]/70 border-2 border-red-400/40 active:scale-95 transition-all touch-manipulation"
+            className="h-20 rounded-full font-bold course-copy flex items-center justify-center gap-2 bg-white text-[#004138]/70 border-2 border-red-400/40 active:scale-95 transition-all touch-manipulation"
           >
             <XCircle className="w-7 h-7" /> Non
           </button>
           <button
             onClick={() => handleAnswer(true)}
             disabled={disabled}
-            className="h-20 rounded-full font-bold text-xl flex items-center justify-center gap-2 bg-white text-[#1F3A34]/70 border-2 border-emerald-400/40 active:scale-95 transition-all touch-manipulation"
+            className="h-20 rounded-full font-bold course-copy flex items-center justify-center gap-2 bg-white text-[#004138]/70 border-2 border-emerald-400/40 active:scale-95 transition-all touch-manipulation"
           >
             <CheckCircle className="w-7 h-7" /> Oui
           </button>

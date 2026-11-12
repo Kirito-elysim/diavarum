@@ -120,6 +120,11 @@ final class ReportingTest extends ApiTestCaseBase
 
         $detail = $book->getSheetByName('Détail des séances')->toArray(null, true, false);
         self::assertSame(['S97', 'Séance de test', 'Validé', 80], [$detail[1][3], $detail[1][4], $detail[1][7], $detail[1][8]]);
+        self::assertSame('IDE', $detail[0][11], 'Colonne IDE par séance');
+        self::assertSame('Clôturé par', $summary[0][10]);
+
+        self::assertSame('Début', $book->getSheetByName('Historique des séances')->getCell('G1')->getValue());
+        self::assertSame('Avis néphrologue requis', $book->getSheetByName('CODEX')->getCell('K1')->getValue());
     }
 
     public function testPatientOfAnotherCenterCannotBeExported(): void
@@ -193,13 +198,20 @@ final class ReportingTest extends ApiTestCaseBase
         $session($this->ideParis, $lyonPatient);
         $this->em()->flush();
 
+        $export = $this->requestAs($this->ideParis, 'GET', '/api/exports/patients.xlsx?patients[]='.$this->dupont->getId()->toRfc4122());
+        $file = tempnam(sys_get_temp_dir(), 'xlsx');
+        file_put_contents($file, $export->getContent());
+        $history = IOFactory::load($file)->getSheetByName('Historique des séances')->toArray(null, true, false);
+        unlink($file);
+        self::assertSame(['Validée' => 3, 'Non terminée' => 1], array_count_values(array_column(\array_slice($history, 1), 5)), 'Chaque lancement, même non terminé');
+
         $today = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
         $activity = $this->requestAs($this->ideParis, 'GET', "/api/statistics/me?from=$today&to=$today")->toArray();
         self::assertSame(['validatedSessions' => 1, 'patients' => 1, 'averageScore' => 80, 'totalDurationSeconds' => 1800, 'validatedCompetencies' => 1], $activity['totals']);
         self::assertSame([['month' => substr($today, 0, 7), 'validatedSessions' => 1, 'averageScore' => 80]], $activity['monthly']);
         self::assertSame([['code' => 'S97', 'title' => 'Séance de test', 'validations' => 1, 'averageScore' => 80]], $activity['courses']);
         self::assertSame('DUPONT Jean', $activity['patients'][0]['name']);
-        self::assertSame(['status' => 'actif', 'validated' => 1, 'selected' => 1], $activity['patients'][0]['program']);
+        self::assertSame(['status' => 'actif', 'activityStatus' => 'actif', 'validated' => 1, 'selected' => 1], $activity['patients'][0]['program']);
 
         $yesterday = (new \DateTimeImmutable('yesterday', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
         self::assertSame(0, $this->requestAs($this->ideParis, 'GET', "/api/statistics/me?to=$yesterday")->toArray()['totals']['validatedSessions']);

@@ -32,7 +32,7 @@ export default function AppLayout() {
               <Sidebar drawer onNavigate={() => setMenuOpen(false)} />
             </SheetContent>
           </Sheet>
-          <span className="font-semibold text-diaverum-green">Diaverum</span>
+          <img src="/brand/diaverum-logo-primary.svg" alt="Diaverum" width="510" height="152" className="h-auto w-32" />
         </header>
         <main className="flex-1 min-w-0 p-4 md:p-6">
           <Outlet />

@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\TrainingSession;
 use App\Training\TrainingWorkflow;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
@@ -22,13 +23,16 @@ final class StartSessionProcessor implements ProcessorInterface
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private readonly ProcessorInterface $persistProcessor,
         private readonly TrainingWorkflow $workflow,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): TrainingSession
     {
-        $this->workflow->start($data);
+        return $this->entityManager->getConnection()->transactional(function () use ($data, $operation, $uriVariables, $context): TrainingSession {
+            $this->workflow->start($data);
 
-        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+            return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        });
     }
 }

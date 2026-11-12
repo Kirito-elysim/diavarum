@@ -8,8 +8,10 @@ const ACCESSORS = {
   center: (a: AreaStatistics) => a.center,
   registered: (a: AreaStatistics) => a.patients.registered,
   eligible: (a: AreaStatistics) => a.patients.eligible.count,
+  notEligible: (a: AreaStatistics) => a.patients.notEligible.count,
   pending: (a: AreaStatistics) => a.patients.pending.count,
   active: (a: AreaStatistics) => a.programs.active.count,
+  inactive: (a: AreaStatistics) => a.programs.inactive.count,
   completed: (a: AreaStatistics) => a.programs.completed.count,
   interrupted: (a: AreaStatistics) => a.programs.interrupted.count,
   sessions: (a: AreaStatistics) => a.activity.validatedSessions,
@@ -30,8 +32,10 @@ export function CentersTab({ centers, total }: { centers: AreaStatistics[]; tota
               {head('Centre', 'center', 'left')}
               {head('Patients', 'registered')}
               {head('Éligibles', 'eligible')}
+              {head('Non éligibles', 'notEligible')}
               {head('À statuer', 'pending')}
               {head('Parcours en cours', 'active')}
+              {head('Inactifs (15 j)', 'inactive')}
               {head('Achevés', 'completed')}
               {head('Clôturés', 'interrupted')}
               {head('Séances (période)', 'sessions')}
@@ -46,8 +50,10 @@ export function CentersTab({ centers, total }: { centers: AreaStatistics[]; tota
                   <TableCell className="text-sm whitespace-nowrap">{area.center}</TableCell>
                   <TableCell className="text-right text-sm tabular-nums">{area.patients.registered}</TableCell>
                   <TableCell className="text-right text-sm"><ShareCell share={area.patients.eligible} /></TableCell>
+                  <TableCell className="text-right text-sm"><ShareCell share={area.patients.notEligible} /></TableCell>
                   <TableCell className="text-right text-sm"><ShareCell share={area.patients.pending} /></TableCell>
                   <TableCell className="text-right text-sm"><ShareCell share={area.programs.active} /></TableCell>
+                  <TableCell className="text-right text-sm"><ShareCell share={area.programs.inactive} /></TableCell>
                   <TableCell className="text-right text-sm"><ShareCell share={area.programs.completed} /></TableCell>
                   <TableCell className="text-right text-sm"><ShareCell share={area.programs.interrupted} /></TableCell>
                   <TableCell className="text-right text-sm tabular-nums">{area.activity.validatedSessions}</TableCell>
@@ -58,7 +64,7 @@ export function CentersTab({ centers, total }: { centers: AreaStatistics[]; tota
           </TableBody>
         </Table>
       </Card>
-      <p className="text-xs text-gray-400">Patients et parcours : effectifs à date. Séances et score : activité de la période choisie.</p>
+      <p className="text-xs text-gray-400">Patients non archivés et leurs parcours : effectifs à date. Séances et score : activité de la période choisie.</p>
     </div>
   );
 }

@@ -38,7 +38,7 @@ final class StatisticsBuilder
      *
      * @return array<string, mixed>
      */
-    public function build(array $centers, bool $national, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null): array
+    public function build(array $centers, bool $national, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null, bool $screen = false): array
     {
         $inPeriod = static fn (?\DateTimeInterface $date): bool => null !== $date
             && (null === $from || $date >= $from) && (null === $to || $date <= $to);
@@ -68,6 +68,7 @@ final class StatisticsBuilder
             $patientsByCenter[$center->getId()->toRfc4122()] ?? [],
             $programsByCenter[$center->getId()->toRfc4122()] ?? [],
             $inPeriod,
+            $screen,
         ), $centers);
 
         return [
@@ -76,9 +77,9 @@ final class StatisticsBuilder
             'generatedAt' => new \DateTimeImmutable(),
             'period' => ['from' => $from?->format('Y-m-d'), 'to' => $to?->format('Y-m-d')],
             'centers' => $perCenter,
-            'total' => ['center' => $national ? 'National' : 'Total'] + $this->aggregate($patients, $programs, $inPeriod),
+            'total' => ['center' => $national ? 'National' : 'Total'] + $this->aggregate($patients, $programs, $inPeriod, $screen),
             'courses' => $this->courses($programs, $inPeriod),
-            'nurses' => $this->nurses($centers, $from, $to),
+            'nurses' => $this->nurses($centers, $from, $to, $screen),
             'monthly' => $this->monthly($programs, $inPeriod, $from, $to),
             'interruptionReasons' => $this->interruptionReasons($programs, $inPeriod),
         ];
@@ -91,7 +92,7 @@ final class StatisticsBuilder
      *
      * @return array<string, mixed>
      */
-    private function aggregate(array $patients, array $programs, \Closure $inPeriod): array
+    private function aggregate(array $patients, array $programs, \Closure $inPeriod, bool $screen = false): array
     {
         $sessionScores = [];
         $validatedSessions = 0;
@@ -126,8 +127,9 @@ final class StatisticsBuilder
             ],
             'programs' => [
                 'total' => $totalPrograms,
-                'inactive' => self::share($countPrograms(ProgramStatus::Inactive), $totalPrograms),
-                'active' => self::share($countPrograms(ProgramStatus::Active), $totalPrograms),
+                'inactive' => self::share($screen ? \count(array_filter($programs, static fn (TrainingProgram $p) => 'non_actif' === $p->getActivityStatus())) : $countPrograms(ProgramStatus::Inactive), $totalPrograms),
+                ...($screen ? ['notStarted' => self::share(\count(array_filter($programs, static fn (TrainingProgram $p) => 'non_demarre' === $p->getActivityStatus())), $totalPrograms)] : []),
+                'active' => self::share($screen ? \count(array_filter($programs, static fn (TrainingProgram $p) => 'actif' === $p->getActivityStatus())) : $countPrograms(ProgramStatus::Active), $totalPrograms),
                 'interrupted' => self::share($countPrograms(ProgramStatus::Interrupted), $totalPrograms),
                 'completed' => self::share($countPrograms(ProgramStatus::Completed), $totalPrograms),
             ],
@@ -190,7 +192,7 @@ final class StatisticsBuilder
      *
      * @return list<array<string, mixed>>
      */
-    private function nurses(array $centers, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to): array
+    private function nurses(array $centers, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to, bool $screen = false): array
     {
         if ([] === $centers) {
             return [];
@@ -209,6 +211,7 @@ final class StatisticsBuilder
         if (null !== $to) {
             $query->andWhere('s.completedAt <= :to')->setParameter('to', $to, Types::DATETIMETZ_IMMUTABLE);
         }
+        if ($screen) $query->andWhere('p.removedAt IS NULL');
         $activity = $query->getQuery()->getArrayResult();
         $byNurse = array_column($activity, null, 'nurse');
 

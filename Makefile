@@ -60,6 +60,7 @@ fixtures: ## Recharge les données de démo (conserve le catalogue des séances 
 	$(MAKE) content
 
 content: ## Importe les contenus de cours versionnés (api/content/*.json)
+	$(CONSOLE) app:content:reference
 	$(PHP) sh -c 'bin/console app:content:import content/*.json'
 
 test: ## Lance les tests (base diaverum_test créée / migrée si besoin)

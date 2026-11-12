@@ -50,7 +50,7 @@
           "id": "s1-respect",
           "type": "reveal-legends",
           "question": "Le personnel soignant garantit le respect de :",
-          "imageUrl": "/courses/S1/patient-soignante.png",
+          "imageUrl": "/courses/S1/droits-suite.png",
           "alt": "Une patiente accompagnée par une infirmière",
           "points": [
             {
@@ -172,31 +172,31 @@
           "slides": [
             {
               "id": "s1-pc-role-1",
-              "imageUrl": "/courses/S1/accompagner.png",
+              "imageUrl": "/courses/S1/confiance-1.png",
               "alt": "Une patiente accompagnée par un proche",
               "text": "Vous accompagner lors de consultations ou d’hospitalisations."
             },
             {
               "id": "s1-pc-role-2",
-              "imageUrl": "/courses/S1/echanges.png",
+              "imageUrl": "/courses/S1/confiance-2.png",
               "alt": "Deux personnes qui échangent",
               "text": "Vous aider à comprendre les informations médicales."
             },
             {
               "id": "s1-pc-role-3",
-              "imageUrl": "/courses/S1/echanges.png",
+              "imageUrl": "/courses/S1/confiance-3.png",
               "alt": "Deux personnes qui échangent",
               "text": "Faciliter les échanges avec les soignants."
             },
             {
               "id": "s1-pc-role-4",
-              "imageUrl": "/courses/S1/accompagner.png",
+              "imageUrl": "/courses/S1/confiance-4.png",
               "alt": "Une patiente soutenue par un proche",
               "text": "Vous soutenir dans vos décisions."
             },
             {
               "id": "s1-pc-role-5",
-              "imageUrl": "/courses/S1/equipe-soignante.png",
+              "imageUrl": "/courses/S1/confiance-5.png",
               "alt": "Un proche qui parle à l’équipe soignante",
               "text": "Témoigner de vos souhaits si vous n’êtes plus en capacité de vous exprimer."
             }
@@ -211,7 +211,7 @@
         {
           "id": "s1-pc-image",
           "type": "image",
-          "url": "/courses/S1/accompagner.png",
+          "url": "/courses/S1/confiance-majeure.png",
           "alt": "Une patiente accompagnée par un proche"
         },
         {
@@ -220,6 +220,20 @@
           "variant": "warning",
           "title": "Important",
           "content": "Le rôle majeur de la personne de confiance est de faire connaître vos volontés si vous n’êtes plus en capacité de les exprimer. Son avis est alors pris en compte prioritairement par l’équipe médicale."
+        }
+      ]
+    },
+    {
+      "id": "p06b",
+      "title": "Les directives anticipées",
+      "blocks": [
+        {
+          "id": "s1-da-intro",
+          "type": "image-text",
+          "imageUrl": "/courses/S1/anticipees-intro.png",
+          "alt": "Une patiente accompagnée, songeuse",
+          "size": "image",
+          "content": "Le sujet de la fin de vie n’est pas facile à envisager, mais anticiper ce type d’évènement peut en alléger le fardeau, pour vous ou vos proches, dans un moment particulièrement difficile."
         }
       ]
     },
@@ -273,25 +287,25 @@
           "slides": [
             {
               "id": "s1-da-role-1",
-              "imageUrl": "/courses/S1/accompagner.png",
+              "imageUrl": "/courses/S1/anticipees-1.png",
               "alt": "Une personne face à ses choix",
               "text": "Les directives anticipées permettent à la personne de faire connaître ses choix sur les traitements de fin de vie, comme la nutrition artificielle, la ventilation artificielle, la réanimation, la sédation, etc."
             },
             {
               "id": "s1-da-role-2",
-              "imageUrl": "/courses/S1/medecin.png",
+              "imageUrl": "/courses/S1/anticipees-2.png",
               "alt": "Un médecin",
               "text": "Les directives anticipées s’imposent au médecin pour toute décision d’investigation, d’intervention ou de traitement lors de la fin de vie, sauf en cas d’urgence et si les directives anticipées apparaissent inappropriées en regard de la situation médicale du patient."
             },
             {
               "id": "s1-da-role-3",
-              "imageUrl": "/courses/S1/medecin.png",
+              "imageUrl": "/courses/S1/anticipees-3.png",
               "alt": "Un médecin",
               "text": "Si les directives anticipées apparaissent inappropriées en regard de la situation médicale du patient, le médecin peut décider de ne pas les appliquer."
             },
             {
               "id": "s1-da-role-4",
-              "imageUrl": "/courses/S1/equipe-soignante.png",
+              "imageUrl": "/courses/S1/anticipees-4.png",
               "alt": "Une équipe soignante réunie",
               "text": "Dans ce cas, il doit solliciter un avis collégial. La décision collégiale s’impose alors et elle est inscrite dans le dossier médical. La personne de confiance, ou à défaut la famille ou les proches, en sont informés."
             }
@@ -305,7 +319,10 @@
       "blocks": [
         {
           "id": "s1-sedation",
-          "type": "text",
+          "type": "image-text",
+          "imageUrl": "/courses/S1/sedation.png",
+          "alt": "Coucher de soleil, symbole d’apaisement",
+          "size": "image",
           "content": "La loi française n’autorise pas l’euthanasie, mais la loi permet la sédation profonde et continue jusqu’au décès.\n\nCela signifie que si les traitements ne peuvent plus soulager le patient, il est possible de l’endormir profondément pour qu’il ne ressente plus la douleur, et ce jusqu’à la fin."
         },
         {
@@ -324,7 +341,7 @@
         {
           "id": "s1-conclusion-image",
           "type": "image",
-          "url": "/courses/S1/echanges.png",
+          "url": "/courses/S1/conclusion.png",
           "alt": "Deux personnes qui échangent"
         },
         {

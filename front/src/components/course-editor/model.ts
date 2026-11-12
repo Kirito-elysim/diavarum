@@ -36,15 +36,22 @@ export function move<T>(items: T[], index: number, direction: number): T[] {
 export function validateCourse(course: ModuleContent): string[] {
   const errors: string[] = [];
   if (!course.title.trim()) errors.push('Renseignez le titre du cours.');
-  if (course.estimatedDuration < 5 || course.estimatedDuration > 120) errors.push('La durée doit être comprise entre 5 et 120 minutes.');
+  if (!Number.isInteger(course.estimatedDuration) || course.estimatedDuration < 5 || course.estimatedDuration > 120) errors.push('La durée doit être un nombre entier compris entre 5 et 120 minutes.');
   if (!course.content.length) errors.push('Ajoutez au moins un écran.');
   if (course.competencies.some(c => !c.trim())) errors.push('Complétez ou retirez les compétences vides.');
+  if (course.competencies.length > 6) errors.push('Une séance compte au plus 6 compétences.');
+  const pageIds = new Set<string>();
+  const blockIds = new Set<string>();
   course.content.forEach((page, index) => {
     const at = `Écran ${index + 1}`;
+    if (!page.id?.trim() || pageIds.has(page.id)) errors.push(`${at} : identifiant manquant ou en double.`);
+    pageIds.add(page.id);
     if (!page.title.trim()) errors.push(`${at} : renseignez le titre.`);
     if (!page.blocks.length) errors.push(`${at} : ajoutez une activité.`);
     page.blocks.forEach((b, i) => {
       const name = `${at}, activité ${i + 1}`;
+      if (!b.id?.trim() || blockIds.has(b.id)) errors.push(`${name} : identifiant manquant ou en double.`);
+      blockIds.add(b.id);
       const missing = (value: string | undefined, label: string) => { if (!value?.trim()) errors.push(`${name} : ${label}.`); };
       if (b.type === 'text' || b.type === 'info-card') missing(b.content, 'complétez le texte');
       if (b.type === 'reorder') {

@@ -45,6 +45,9 @@ final class ContentValidator
                 $errors[] = "$where : liste de blocs manquante.";
                 continue;
             }
+            if ([] === $page['blocks']) {
+                $errors[] = "$where : ajoutez au moins une activité.";
+            }
 
             foreach ($page['blocks'] as $b => $block) {
                 $at = \sprintf('%s, bloc %d', $where, $b + 1);
@@ -58,6 +61,12 @@ final class ContentValidator
                 $blockIds[$block['id']] = true;
                 if (!\in_array($block['type'] ?? null, self::BLOCK_TYPES, true)) {
                     $errors[] = \sprintf('%s : type « %s » inconnu.', $at, \is_string($block['type'] ?? null) ? $block['type'] : '?');
+                    continue;
+                }
+                // Refuser les structures qui feraient planter le lecteur ou le calcul du score.
+                $structureErrors = $this->validateStructure($block);
+                if ([] !== $structureErrors) {
+                    foreach ($structureErrors as $error) $errors[] = "$at : $error";
                     continue;
                 }
                 if ('quiz' === $block['type'] && \in_array($block['questionType'] ?? '', ['qcu', 'qcm'], true)) {
@@ -132,4 +141,77 @@ final class ContentValidator
 
         return $errors;
     }
+    /** @return list<string> */
+    private function validateStructure(array $block): array
+    {
+        $errors = [];
+        $type = $block['type'];
+        $lists = match ($type) {
+            'quiz' => ['drag-drop' === ($block['questionType'] ?? null) ? 'pairs' : 'options'],
+            'timeline', 'reorder', 'sort-bin', 'picto-grid' => ['items'],
+            'categorize' => ['categories', 'items'],
+            'memory', 'flip-cards' => ['cards'],
+            'tap-sequence', 'scenario', 'yes-no-path' => ['steps'],
+            'hotspot' => ['hotspots'], 'reveal-legends' => ['points'],
+            'pull-timeline' => ['events'], 'connect-dots' => ['dots'],
+            'word-search' => ['words'], 'carousel' => ['slides'],
+            'true-false' => ['statements'], 'fill-blank' => ['answers'],
+            default => [],
+        };
+        if ('quiz' === $type && !\in_array($block['questionType'] ?? null, ['qcu', 'qcm', 'drag-drop'], true)) {
+            $errors[] = 'type de question inconnu.';
+        }
+        foreach ($lists as $field) {
+            $items = $block[$field] ?? null;
+            if (!\is_array($items) || !array_is_list($items) || [] === $items) {
+                $errors[] = "$field doit être une liste non vide.";
+                continue;
+            }
+            $ids = [];
+            foreach ($items as $item) {
+                if (\in_array($field, ['categories', 'answers'], true)) {
+                    if (!\is_string($item) || '' === trim($item)) $errors[] = "$field contient un texte invalide.";
+                    continue;
+                }
+                if (!\is_array($item) || !\is_string($item['id'] ?? null) || '' === trim($item['id'])) {
+                    $errors[] = "$field contient un élément sans identifiant.";
+                    continue;
+                }
+                if (isset($ids[$item['id']])) $errors[] = "$field contient un identifiant en double.";
+                $ids[$item['id']] = true;
+                $texts = match ($type) {
+                    'quiz' => 'drag-drop' === $block['questionType'] ? ['left', 'right'] : ['label'],
+                    'reorder', 'tap-sequence', 'sort-bin' => ['label'],
+                    'categorize' => ['label', 'category'], 'picto-grid' => ['imageUrl', 'text'],
+                    'flip-cards' => ['front', 'back'], 'memory' => ['pairId', 'content'],
+                    'carousel' => ['imageUrl'], 'true-false' => ['statement'],
+                    'hotspot' => ['label', 'description'], 'reveal-legends' => ['label'],
+                    default => [],
+                };
+                foreach ($texts as $text) {
+                    if (!\is_string($item[$text] ?? null) || '' === trim($item[$text])) $errors[] = "$field : $text manquant ou invalide.";
+                }
+            }
+        }
+        $texts = match ($type) {
+            'text', 'info-card' => ['content'], 'image' => ['url'],
+            'image-text' => ['imageUrl', 'content'],
+            'hotspot', 'reveal-legends', 'connect-dots' => ['imageUrl'],
+            'iframe' => ['url', 'title'], 'fill-blank' => ['text'],
+            default => [],
+        };
+        foreach ($texts as $field) {
+            if (!\is_string($block[$field] ?? null) || '' === trim($block[$field])) $errors[] = "$field manquant ou invalide.";
+        }
+        if ([] === $errors && 'fill-blank' === $type && substr_count($block['text'], '___') !== \count($block['answers'])) {
+            $errors[] = 'chaque trou doit avoir exactement une réponse.';
+        }
+        if ([] === $errors && 'memory' === $type) {
+            foreach (array_count_values(array_column($block['cards'], 'pairId')) as $count) {
+                if (2 !== $count) { $errors[] = 'chaque paire doit contenir exactement deux cartes.'; break; }
+            }
+        }
+        return $errors;
+    }
+
 }

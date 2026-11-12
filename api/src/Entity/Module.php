@@ -15,6 +15,7 @@ use App\Entity\Contract\ArchivableInterface;
 use App\Entity\Contract\ArchivableTrait;
 use App\State\ArchiveProcessor;
 use App\Training\ScoreCalculator;
+use App\Training\ContentValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -25,6 +26,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Cours (= séance d'entraînement = module) : 32 au total (doc/Liste-seances.pdf) —
@@ -273,6 +275,15 @@ class Module implements ArchivableInterface
         $this->content = $content;
 
         return $this;
+    }
+
+    /** Même contrôle pour POST/PATCH /modules que pour l'API d'intégration. */
+    #[Assert\Callback]
+    public function validateContent(ExecutionContextInterface $context): void
+    {
+        foreach ((new ContentValidator())->validate($this->content) as $error) {
+            $context->buildViolation($error)->atPath('content')->addViolation();
+        }
     }
 
     /**

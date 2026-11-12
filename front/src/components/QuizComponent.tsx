@@ -55,7 +55,7 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
 
           let borderClass = 'border-[#1C5335]';
           let bgClass   = 'bg-transparent hover:bg-[#FAFAFA]';
-          let textClass = 'text-[#1F3A34]';
+          let textClass = 'text-[#004138]';
           let letterBg  = 'bg-[#004138]/8 text-[#004138]/50';
           let anim      = '';
 
@@ -71,7 +71,7 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
               borderClass = 'border-red-500'; bgClass = 'bg-red-50'; textClass = 'text-red-800';
               letterBg = 'bg-red-500 text-white'; anim = shake ? 'shake' : '';
             } else {
-              borderClass = 'border-[#004138]/8'; bgClass = 'bg-[#ECF5E9]/60'; textClass = 'text-[#1F3A34]/40';
+              borderClass = 'border-[#004138]/8'; bgClass = 'bg-[#ECF5E9]/60'; textClass = 'text-[#004138]/40';
             }
           } else if (isSelected) {
             borderClass = 'border-[#E86825]'; bgClass = 'bg-[#FFF4ED]'; textClass = 'text-[#A64314]';
@@ -88,7 +88,7 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
                 borderClass, bgClass, textClass, anim
               )}
             >
-              <span aria-hidden="true" className={cn('w-9 h-9 rounded-lg border border-current flex-shrink-0 flex items-center justify-center text-sm font-black transition-all', letterBg)}>
+              <span aria-hidden="true" className={cn('w-9 h-9 rounded-lg border border-current flex-shrink-0 flex items-center justify-center course-label font-black transition-all', letterBg)}>
                 {isSelected ? '✓' : ''}
               </span>
               <span className="flex-1 font-normal leading-snug whitespace-pre-line" style={{ fontSize: (block.options?.length ?? 0) >= 5 ? 20 : 25 }}><CourseText text={opt.label} /></span>
@@ -150,7 +150,7 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
           const isSelected = selected.has(opt.id);
           const isCorrect  = opt.isCorrect;
 
-          let borderClass = 'border-[#1C5335]'; let bgClass = 'bg-transparent hover:bg-[#FAFAFA]'; let textClass = 'text-[#1F3A34]'; let checkClass = 'border-[#004138]/25'; let anim = '';
+          let borderClass = 'border-[#1C5335]'; let bgClass = 'bg-transparent hover:bg-[#FAFAFA]'; let textClass = 'text-[#004138]'; let checkClass = 'border-[#004138]/25'; let anim = '';
           if (submitted && !showCorrection) {
             if (isSelected) { borderClass = 'border-[#1FABC7]'; bgClass = 'bg-[#1FABC7]/10'; textClass = 'text-[#0E6477]'; checkClass = 'border-[#1FABC7] bg-[#1FABC7]'; }
           } else if (submitted) {
@@ -161,7 +161,7 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
               borderClass = 'border-red-500'; bgClass = 'bg-red-50'; textClass = 'text-red-800';
               checkClass = 'border-red-500 bg-red-500';
             } else {
-              borderClass = 'border-[#004138]/8'; bgClass = 'bg-[#ECF5E9]/60'; textClass = 'text-[#1F3A34]/40'; checkClass = 'border-[#1C5335]';
+              borderClass = 'border-[#004138]/8'; bgClass = 'bg-[#ECF5E9]/60'; textClass = 'text-[#004138]/40'; checkClass = 'border-[#1C5335]';
             }
           } else if (isSelected) {
             borderClass = 'border-[#E86825]'; bgClass = 'bg-[#FFF4ED]'; textClass = 'text-[#A64314]';
@@ -272,7 +272,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/* Left — drop zones */}
         <div className="space-y-3">
-          <p className="text-xs font-bold text-[#004138]/50 uppercase tracking-widest px-1">Concepts</p>
+          <p className="course-caption font-bold text-[#004138]/50 uppercase tracking-widest px-1">Concepts</p>
           {block.pairs?.map((pair: DragDropPair) => {
             const matched    = matches[pair.id];
             const isCorrect  = submitted && matched === pair.right;
@@ -292,12 +292,12 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
                               'border-dashed border-[#004138]/20 bg-white'
                 )}
               >
-                <span className="font-bold text-[#004138] text-base">{pair.left}</span>
+                <span className="font-bold text-[#004138] course-label">{pair.left}</span>
                 {matched && (
                   <button
                     onClick={() => !submitted && removeMatch(pair.id)}
                     className={cn(
-                      'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition-all touch-manipulation',
+                      'flex items-center gap-1.5 px-3 py-1.5 rounded-xl course-label font-semibold transition-all touch-manipulation',
                       submitted
                         ? isCorrect ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100'
                         : 'text-[#A64314] bg-[#FFE0D0] hover:bg-[#FCC6A8] active:scale-95'
@@ -311,7 +311,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
                   </button>
                 )}
                 {!matched && (
-                  <span className="text-xs text-[#004138]/30 font-medium">Déposez ici</span>
+                  <span className="course-caption text-[#004138]/30 font-medium">Déposez ici</span>
                 )}
               </div>
             );
@@ -320,7 +320,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
 
         {/* Right — draggable chips */}
         <div className="space-y-3">
-          <p className="text-xs font-bold text-[#004138]/50 uppercase tracking-widest px-1">Définitions</p>
+          <p className="course-caption font-bold text-[#004138]/50 uppercase tracking-widest px-1">Définitions</p>
           {shuffled.map((item: string) => {
             const isUsed = Object.values(matches).includes(item);
             const isDraggingThis = dragging === item;
@@ -352,7 +352,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
                     </svg>
                   </span>
                 )}
-                <span className="text-base text-[#1F3A34] font-medium leading-snug">{item}</span>
+                <span className="course-label text-[#004138] font-medium leading-snug">{item}</span>
               </div>
             );
           })}
@@ -362,7 +362,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
       {/* Floating drag ghost */}
       {dragging && (
         <div
-          className="fixed pointer-events-none z-50 px-5 py-3 rounded-2xl bg-[#E86825] text-white text-base font-semibold shadow-2xl shadow-orange-900/20 -translate-x-1/2 -translate-y-1/2 max-w-[200px] text-center"
+          className="fixed pointer-events-none z-50 px-5 py-3 rounded-2xl bg-[#E86825] text-white course-label font-semibold shadow-2xl shadow-orange-900/20 -translate-x-1/2 -translate-y-1/2 max-w-[200px] text-center"
           style={{ left: dragPos.x, top: dragPos.y }}
         >
           {dragging}
@@ -375,7 +375,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
 
       {submitted && (
         <div className="p-5 bg-[#1FABC7]/10 border border-[#1FABC7]/25 rounded-2xl">
-          <p className="text-base font-bold text-[#0E6477]">
+          <p className="course-label font-bold text-[#0E6477]">
             {block.pairs?.filter((p: DragDropPair) => matches[p.id] === p.right).length} / {block.pairs?.length} associations correctes
           </p>
           {block.explanation && <p className="mt-3 whitespace-pre-line text-[#0E6477]/80">{block.explanation}</p>}
@@ -388,9 +388,9 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
 /* ─── Shared sub-components ──────────────────────────────────────────────── */
 function QuestionHeader({ text, multi }: { label?: string; text: string; multi?: boolean }) {
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex flex-wrap items-start gap-2">
       <p className="flex-1 text-[25px] font-bold text-[#004138] leading-snug">{text}</p>
-      {multi && <span className="flex-shrink-0 mt-1 bg-[#E86825]/15 text-[#E86825] px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide">Plusieurs réponses</span>}
+      {multi && <span className="mt-1 bg-[#E86825]/15 text-[#A64314] px-2 py-1 rounded-md course-label font-bold">Plusieurs réponses</span>}
     </div>
   );
 }
@@ -400,12 +400,7 @@ function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disab
     <button
       onClick={onClick}
       disabled={disabled}
-      className={cn(
-        'w-full h-16 rounded-full text-lg font-bold transition-all touch-manipulation',
-        disabled
-          ? 'bg-[#004138]/8 text-[#004138]/25 cursor-not-allowed'
-          : 'bg-[#E86825] text-white shadow-lg shadow-orange-900/15 active:scale-[0.98] hover:bg-[#CC5518]'
-      )}
+      className="course-action w-full transition-colors"
     >
       {label}
     </button>
@@ -420,8 +415,8 @@ function Explanation({ text, isCorrect }: { text: string; isCorrect: boolean }) 
     )}>
       <span className="text-2xl flex-shrink-0">{isCorrect ? '🎉' : '💡'}</span>
       <div>
-        <p className={cn('text-sm font-bold mb-1', isCorrect ? 'text-emerald-700' : 'text-[#0E6477]')}>Explication</p>
-        <p className={cn('text-base leading-relaxed', isCorrect ? 'text-emerald-800/80' : 'text-[#0E6477]/80')}>{text}</p>
+        <p className={cn('course-label font-bold mb-1', isCorrect ? 'text-emerald-700' : 'text-[#0E6477]')}>Explication</p>
+        <p className={cn('course-label leading-relaxed', isCorrect ? 'text-emerald-800/80' : 'text-[#0E6477]/80')}>{text}</p>
       </div>
     </div>
   );

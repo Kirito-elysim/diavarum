@@ -25,7 +25,7 @@ final class SpreadsheetWriter
         $summary = $book->getActiveSheet()->setTitle('Synthèse');
         $this->table($summary, [
             'Nom', 'Prénom', 'Date de naissance', 'Centre', 'Éligibilité', 'Parcours',
-            'Séances validées', 'Séances du parcours', 'Score moyen (%)', 'Durée totale (min)', 'Validé par', 'Achevé le',
+            'Séances validées', 'Séances du parcours', 'Score moyen (%)', 'Durée totale (min)', 'Clôturé par', 'Achevé le',
         ], array_map(static fn (array $r) => [
             mb_strtoupper($r['patient']['lastName']),
             $r['patient']['firstName'],
@@ -36,7 +36,7 @@ final class SpreadsheetWriter
             $r['program']['validatedCount'] ?? null,
             $r['program']['selectedCount'] ?? null,
             $r['program']['averageScore'] ?? null,
-            isset($r['program']) ? self::minutes($r['program']['totalDurationSeconds']) : null,
+            isset($r['program']['totalDurationSeconds']) ? self::minutes($r['program']['totalDurationSeconds']) : null,
             $r['program']['validatedBy'] ?? null,
             ($r['program']['completedAt'] ?? null)?->format('d/m/Y'),
         ], $reports));
@@ -57,6 +57,7 @@ final class SpreadsheetWriter
                     $c['score'],
                     null === $c['durationSeconds'] ? null : self::minutes($c['durationSeconds']),
                     $c['validatedAt']?->setTimezone(new \DateTimeZone('Europe/Paris'))->format('d/m/Y H:i'),
+                    $c['nurse'],
                     implode(' ; ', $c['competencies']),
                     implode(' ; ', $c['competenciesNotValidated']),
                 ];
@@ -64,8 +65,32 @@ final class SpreadsheetWriter
         }
         $this->table($detail, [
             'Nom', 'Prénom', 'Date de naissance', 'Code', 'Séance', 'Thématique', 'Sélectionnée', 'Statut',
-            'Score (%)', 'Durée (min)', 'Validée le', 'Compétences validées', 'Compétences non validées',
+            'Score (%)', 'Durée (min)', 'Validée le', 'IDE', 'Compétences validées', 'Compétences non validées',
         ], $rows);
+
+        $paris = new \DateTimeZone('Europe/Paris');
+        $moment = static fn (?\DateTimeInterface $d) => $d?->setTimezone($paris)->format('d/m/Y H:i:s');
+        $attempts = [];
+        $codex = [];
+        foreach ($reports as $r) {
+            $who = [mb_strtoupper($r['patient']['lastName']), $r['patient']['firstName'], $r['patient']['dateOfBirth']?->format('d/m/Y')];
+            foreach ($r['sessions'] as $s) {
+                $attempts[] = [...$who, $s['code'], $s['title'], $s['status'], $moment($s['startedAt']), $moment($s['endedAt']),
+                    self::minutes($s['durationSeconds']), $s['score'], $s['nurse']];
+            }
+            foreach ($r['codex'] as $t) {
+                $codex[] = [...$who, $moment($t['date']), $t['nurse'], implode(', ', $t['words']), $t['clockTime'],
+                    $t['clockPassed'] ? 'Réussi' : 'Échoué', $t['wordRecallPassed'] ? 'Réussi' : 'Échoué',
+                    $t['orientationScore'], $t['nephrologistReview'] ? 'Oui' : 'Non', $t['notes']];
+            }
+        }
+        $this->table($book->createSheet()->setTitle('Historique des séances'), [
+            'Nom', 'Prénom', 'Date de naissance', 'Code', 'Séance', 'Statut', 'Début', 'Fin', 'Durée (min)', 'Score (%)', 'IDE',
+        ], $attempts);
+        $this->table($book->createSheet()->setTitle('CODEX'), [
+            'Nom', 'Prénom', 'Date de naissance', 'Passé le', 'IDE', 'Mots', 'Heure donnée', 'Test de l\'horloge',
+            'Rappel des mots', 'Score d\'orientation', 'Avis néphrologue requis', 'Notes',
+        ], $codex);
 
         $book->setActiveSheetIndex(0);
 

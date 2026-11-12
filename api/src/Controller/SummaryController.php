@@ -79,13 +79,21 @@ final class SummaryController
                 ->setParameter('search', '%'.mb_strtolower(addcslashes($search, '%_')).'%');
         }
 
+        $activityQb = clone $qb;
+        $activityExpression = \App\Doctrine\Filter\ProgramActivityFilter::expression('tp', 'activityBoundary');
+        $activityCounts = array_fill_keys(['non_demarre', 'non_actif', 'actif', 'interrompu', 'acheve'], 0);
+        foreach ($activityQb->select($activityExpression.' AS activity', 'COUNT(tp.id) AS total')->groupBy('activity')
+            ->setParameter('activityBoundary', new \DateTimeImmutable('-15 days'), \Doctrine\DBAL\Types\Types::DATETIMETZ_IMMUTABLE)->getQuery()->getArrayResult() as $row) {
+            $activityCounts[$row['activity']] = (int) $row['total'];
+        }
+
         $counts = array_fill_keys(array_map(static fn (ProgramStatus $s) => $s->value, ProgramStatus::cases()), 0);
         foreach ($qb->select('tp.status AS status', 'COUNT(tp.id) AS total')->groupBy('tp.status')->getQuery()->getArrayResult() as $row) {
             $status = $row['status'] instanceof ProgramStatus ? $row['status']->value : (string) $row['status'];
             $counts[$status] = (int) $row['total'];
         }
 
-        return new JsonResponse(['total' => array_sum($counts), 'byStatus' => $counts]);
+        return new JsonResponse(['total' => array_sum($counts), 'byStatus' => $counts, 'activityByStatus' => $activityCounts]);
     }
 
     /** Requête limitée aux centres de l'utilisateur, comme les collections de l'API */

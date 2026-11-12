@@ -103,8 +103,43 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
 
         $tracking = $this->tracking();
         self::assertSame('actif', $tracking['status']);
+        self::assertSame('actif', $tracking['activityStatus']);
+        self::assertNotNull($tracking['lastActivityAt']);
         self::assertSame('non_termine', $tracking['module']['status']);
         self::assertSame(0, $tracking['validatedCount']);
+    }
+
+    public function testValidationRefreshesActivityWithoutChangingFirstStart(): void
+    {
+        $id = $this->startSession();
+        $start = $this->tracking()['startedAt'];
+        $this->em()->getConnection()->executeStatement("UPDATE training_program SET last_activity_at = NOW() - INTERVAL '16 days' WHERE id = ?", [$this->program->getId()->toRfc4122()]);
+        $this->em()->clear();
+        self::assertSame('non_actif', $this->tracking()['activityStatus']);
+        $this->requestAs($this->ide, 'POST', "/api/sessions/$id/validate", $this->validPayload());
+        self::assertResponseIsSuccessful();
+        $tracking = $this->tracking();
+        self::assertSame('actif', $tracking['activityStatus']);
+        self::assertSame($start, $tracking['startedAt']);
+    }
+
+    public function testSessionWithSixCompetenciesCanBeValidated(): void
+    {
+        for ($i = 2; $i < Module::MAX_COMPETENCIES; ++$i) {
+            $competency = (new ModuleCompetency())->setModule($this->module)->setLabel('Compétence '.$i)->setPosition($i);
+            $this->module->getCompetencies()->add($competency);
+            $this->em()->persist($competency);
+            $this->competencies[] = $competency;
+        }
+        $this->em()->flush();
+        $payload = $this->validPayload();
+        $payload['competencies'] = array_map(static fn (ModuleCompetency $c) => [
+            'id' => $c->getId()->toRfc4122(), 'validated' => true,
+        ], $this->competencies);
+        $id = $this->startSession();
+        $this->requestAs($this->ide, 'POST', "/api/sessions/$id/validate", $payload);
+        self::assertResponseIsSuccessful();
+        self::assertSame('validee', $this->client->getResponse()->toArray()['status']);
     }
 
     public function testPostTestRequiresCompletedCoursesAndDoesNotRecordDuration(): void
@@ -162,6 +197,25 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
         self::assertSame(1860, $tracking['totalDurationSeconds']);
     }
 
+    public function testValidatedCourseCannotBeStartedOrValidatedAgain(): void
+    {
+        $id = $this->startSession();
+        $this->requestAs($this->ide, 'POST', "/api/sessions/$id/validate", $this->validPayload());
+        self::assertResponseIsSuccessful();
+
+        $this->requestAs($this->ide, 'POST', '/api/sessions', [
+            'patient' => $this->iri($this->patient),
+            'module' => $this->iri($this->module),
+            'program' => $this->iri($this->program),
+        ]);
+        self::assertResponseStatusCodeSame(422);
+        self::assertStringContainsString('déjà validé', $this->client->getResponse()->toArray(false)['detail']);
+
+        $this->requestAs($this->ide, 'POST', "/api/sessions/$id/validate", $this->validPayload());
+        self::assertResponseStatusCodeSame(422);
+        self::assertSame(75, $this->tracking()['module']['score']);
+    }
+
     public function testUnansweredExerciseCountsAsZero(): void
     {
         $id = $this->startSession();
@@ -208,6 +262,7 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
 
         $this->requestAs($this->ide, 'POST', "/api/sessions/$id/validate", $this->validPayload());
         self::assertResponseStatusCodeSame(422, 'Une séance interrompue ne peut plus être validée');
+        self::assertNotSame($id, $this->startSession(), 'Le cours interrompu peut être recommencé.');
     }
 
     public function testStartingANewSessionInterruptsTheOpenOne(): void
@@ -252,6 +307,47 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
             'program' => $programPath,
         ]);
         self::assertResponseStatusCodeSame(422, 'Plus de séance sur un parcours achevé');
+    }
+
+    public function testCadreCanCancelProgramValidationWithAReasonAndTheCourseStaysLocked(): void
+    {
+        $cadre = $this->createUser(UserRole::Cadre, [$this->center]);
+        $admin = $this->createUser(UserRole::AdminNational, []);
+        $id = $this->startSession();
+        $this->requestAs($this->ide, 'POST', "/api/sessions/$id/validate", $this->validPayload());
+        $programPath = $this->iri($this->program);
+
+        $this->requestAs($cadre, 'POST', "$programPath/reopen", ['reason' => 'x']);
+        self::assertResponseStatusCodeSame(422, 'Seul un parcours achevé peut être rouvert');
+
+        $this->requestAs($cadre, 'POST', "$programPath/complete");
+        $this->requestAs($this->ide, 'POST', "$programPath/reopen", ['reason' => 'Erreur de patient']);
+        self::assertResponseStatusCodeSame(403, 'Réservé au cadre et à l\'administrateur national');
+
+        $this->requestAs($cadre, 'POST', "$programPath/reopen", ['reason' => ' ']);
+        self::assertResponseStatusCodeSame(422, 'Motif obligatoire');
+
+        $this->requestAs($cadre, 'POST', "$programPath/reopen", ['reason' => 'Erreur de patient']);
+        self::assertResponseIsSuccessful();
+        $tracking = $this->tracking();
+        self::assertSame('actif', $tracking['status']);
+        self::assertNull($tracking['validatedBy'] ?? null);
+
+        $this->em()->clear();
+        $log = $this->em()->getConnection()->fetchAssociative("SELECT user_email, detail FROM access_log WHERE path LIKE '%/reopen' AND status_code = 200");
+        self::assertSame($cadre->getEmail(), $log['user_email']);
+        self::assertStringContainsString('Erreur de patient', $log['detail']);
+
+        $this->requestAs($this->ide, 'POST', '/api/sessions', [
+            'patient' => $this->iri($this->patient),
+            'module' => $this->iri($this->module),
+            'program' => $programPath,
+        ]);
+        self::assertResponseStatusCodeSame(422, 'Le cours validé reste verrouillé (validation unique)');
+
+        $this->requestAs($cadre, 'POST', "$programPath/complete");
+        $this->requestAs($admin, 'POST', "$programPath/reopen", ['reason' => 'Correction nationale']);
+        self::assertResponseIsSuccessful();
     }
 
     public function testProgramInterruptionRequiresAReasonAndCanBeResumed(): void

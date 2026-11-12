@@ -1,7 +1,6 @@
 import { CourseNavigation } from '../components/CourseNavigation';
 import { courseTemplates, pageFromTemplate } from '../components/course-editor/templates';
-import { pageHeaderMeta } from '../lib/courseVisuals';
-import { CoursePageHeading } from '../components/CoursePageHeading';
+import { CourseHeader } from '../components/CourseHeader';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useBlocker, useParams } from 'react-router-dom';
@@ -150,10 +149,10 @@ function Preview({ pages, start }: { pages: ModulePage[]; start: number }) {
   const [answers, setAnswers] = useState<Record<string, { isCorrect: boolean; score: number; selected?: string[] }>>({});
   const page = pages[index];
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
-  return <div className="course-theme rounded-2xl bg-[#ECF5E9] flex flex-col h-[70dvh] min-h-0">
-    <header className="shrink-0 bg-[#1C5335] p-5"><CoursePageHeading title={page.title} instruction={pageHeaderMeta(page).instruction} icon={pageHeaderMeta(page).icon} pageNumber={index + 1} totalPages={pages.length} level="h2" /></header>
+  return <div className="course-theme rounded-2xl flex flex-col h-[70dvh] min-h-0">
+    <CourseHeader page={page} pageNumber={index + 1} totalPages={pages.length} level="h2" />
     <main key={page.id} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-10 py-5 space-y-5"><Suspense fallback={<p>Chargement de l’aperçu…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense>
-      <Button variant="ghost" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</Button>
+      <button className="course-action" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</button>
     </main>
     <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />
   </div>;

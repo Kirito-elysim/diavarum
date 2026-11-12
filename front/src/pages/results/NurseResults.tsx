@@ -10,7 +10,7 @@ import { ExportButton } from '../../components/ExportButton';
 import { PeriodPicker } from '../../components/PeriodPicker';
 import { EmptyState, HEAD, ProgressBar, ScoreBar } from '../../components/ListParts';
 import { useMyActivity } from '../../api/hooks';
-import { PROGRAM_STATUS_LABELS } from '../../api/types';
+import { PROGRAM_STATUS_LABELS, PROGRAM_ACTIVITY_LABELS } from '../../api/types';
 import { ApiError } from '../../lib/api';
 import { formatDate, formatDuration, programBadge } from '../../lib/format';
 import { presetPeriod, type Period, type PeriodPreset } from '../../lib/period';
@@ -137,7 +137,7 @@ export function NurseResults() {
                             {patient.program ? (
                               <div className="flex flex-wrap items-center gap-2">
                                 <ProgressBar value={patient.program.validated} total={patient.program.selected} />
-                                <Badge variant="secondary" className={programBadge[patient.program.status]}>{PROGRAM_STATUS_LABELS[patient.program.status]}</Badge>
+                                <Badge variant="secondary" className={programBadge[patient.program.activityStatus === 'non_demarre' ? 'non_actif' : patient.program.activityStatus ?? patient.program.status]}>{(patient.program.activityStatus ? PROGRAM_ACTIVITY_LABELS[patient.program.activityStatus] : PROGRAM_STATUS_LABELS[patient.program.status])}</Badge>
                               </div>
                             ) : <span className="text-gray-400">—</span>}
                           </TableCell>

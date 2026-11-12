@@ -41,6 +41,7 @@ Dans Coolify, ouvrir le **Terminal** du service `php` :
 php bin/console app:user:create prenom.nom@diaverum.fr Prénom Nom --role=admin_national
 
 # Contenus des séances versionnés dans le dépôt (api/content/, ex. S1)
+php bin/console app:content:reference
 php bin/console app:content:import content/*.json
 ```
 

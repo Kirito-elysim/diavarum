@@ -57,6 +57,37 @@ make test        # API : tests fonctionnels (base diaverum_test créée et migr�
 make e2e         # interface : 30 étapes dans un vrai navigateur (Playwright), données de démo rechargées
 ```
 
+Contrôles de régression sans écriture dans les dossiers patients :
+
+```bash
+cd front && npm run lint && npm run build && cd ..
+node e2e/api-session.mjs           # expiration de session : appels JSON et exports
+node e2e/list-completeness.mjs     # patients et historique sur plusieurs pages API
+node --experimental-strip-types e2e/course-editor-model.mjs
+node e2e/course-charter.mjs        # 37 modèles pédagogiques
+node e2e/course-theme.mjs          # navigateur : thème des 26 types de blocs et des aperçus
+```
+
+Les deux premiers scénarios simulent les réponses HTTP et n’exigent pas de stack Docker.
+Les recettes navigateur ciblées sont décrites plus bas ; elles nécessitent Chromium installé
+avec `cd e2e && npx playwright install chromium` et les comptes de démonstration disponibles.
+
+Le thème des cours est partagé par le lecteur, l’aperçu apprenant et l’aperçu tablette :
+bandeau vert, fond menthe, actions orange, textes pédagogiques de 25 px et libellés de 20 px.
+Les styles de texte choisis explicitement dans l’éditeur restent prioritaires. Les activités
+complémentaires, les légendes et les écrans de pause/validation utilisent les mêmes repères.
+`course-theme.mjs` parcourt les 40 écrans de référence et 16 exemples complémentaires en portrait
+et paysage, puis contrôle les deux aperçus. Le contenu d’un site externe intégré dans une iframe
+conserve son propre thème ; seul son cadre appartient à l’application.
+
+Passe du 1er novembre 2026 : les listes de patients et l’historique des séances récupèrent
+toutes les pages API ; un refus d’authentification définitif ferme aussi la session lors d’un export.
+Les correctifs Symfony ExpressionLanguage 7.4.21 et Mime 7.4.22 et les mises à jour npm compatibles
+sont verrouillés. Zod, inutilisé, a été retiré. Les audits des dépendances de production PHP et npm
+ne signalent plus de vulnérabilité. L’audit npm complet conserve des alertes dans l’outillage de
+développement (Vite/esbuild et ESLint/TypeScript-ESLint/minimatch), à traiter lors d’une migration
+de cet outillage ; aucune mise à jour majeure forcée n’a été appliquée.
+
 ## Authentification et droits
 
 - `POST /api/auth/login` `{email, password}` → `{token}` (JWT valable 15 min) + cookie `refresh_token`
@@ -112,7 +143,7 @@ Création sur une nouvelle installation : `docker compose exec php bin/console a
 
 `GET` / `PUT /api/content/modules/{code}` (ex. `S4`, `O2`, `PT`) avec l'en-tête `X-Content-Token: <CONTENT_API_TOKEN>`.
 Ce jeton ne donne accès qu'aux contenus, jamais aux données patients. Corps : `title`, `description`,
-`estimatedDuration`, `published`, `competencies` (5 libellés au plus), `content` (pages > blocs, format du lecteur).
+`estimatedDuration`, `published`, `competencies` (6 libellés au plus), `content` (pages > blocs, format du lecteur).
 Le serveur refuse tout contenu mal formé (identifiants en double, type de bloc inconnu, exercice sans bonne réponse).
 L'écran « Contenus des séances » (administrateurs nationaux) permet d'exporter, corriger et réimporter ce JSON.
 

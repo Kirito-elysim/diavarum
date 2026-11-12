@@ -139,7 +139,7 @@ final class DashboardController
                 'SUM(CASE WHEN pm.validatedAt IS NULL AND pm.startedAt IS NOT NULL THEN 1 ELSE 0 END) AS inProgress')
             ->from(ProgramModule::class, 'pm')
             ->join('pm.module', 'm')->join('pm.program', 'tp')->join('tp.patient', 'p')
-            ->andWhere('p.center IN (:centers)')->andWhere('pm.startedAt IS NOT NULL')
+            ->andWhere('p.center IN (:centers)')->andWhere('p.removedAt IS NULL')->andWhere('pm.startedAt IS NOT NULL')
             ->setParameter('centers', $centers)
             ->groupBy('m.id')
             ->getQuery()->getArrayResult();
@@ -203,6 +203,6 @@ final class DashboardController
             $qb->join("$alias.patient", 'p');
         }
 
-        return $qb->andWhere('p.center IN (:centers)')->setParameter('centers', $centers);
+        return $qb->andWhere('p.removedAt IS NULL')->andWhere('p.center IN (:centers)')->setParameter('centers', $centers);
     }
 }
