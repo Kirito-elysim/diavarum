@@ -123,6 +123,8 @@ Aucune suppression physique : patients, comptes et centres sont archivés (traç
 | `GET /api/statistics[?centers[]=…]` | Cadre | Synthèse (JSON) de ses centres ; national par défaut pour un administrateur |
 | `GET /api/exports/statistics.xlsx` / `.pdf` | Cadre | Même synthèse : patients, programmes, séances, activité des IDE |
 
+**Comparaison de deux périodes (écran Résultats).** Le bouton « Comparer » ouvre un second sélecteur de période, identique au premier (périodes prédéfinies, dont mois, trimestre et année précédents, ou dates libres). L'écran interroge `GET /api/statistics` deux fois, avec les mêmes centres, et affiche sous chaque valeur de la période A : « B : valeur, écart A − B (en %) », sur la Vue d'ensemble, les indicateurs du haut et les onglets Séances, Centres et IDE. Les effectifs et statuts de patients sont à date, donc identiques ; l'onglet Parcours (liste à date) n'est pas concerné. « Période précédente » propose les jours qui précèdent la période A, en nombre égal (mois, trimestre ou année complets : le précédent). Pas d'export de la comparaison. Contrôles : `node e2e/compare-logic.mjs` (écarts, périodes) et `node e2e/results-compare.mjs` (parcours navigateur, API simulée).
+
 ### Contenus de cours
 
 Les contenus intégrés sont versionnés dans `api/content/` (un JSON par séance, format de l'API d'intégration) et

@@ -3,13 +3,15 @@ import { BarChart2, CirclePause } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import type { Statistics } from '../../api/types';
 import { formatDate, formatDuration } from '../../lib/format';
-import { DIAVERUM_GREEN, ORANGE } from './shared';
+import { asMinutes, asPercent, asPoints } from '../../lib/compare';
+import { DeltaPill, DIAVERUM_GREEN, ORANGE, ValuePair } from './shared';
 import { EmptyState } from '../../components/ListParts';
 
 const STATUS_COLORS = { notStarted: '#d1d5db', inactive: '#f97316', active: '#3b82f6', interrupted: '#f59e0b', completed: '#22c55e' };
 
 /** Vue d'ensemble : entonnoir des patients, statut des parcours, activité mensuelle, motifs de clôture */
-export function OverviewTab({ stats }: { stats: Statistics }) {
+export function OverviewTab({ stats, compare }: { stats: Statistics; compare?: Statistics }) {
+  const otherReasons = new Map((compare?.interruptionReasons ?? []).map((r) => [r.label, r.count]));
   const { patients, programs } = stats.total;
   const inProgram = programs.active.count + programs.inactive.count + programs.interrupted.count + programs.completed.count;
   const funnel = [
@@ -32,15 +34,25 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
     <div className="grid gap-5 lg:grid-cols-2">
       <Card className="border-0 shadow-sm ring-1 ring-gray-100 lg:col-span-2">
         <CardContent className="grid gap-4 p-5 sm:grid-cols-2">
-          <div>
+          <div className="space-y-2">
             <p className="text-sm text-gray-500">Score moyen des parcours</p>
-            <p className="text-3xl font-bold tabular-nums text-gray-900">{stats.total.averageProgramScore != null ? `${stats.total.averageProgramScore} %` : '—'}</p>
-            <p className="text-xs text-gray-400">Parcours avec au moins une séance validée sur la période, post-test exclu.</p>
+            {compare ? (
+              <>
+                <ValuePair a={stats.total.averageProgramScore} b={compare.total.averageProgramScore} format={asPercent} large />
+                <DeltaPill a={stats.total.averageProgramScore} b={compare.total.averageProgramScore} formatDiff={asPoints} />
+              </>
+            ) : <p className="text-3xl font-bold tabular-nums text-gray-900">{stats.total.averageProgramScore != null ? `${stats.total.averageProgramScore} %` : '—'}</p>}
+            <p className="text-[11px] text-gray-400">Parcours avec au moins une séance validée sur la période, post-test exclu.</p>
           </div>
-          <div>
+          <div className="space-y-2">
             <p className="text-sm text-gray-500">Durée moyenne d'un parcours</p>
-            <p className="text-3xl font-bold tabular-nums text-gray-900">{stats.total.averageCompletedProgramDurationSeconds != null ? formatDuration(stats.total.averageCompletedProgramDurationSeconds) : '—'}</p>
-            <p className="text-xs text-gray-400">Parcours achevés sur la période.</p>
+            {compare ? (
+              <>
+                <ValuePair a={stats.total.averageCompletedProgramDurationSeconds} b={compare.total.averageCompletedProgramDurationSeconds} format={formatDuration} large />
+                <DeltaPill a={stats.total.averageCompletedProgramDurationSeconds} b={compare.total.averageCompletedProgramDurationSeconds} formatDiff={asMinutes} better="neutral" />
+              </>
+            ) : <p className="text-3xl font-bold tabular-nums text-gray-900">{stats.total.averageCompletedProgramDurationSeconds != null ? formatDuration(stats.total.averageCompletedProgramDurationSeconds) : '—'}</p>}
+            <p className="text-[11px] text-gray-400">Parcours achevés sur la période.</p>
           </div>
         </CardContent>
       </Card>
@@ -70,7 +82,7 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
       </Card>
 
       <Card className="border-0 shadow-sm ring-1 ring-gray-100">
-        <CardHeader className="pb-2"><CardTitle className="text-base">Parcours par statut</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-base">Parcours par statut{compare && <span className="ml-2 text-xs font-normal text-gray-400">à date : identique pour A et B</span>}</CardTitle></CardHeader>
         <CardContent>
           {programs.total === 0 ? <EmptyState icon={<BarChart2 className="w-8 h-8" />}>Aucun parcours</EmptyState> : (
             <div className="flex flex-wrap items-center gap-6">
@@ -100,7 +112,7 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
       </Card>
 
       <Card className="border-0 shadow-sm ring-1 ring-gray-100 lg:col-span-2">
-        <CardHeader className="pb-2"><CardTitle className="text-base">Séances validées et score moyen, par mois</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-base">Séances validées et score moyen, par mois{compare && <span className="ml-2 text-xs font-normal text-gray-400">période A</span>}</CardTitle></CardHeader>
         <CardContent>
           {monthly.length === 0 ? <EmptyState icon={<BarChart2 className="w-8 h-8" />}>Aucune séance validée sur la période</EmptyState> : (
             <div className="h-64">
@@ -127,10 +139,10 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
           {stats.interruptionReasons.length === 0 ? <EmptyState icon={<CirclePause className="w-8 h-8" />}>Aucun parcours clôturé sur la période</EmptyState> : (
             <ul className="space-y-2.5">
               {stats.interruptionReasons.map((reason) => (
-                <li key={reason.label} className="grid grid-cols-[minmax(0,16rem)_1fr_2rem] items-center gap-3 text-sm">
+                <li key={reason.label} className="grid grid-cols-[minmax(0,16rem)_1fr_auto] items-center gap-3 text-sm">
                   <span className="text-gray-700 truncate" title={reason.label}>{reason.label}</span>
                   <span className="h-2.5 rounded-full bg-gray-100 overflow-hidden"><span className="block h-full rounded-full bg-amber-500" style={{ width: `${(100 * reason.count) / maxReason}%` }} /></span>
-                  <strong className="text-right tabular-nums">{reason.count}</strong>
+                  <div className="flex items-center justify-end gap-2"><strong className="tabular-nums" data-testid="compare-a">{reason.count}</strong>{compare && <><span className="tabular-nums text-gray-400" data-testid="compare-b">B : {otherReasons.get(reason.label) ?? 0}</span><DeltaPill a={reason.count} b={otherReasons.get(reason.label) ?? 0} better="neutral" /></>}</div>
                 </li>
               ))}
             </ul>

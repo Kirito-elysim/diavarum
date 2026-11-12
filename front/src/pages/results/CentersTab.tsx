@@ -3,6 +3,8 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../compon
 import type { AreaStatistics, Share } from '../../api/types';
 import { ScoreBar, SortableHead } from '../../components/ListParts';
 import { useSort } from './useSort';
+import { asPercent, asPoints } from '../../lib/compare';
+import { BAndDeltaCells, BAndDeltaHeads } from './shared';
 
 const ACCESSORS = {
   center: (a: AreaStatistics) => a.center,
@@ -19,7 +21,8 @@ const ACCESSORS = {
 };
 
 /** Comparaison des centres : effectifs à date et activité de la période ; total (ou national) en dernière ligne */
-export function CentersTab({ centers, total }: { centers: AreaStatistics[]; total: AreaStatistics }) {
+export function CentersTab({ centers, total, compare }: { centers: AreaStatistics[]; total: AreaStatistics; compare?: { centers: AreaStatistics[]; total: AreaStatistics } }) {
+  const other = new Map((compare?.centers ?? []).map((c) => [c.center, c]));
   const { sorted, sort, toggle } = useSort(centers, ACCESSORS, { key: 'center' });
   const head = (label: string, column: keyof typeof ACCESSORS, align: 'left' | 'right' = 'right') => <SortableHead label={label} column={column} sort={sort} onSort={toggle} align={align} />;
 
@@ -38,13 +41,16 @@ export function CentersTab({ centers, total }: { centers: AreaStatistics[]; tota
               {head('Inactifs (15 j)', 'inactive')}
               {head('Achevés', 'completed')}
               {head('Clôturés', 'interrupted')}
-              {head('Séances (période)', 'sessions')}
-              {head('Score (période)', 'score')}
+              {head(compare ? 'Séances (A)' : 'Séances (période)', 'sessions')}
+              <BAndDeltaHeads show={!!compare} />
+              {head(compare ? 'Score (A)' : 'Score (période)', 'score')}
+              <BAndDeltaHeads show={!!compare} />
             </TableRow>
           </TableHeader>
           <TableBody>
             {[...sorted, total].map((area, i, all) => {
               const isTotal = i === all.length - 1;
+              const b = isTotal ? compare?.total : other.get(area.center);
               return (
                 <TableRow key={`${area.center}-${i}`} className={isTotal ? 'bg-green-50/60 font-semibold hover:bg-green-50/60' : 'border-gray-100'}>
                   <TableCell className="text-sm whitespace-nowrap">{area.center}</TableCell>
@@ -57,14 +63,16 @@ export function CentersTab({ centers, total }: { centers: AreaStatistics[]; tota
                   <TableCell className="text-right text-sm"><ShareCell share={area.programs.completed} /></TableCell>
                   <TableCell className="text-right text-sm"><ShareCell share={area.programs.interrupted} /></TableCell>
                   <TableCell className="text-right text-sm tabular-nums">{area.activity.validatedSessions}</TableCell>
+                  <BAndDeltaCells show={!!compare} a={area.activity.validatedSessions} b={b?.activity.validatedSessions ?? 0} />
                   <TableCell className="text-right text-sm"><ScoreBar score={area.activity.averageSessionScore} /></TableCell>
+                  <BAndDeltaCells show={!!compare} a={area.activity.averageSessionScore} b={b?.activity.averageSessionScore} format={asPercent} formatDiff={asPoints} />
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
       </Card>
-      <p className="text-xs text-gray-400">Patients non archivés et leurs parcours : effectifs à date. Séances et score : activité de la période choisie.</p>
+      <p className="text-xs text-gray-400">Patients non archivés et leurs parcours : effectifs à date. Séances et score : activité de la période choisie{compare ? ' (A), avec la période comparée (B) et l’écart A − B' : ''}.</p>
     </div>
   );
 }

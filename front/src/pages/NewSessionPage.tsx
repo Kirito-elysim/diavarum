@@ -1,4 +1,3 @@
-import { PatientProfileSummary } from '../components/PatientProfile';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -71,8 +70,6 @@ export default function NewSessionPage() {
               Ce patient n'a pas encore de parcours. <Link to={`/patients/${patient.id}`} className="underline font-medium">Le créer depuis sa fiche</Link>.
             </p>
           )}
-
-          {patient && <PatientProfileSummary patient={patient} />}
 
           {program && (
             <div>

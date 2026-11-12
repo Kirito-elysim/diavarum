@@ -8,6 +8,8 @@ import { Switch } from '../../components/ui/switch';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../components/ui/table';
 import type { Statistics } from '../../api/types';
 import { formatDuration } from '../../lib/format';
+import { asMinutes, asPercent, asPoints } from '../../lib/compare';
+import { BAndDeltaCells, BAndDeltaHeads } from './shared';
 import { EmptyState, ScoreBar, SortableHead } from '../../components/ListParts';
 import { useSort } from './useSort';
 
@@ -25,14 +27,15 @@ const ACCESSORS = {
 };
 
 /** Séances du catalogue sur la période : validations, score et durée moyens ; tri pour repérer les cours difficiles */
-export function CoursesTab({ courses }: { courses: Statistics['courses'] }) {
+export function CoursesTab({ courses, compare }: { courses: Statistics['courses']; compare?: Statistics['courses'] }) {
+  const other = useMemo(() => new Map((compare ?? []).map((c) => [c.code, c])), [compare]);
   const [onlyDone, setOnlyDone] = useState(true);
   const [search, setSearch] = useState('');
 
   // Ordre du catalogue mémorisé pour pouvoir y revenir après un tri
   const indexed = useMemo(() => courses.map((c, i) => ({ ...c, catalogIndex: i })), [courses]);
   const rows = useMemo(() => indexed.filter((c) =>
-    (!onlyDone || c.validations > 0) && normalize(`${c.code} ${c.title}`).includes(normalize(search.trim()))), [indexed, onlyDone, search]);
+    (!onlyDone || c.validations > 0 || (other.get(c.code)?.validations ?? 0) > 0) && normalize(`${c.code} ${c.title}`).includes(normalize(search.trim()))), [indexed, onlyDone, search, other]);
   const { sorted, sort, toggle } = useSort(rows, ACCESSORS, { key: 'order' });
 
   return (
@@ -57,9 +60,12 @@ export function CoursesTab({ courses }: { courses: Statistics['courses'] }) {
             <TableHeader>
               <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-gray-100">
                 <SortableHead label="Séance" column="order" sort={sort} onSort={toggle} />
-                <SortableHead label="Validations" column="validations" sort={sort} onSort={toggle} align="right" />
-                <SortableHead label="Score moyen" column="score" sort={sort} onSort={toggle} align="right" />
-                <SortableHead label="Durée moyenne" column="duration" sort={sort} onSort={toggle} align="right" />
+                <SortableHead label={compare ? 'Validations (A)' : 'Validations'} column="validations" sort={sort} onSort={toggle} align="right" />
+                <BAndDeltaHeads show={!!compare} />
+                <SortableHead label={compare ? 'Score moyen (A)' : 'Score moyen'} column="score" sort={sort} onSort={toggle} align="right" />
+                <BAndDeltaHeads show={!!compare} />
+                <SortableHead label={compare ? 'Durée moyenne (A)' : 'Durée moyenne'} column="duration" sort={sort} onSort={toggle} align="right" />
+                <BAndDeltaHeads show={!!compare} />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -71,8 +77,11 @@ export function CoursesTab({ courses }: { courses: Statistics['courses'] }) {
                     {c.postTest && <span className="ml-2 text-xs text-gray-400">(post-test, hors moyennes)</span>}
                   </TableCell>
                   <TableCell className="text-right text-sm tabular-nums">{c.validations}</TableCell>
+                  <BAndDeltaCells show={!!compare} a={c.validations} b={other.get(c.code)?.validations ?? 0} />
                   <TableCell className="text-right text-sm"><ScoreBar score={c.averageScore} /></TableCell>
+                  <BAndDeltaCells show={!!compare} a={c.averageScore} b={other.get(c.code)?.averageScore} format={asPercent} formatDiff={asPoints} />
                   <TableCell className="text-right text-sm text-gray-600 tabular-nums">{formatDuration(c.averageDurationSeconds)}</TableCell>
+                  <BAndDeltaCells show={!!compare} a={c.averageDurationSeconds} b={other.get(c.code)?.averageDurationSeconds} format={formatDuration} formatDiff={asMinutes} better="neutral" />
                 </TableRow>
               ))}
             </TableBody>

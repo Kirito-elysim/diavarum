@@ -156,3 +156,7 @@ Rejoué par un test d'API complet sur la base de test et par les scripts navigat
 ## Base de recette fictive — J-032
 
 `make recette-base` crée la base dédiée `diaverum_recette` ; `RECETTE_BASE_FICTIVE.md` décrit le jeu de données et les résultats attendus ; `RecetteDatasetTest` les vérifie (écrans et Excel). Écart corrigé : statuts du bilan patient alignés sur les écrans. 197 tests API réussis. Non commité (depuis a73558a). Lot 4 géré par l'utilisateur. Reste du lot 5 : PDF, tablette, accès par rôle dans l'interface, recette client.
+
+## Comparaison de périodes — J-033
+
+Résultats : bouton Comparer, période B choisie comme A, écarts A − B sur la Vue d'ensemble, Séances, Centres, IDE ; sans export. Tests `e2e/compare-logic.mjs` et `e2e/results-compare.mjs`. Build de production réparé (import du profil supprimé dans `NewSessionPage`, cassé depuis e1cf37e) ; vérifier le front avec `npm run typecheck && npm run build`, pas avec `tsc -p .`. Non commité (depuis 4ff7e78).
