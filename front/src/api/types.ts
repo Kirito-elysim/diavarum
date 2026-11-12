@@ -241,7 +241,7 @@ export interface Statistics {
   period: { from: string | null; to: string | null };
   centers: AreaStatistics[];
   total: AreaStatistics;
-  courses: { code: string; title: string; mandatory: boolean; validations: number; averageScore: number | null; averageDurationSeconds: number | null }[];
+  courses: { code: string; title: string; mandatory: boolean; postTest: boolean; validations: number; averageScore: number | null; averageDurationSeconds: number | null }[];
   nurses: { name: string; centers: string; validatedSessions: number; totalDurationSeconds: number; patients: number; averageScore: number | null }[];
   monthly: { month: string; validatedSessions: number; averageScore: number | null }[];
   interruptionReasons: { label: string; count: number }[];

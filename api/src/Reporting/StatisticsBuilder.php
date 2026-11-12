@@ -5,6 +5,7 @@ namespace App\Reporting;
 use App\Entity\Center;
 use App\Entity\Module;
 use App\Entity\Patient;
+use App\Entity\ProgramModule;
 use App\Entity\TrainingProgram;
 use App\Entity\TrainingSession;
 use App\Entity\User;
@@ -100,7 +101,7 @@ final class StatisticsBuilder
             foreach ($program->getModules() as $selection) {
                 if ($inPeriod($selection->getValidatedAt())) {
                     ++$validatedSessions;
-                    if (null !== $selection->getScore()) {
+                    if (null !== $selection->getScore() && TrainingProgram::POST_TEST_CODE !== $selection->getModule()->getCode()) {
                         $sessionScores[] = $selection->getScore();
                     }
                 }
@@ -112,10 +113,21 @@ final class StatisticsBuilder
         $totalPrograms = \count($programs);
         $countPrograms = static fn (ProgramStatus $status) => \count(array_filter($programs, static fn (TrainingProgram $p) => $p->getStatus() === $status));
 
-        $programScores = array_values(array_filter(array_map(static fn (TrainingProgram $p) => $p->getAverageScore(), $programs), static fn (?int $s) => null !== $s));
+        // Score d'un parcours : cours validés (score définitif), post-test exclu ; compte dès qu'un cours est validé dans la période
+        $programScores = [];
+        foreach ($programs as $program) {
+            $validatedInPeriod = array_filter(
+                $program->getModules()->toArray(),
+                static fn (ProgramModule $m) => TrainingProgram::POST_TEST_CODE !== $m->getModule()->getCode() && $inPeriod($m->getValidatedAt()),
+            );
+            if ([] !== $validatedInPeriod && null !== $program->getAverageScore()) {
+                $programScores[] = $program->getAverageScore();
+            }
+        }
+        // Durée moyenne : parcours achevés dans la période
         $completedDurations = array_map(
             static fn (TrainingProgram $p) => $p->getTotalDurationSeconds(),
-            array_filter($programs, static fn (TrainingProgram $p) => ProgramStatus::Completed === $p->getStatus()),
+            array_filter($programs, static fn (TrainingProgram $p) => ProgramStatus::Completed === $p->getStatus() && $inPeriod($p->getCompletedAt())),
         );
 
         return [
@@ -179,6 +191,7 @@ final class StatisticsBuilder
             'code' => $m->getCode(),
             'title' => $m->getTitle(),
             'mandatory' => $m->isMandatory(),
+            'postTest' => TrainingProgram::POST_TEST_CODE === $m->getCode(),
             'validations' => \count($durations[$m->getCode()] ?? []),
             'averageScore' => self::average($scores[$m->getCode()] ?? []),
             'averageDurationSeconds' => self::average($durations[$m->getCode()] ?? []),
@@ -200,8 +213,8 @@ final class StatisticsBuilder
 
         $query = $this->entityManager->createQueryBuilder()
             ->select('IDENTITY(s.nurse) AS nurse', 'COUNT(s.id) AS sessions', 'COALESCE(SUM(s.durationSeconds), 0) AS duration',
-                'COUNT(DISTINCT s.patient) AS patients', 'AVG(s.score) AS score')
-            ->from(TrainingSession::class, 's')->join('s.patient', 'p')
+                'COUNT(DISTINCT s.patient) AS patients', "AVG(CASE WHEN m.code <> 'PT' THEN s.score ELSE NULL END) AS score")
+            ->from(TrainingSession::class, 's')->join('s.patient', 'p')->join('s.module', 'm')
             ->andWhere('p.center IN (:centers)')->andWhere('s.status = :validated')
             ->setParameter('centers', $centers)->setParameter('validated', SessionStatus::Validated)
             ->groupBy('s.nurse');
@@ -267,7 +280,7 @@ final class StatisticsBuilder
                 }
                 $month = $date->setTimezone($paris)->format('Y-m');
                 $counts[$month] = ($counts[$month] ?? 0) + 1;
-                if (null !== $selection->getScore()) {
+                if (null !== $selection->getScore() && TrainingProgram::POST_TEST_CODE !== $selection->getModule()->getCode()) {
                     $scores[$month][] = $selection->getScore();
                 }
                 $first = null === $first || $month < $first ? $month : $first;

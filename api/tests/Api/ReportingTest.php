@@ -174,6 +174,59 @@ final class ReportingTest extends ApiTestCaseBase
         self::assertStringStartsWith('%PDF', $stats->getContent());
     }
 
+    public function testProgramScoreAndDurationFollowThePeriodAndExcludeThePostTest(): void
+    {
+        $tz = new \DateTimeZone('Europe/Paris');
+        $today = (new \DateTimeImmutable('now', $tz))->format('Y-m-d');
+
+        // Parcours en cours de Dupont : S97 = 80 aujourd'hui, post-test = 20 (hors moyennes)
+        $postTest = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'PT']);
+        $running = $this->em()->getRepository(TrainingProgram::class)->findOneBy(['patient' => $this->dupont]);
+        $running->addModule($postTest)->markValidated(20, 0);
+
+        // Parcours achevé en janvier : S98 = 100, 10 minutes
+        $martin = $this->em()->getRepository(\App\Entity\Patient::class)->findOneBy(['lastName' => 'Martin']);
+        $old = (new \DateTimeImmutable('2026-01-10 10:00', $tz));
+        $module = (new Module())->setCode('S98')->setTitle('Séance ancienne')->setPosition(98);
+        $this->em()->persist($module);
+        $done = (new TrainingProgram())->setPatient($martin);
+        $done->setAuthor($this->ideParis);
+        $done->addModule($module)->markValidated(100, 600, $old);
+        $done->markCompleted($this->cadreParis);
+        $done->setCompletedAt($old);
+        $this->em()->persist($done);
+        $this->em()->flush();
+
+        $total = fn (string $query) => $this->statisticsAs($this->cadreParis, $query)['total'];
+
+        $all = $total('');
+        self::assertSame(90, $all['averageProgramScore'], '(80 + 100) / 2, post-test exclu');
+        self::assertSame(600, $all['averageCompletedProgramDurationSeconds'], 'Seul parcours achevé');
+
+        $january = $total('?from=2026-01-01&to=2026-01-31');
+        self::assertSame(100, $january['averageProgramScore'], 'Parcours en cours sans validation en janvier : ignoré');
+        self::assertSame(600, $january['averageCompletedProgramDurationSeconds']);
+
+        $current = $total("?from=$today&to=$today");
+        self::assertSame(80, $current['averageProgramScore'], 'Parcours en cours compté dès qu\'un cours est validé');
+        self::assertNull($current['averageCompletedProgramDurationSeconds'], 'Aucun parcours achevé dans la période');
+
+        $empty = $total('?from=2025-01-01&to=2025-01-31');
+        self::assertNull($empty['averageProgramScore']);
+        self::assertNull($empty['averageCompletedProgramDurationSeconds']);
+
+        // Bornes incluses : le jour de clôture, le lendemain, la veille
+        self::assertSame(600, $total('?from=2026-01-10&to=2026-01-10')['averageCompletedProgramDurationSeconds']);
+        self::assertNull($total('?from=2026-01-11&to=2026-01-31')['averageCompletedProgramDurationSeconds']);
+        self::assertNull($total('?from=2026-01-01&to=2026-01-09')['averageCompletedProgramDurationSeconds']);
+
+        $courses = $this->statisticsAs($this->cadreParis, "?from=$today&to=$today")['courses'];
+        $pt = array_values(array_filter($courses, static fn (array $c) => 'PT' === $c['code']))[0];
+        self::assertTrue($pt['postTest']);
+        self::assertSame(2, $this->statisticsAs($this->cadreParis, "?from=$today&to=$today")['total']['activity']['validatedSessions'], 'Le post-test reste une séance réalisée');
+        self::assertSame(80, $this->statisticsAs($this->cadreParis, "?from=$today&to=$today")['total']['activity']['averageSessionScore'], 'Mais hors du score moyen des séances');
+    }
+
     public function testPeriodFiltersActivityButNotHeadcounts(): void
     {
         $today = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');

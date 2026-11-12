@@ -45,12 +45,14 @@
     </tbody>
 </table>
 
+<p class="muted small">Score moyen : parcours ayant au moins une séance validée dans la période, post-test exclu. Durée moyenne : parcours achevés dans la période.</p>
+
 <h2>Séances réalisées sur la période</h2>
 <table>
     <thead><tr><th>Séance</th><th class="num">Validations</th><th class="num">Score moyen</th><th class="num">Durée moyenne</th></tr></thead>
     <tbody>
     {% for c in s.courses|filter(c => c.validations > 0) %}
-        <tr><td><strong>{{ c.code }}</strong> {{ c.title }}</td><td class="num">{{ c.validations }}</td>
+        <tr><td><strong>{{ c.code }}</strong> {{ c.title }}{% if c.postTest %} <span class="muted small">(post-test, hors moyennes)</span>{% endif %}</td><td class="num">{{ c.validations }}</td>
             <td class="num">{{ c.averageScore is not null ? c.averageScore ~ ' %' : '—' }}</td><td class="num">{{ f.minutes(c.averageDurationSeconds) }}</td></tr>
     {% else %}
         <tr><td colspan="4" class="muted">Aucune séance validée sur la période.</td></tr>

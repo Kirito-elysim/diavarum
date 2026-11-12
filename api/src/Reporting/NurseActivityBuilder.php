@@ -4,6 +4,7 @@ namespace App\Reporting;
 
 use App\Entity\Center;
 use App\Entity\SessionCompetencyValidation;
+use App\Entity\TrainingProgram;
 use App\Entity\TrainingSession;
 use App\Entity\User;
 use App\Enum\SessionStatus;
@@ -39,7 +40,7 @@ final class NurseActivityBuilder
             ->andWhere('v.validated = true')->andWhere('v.validatedBy = :nurse')
             ->getQuery()->getSingleScalarResult();
 
-        $scores = array_values(array_filter(array_map(static fn (TrainingSession $s) => $s->getScore(), $sessions), static fn (?int $s) => null !== $s));
+        $scores = array_values(array_filter(array_map(static fn (TrainingSession $s) => self::isPostTest($s) ? null : $s->getScore(), $sessions), static fn (?int $s) => null !== $s));
 
         return [
             'period' => ['from' => $from?->format('Y-m-d'), 'to' => $to?->format('Y-m-d')],
@@ -91,7 +92,7 @@ final class NurseActivityBuilder
         foreach ($sessions as $session) {
             $month = $session->getCompletedAt()->setTimezone($paris)->format('Y-m');
             $counts[$month] = ($counts[$month] ?? 0) + 1;
-            if (null !== $session->getScore()) {
+            if (null !== $session->getScore() && !self::isPostTest($session)) {
                 $scores[$month][] = $session->getScore();
             }
         }
@@ -164,7 +165,7 @@ final class NurseActivityBuilder
                 ];
             }
             ++$rows[$id]['sessions'];
-            if (null !== $session->getScore()) {
+            if (null !== $session->getScore() && !self::isPostTest($session)) {
                 $rows[$id]['scores'][] = $session->getScore();
             }
         }
@@ -183,5 +184,11 @@ final class NurseActivityBuilder
     private static function average(array $values): ?int
     {
         return [] === $values ? null : (int) round(array_sum($values) / \count($values));
+    }
+
+    /** Le post-test est présenté à part : il n'entre dans aucune moyenne de score */
+    private static function isPostTest(TrainingSession $session): bool
+    {
+        return TrainingProgram::POST_TEST_CODE === $session->getModule()->getCode();
     }
 }

@@ -68,6 +68,7 @@ export function CoursesTab({ courses }: { courses: Statistics['courses'] }) {
                   <TableCell className="text-sm">
                     <Badge variant="secondary" className={`mr-2 ${c.mandatory ? 'bg-blue-50 text-blue-700' : 'bg-violet-50 text-violet-700'}`}>{c.code}</Badge>
                     {c.title}
+                    {c.postTest && <span className="ml-2 text-xs text-gray-400">(post-test, hors moyennes)</span>}
                   </TableCell>
                   <TableCell className="text-right text-sm tabular-nums">{c.validations}</TableCell>
                   <TableCell className="text-right text-sm"><ScoreBar score={c.averageScore} /></TableCell>

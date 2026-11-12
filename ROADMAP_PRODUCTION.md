@@ -19,7 +19,7 @@ Objectif : livrer un catalogue exploitable sur tablette, des KPI cohérents entr
 - [x] J-008 : implémenter les 15 jours d’inactivité. Vérifier la frontière à 14 et 15 jours, la reprise d’activité et la conservation des statuts achevé et interrompu.
 - [ ] Rapprocher les totaux IDE, centre et national avec la validation unique décidée en J-004. Définir le traitement des anciennes répétitions et des séances interrompues.
 - [ ] Ajouter le score moyen par chapitre dans le bilan patient. Définir la pondération, le traitement des cours sans note et la place du post-test.
-- [ ] Appliquer le périmètre retenu pour la durée moyenne des programmes. Tester les périodes sans activité et les bornes de dates.
+- [x] J-023 : durée moyenne des programmes (achevés dans la période) et score moyen des parcours (avec une séance validée dans la période, post-test exclu) appliqués aux statistiques ; périodes sans activité et bornes de dates testées. Écrans et exports encore à rapprocher.
 - [ ] Mettre le bilan patient au format attendu par statut. Pour un parcours jamais commencé, afficher son statut uniquement. Pour un parcours commencé, vérifier progression, dates et heures, score, durée et compétences. Pour un parcours achevé, vérifier le score global et la durée totale.
 - [ ] Recetter les exports Excel et PDF avec les mêmes filtres et chiffres que les écrans. Vérifier les droits IDE, cadre et administrateur, y compris les refus hors centre.
 

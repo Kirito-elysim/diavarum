@@ -120,7 +120,7 @@ final class SpreadsheetWriter
         $programs = $book->createSheet()->setTitle('Parcours');
         $this->table($programs, [
             'Centre', 'Parcours', 'Non actifs', '%', 'En cours', '%', 'Interrompus', '%', 'Achevés', '%',
-            'Score moyen des parcours (%)', 'Durée moyenne d\'un parcours achevé (min)',
+            'Score moyen des parcours (%) · parcours avec une séance validée dans la période', 'Durée moyenne d\'un parcours (min) · parcours achevés dans la période',
         ], array_map(static fn (array $a) => [
             $a['center'], $a['programs']['total'],
             $a['programs']['inactive']['count'], $a['programs']['inactive']['percent'],
@@ -133,7 +133,7 @@ final class SpreadsheetWriter
 
         $courses = $book->createSheet()->setTitle('Séances');
         $this->table($courses, ['Code', 'Séance', 'Type', 'Validations', 'Score moyen (%)', 'Durée moyenne (min)'], array_map(static fn (array $c) => [
-            $c['code'], $c['title'], $c['mandatory'] ? 'Systématique' : 'Optionnelle', $c['validations'],
+            $c['code'], $c['title'], $c['postTest'] ? 'Post-test (hors moyennes)' : ($c['mandatory'] ? 'Systématique' : 'Optionnelle'), $c['validations'],
             $c['averageScore'], null === $c['averageDurationSeconds'] ? null : self::minutes($c['averageDurationSeconds']),
         ], $stats['courses']), $this->caption($stats));
 
