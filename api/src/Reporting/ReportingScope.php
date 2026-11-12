@@ -67,7 +67,8 @@ final class ReportingScope
     {
         $centers = $this->centers($user, []);
         if ([] === $centers) {
-            return [];
+            // Aucun centre : rien d'exportable, et un patient demandé est « introuvable » comme hors périmètre
+            return [] === $requestedIds ? [] : throw new NotFoundHttpException('Patient introuvable.');
         }
 
         $qb = $this->entityManager->createQueryBuilder()

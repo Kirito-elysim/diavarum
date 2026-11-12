@@ -21,7 +21,7 @@ Objectif : livrer un catalogue exploitable sur tablette, des KPI cohérents entr
 - [ ] Ajouter le score moyen par chapitre dans le bilan patient. Définir la pondération, le traitement des cours sans note et la place du post-test.
 - [x] J-023 : durée moyenne des programmes (achevés dans la période) et score moyen des parcours (avec une séance validée dans la période, post-test exclu) appliqués aux statistiques ; périodes sans activité et bornes de dates testées. Écrans et exports encore à rapprocher.
 - [ ] Mettre le bilan patient au format attendu par statut. Pour un parcours jamais commencé, afficher son statut uniquement. Pour un parcours commencé, vérifier progression, dates et heures, score, durée et compétences. Pour un parcours achevé, vérifier le score global et la durée totale.
-- [ ] Recetter les exports Excel et PDF avec les mêmes filtres et chiffres que les écrans. Vérifier les droits IDE, cadre et administrateur, y compris les refus hors centre. (J-025 : calcul unique, Excel comparé à l'écran par un test ; reste la revue visuelle des PDF et la recette des droits par rôle.)
+- [ ] Recetter les exports Excel et PDF avec les mêmes filtres et chiffres que les écrans. Vérifier les droits IDE, cadre et administrateur, y compris les refus hors centre. (J-025 : calcul unique, Excel comparé à l'écran par un test ; droits par rôle recettés en J-027 ; reste le rapprochement des chiffres du PDF et sa revue visuelle.)
 
 ## Lot 2 — Parcours patient et règles métier
 

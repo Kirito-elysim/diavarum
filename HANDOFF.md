@@ -132,3 +132,7 @@ Dernière validation par cours et parcours pour l'activité des IDE et le tablea
 ## Logs de connexion — J-026
 
 Décision : pas d'export des connexions/déconnexions. Reste du lot 1 : comptage des doublons en production, revue visuelle des PDF, recette des droits par rôle.
+
+## Recette des droits sur les exports — J-027
+
+Tests de droits par rôle sur tous les exports (IDE, cadre, administrateur national, hors centre, archivés, anonymes) ; défaut corrigé pour un utilisateur sans centre. Non commité (depuis dd3f925). Reste du lot 1 : doublons en production, rapprochement et revue visuelle des PDF.
