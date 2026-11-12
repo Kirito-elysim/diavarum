@@ -1,6 +1,6 @@
 # Reprise du projet Diaverum
 
-Dernière mise à jour : 12 novembre 2026 · entrée J-015 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
+Dernière mise à jour : 12 novembre 2026 · entrée J-018 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
 
 ## Point de départ
 
@@ -79,3 +79,15 @@ Bilan patient : feuilles Historique des séances et CODEX dans l'Excel uniquemen
 ## Annulation de la validation — J-015
 
 Un cadre ou l'administrateur national peut annuler la validation d'un parcours achevé (motif obligatoire, sans délai, tracé au journal d'accès). Les cours validés restent verrouillés. 171 tests API réussis. Prochaine action : point 2 (moyennes) ; décision sur les logs de connexion toujours en attente.
+
+## Sélection et exports de la liste patients — J-016
+
+`/patients` : « Patients actifs », cases à cocher, Excel et PDF de la sélection (PDF : 50 patients maximum, un par page). 171 tests API réussis. Non commité.
+
+## Import de patients — J-017
+
+Archivé dans le même centre = erreur ; homonyme et patient existant dans un autre centre (périmètre de l'auteur) = avertissements non bloquants. 172 tests API réussis. Affichage non contrôlé dans le navigateur ; rien commité depuis bef0c36.
+
+## Création manuelle de patient — J-018
+
+Mêmes règles que l'import : doublon actif ou archivé dans le même centre refusé (aussi côté API), homonyme et patient d'un autre centre = avertissement avec « Créer quand même ». Service `PatientDuplicates` partagé. 173 tests API réussis. Rien commité depuis bef0c36.

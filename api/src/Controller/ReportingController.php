@@ -32,6 +32,7 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 final class ReportingController
 {
     private const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    private const MAX_PDF_PATIENTS = 50;
 
     public function __construct(
         private readonly ReportingScope $scope,
@@ -50,6 +51,22 @@ final class ReportingController
         $patients = $this->scope->patients($user, $request->query->all('patients'));
 
         return $this->file($this->spreadsheet->patients($this->patientReports->build($patients)), self::XLSX, 'bilan-patients-'.date('Y-m-d').'.xlsx');
+    }
+
+    /** Bilans PDF de plusieurs patients (?patients[]=…), un patient par page ; sélection obligatoire */
+    #[Route('/api/exports/patients.pdf', name: 'api_export_patients_pdf', methods: ['GET'])]
+    public function patientsPdf(Request $request, #[CurrentUser] User $user): Response
+    {
+        $ids = $request->query->all('patients');
+        if ([] === $ids) {
+            throw new BadRequestHttpException('Sélectionnez au moins un patient.');
+        }
+        if (\count($ids) > self::MAX_PDF_PATIENTS) {
+            throw new BadRequestHttpException(\sprintf('Un PDF est limité à %d patients ; utilisez l\'export Excel pour davantage.', self::MAX_PDF_PATIENTS));
+        }
+        $patients = $this->scope->patients($user, $ids);
+
+        return $this->file($this->pdf->render('reports/patients.html.twig', ['reports' => $this->patientReports->build($patients)]), 'application/pdf', 'bilans-patients-'.date('Y-m-d').'.pdf');
     }
 
     #[Route('/api/exports/patients/{id}.pdf', name: 'api_export_patient_pdf', requirements: ['id' => Requirement::UUID], methods: ['GET'])]

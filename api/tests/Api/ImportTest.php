@@ -217,6 +217,67 @@ final class ImportTest extends ApiTestCaseBase
         self::assertStringContainsString('ligne 2', $report['rows'][5]['errors'][0]);
     }
 
+    public function testManualCreationBlocksSameCenterDuplicatesAndChecksWarnings(): void
+    {
+        $a = $this->createCenter('Centre A2');
+        $b = $this->createCenter('Centre B2');
+        $cadre = $this->createUser(UserRole::Cadre, [$a, $b]);
+        $birth = new \DateTimeImmutable('1960-01-01');
+        $this->createPatient($b, $cadre, 'Autre')->setFirstName('Marc')->setDateOfBirth($birth);
+        $this->createPatient($a, $cadre, 'Archive')->setFirstName('Zoe')->setDateOfBirth($birth)->archive();
+        $this->createPatient($a, $cadre, 'Actif')->setFirstName('Ann')->setDateOfBirth($birth);
+        $this->em()->flush();
+        $centerA = $a->getId()->toRfc4122();
+
+        $check = $this->requestAs($cadre, 'GET', '/api/patient-duplicates?lastName=Autre&firstName=Marc&dateOfBirth=1960-01-01&center='.$centerA)->toArray();
+        self::assertSame([], $check['errors']);
+        self::assertStringContainsString('Centre B2 (actif)', $check['warnings'][0]);
+
+        $check = $this->requestAs($cadre, 'GET', '/api/patient-duplicates?lastName=Autre&firstName=Marc&dateOfBirth=1961-01-01&center='.$centerA)->toArray();
+        self::assertStringContainsString('Homonyme', $check['warnings'][0]);
+
+        $payload = fn (string $last, string $first) => ['lastName' => $last, 'firstName' => $first, 'dateOfBirth' => '1960-01-01', 'center' => '/api/centers/'.$centerA];
+        $this->requestAs($cadre, 'POST', '/api/patients', $payload('Actif', 'Ann'));
+        self::assertResponseStatusCodeSame(422, 'Doublon actif du même centre refusé');
+        $this->requestAs($cadre, 'POST', '/api/patients', $payload('Archive', 'Zoe'));
+        self::assertResponseStatusCodeSame(422, 'Doublon archivé du même centre refusé');
+        $this->requestAs($cadre, 'POST', '/api/patients', $payload('Autre', 'Marc'));
+        self::assertResponseStatusCodeSame(201, 'Même patient dans un autre centre : seulement un avertissement');
+
+        $this->requestAs($cadre, 'GET', '/api/patient-duplicates?lastName=X&firstName=Y&center='.$b->getId()->toRfc4122());
+        self::assertResponseIsSuccessful();
+    }
+
+    public function testArchivedPatientBlocksAndHomonymOrOtherCenterOnlyWarn(): void
+    {
+        $a = $this->createCenter('Centre A');
+        $b = $this->createCenter('Centre B');
+        $hidden = $this->createCenter('Centre Hors Perimetre');
+        $cadre = $this->createUser(UserRole::Cadre, [$a, $b]);
+        $birth = static fn (string $d) => new \DateTimeImmutable($d);
+        $this->createPatient($b, $cadre, 'Autre')->setFirstName('Marc')->setDateOfBirth($birth('1960-01-01'));
+        $this->createPatient($a, $cadre, 'Archive')->setFirstName('Zoe')->setDateOfBirth($birth('1970-01-01'))->archive();
+        $this->createPatient($a, $cadre, 'Homo')->setFirstName('Lea')->setDateOfBirth($birth('1980-02-02'));
+        $this->createPatient($hidden, $cadre, 'Cache')->setFirstName('Luc')->setDateOfBirth($birth('1990-03-03'));
+        $this->em()->flush();
+
+        $report = $this->upload($cadre, 'patients', [
+            ['Nom', 'Prénom', 'Date de naissance', 'Centre'],
+            ['Autre', 'Marc', '01/01/1960', 'Centre A'],
+            ['Archive', 'Zoé', '01/01/1970', 'Centre A'],
+            ['Homo', 'Léa', '05/05/1985', 'Centre A'],
+            ['Cache', 'Luc', '03/03/1990', 'Centre A'],
+        ], 'preview')->toArray();
+
+        self::assertSame([], $report['rows'][0]['errors']);
+        self::assertStringContainsString('autre centre : Centre B (actif)', $report['rows'][0]['warnings'][0]);
+        self::assertStringContainsString('en archive', $report['rows'][1]['errors'][0]);
+        self::assertSame([], $report['rows'][2]['errors'], 'Un homonyme ne bloque pas');
+        self::assertStringContainsString('Homonyme', $report['rows'][2]['warnings'][0]);
+        self::assertSame([], $report['rows'][3]['warnings'], 'Aucune fuite hors du périmètre de l\'auteur');
+        self::assertFalse($report['valid']);
+    }
+
     public function testPatientsAreCreatedWithImporterAsAuthor(): void
     {
         $center = $this->createCenter('Centre Auteur');

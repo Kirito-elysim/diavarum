@@ -5,15 +5,16 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Badge } from '../components/ui/badge';
+import { Checkbox } from '../components/ui/checkbox';
 import { Card, CardContent } from '../components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Archive, Search, Plus, Eye, Pencil, Users, Filter, Loader2, Upload } from 'lucide-react';
+import { AlertTriangle, Archive, Search, Plus, Eye, Pencil, Users, Filter, Loader2, Upload } from 'lucide-react';
 import { useCenters, useCreatePatient, usePatients, useUpdatePatient, type ArchiveStatus } from '../api/hooks';
 import { useAuth } from '../contexts/AuthContext';
 import { ELIGIBILITY_LABELS, type Patient } from '../api/types';
-import { ApiError } from '../lib/api';
+import { api, ApiError } from '../lib/api';
 import { ExportButton } from '../components/ExportButton';
 import { ImportDialog } from '../components/ImportDialog';
 import { eligibilityBadge, formatDate } from '../lib/format';
@@ -40,6 +41,9 @@ export default function PatientsPage() {
   const navigate = useNavigate();
   const { isCadre } = useAuth();
   const debouncedSearch = useDebounced(search);
+  const [selected, setSelected] = useState<string[]>([]);
+  // La sélection ne survit pas à un changement de liste : rien de coché hors de vue
+  useEffect(() => setSelected([]), [debouncedSearch, centerFilter, statusFilter, archiveFilter]);
 
   const { data: centers } = useCenters();
   const { data, isLoading, isError } = usePatients({
@@ -50,16 +54,30 @@ export default function PatientsPage() {
   });
   const patients = data?.member ?? [];
   const showCenter = (centers?.member.length ?? 0) > 1;
+  const allSelected = patients.length > 0 && patients.every((p) => selected.includes(p.id));
+  const toggle = (id: string, on: boolean) => setSelected((cur) => (on ? [...cur, id] : cur.filter((x) => x !== id)));
+  const selectionQuery = selected.map((id) => `patients[]=${id}`).join('&');
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
-          <p className="text-gray-500 text-sm mt-0.5">{archiveFilter === 'archived' ? 'Patients archivés de vos centres' : 'File active de vos centres'}</p>
+          <p className="text-gray-500 text-sm mt-0.5">{archiveFilter === 'archived' ? 'Patients archivés de vos centres' : 'Patients actifs de vos centres'}</p>
         </div>
         <div className="flex items-center gap-2">
-          <ExportButton path="/exports/patients.xlsx" format="xlsx" label="Bilan des patients (Excel)" />
+          <ExportButton
+            path={selected.length > 0 ? `/exports/patients.xlsx?${selectionQuery}` : '/exports/patients.xlsx'}
+            format="xlsx"
+            label={selected.length > 0 ? `Excel (${selected.length} sélectionné${selected.length > 1 ? 's' : ''})` : 'Excel (tous les actifs)'}
+          />
+          <ExportButton
+            path={`/exports/patients.pdf?${selectionQuery}`}
+            format="pdf"
+            label={selected.length > 0 ? `PDF (${selected.length})` : 'PDF'}
+            disabled={selected.length === 0 || selected.length > 50}
+            title={selected.length === 0 ? 'Cochez au moins un patient' : selected.length > 50 ? 'Un PDF est limité à 50 patients' : undefined}
+          />
           {/* Import en masse : cadres et administrateurs uniquement */}
           {isCadre && (
             <Button variant="outline" onClick={() => setImporting(true)} className="h-10 px-4 gap-2">
@@ -113,11 +131,11 @@ export default function PatientsPage() {
                 </SelectContent>
               </Select>
               <Select value={archiveFilter} onValueChange={(value) => setArchiveFilter(value as ArchiveStatus)}>
-                <SelectTrigger className="h-10 w-48 bg-gray-50 border-gray-100" aria-label="File active ou archivés">
+                <SelectTrigger className="h-10 w-48 bg-gray-50 border-gray-100" aria-label="Patients actifs ou archivés">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="active">File active</SelectItem>
+                  <SelectItem value="active">Patients actifs</SelectItem>
                   <SelectItem value="archived">Archivés</SelectItem>
                   <SelectItem value="all">Actifs et archivés</SelectItem>
                 </SelectContent>
@@ -135,6 +153,13 @@ export default function PatientsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-gray-100">
+              <TableHead className="w-10">
+                <Checkbox
+                  aria-label="Tout sélectionner"
+                  checked={allSelected}
+                  onCheckedChange={(on) => setSelected(on === true ? patients.map((p) => p.id) : [])}
+                />
+              </TableHead>
               <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Patient</TableHead>
               <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Date de naissance</TableHead>
               {showCenter && <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Centre</TableHead>}
@@ -151,6 +176,13 @@ export default function PatientsPage() {
                 className={`border-gray-100 hover:bg-orange-50/30 transition-colors cursor-pointer ${patient.removedAt ? 'bg-gray-50/60' : ''}`}
                 onClick={() => navigate(`/patients/${patient.id}`)}
               >
+                <TableCell onClick={(e) => e.stopPropagation()}>
+                  <Checkbox
+                    aria-label={`Sélectionner ${patient.lastName.toUpperCase()} ${patient.firstName}`}
+                    checked={selected.includes(patient.id)}
+                    onCheckedChange={(on) => toggle(patient.id, on === true)}
+                  />
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 text-sm font-semibold flex-shrink-0">
@@ -191,14 +223,14 @@ export default function PatientsPage() {
             ))}
             {!isLoading && patients.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-gray-400">
+                <TableCell colSpan={8} className="text-center py-12 text-gray-400">
                   {isError ? 'Impossible de charger les patients.' : 'Aucun patient trouvé'}
                 </TableCell>
               </TableRow>
             )}
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-gray-400">
+                <TableCell colSpan={8} className="text-center py-12 text-gray-400">
                   <Loader2 className="w-5 h-5 animate-spin inline mr-2" />Chargement…
                 </TableCell>
               </TableRow>
@@ -224,20 +256,33 @@ export function PatientDialog({ open, onOpenChange, onSaved, defaultCenter, pati
     : { firstName: '', lastName: '', dateOfBirth: '', center: defaultCenter ?? '' };
   const [form, setForm] = useState(initial);
   const [error, setError] = useState<ApiError | null>(null);
+  const [blocking, setBlocking] = useState<string[]>([]);
+  const [warnings, setWarnings] = useState<string[]>([]);
+  const [warned, setWarned] = useState(false);
   const saving = createPatient.isPending || updatePatient.isPending;
 
   const centerList = centers?.member ?? [];
   const center = form.center || (centerList.length === 1 ? centerList[0]['@id'] : '');
-  const set = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [field]: e.target.value });
+  const resetChecks = () => { setBlocking([]); setWarnings([]); setWarned(false); };
+  const set = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => { resetChecks(); setForm({ ...form, [field]: e.target.value }); };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
       const input = { ...form, center, dateOfBirth: form.dateOfBirth || null };
+      if (!patient && !warned) {
+        const query = new URLSearchParams({ lastName: form.lastName, firstName: form.firstName, dateOfBirth: form.dateOfBirth, center: center.split('/').pop() ?? '' });
+        const check = await api<{ errors: string[]; warnings: string[] }>(`/patient-duplicates?${query}`);
+        setBlocking(check.errors);
+        setWarnings(check.warnings);
+        if (check.errors.length > 0) return;
+        if (check.warnings.length > 0) { setWarned(true); return; }
+      }
       const saved = patient ? await updatePatient.mutateAsync(input) : await createPatient.mutateAsync(input);
       toast.success(patient ? 'Patient modifié' : `${saved.firstName} ${saved.lastName} enregistré`);
       setForm(initial);
+      resetChecks();
       onOpenChange(false);
       onSaved?.(saved.id);
     } catch (err) {
@@ -275,7 +320,7 @@ export function PatientDialog({ open, onOpenChange, onSaved, defaultCenter, pati
           {centerList.length > 1 && (
             <div className="space-y-1.5">
               <Label>Centre de dialyse</Label>
-              <Select value={center} onValueChange={(value) => setForm({ ...form, center: value })}>
+              <Select value={center} onValueChange={(value) => { resetChecks(); setForm({ ...form, center: value }); }}>
                 <SelectTrigger><SelectValue placeholder="Choisir un centre" /></SelectTrigger>
                 <SelectContent>
                   {centerList.map((c) => <SelectItem key={c.id} value={c['@id']}>{c.name}</SelectItem>)}
@@ -284,12 +329,19 @@ export function PatientDialog({ open, onOpenChange, onSaved, defaultCenter, pati
               {fieldError('center')}
             </div>
           )}
+          {blocking.length > 0 && <ul className="space-y-1 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{blocking.map((m) => <li key={m}>{m}</li>)}</ul>}
+          {warnings.length > 0 && (
+            <div className="space-y-1 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+              {warnings.map((m) => <p key={m} className="flex items-start gap-1.5"><AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />{m}</p>)}
+              <p className="pt-1 font-medium">Vérifiez qu'il ne s'agit pas du même patient avant de créer le dossier.</p>
+            </div>
+          )}
           {error && error.violations.length === 0 && <p className="text-sm text-red-600">{error.message}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annuler</Button>
             <Button type="submit" disabled={saving || !center} className="bg-orange-500 hover:bg-orange-600 text-white">
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Enregistrer
+              {warned ? 'Créer quand même' : 'Enregistrer'}
             </Button>
           </DialogFooter>
         </form>

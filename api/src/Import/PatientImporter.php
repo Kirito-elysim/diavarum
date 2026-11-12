@@ -5,6 +5,7 @@ namespace App\Import;
 use App\Entity\Center;
 use App\Entity\Patient;
 use App\Entity\User;
+use App\Service\PatientDuplicates;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -30,20 +31,22 @@ final class PatientImporter
         private readonly ValidatorInterface $validator,
         private readonly EntityManagerInterface $entityManager,
         private readonly CenterResolver $centers,
+        private readonly PatientDuplicates $duplicates,
     ) {
     }
 
     /**
      * @param Center|null $defaultCenter centre appliqué aux lignes sans centre (fiche centre, centre unique)
      *
-     * @return array{valid: bool, rows: list<array{line: int, label: string, errors: list<string>}>, created: int}
+     * @return array{valid: bool, rows: list<array{line: int, label: string, errors: list<string>, warnings: list<string>}>, created: int}
      */
     public function import(UploadedFile $file, User $actor, ?Center $defaultCenter, bool $commit): array
     {
         $allowed = $this->centers->allowedCenters($actor);
         $defaultCenter ??= 1 === \count($allowed) ? $allowed[0] : null;
         $findCenter = $this->centers->matcher($allowed);
-        $known = $this->existingIdentities($allowed);
+        $index = $this->duplicates->index($allowed);
+        $seen = [];
 
         $report = [];
         $patients = [];
@@ -73,14 +76,15 @@ final class PatientImporter
                 }
             }
 
+            $warnings = [];
             if (null !== $center) {
-                $identity = self::identity($patient, $center);
-                if (isset($known[$identity])) {
-                    $errors[] = \is_int($known[$identity])
-                        ? \sprintf('Même patient que ligne %d.', $known[$identity])
-                        : 'Ce patient existe déjà dans ce centre (même nom, prénom et date de naissance).';
+                $found = $this->duplicates->inspect($index, $patient, $center);
+                $identity = PatientDuplicates::identity($patient, $center);
+                $errors = [...$errors, ...(isset($seen[$identity]) ? [\sprintf('Même patient que ligne %d.', $seen[$identity])] : $found['errors'])];
+                $warnings = $found['warnings'];
+                if ([] === $found['errors']) {
+                    $seen[$identity] ??= $line;
                 }
-                $known[$identity] ??= $line;
             }
 
             $report[] = [
@@ -89,6 +93,7 @@ final class PatientImporter
                     .($patient->getDateOfBirth() ? ' · '.$patient->getDateOfBirth()->format('d/m/Y') : '')
                     .($center ? ' · '.$center->getName() : '')),
                 'errors' => array_values(array_unique($errors)),
+                'warnings' => array_values(array_unique($warnings)),
             ];
             $patients[] = $patient;
         }
@@ -103,36 +108,6 @@ final class PatientImporter
         }
 
         return ['valid' => $valid, 'rows' => $report, 'created' => $commit && $valid ? \count($patients) : 0];
-    }
-
-    /**
-     * Patients de la file active déjà connus dans ces centres.
-     *
-     * @param list<Center> $centers
-     *
-     * @return array<string, true>
-     */
-    private function existingIdentities(array $centers): array
-    {
-        $known = [];
-        if ([] === $centers) {
-            return $known;
-        }
-        foreach ($this->entityManager->getRepository(Patient::class)->findBy(['center' => $centers, 'removedAt' => null]) as $patient) {
-            $known[self::identity($patient, $patient->getCenter())] = true;
-        }
-
-        return $known;
-    }
-
-    private static function identity(Patient $patient, Center $center): string
-    {
-        return implode('|', [
-            SpreadsheetReader::normalize($patient->getLastName()),
-            SpreadsheetReader::normalize($patient->getFirstName()),
-            $patient->getDateOfBirth()?->format('Y-m-d'),
-            $center->getId()->toRfc4122(),
-        ]);
     }
 
     /** JJ/MM/AAAA, JJ-MM-AAAA, AAAA-MM-JJ ou date Excel (nombre de jours) */

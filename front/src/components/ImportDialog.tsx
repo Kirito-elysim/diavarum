@@ -68,6 +68,7 @@ export function ImportDialog({ type, open, onOpenChange, centerId, centerName }:
 
   const errorCount = preview?.rows.filter((r) => r.errors.length).length ?? 0;
   const validCount = (preview?.rows.length ?? 0) - errorCount;
+  const warningCount = preview?.rows.filter((r) => !r.errors.length && r.warnings?.length).length ?? 0;
 
   return (
     <Dialog open={open} onOpenChange={close}>
@@ -110,6 +111,7 @@ export function ImportDialog({ type, open, onOpenChange, centerId, centerName }:
                 <div className="flex flex-wrap items-center gap-2 text-sm">
                   <span className="text-gray-500">{preview.rows.length} ligne{preview.rows.length > 1 ? 's' : ''} lue{preview.rows.length > 1 ? 's' : ''} :</span>
                   <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-0.5 text-green-700"><CheckCircle2 className="w-3.5 h-3.5" />{validCount} valide{validCount > 1 ? 's' : ''}</span>
+                  {warningCount > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-amber-700"><AlertTriangle className="w-3.5 h-3.5" />{warningCount} avec avertissement</span>}
                   {errorCount > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-red-700"><XCircle className="w-3.5 h-3.5" />{errorCount} en erreur</span>}
                 </div>
                 {errorCount > 0 && (
@@ -128,7 +130,7 @@ export function ImportDialog({ type, open, onOpenChange, centerId, centerName }:
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {[...preview.rows].sort((a, b) => b.errors.length - a.errors.length || a.line - b.line).map((row) => (
+                      {[...preview.rows].sort((a, b) => b.errors.length - a.errors.length || (b.warnings?.length ?? 0) - (a.warnings?.length ?? 0) || a.line - b.line).map((row) => (
                         <TableRow key={row.line} className={row.errors.length ? 'bg-red-50/40' : ''}>
                           <TableCell className="text-sm text-gray-500 tabular-nums">{row.line}</TableCell>
                           <TableCell className="text-sm text-gray-900">{row.label || <span className="text-gray-400">—</span>}</TableCell>
@@ -136,6 +138,7 @@ export function ImportDialog({ type, open, onOpenChange, centerId, centerName }:
                             {row.errors.length
                               ? <ul className="space-y-0.5 text-red-700">{row.errors.map((e) => <li key={e}>{e}</li>)}</ul>
                               : <span className="inline-flex items-center gap-1 text-green-700"><CheckCircle2 className="w-4 h-4" />Prêt</span>}
+                            {!!row.warnings?.length && <ul className="mt-1 space-y-0.5 text-amber-700">{row.warnings.map((w) => <li key={w} className="flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />{w}</li>)}</ul>}
                           </TableCell>
                         </TableRow>
                       ))}

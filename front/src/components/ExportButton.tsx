@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { ApiError, downloadFile } from '../lib/api';
 
 /** Téléchargement d'un export Excel ou PDF de l'API */
-export function ExportButton({ path, format, label }: { path: string; format: 'xlsx' | 'pdf'; label?: string }) {
+export function ExportButton({ path, format, label, disabled, title }: { path: string; format: 'xlsx' | 'pdf'; label?: string; disabled?: boolean; title?: string }) {
   const [loading, setLoading] = useState(false);
   const Icon = format === 'xlsx' ? FileSpreadsheet : FileText;
 
@@ -21,7 +21,7 @@ export function ExportButton({ path, format, label }: { path: string; format: 'x
   };
 
   return (
-    <Button variant="outline" size="sm" className="h-9 gap-2" onClick={download} disabled={loading}>
+    <Button variant="outline" size="sm" className="h-9 gap-2" onClick={download} disabled={loading || disabled} title={title}>
       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Icon className={format === 'xlsx' ? 'w-4 h-4 text-green-700' : 'w-4 h-4 text-red-600'} />}
       {label ?? (format === 'xlsx' ? 'Excel' : 'PDF')}
     </Button>

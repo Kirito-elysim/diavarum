@@ -1,0 +1,10 @@
+{% extends 'reports/_layout.html.twig' %}
+{% block title %}Bilans des patients{% endblock %}
+{% block doc %}Bilans des patients ({{ reports|length }}){% endblock %}
+{% block body %}
+{% for r in reports %}
+    <div{% if not loop.last %} style="page-break-after: always"{% endif %}>
+        {% include 'reports/_patient.html.twig' with {r: r} only %}
+    </div>
+{% endfor %}
+{% endblock %}

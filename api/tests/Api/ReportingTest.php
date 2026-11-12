@@ -145,6 +145,12 @@ final class ReportingTest extends ApiTestCaseBase
         self::assertStringStartsWith('%PDF', $bilan->getContent());
         self::assertStringContainsString('bilan-dupont-jean.pdf', $bilan->getHeaders()['content-disposition'][0]);
 
+        $many = $this->requestAs($this->ideParis, 'GET', '/api/exports/patients.pdf?patients[]='.$this->dupont->getId()->toRfc4122());
+        self::assertResponseIsSuccessful();
+        self::assertStringStartsWith('%PDF', $many->getContent());
+        $this->requestAs($this->ideParis, 'GET', '/api/exports/patients.pdf');
+        self::assertResponseStatusCodeSame(400, 'Sélection obligatoire');
+
         $stats = $this->requestAs($this->cadreParis, 'GET', '/api/exports/statistics.pdf');
         self::assertResponseIsSuccessful();
         self::assertStringStartsWith('%PDF', $stats->getContent());

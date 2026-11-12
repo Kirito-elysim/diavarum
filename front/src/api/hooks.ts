@@ -362,7 +362,7 @@ export type ImportType = 'users' | 'centers' | 'patients';
 
 export interface ImportReport {
   valid: boolean;
-  rows: { line: number; label: string; errors: string[] }[];
+  rows: { line: number; label: string; errors: string[]; warnings?: string[] }[];
   created: number;
   /** Mots de passe provisoires des comptes créés (renvoyés une seule fois) */
   credentials?: { name: string; email: string; role: string; password: string }[];

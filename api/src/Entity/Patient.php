@@ -25,6 +25,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use App\Validator\UniquePatient;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -39,6 +40,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(fields: ['lastName'])]
+#[UniquePatient(groups: ['patient:create'])]
 #[ApiResource(
     operations: [
         new GetCollection(parameters: [
@@ -51,7 +53,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             ),
         ]),
         new Get(),
-        new Post(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)"),
+        new Post(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)", validationContext: ['groups' => ['Default', 'patient:create']]),
         new Patch(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)"),
         new Delete(security: "is_granted('ROLE_CADRE')", processor: ArchiveProcessor::class),
     ],
