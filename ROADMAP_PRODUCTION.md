@@ -8,7 +8,7 @@ Objectif : livrer un catalogue exploitable sur tablette, des KPI cohérents entr
 |---|---|---|
 | Figer les définitions KPI (§7) | Diaverum + développement | Dictionnaire des KPI avec source, dénominateur, règle de période et exemples chiffrés. Appliquer la validation unique décidée en J-004 et définir le traitement des données historiques. |
 | Préciser le statut après 15 jours (§2.3) | Diaverum | Définir l’événement qui compte comme activité, la date de référence et la distinction entre parcours jamais commencé et parcours devenu inactif. |
-| Arbitrer la limite de compétences (§4.6) | Diaverum + pédagogie | Confirmer cinq selon le PDF ou acter six, et décider du traitement des contenus existants. |
+| Arbitrer la limite de compétences (§4.6) | Diaverum + pédagogie | **Décidé : six (J-028).** Les contenus existants sont compatibles (maximum de six compétences actives constaté). À faire confirmer par Diaverum : le PDF du cahier des charges mentionne cinq. |
 | Valider la suppression définitive (§3.4) | Diaverum + DPO | Définir les données et relations à effacer, la trace d’audit à conserver et le traitement des sauvegardes. |
 | Confirmer le périmètre de lancement | Diaverum + pédagogie | Liste des cours ouvrables, questionnaire final, post-test, polices et maquettes de référence. |
 
@@ -27,7 +27,7 @@ Objectif : livrer un catalogue exploitable sur tablette, des KPI cohérents entr
 
 - [ ] Intégrer le questionnaire médical et administratif validé. Vérifier que les réponses restent visibles pendant la sélection des cours et que les dossiers existants restent lisibles.
 - [ ] Ajouter la suppression définitive selon l’arbitrage du lot 0, avec droits par centre, confirmation prévue au §3.4, contrôle des dépendances et exclusion des statistiques. Recetter séparément l’archivage et la restauration.
-- [ ] Aligner la limite de compétences dans l’éditeur, l’import et la validation IDE. Vérifier la limite et la compatibilité des cours déjà saisis.
+- [x] J-029 : limite de six compétences alignée (constante unique côté API, constante unique dans l'éditeur, import, création directe, validation IDE) ; tests aux limites (6 acceptées, 7 refusées) ; cours existants compatibles (maximum de six actives en base locale).
 - [ ] Vérifier les parcours de bout en bout : CODEX, décision d’éligibilité, sélection et confirmation sans cours optionnel, interruption, rappel à partir de trois cours inachevés, reprise depuis le début, validation IDE et clôture par le cadre.
 - [ ] Vérifier le ratio de progression sur les écrans concernés, notamment après désélection d’un cours déjà validé. Confirmer le numérateur et le dénominateur attendus.
 - [ ] Vérifier sur tablette le chronomètre, la pause, la sortie protégée par code, les exercices formatifs signalés comme non notés et l’absence de résultats pour une séance interrompue ou un aperçu.

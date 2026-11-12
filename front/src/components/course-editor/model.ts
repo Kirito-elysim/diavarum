@@ -1,6 +1,9 @@
 import type { ContentBlock, ModulePage } from '../../types';
 import type { ModuleContent } from '../../api/types';
 
+/** Limite décidée avec Diaverum (J-028) ; identique à Module::MAX_COMPETENCIES côté API */
+export const MAX_COMPETENCIES = 6;
+
 export const uid = () => crypto.randomUUID();
 export const activities = [
   ['text', 'Texte'], ['image', 'Image'], ['image-text', 'Image ou picto + texte'], ['info-card', 'Encadré'], ['carousel', 'Carrousel'],
@@ -39,7 +42,7 @@ export function validateCourse(course: ModuleContent): string[] {
   if (!Number.isInteger(course.estimatedDuration) || course.estimatedDuration < 5 || course.estimatedDuration > 120) errors.push('La durée doit être un nombre entier compris entre 5 et 120 minutes.');
   if (!course.content.length) errors.push('Ajoutez au moins un écran.');
   if (course.competencies.some(c => !c.trim())) errors.push('Complétez ou retirez les compétences vides.');
-  if (course.competencies.length > 6) errors.push('Une séance compte au plus 6 compétences.');
+  if (course.competencies.length > MAX_COMPETENCIES) errors.push(`Une séance compte au plus ${MAX_COMPETENCIES} compétences.`);
   const pageIds = new Set<string>();
   const blockIds = new Set<string>();
   course.content.forEach((page, index) => {

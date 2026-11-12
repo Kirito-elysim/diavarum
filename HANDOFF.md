@@ -140,3 +140,7 @@ Tests de droits par rôle sur tous les exports (IDE, cadre, administrateur natio
 ## Suppression définitive — J-028
 
 Décisions : six compétences ; suppression définitive d'un patient archivé (cadre/admin, confirmation par nom et prénom, effacement complet, trace sans donnée de santé), implémentée et testée. Reste au lot 2 : aligner éditeur/import sur six compétences, parcours de bout en bout, ratio de progression. Anonymisation : question ouverte (avis DPO). Non commité (depuis b5b6e65).
+
+## Six compétences — J-029
+
+Limite alignée (API déjà à six ; éditeur sur une constante unique ; tests aux limites). 189 tests API réussis. Non commité (depuis 64e601f). Reste du lot 2 : parcours de bout en bout, ratio de progression, tablette, questionnaire médical.

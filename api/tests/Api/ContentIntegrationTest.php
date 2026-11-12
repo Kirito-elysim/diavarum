@@ -136,8 +136,22 @@ final class ContentIntegrationTest extends ApiTestCaseBase
 
     public function testAtMostSixCompetencies(): void
     {
-        $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6', '7']]));
+        $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6']]));
+        self::assertResponseIsSuccessful('Six compétences : limite acceptée');
 
+        $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6', '7']]));
+        self::assertResponseStatusCodeSame(422);
+        $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S2']);
+        self::assertCount(6, $module->getActiveCompetencies(), 'Le refus ne modifie pas le cours');
+    }
+
+    public function testSeventhCompetencyIsRefusedWhenAddedDirectly(): void
+    {
+        $this->put('S2', $this->payload(['competencies' => ['1', '2', '3', '4', '5', '6']]));
+        $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S2']);
+        $admin = $this->createUser(UserRole::AdminNational);
+
+        $this->requestAs($admin, 'POST', '/api/module_competencies', ['module' => '/api/modules/'.$module->getId()->toRfc4122(), 'label' => 'Septième', 'position' => 7]);
         self::assertResponseStatusCodeSame(422);
     }
 
