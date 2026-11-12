@@ -116,15 +116,33 @@ final class ReportingTest extends ApiTestCaseBase
         self::assertSame('Nom', $summary[0][0]);
         self::assertSame(['DUPONT', 'MARTIN'], array_column(\array_slice($summary, 1), 0), 'Patients de Paris uniquement');
         self::assertSame(['En cours', 1, 1, 80], [$summary[1][5], $summary[1][6], $summary[1][7], $summary[1][8]]);
-        self::assertEqualsWithDelta(30.0, $summary[1][9], 0.01, 'Durée totale en minutes');
+        self::assertEqualsWithDelta(30.0, $summary[1][10], 0.01, 'Durée totale en minutes');
 
         $detail = $book->getSheetByName('Détail des séances')->toArray(null, true, false);
         self::assertSame(['S97', 'Séance de test', 'Validé', 80], [$detail[1][3], $detail[1][4], $detail[1][7], $detail[1][8]]);
         self::assertSame('IDE', $detail[0][11], 'Colonne IDE par séance');
-        self::assertSame('Clôturé par', $summary[0][10]);
+        self::assertSame('Clôturé par', $summary[0][11]);
 
         self::assertSame('Début', $book->getSheetByName('Historique des séances')->getCell('G1')->getValue());
         self::assertSame('Avis néphrologue requis', $book->getSheetByName('CODEX')->getCell('K1')->getValue());
+    }
+
+    public function testPostTestIsReportedApartAndExcludedFromProgramAverage(): void
+    {
+        $postTest = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'PT']);
+        $program = $this->em()->getRepository(TrainingProgram::class)->findOneBy(['patient' => $this->dupont]);
+        $program->addModule($postTest)->markValidated(20, 600);
+        $this->em()->flush();
+
+        self::assertSame(80, $program->getAverageScore(), 'Moyenne des cours seulement (S97 = 80), sans le post-test à 20');
+        self::assertSame(20, $program->getPostTestScore());
+
+        $response = $this->requestAs($this->ideParis, 'GET', '/api/exports/patients.xlsx');
+        $file = tempnam(sys_get_temp_dir(), 'xlsx');
+        file_put_contents($file, $response->getContent());
+        $summary = IOFactory::load($file)->getSheetByName('Synthèse')->toArray(null, true, false);
+        unlink($file);
+        self::assertSame([80, 20], [$summary[1][8], $summary[1][9]]);
     }
 
     public function testPatientOfAnotherCenterCannotBeExported(): void

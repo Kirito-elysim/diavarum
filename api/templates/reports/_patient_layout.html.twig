@@ -1,0 +1,48 @@
+{% extends 'reports/_layout.html.twig' %}
+{% block report_styles %}
+    @page { margin: 29mm 5mm 16mm; }
+    body { font-family: 'DejaVu Sans', sans-serif; font-size: 8pt; color: #202032; }
+    header { top: -23mm; border-bottom: 0.8mm solid #f35b18; padding-bottom: 3mm; }
+    .report-heading { margin: 0; table-layout: fixed; }
+    .report-heading td { border: 0; padding: 0 6mm; vertical-align: middle; }
+    .report-heading .logo-cell { width: 28%; padding-left: 2mm; padding-right: 5mm; }
+    .report-heading .heading-cell { width: 45%; border-left: 0.2mm solid #b8b8bd; border-right: 0.2mm solid #b8b8bd; color: #003e35; font-size: 11pt; font-weight: bold; line-height: 1.15; }
+    .report-heading .document-cell { width: 27%; padding-right: 0; font-size: 10pt; color: #70707c; line-height: 1.2; }
+    footer { bottom: -12mm; border-top: 0.5mm solid #f35b18; padding-top: 2.5mm; color: #57576a; text-align: center; font-size: 7pt; }
+    h1 { font-size: 22pt; line-height: 1.2; margin: 0 0 1mm; color: #003e35; }
+    .identity { font-size: 10pt; margin: 0 0 4mm; color: #70707c; }
+    .identity strong { color: #003e35; }
+    .kpis { border-collapse: separate; border-spacing: 3mm 0; margin: 0 -3mm 4mm; width: 206mm; table-layout: fixed; }
+    .kpis td { width: 25%; padding: 2mm 3mm; text-align: left; border: 0.25mm solid #abc5b1; border-radius: 3mm; background: #f3f8f3; vertical-align: top; }
+    .kpi-label { color: #003e35; font-weight: bold; font-size: 8pt; white-space: nowrap; }
+    .kpi-icon { width: 6mm; height: 7mm; vertical-align: middle; margin-right: 1mm; }
+    .kpis .value { color: #f35b18; font-size: 18pt; line-height: 1.2; margin-top: 2mm; overflow-wrap: break-word; }
+    .kpis .status-value { font-size: 16pt; }
+    .courses .small { font-size: 7pt; }
+    .dates { font-size: 8pt; color: #70707c; margin: 2mm 0 4mm; }
+    h2 { border: 0; font-size: 14pt; margin: 0 0 2mm; padding: 0; }
+    .courses { table-layout: fixed; margin: 0; font-size: 7.5pt; }
+    .courses th { background: #004b3e; padding: 1.8mm 1.5mm; font-size: 7.5pt; line-height: 1.15; border-right: 0.2mm solid #b8c8c2; vertical-align: middle; }
+    .courses td { border: 0.2mm solid #d4d7dd; padding: 0.6mm 1.5mm; vertical-align: middle; line-height: 1.1; overflow-wrap: break-word; }
+    .courses tr { page-break-inside: avoid; }
+    .courses tbody tr:nth-child(even) { background: #f5f6f7; }
+    .course-code { color: #003e35; font-size: 9pt; }
+    .score { color: #ed5714; font-size: 9pt; font-weight: bold; white-space: nowrap; }
+    .badge { font-size: 7pt; padding: 0.6mm 1mm; white-space: normal; border-radius: 4mm; }
+    .ok { background: #e6f3e1; color: #093c20; }
+    .competency { color: #093c20; }
+    .tick { color: #087816; font-family: 'DejaVu Sans'; font-weight: bold; }
+    .competency { display: inline; padding: 0; font-size: 7pt; }
+    .not-validated { margin-top: 0.5mm; color: #57576a; font-size: 7pt; font-style: italic; }
+    .summary { background: #eaf4e7; color: #003e35; border-radius: 3mm; padding: 2mm 3mm; margin-top: 4mm; font-size: 11pt; font-weight: bold; page-break-inside: avoid; }
+    .summary .tick { font-size: 14pt; margin-right: 3mm; }
+{% endblock %}
+{% block report_header %}
+<header>
+    <table class="report-heading"><tr>
+        <td class="logo-cell"><img src="{{ logo }}" alt="Diaverum" style="width: 49mm"></td>
+        <td class="heading-cell">Parcours d'entraînement<br>des patients</td>
+        <td class="document-cell">Bilan du parcours<br>d'entraînement</td>
+    </tr></table>
+</header>
+{% endblock %}

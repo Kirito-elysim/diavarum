@@ -1,10 +1,10 @@
-{% extends 'reports/_layout.html.twig' %}
+{% extends 'reports/_patient_layout.html.twig' %}
 {% block title %}Bilans des patients{% endblock %}
 {% block doc %}Bilans des patients ({{ reports|length }}){% endblock %}
 {% block body %}
 {% for r in reports %}
-    <div{% if not loop.last %} style="page-break-after: always"{% endif %}>
+    {% if not loop.first %}<div style="page-break-before: always"></div>{{ block('report_header') }}<footer>Document confidentiel — données de santé. Édité le {{ 'now'|date('d/m/Y à H:i') }}.</footer>{% endif %}
         {% include 'reports/_patient.html.twig' with {r: r} only %}
-    </div>
+
 {% endfor %}
 {% endblock %}

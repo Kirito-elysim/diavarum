@@ -26,10 +26,11 @@
     .pending { background: #FFE0D0; color: #9a3412; }
     .none { background: #f3f4f6; color: #6b7280; }
     .small { font-size: 7.5pt; }
+{% block report_styles %}{% endblock %}
 </style>
 </head>
 <body>
-<header><img src="{{ logo }}" alt="Diaverum" style="height: 9mm"> <span class="brand">Parcours d'entraînement des patients</span><span class="doc">{% block doc %}{% endblock %}</span></header>
+{% block report_header %}<header><img src="{{ logo }}" alt="Diaverum" style="height: 9mm"> <span class="brand">Parcours d'entraînement des patients</span><span class="doc">{% block doc %}{% endblock %}</span></header>{% endblock %}
 <footer>Document confidentiel — données de santé. Édité le {{ 'now'|date('d/m/Y à H:i') }}.</footer>
 {% block body %}{% endblock %}
 </body>

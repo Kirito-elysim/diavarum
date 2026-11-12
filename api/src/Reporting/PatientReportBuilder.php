@@ -135,6 +135,7 @@ final class PatientReportBuilder
             'validatedCount' => $program->getValidatedCount(),
             'selectedCount' => $program->getSelectedCount(),
             'averageScore' => $program->getAverageScore(),
+            'postTestScore' => $program->getPostTestScore(),
             'totalDurationSeconds' => $program->getTotalDurationSeconds(),
         ];
 

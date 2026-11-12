@@ -1,7 +1,7 @@
 <h1>{{ r.patient.lastName|upper }} {{ r.patient.firstName }}</h1>
-<p class="muted">
+<p class="identity">
     Né(e) le {{ r.patient.dateOfBirth ? r.patient.dateOfBirth|date('d/m/Y', false) : '—' }}
-    · {{ r.patient.center }} · Éligibilité : {{ r.patient.eligibility }}
+    · {{ r.patient.center }} · Éligibilité : <strong>{{ r.patient.eligibility }}</strong>
 </p>
 
 {% if r.program is null %}
@@ -11,35 +11,36 @@
 {% else %}
     {% set p = r.program %}
     <table class="kpis"><tr>
-        <td><div class="value">{{ p.status }}</div>Statut du parcours</td>
-        <td><div class="value">{{ p.validatedCount }}/{{ p.selectedCount }}</div>séances validées</td>
-        <td><div class="value">{{ p.averageScore is not null ? p.averageScore ~ ' %' : '—' }}</div>score {{ p.completed ? 'total' : 'moyen' }}</td>
-        <td><div class="value">{{ (p.totalDurationSeconds / 60)|round }} min</div>durée {{ p.completed ? 'totale' : 'cumulée' }}</td>
+        <td><div class="kpi-label">{% include 'reports/_report_icon.html.twig' with {icon: 'clipboard'} only %}Statut du parcours</div><div class="value status-value">{{ p.status }}</div></td>
+        <td><div class="kpi-label">{% include 'reports/_report_icon.html.twig' with {icon: 'layers'} only %}Séances validées</div><div class="value">{{ p.validatedCount }}/{{ p.selectedCount }}</div></td>
+        <td><div class="kpi-label">{% include 'reports/_report_icon.html.twig' with {icon: 'award'} only %}Score {{ p.completed ? 'total' : 'moyen' }}</div><div class="value">{{ p.averageScore is not null ? p.averageScore ~ ' %' : '—' }}</div></td>
+        <td><div class="kpi-label">{% include 'reports/_report_icon.html.twig' with {icon: 'clock'} only %}Durée {{ p.completed ? 'totale' : 'cumulée' }}</div><div class="value">{{ (p.totalDurationSeconds / 60)|round }} min</div></td>
     </tr></table>
-    <p class="muted small">
+    <p class="dates">
         {% if p.startedAt %}Démarré le {{ p.startedAt|date('d/m/Y') }}.{% endif %}
+        {% if p.postTestScore is not null %}Post-test : {{ p.postTestScore }} % (hors score moyen).{% endif %}
         {% if p.completed %}Achevé le {{ p.completedAt|date('d/m/Y') }}{% if p.validatedBy %}, clôturé par {{ p.validatedBy }}{% endif %}.{% endif %}
     </p>
 
     <h2>Séances du parcours</h2>
-    <table>
-        <colgroup><col style="width: 28%"><col style="width: 11%"><col style="width: 7%"><col style="width: 8%"><col style="width: 12%"><col style="width: 13%"><col style="width: 21%"></colgroup>
-        <thead><tr><th>Séance</th><th>Statut</th><th class="num">Score</th><th class="num">Durée</th><th>Validée le</th><th>IDE</th><th>Compétences validées</th></tr></thead>
+    <table class="courses">
+        <thead><tr><th style="width: 27%">Séance<br>(code + titre)</th><th style="width: 11%">Statut</th><th class="num" style="width: 8%">Score</th><th class="num" style="width: 8%">Durée</th><th style="width: 13%">Validée le</th><th style="width: 11%">IDE</th><th style="width: 22%">Compétences validées</th></tr></thead>
         <tbody>
         {% for c in r.courses %}
             <tr>
-                <td><strong>{{ c.code }}</strong> {{ c.title }}{% if not c.selected %} <span class="muted small">(désélectionnée)</span>{% endif %}</td>
-                <td><span class="badge {{ c.status == 'Validé' ? 'ok' : (c.status == 'Non terminé' ? 'pending' : 'none') }}">{{ c.status }}</span></td>
-                <td class="num">{{ c.score is not null ? c.score ~ ' %' : '—' }}</td>
+                <td><strong class="course-code">{{ c.code }}</strong> &nbsp;{{ c.title }}{% if not c.selected %} <span class="muted small">(désélectionnée)</span>{% endif %}</td>
+                <td><span class="badge {{ c.status == 'Validé' ? 'ok' : (c.status == 'Non terminé' ? 'pending' : 'none') }}">{% if c.status == 'Validé' %}<span class="tick">✓</span> {% endif %}{{ c.status }}</span></td>
+                <td class="num score">{{ c.score is not null ? c.score ~ ' %' : '—' }}</td>
                 <td class="num">{{ c.durationSeconds is not null ? (c.durationSeconds / 60)|round ~ ' min' : '—' }}</td>
-                <td>{{ c.validatedAt ? c.validatedAt|date('d/m/Y H:i') : '—' }}</td>
+                <td>{% if c.validatedAt %}{{ c.validatedAt|date('d/m/Y') }}<br>{{ c.validatedAt|date('H:i') }}{% else %}—{% endif %}</td>
                 <td class="small">{{ c.nurse ?? '—' }}</td>
                 <td class="small">
-                    {{ c.competencies|join(' ; ') }}
-                    {% if c.competenciesNotValidated is not empty %}<br><span class="muted">Non validées : {{ c.competenciesNotValidated|join(' ; ') }}</span>{% endif %}
+                    {% for competency in c.competencies %}<span class="competency"><span class="tick">✓</span> &nbsp;{{ competency }}</span> {% endfor %}
+                    {% if c.competenciesNotValidated is not empty %}<div class="not-validated">Non validées : {{ c.competenciesNotValidated|join(' ; ') }}</div>{% endif %}
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div class="summary"><span class="tick">✓</span>{{ p.validatedCount }} séance{{ p.validatedCount > 1 ? 's' : '' }} sur {{ p.selectedCount }} validée{{ p.validatedCount > 1 ? 's' : '' }}</div>
 {% endif %}

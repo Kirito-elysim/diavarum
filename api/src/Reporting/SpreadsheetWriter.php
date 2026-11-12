@@ -25,7 +25,7 @@ final class SpreadsheetWriter
         $summary = $book->getActiveSheet()->setTitle('Synthèse');
         $this->table($summary, [
             'Nom', 'Prénom', 'Date de naissance', 'Centre', 'Éligibilité', 'Parcours',
-            'Séances validées', 'Séances du parcours', 'Score moyen (%)', 'Durée totale (min)', 'Clôturé par', 'Achevé le',
+            'Séances validées', 'Séances du parcours', 'Score moyen (%)', 'Post-test (%)', 'Durée totale (min)', 'Clôturé par', 'Achevé le',
         ], array_map(static fn (array $r) => [
             mb_strtoupper($r['patient']['lastName']),
             $r['patient']['firstName'],
@@ -36,6 +36,7 @@ final class SpreadsheetWriter
             $r['program']['validatedCount'] ?? null,
             $r['program']['selectedCount'] ?? null,
             $r['program']['averageScore'] ?? null,
+            $r['program']['postTestScore'] ?? null,
             isset($r['program']['totalDurationSeconds']) ? self::minutes($r['program']['totalDurationSeconds']) : null,
             $r['program']['validatedBy'] ?? null,
             ($r['program']['completedAt'] ?? null)?->format('d/m/Y'),

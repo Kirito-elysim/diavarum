@@ -65,6 +65,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 )]
 class TrainingProgram implements CenterScopedInterface, AuthoredInterface
 {
+    public const POST_TEST_CODE = 'PT';
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
     #[Groups(['program:read', 'program:list'])]
@@ -286,9 +288,23 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
     #[Groups(['program:read', 'program:list'])]
     public function getAverageScore(): ?int
     {
-        $scores = $this->modules->map(static fn (ProgramModule $m) => $m->getScore())->filter(static fn (?int $s) => null !== $s)->toArray();
+        $scores = $this->modules
+            ->filter(static fn (ProgramModule $m) => self::POST_TEST_CODE !== $m->getModule()->getCode())
+            ->map(static fn (ProgramModule $m) => $m->getScore())->filter(static fn (?int $s) => null !== $s)->toArray();
 
         return [] === $scores ? null : (int) round(array_sum($scores) / \count($scores));
+    }
+
+    /** Résultat du post-test, à part : il n'entre pas dans le score moyen du parcours */
+    public function getPostTestScore(): ?int
+    {
+        foreach ($this->modules as $selection) {
+            if (self::POST_TEST_CODE === $selection->getModule()->getCode()) {
+                return $selection->getScore();
+            }
+        }
+
+        return null;
     }
 
     /** Durée cumulée des séances validées */

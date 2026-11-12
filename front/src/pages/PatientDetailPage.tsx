@@ -47,6 +47,7 @@ import {
   useCreateProgram,
   useEligibilityReasons,
   useInterruptionReasons,
+  useModules,
   useProgramAction,
   usePatient,
   usePatientProgram,
@@ -63,7 +64,8 @@ import {
   type ProgramModule,
   type TrainingProgram,
 } from '../api/types';
-import { ApiError } from '../lib/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { api, ApiError } from '../lib/api';
 import { ExportButton } from '../components/ExportButton';
 import { PatientDialog } from './PatientsPage';
 import { eligibilityBadge, formatDate, formatDuration, programBadge, sessionLabel } from '../lib/format';
@@ -241,7 +243,7 @@ export default function PatientDetailPage() {
 /* ─── Parcours ─────────────────────────────────────────────────────────── */
 
 function ProgramSection({ patient, program }: { patient: Patient; program: TrainingProgram | null }) {
-  const createProgram = useCreateProgram();
+  const [creating, setCreating] = useState(false);
   const { launch, confirmation } = useCourseLaunch(patient.id, program);
 
   if (patient.eligibilityStatus !== 'eligible') {
@@ -258,19 +260,11 @@ function ProgramSection({ patient, program }: { patient: Patient; program: Train
     return (
       <EmptyState icon={<Route className="w-8 h-8" />} title="Aucun parcours">
         <p>Les cours systématiques seront pré-sélectionnés ; vous pourrez ajouter les cours optionnels adaptés au patient.</p>
-        <Button
-          className="mt-4 gap-2 bg-orange-500 hover:bg-orange-600 text-white"
-          disabled={createProgram.isPending}
-          onClick={() =>
-            createProgram.mutateAsync(patient['@id']).then(
-              () => toast.success('Parcours créé'),
-              (err) => toast.error(err instanceof ApiError ? err.message : 'Création impossible'),
-            )
-          }
-        >
-          {createProgram.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Route className="w-4 h-4" />}
+        <Button className="mt-4 gap-2 bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setCreating(true)}>
+          <Route className="w-4 h-4" />
           Créer le parcours
         </Button>
+        <CreateProgramDialog patient={patient} open={creating} onOpenChange={setCreating} />
       </EmptyState>
     );
   }
@@ -308,6 +302,73 @@ function ProgramSection({ patient, program }: { patient: Patient; program: Train
         <ModuleGroup key={theme.title} title={theme.title} items={theme.items} patient={patient} readOnly={readOnly} canStart={canStart} onLaunch={launch} />
       ))}
     </div>
+  );
+}
+
+/** Création du parcours : séances systématiques incluses d'office (grisées), optionnelles à cocher */
+function CreateProgramDialog({ patient, open, onOpenChange }: { patient: Patient; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const createProgram = useCreateProgram();
+  const client = useQueryClient();
+  const { data } = useModules();
+  const [chosen, setChosen] = useState<string[]>([]);
+  const modules = (data?.member ?? []).filter((m) => m.published).sort((a, b) => a.position - b.position);
+  const mandatory = modules.filter((m) => m.mandatory);
+  const optional = modules.filter((m) => !m.mandatory);
+
+  const submit = async () => {
+    try {
+      const program = await createProgram.mutateAsync(patient['@id']);
+      const wanted = program.modules.filter((pm) => chosen.includes(pm.module.id));
+      const results = await Promise.allSettled(wanted.map((pm) => api(pm['@id'].replace(/^\/api/, ''), { method: 'PATCH', body: { selected: true } })));
+      client.invalidateQueries({ queryKey: ['program', 'patient', patient['@id']] });
+      client.invalidateQueries({ queryKey: ['programs'] });
+      if (results.some((r) => r.status === 'rejected')) toast.warning('Parcours créé, mais certaines séances optionnelles n\'ont pas pu être ajoutées : utilisez « Choisir optionnel ».');
+      else toast.success('Parcours créé');
+      onOpenChange(false);
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : 'Création impossible');
+    }
+  };
+
+  const row = (m: (typeof modules)[number], fixed: boolean) => (
+    <label key={m.id} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${fixed ? 'bg-gray-50 text-gray-500' : 'bg-orange-50/60'}`}>
+      <Checkbox
+        checked={fixed || chosen.includes(m.id)}
+        disabled={fixed || createProgram.isPending}
+        onCheckedChange={(on) => setChosen((cur) => (on === true ? [...cur, m.id] : cur.filter((id) => id !== m.id)))}
+      />
+      <span className="flex-1">{m.title}</span>
+      <span className="text-xs text-gray-400">{m.estimatedDuration} min</span>
+    </label>
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl text-left">
+        <DialogHeader>
+          <DialogTitle>Créer le parcours</DialogTitle>
+          <DialogDescription>Les séances systématiques sont incluses d'office. Cochez les séances optionnelles adaptées au profil du patient.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-sm font-semibold text-gray-800">Séances systématiques ({mandatory.length}) · incluses</h3>
+            {mandatory.map((m) => row(m, true))}
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-semibold text-gray-800">Séances optionnelles ({chosen.length}/{optional.length})</h3>
+            {optional.map((m) => row(m, false))}
+            {optional.length === 0 && <p className="text-sm text-gray-500">Aucune séance optionnelle disponible.</p>}
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={createProgram.isPending}>Annuler</Button>
+          <Button className="bg-orange-500 hover:bg-orange-600 text-white" disabled={createProgram.isPending} onClick={submit}>
+            {createProgram.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            Créer le parcours
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

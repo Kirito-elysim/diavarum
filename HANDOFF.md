@@ -1,6 +1,6 @@
 # Reprise du projet Diaverum
 
-Dernière mise à jour : 12 novembre 2026 · entrée J-018 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
+Dernière mise à jour : 12 novembre 2026 · entrée J-022 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
 
 ## Point de départ
 
@@ -91,3 +91,28 @@ Archivé dans le même centre = erreur ; homonyme et patient existant dans un au
 ## Création manuelle de patient — J-018
 
 Mêmes règles que l'import : doublon actif ou archivé dans le même centre refusé (aussi côté API), homonyme et patient d'un autre centre = avertissement avec « Créer quand même ». Service `PatientDuplicates` partagé. 173 tests API réussis. Rien commité depuis bef0c36.
+
+## Moyennes et choix des séances — J-019
+
+Point 2 validé : post-test hors moyenne du parcours et affiché à part ; moyenne de chapitre dans Parcours bis ; panneau « Choisir les séances » dans Parcours bis. 174 tests API réussis. Non commité. Prochaine action : point 3 (durées, période, post-test dans les statistiques).
+
+
+## Maquette du bilan PDF patient — J-020
+
+Présentation appliquée aux exports PDF individuels et de sélection : quatre KPI, tableau sans Chapitre, compétences en pastilles et total validé/sélectionné. Données et post-test J-019 conservés ; Excel inchangé. Nouveau layout dédié aux patients, statistiques préservées. Gabarits Twig valides, PDF fictifs inspectés (bilan 1 page, sélection longue 6 pages avec non démarré), diff sans erreur. Aucun accès à la base ni déploiement. Logo officiel du dépôt et police DejaVu Sans diffèrent de la maquette ; reproduction typographique exacte non certifiée. Suite : retour utilisateur, puis point 3 des arbitrages toujours ouvert.
+
+
+## PDF patient compact — J-021
+À la demande utilisateur, police et espacements réduits, colonne des titres élargie, statut « Interrompu » à 16 pt sans débordement. Gabarits partagés aux exports individuels et sélection. Lint Twig et diff réussis ; rendu fictif de 26 séances longues réduit de 7 à 3 pages, toutes inspectées. Aucun changement de données ou de calcul, aucune base utilisée ni déploiement. Prochaine action : réexport utilisateur pour confirmer la densité sur son bilan ; point 3 métier toujours ouvert.
+
+## Optionnelles en popup — J-020
+
+Parcours bis : bouton « Choisir optionnel » et popup des séances optionnelles (remplace le panneau de J-019). Non commité depuis bef0c36 + d0b502c. Prochaine action : point 3.
+
+
+## Bilan sur deux pages — J-022
+Tableau optimisé : code et titre sur la même ligne, compétences continues avec coches, texte 7,5 pt et marges verticales 0,6 mm. Jeu fictif de 26 séances longues : 2 pages, récapitulatif inclus, toutes deux inspectées ; lint Twig et diff réussis. Aucun changement de données ni déploiement. Relancer l’export utilisateur pour confirmer ; deux pages ne sont pas une limite forcée pour les bilans plus volumineux.
+
+## Création du parcours avec optionnelles — J-021
+
+Le bouton « Créer le parcours » ouvre une popup : systématiques grisées, optionnelles à cocher. Testé sur un patient de test supprimé ensuite. Non commité (J-019 à J-021). Prochaine action : point 3.
