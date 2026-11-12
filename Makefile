@@ -5,7 +5,7 @@ PHP     = $(DC) exec php
 CONSOLE = $(PHP) bin/console
 
 .DEFAULT_GOAL := help
-.PHONY: help up down restart build ps logs cc sh console composer npm migration migrate fixtures content test e2e db db-dump db-restore prod-check prod-build
+.PHONY: help up down restart build ps logs cc sh console composer npm migration migrate fixtures content test recette-base e2e db db-dump db-restore prod-check prod-build
 
 help: ## Liste des commandes
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -68,6 +68,12 @@ test: ## Lance les tests (base diaverum_test créée / migrée si besoin)
 		&& bin/console --env=test doctrine:database:create --if-not-exists -q \
 		&& bin/console --env=test doctrine:migrations:migrate --no-interaction -q \
 		&& vendor/bin/phpunit $(c)'
+
+recette-base: ## Crée la base dédiée diaverum_recette (migrations + données fictives de recette) sans toucher à la base de dev
+	$(PHP) sh -c 'U=$$(echo "$$DATABASE_URL" | sed "s#/diaverum?#/diaverum_recette?#"); \
+		DATABASE_URL="$$U" bin/console doctrine:database:create --if-not-exists -q \
+		&& DATABASE_URL="$$U" bin/console doctrine:migrations:migrate --no-interaction -q \
+		&& DATABASE_URL="$$U" bin/console app:recette:load'
 
 e2e: ## Parcours complet dans un navigateur (recharge les données de démo)
 	$(MAKE) fixtures

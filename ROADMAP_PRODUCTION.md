@@ -51,8 +51,8 @@ Objectif : livrer un catalogue exploitable sur tablette, des KPI cohérents entr
 
 ## Lot 5 — Recette client et ouverture
 
-- [ ] Fournir une base de recette fictive avec plusieurs centres et rôles, des archivés, des parcours aux quatre statuts, des sessions répétées sur deux mois et des cours sans note.
-- [ ] Comparer les KPI et les exports à des résultats attendus calculés à l’avance. Recetter sur tablette les parcours soignant et patient, ainsi que les accès par rôle.
+- [x] J-032 : base de recette fictive fournie (`make recette-base`, `RECETTE_BASE_FICTIVE.md`) : trois centres, tous les rôles, archivés, parcours non démarré, en cours, inactif, interrompu et achevé, séances étalées sur deux mois, ancienne validation répétée, cours sans note, post-test.
+- [ ] Comparer les KPI et les exports à des résultats attendus calculés à l’avance. Recetter sur tablette les parcours soignant et patient, ainsi que les accès par rôle. (J-032 : KPI, résultats des IDE et exports Excel comparés à des valeurs calculées à la main par `RecetteDatasetTest` ; reste les PDF, la recette sur tablette et les accès par rôle dans l'interface.)
 - [ ] Organiser la période de recette client d’au moins 15 jours prévue au cahier des charges. Suivre les anomalies, refaire les contrôles après correction et obtenir la validation des cours et de la plateforme.
 - [ ] Après validation, déployer, vérifier l’accès par rôle et les KPI en production, puis contrôler les sauvegardes et l’envoi des notifications.
 

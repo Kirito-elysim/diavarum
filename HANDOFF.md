@@ -152,3 +152,7 @@ Onglet et carte « Profil patient » retirés (données conservées en base) ; r
 ## Parcours de bout en bout — J-031
 
 Rejoué par un test d'API complet sur la base de test et par les scripts navigateur à écritures simulées (tous réussis). Le scénario réel `make e2e` n'a pas été lancé (il efface la base locale ; sauvegarde existante dans `backups/`). Écart à trancher : rappel dès un cours inachevé (code) ou à partir de trois (feuille de route). Non commité (depuis e1cf37e).
+
+## Base de recette fictive — J-032
+
+`make recette-base` crée la base dédiée `diaverum_recette` ; `RECETTE_BASE_FICTIVE.md` décrit le jeu de données et les résultats attendus ; `RecetteDatasetTest` les vérifie (écrans et Excel). Écart corrigé : statuts du bilan patient alignés sur les écrans. 197 tests API réussis. Non commité (depuis a73558a). Lot 4 géré par l'utilisateur. Reste du lot 5 : PDF, tablette, accès par rôle dans l'interface, recette client.

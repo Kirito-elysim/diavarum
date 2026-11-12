@@ -120,14 +120,14 @@ final class PatientReportBuilder
         // Jamais démarré : identité, éligibilité et statut uniquement
         if ('non_demarre' === $program->getActivityStatus()) {
             $report['neverStarted'] = true;
-            $report['program'] = ['status' => Labels::PROGRAM[$program->getStatus()->value]];
+            $report['program'] = ['status' => Labels::ACTIVITY[$program->getActivityStatus()]];
 
             return $report;
         }
 
         $completed = 'acheve' === $program->getStatus()->value;
         $report['program'] = [
-            'status' => Labels::PROGRAM[$program->getStatus()->value],
+            'status' => Labels::ACTIVITY[$program->getActivityStatus()],
             'completed' => $completed,
             'startedAt' => $program->getStartedAt(),
             'completedAt' => $program->getCompletedAt(),
