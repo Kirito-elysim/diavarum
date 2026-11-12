@@ -67,6 +67,7 @@ final class NurseActivityBuilder
             ->andWhere('s.nurse = :nurse')->andWhere('s.status = :validated')
             ->andWhere('p.center IN (:centers)')->andWhere('p.removedAt IS NULL')
             ->setParameter('nurse', $nurse)->setParameter('validated', SessionStatus::Validated)->setParameter('centers', $centers);
+        LatestValidation::restrict($query);
         if (null !== $from) {
             $query->andWhere('s.completedAt >= :from')->setParameter('from', $from, Types::DATETIMETZ_IMMUTABLE);
         }

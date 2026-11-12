@@ -218,6 +218,7 @@ final class StatisticsBuilder
             ->andWhere('p.center IN (:centers)')->andWhere('s.status = :validated')
             ->setParameter('centers', $centers)->setParameter('validated', SessionStatus::Validated)
             ->groupBy('s.nurse');
+        LatestValidation::restrict($query);
         if (null !== $from) {
             $query->andWhere('s.completedAt >= :from')->setParameter('from', $from, Types::DATETIMETZ_IMMUTABLE);
         }

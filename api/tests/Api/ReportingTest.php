@@ -174,6 +174,33 @@ final class ReportingTest extends ApiTestCaseBase
         self::assertStringStartsWith('%PDF', $stats->getContent());
     }
 
+    public function testOnlyTheLatestValidationOfACourseCountsForSessionBasedFigures(): void
+    {
+        $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S97']);
+        $program = $this->em()->getRepository(TrainingProgram::class)->findOneBy(['patient' => $this->dupont]);
+        // Ancienne répétition (avant la validation unique) : 50 % puis 90 %, même cours et même parcours
+        foreach ([[1200, 50], [900, 90]] as [$duration, $score]) {
+            $session = (new TrainingSession())->setPatient($this->dupont)->setModule($module)->setProgram($program);
+            $session->setAuthor($this->ideParis);
+            $session->markValidated($duration, $score, []);
+            $this->em()->persist($session);
+            $this->em()->flush();
+            usleep(2000);
+        }
+        $today = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
+
+        $mine = $this->requestAs($this->ideParis, 'GET', "/api/statistics/me?from=$today&to=$today")->toArray();
+        self::assertSame([1, 90, 900], [$mine['totals']['validatedSessions'], $mine['totals']['averageScore'], $mine['totals']['totalDurationSeconds']]);
+
+        $nurses = $this->statisticsAs($this->cadreParis)['nurses'];
+        self::assertSame(1, array_sum(array_column($nurses, 'validatedSessions')));
+        self::assertSame(90, array_values(array_filter($nurses, static fn (array $n) => $n['validatedSessions'] > 0))[0]['averageScore']);
+
+        $kpis = $this->requestAs($this->ideParis, 'GET', '/api/dashboard')->toArray()['kpis'];
+        self::assertSame(1, $kpis['validatedSessions']);
+        self::assertSame(90, $kpis['averageScore']);
+    }
+
     public function testProgramScoreAndDurationFollowThePeriodAndExcludeThePostTest(): void
     {
         $tz = new \DateTimeZone('Europe/Paris');
@@ -255,8 +282,10 @@ final class ReportingTest extends ApiTestCaseBase
         $this->em()->persist($competency);
         $colleague = $this->createUser(UserRole::Ide, [$this->paris]);
         $lyonPatient = $this->em()->getRepository(Patient::class)->findOneBy(['lastName' => 'Lyonnais']);
-        $session = function (User $nurse, Patient $patient, bool $validated = true) use ($module, $program): TrainingSession {
-            $session = (new TrainingSession())->setPatient($patient)->setModule($module)->setProgram($program);
+        // Un cours validé une seule fois par parcours : les autres séances portent sur d'autres cours
+        $other = fn (string $code) => $this->em()->persist($m = (new Module())->setCode($code)->setTitle('Autre '.$code)->setPosition(90)) ?? $m;
+        $session = function (User $nurse, Patient $patient, bool $validated = true, ?Module $on = null) use ($module, $program): TrainingSession {
+            $session = (new TrainingSession())->setPatient($patient)->setModule($on ?? $module)->setProgram($program);
             $session->setAuthor($nurse);
             if ($validated) {
                 $session->markValidated(1800, 80, []);
@@ -270,9 +299,9 @@ final class ReportingTest extends ApiTestCaseBase
         $validation->setAuthor($this->ideParis);
         $mine->addCompetencyValidation($validation);
         $this->em()->persist($validation);
-        $session($colleague, $this->dupont);
+        $session($colleague, $this->dupont, true, $other('S96'));
         $session($this->ideParis, $this->dupont, false);
-        $session($this->ideParis, $lyonPatient);
+        $session($this->ideParis, $lyonPatient, true, $other('S95'));
         $this->em()->flush();
 
         $export = $this->requestAs($this->ideParis, 'GET', '/api/exports/patients.xlsx?patients[]='.$this->dupont->getId()->toRfc4122());

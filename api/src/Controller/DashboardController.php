@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Patient;
+use App\Reporting\LatestValidation;
 use App\Entity\ProgramModule;
 use App\Entity\TrainingProgram;
 use App\Entity\TrainingSession;
@@ -54,7 +55,7 @@ final class DashboardController
 
         return new JsonResponse([
             'kpis' => $this->kpis($centers, $patients, $sessions, $today, $now),
-            'monthly' => $this->monthly($sessions, $firstMonth),
+            'monthly' => $this->monthly($sessions, $firstMonth, LatestValidation::supersededIds($sessions)),
             'modules' => $this->modules($centers),
             'activeSessions' => array_values(array_map(fn (TrainingSession $s) => [
                 'id' => $s->getId()->toRfc4122(),
@@ -79,8 +80,10 @@ final class DashboardController
     {
         $validated = $this->qb(TrainingSession::class, 's', $centers)
             ->select('COUNT(s.id) AS total', 'AVG(s.score) AS average', 'COUNT(s.score) AS scored')
-            ->andWhere('s.status = :validated')->setParameter('validated', SessionStatus::Validated)
-            ->getQuery()->getSingleResult();
+            ->andWhere('s.status = :validated')->setParameter('validated', SessionStatus::Validated);
+        LatestValidation::restrict($validated);
+        $validated = $validated->getQuery()->getSingleResult();
+        $superseded = LatestValidation::supersededIds($sessions);
         $monthStart = $now->modify('first day of this month')->setTime(0, 0);
         $weekAgo = $now->modify('-7 days');
 
@@ -91,7 +94,7 @@ final class DashboardController
             'patientsThisWeek' => \count(array_filter($patients, static fn (Patient $p) => $p->getCreatedAt() >= $weekAgo)),
             'eligible' => \count(array_filter($patients, static fn (Patient $p) => EligibilityStatus::Eligible === $p->getEligibilityStatus())),
             'validatedSessions' => (int) $validated['total'],
-            'validatedThisMonth' => \count(array_filter($sessions, static fn (TrainingSession $s) => SessionStatus::Validated === $s->getStatus() && $s->getCompletedAt() >= $monthStart)),
+            'validatedThisMonth' => \count(array_filter($sessions, static fn (TrainingSession $s) => SessionStatus::Validated === $s->getStatus() && !isset($superseded[$s->getId()->toRfc4122()]) && $s->getCompletedAt() >= $monthStart)),
             'averageScore' => null === $validated['average'] ? null : (int) round((float) $validated['average']),
             'scoredSessions' => (int) $validated['scored'],
         ];
@@ -104,7 +107,7 @@ final class DashboardController
      *
      * @return list<array{month: string, sessions: int, completed: int}>
      */
-    private function monthly(array $sessions, \DateTimeImmutable $firstMonth): array
+    private function monthly(array $sessions, \DateTimeImmutable $firstMonth, array $superseded): array
     {
         $months = [];
         for ($i = 0; $i < 6; ++$i) {
@@ -117,7 +120,7 @@ final class DashboardController
             if (isset($months[$started])) {
                 ++$months[$started]['sessions'];
             }
-            $completed = SessionStatus::Validated === $session->getStatus() ? $session->getCompletedAt()?->format('Y-m') : null;
+            $completed = SessionStatus::Validated === $session->getStatus() && !isset($superseded[$session->getId()->toRfc4122()]) ? $session->getCompletedAt()?->format('Y-m') : null;
             if (null !== $completed && isset($months[$completed])) {
                 ++$months[$completed]['completed'];
             }

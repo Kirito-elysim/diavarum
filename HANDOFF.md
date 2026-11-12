@@ -120,3 +120,7 @@ Le bouton « Créer le parcours » ouvre une popup : systématiques grisées, op
 ## Point 3 — J-023
 
 Statistiques : score moyen des parcours (avec une séance validée dans la période, post-test exclu) et durée moyenne (parcours achevés dans la période) suivent la période ; post-test hors moyennes, compté comme séance réalisée. 175 tests API réussis. Non commité (depuis 54697b1). Reste : points 4 (anciens doublons de validation) et 5 (exports, mode screen), logs de connexion en attente.
+
+## Point 4 — J-024
+
+Dernière validation par cours et parcours pour l'activité des IDE et le tableau de bord (`LatestValidation`) ; historique conservé. 176 tests API réussis. Non commité (depuis b4467d0). Reste : point 5 (écrans/exports, mode screen), logs de connexion, comptage des doublons en production.
