@@ -197,6 +197,25 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
         self::assertSame(1860, $tracking['totalDurationSeconds']);
     }
 
+    public function testProgressRatioNeverExceedsTheSelectedCoursesAfterDeselectingAValidatedOne(): void
+    {
+        $cadre = $this->createUser(UserRole::Cadre, [$this->center]);
+        $id = $this->startSession();
+        $this->requestAs($this->ide, 'POST', "/api/sessions/$id/validate", $this->validPayload());
+        $tracking = $this->tracking();
+        self::assertSame([1, 1], [$tracking['validatedCount'], $tracking['selectedCount']]);
+
+        $this->requestAs($this->ide, 'PATCH', '/api/program_modules/'.$tracking['module']['id'], ['selected' => false]);
+        self::assertResponseIsSuccessful();
+        $after = $this->tracking();
+        self::assertSame([0, 0], [$after['validatedCount'], $after['selectedCount']], 'Numérateur et dénominateur sur les mêmes séances');
+        self::assertSame(75, $after['averageScore'], 'Le score de la séance validée reste dans la moyenne');
+        self::assertSame(1860, $after['totalDurationSeconds'], 'Et sa durée dans le temps cumulé');
+
+        $this->requestAs($cadre, 'POST', $this->iri($this->program).'/complete');
+        self::assertResponseIsSuccessful('Le parcours reste validable : une séance a bien été validée');
+    }
+
     public function testValidatedCourseCannotBeStartedOrValidatedAgain(): void
     {
         $id = $this->startSession();

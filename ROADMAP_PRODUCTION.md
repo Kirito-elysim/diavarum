@@ -29,8 +29,8 @@ Objectif : livrer un catalogue exploitable sur tablette, des KPI cohérents entr
 - [ ] Ajouter la suppression définitive selon l’arbitrage du lot 0, avec droits par centre, confirmation prévue au §3.4, contrôle des dépendances et exclusion des statistiques. Recetter séparément l’archivage et la restauration.
 - [x] J-029 : limite de six compétences alignée (constante unique côté API, constante unique dans l'éditeur, import, création directe, validation IDE) ; tests aux limites (6 acceptées, 7 refusées) ; cours existants compatibles (maximum de six actives en base locale).
 - [ ] Vérifier les parcours de bout en bout : CODEX, décision d’éligibilité, sélection et confirmation sans cours optionnel, interruption, rappel à partir de trois cours inachevés, reprise depuis le début, validation IDE et clôture par le cadre.
-- [ ] Vérifier le ratio de progression sur les écrans concernés, notamment après désélection d’un cours déjà validé. Confirmer le numérateur et le dénominateur attendus.
-- [ ] Vérifier sur tablette le chronomètre, la pause, la sortie protégée par code, les exercices formatifs signalés comme non notés et l’absence de résultats pour une séance interrompue ou un aperçu.
+- [x] J-030 : ratio de progression = séances validées parmi les séances sélectionnées / séances sélectionnées, sur tous les écrans (fiche, Parcours bis, liste des parcours, bilans) ; une séance validée puis désélectionnée reste dans les moyennes, durées et le bilan mais plus dans le ratio. Test API ajouté.
+- [ ] Vérifier sur tablette le chronomètre, la pause, la sortie protégée par code, les exercices formatifs signalés comme non notés et l’absence de résultats pour une séance interrompue ou un aperçu. (J-030 : chronomètre, pause, reprise, sortie par le code, durée envoyée et relance à zéro recettés par `e2e/stopwatch.mjs` sur navigateur tactile émulé ; reste la recette sur la tablette physique, les exercices non notés et l'aperçu.)
 
 ## Lot 3 — Contenus et template
 

@@ -161,7 +161,7 @@ final class TrainingWorkflow
         if (ProgramStatus::Active !== $program->getStatus()) {
             throw new WorkflowException('Seul un parcours en cours peut être validé.');
         }
-        if (0 === $program->getValidatedCount()) {
+        if (!$program->hasValidatedModule()) {
             throw new WorkflowException('Aucune séance n\'a encore été validée.');
         }
 

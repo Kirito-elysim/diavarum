@@ -277,11 +277,20 @@ class TrainingProgram implements CenterScopedInterface, AuthoredInterface
         return $this->modules->filter(static fn (ProgramModule $m) => $m->isSelected())->count();
     }
 
-    /** Séances validées, y compris celles désélectionnées après coup */
+    /**
+     * Séances validées parmi les séances sélectionnées : numérateur du ratio de progression (jamais supérieur à
+     * getSelectedCount). Une séance validée puis désélectionnée reste dans le bilan, les moyennes et les durées.
+     */
     #[Groups(['program:read', 'program:list'])]
     public function getValidatedCount(): int
     {
-        return $this->modules->filter(static fn (ProgramModule $m) => null !== $m->getValidatedAt())->count();
+        return $this->modules->filter(static fn (ProgramModule $m) => $m->isSelected() && null !== $m->getValidatedAt())->count();
+    }
+
+    /** Au moins une séance validée, désélectionnée ou non (condition pour valider le parcours) */
+    public function hasValidatedModule(): bool
+    {
+        return $this->modules->exists(static fn (int $key, ProgramModule $m) => null !== $m->getValidatedAt());
     }
 
     /** Moyenne des scores des séances validées (%), null si aucune séance notée */

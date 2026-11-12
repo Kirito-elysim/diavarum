@@ -223,10 +223,7 @@ Le lecteur de séance utilise un verrou de navigation : un retour navigateur dem
 
 La cible indiquée dans le cahier des charges est la Tab A11+ 11 pouces, en ligne. Les essais automatisés utilisent un navigateur tactile émulé ; la recette physique sur ce modèle reste à réaliser. Le verrou applicatif protège la navigation dans l’onglet ; il ne remplace pas un mode kiosque Android pour bloquer les boutons système ou l’ouverture d’un autre navigateur.
 
-Le profil patient dispose d’un onglet de saisie libre : notes médicales/administratives et questions/réponses ajoutées par l’IDE. Son résumé apparaît dans le parcours et lors du lancement d’une nouvelle séance. Les questions métier fixes restent à fournir et à valider ; cette saisie ne constitue pas un questionnaire médical validé et ne détermine pas automatiquement l’éligibilité. Les données sont stockées dans la clé `profile` des champs JSON existants (`notes`, `answers`), en préservant leurs autres clés. Aucune migration supplémentaire.
-
-`node e2e/patient-profile.mjs` contrôle la saisie tactile, la reprise après erreur d’enregistrement, la conservation des données existantes, le résumé du parcours, le rechargement et l’annulation. Les écritures patient sont interceptées ; aucun dossier réel n’est modifié.
-
+L’onglet « Profil patient » (saisie libre de notes et de questions/réponses) a été retiré : le test CODEX couvre ce besoin. Les champs `medicalData` et `administrativeData` restent en base et dans l’API, sans interface de saisie, en attendant un éventuel questionnaire validé.
 
 ### Éditeur pédagogique (13 octobre 2026)
 

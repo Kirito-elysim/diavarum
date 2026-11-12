@@ -144,3 +144,7 @@ Décisions : six compétences ; suppression définitive d'un patient archivé (c
 ## Six compétences — J-029
 
 Limite alignée (API déjà à six ; éditeur sur une constante unique ; tests aux limites). 189 tests API réussis. Non commité (depuis 64e601f). Reste du lot 2 : parcours de bout en bout, ratio de progression, tablette, questionnaire médical.
+
+## Profil retiré, ratio, chronomètre — J-030
+
+Onglet et carte « Profil patient » retirés (données conservées en base) ; ratio de progression corrigé (séances sélectionnées des deux côtés) ; chronomètre recetté par `e2e/stopwatch.mjs`. 190 tests API réussis. Non commité (depuis 795bcb3). Reste du lot 2 : parcours de bout en bout, tablette physique, questionnaire médical (plus d'emplacement dans la fiche), recette archivage/restauration.

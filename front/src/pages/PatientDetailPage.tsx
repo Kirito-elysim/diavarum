@@ -1,5 +1,4 @@
 import { PatientProgramBis, PatientCompetencies } from '../components/PatientProgramBis';
-import { PatientProfile, PatientProfileSummary } from '../components/PatientProfile';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -189,7 +188,6 @@ export default function PatientDetailPage() {
 
       <Tabs defaultValue={patient.eligibilityStatus === 'eligible' ? 'parcours' : 'eligibility'} className="space-y-4">
         <TabsList className="patient-detail-tabs w-full border-b border-slate-200 bg-transparent p-0 h-auto rounded-none">
-          <TabsTrigger value="profile" className="rounded-lg px-4 py-2 text-sm"><User className="w-4 h-4 mr-2" />Profil patient</TabsTrigger>
           <TabsTrigger value="parcours" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Route className="w-4 h-4 mr-2" />Parcours
           </TabsTrigger>
@@ -204,9 +202,7 @@ export default function PatientDetailPage() {
         </TabsList>
 
         {/* Patient archivé : consultation seule (un fieldset désactivé neutralise boutons et champs) */}
-        <TabsContent value="profile"><fieldset disabled={!!patient.removedAt} className="contents"><PatientProfile key={patient.id} patient={patient} /></fieldset></TabsContent>
         <TabsContent value="parcours" className="space-y-4">
-          <PatientProfileSummary patient={patient} />
           <fieldset disabled={!!patient.removedAt} className="contents"><ProgramSection patient={patient} program={program ?? null} /></fieldset>
         </TabsContent>
         <TabsContent value="parcours-bis">
@@ -760,7 +756,7 @@ function CodexSummary({ patient }: { patient: Patient }) {
   return (
     <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-white ring-1 ring-gray-100 text-sm">
       <ShieldCheck className="w-4 h-4 text-gray-400" />
-      <span className="text-gray-500">Profil patient — test CODEX :</span>
+      <span className="text-gray-500">Test CODEX :</span>
       {last ? (
         <span className={last.passed ? 'text-green-700 font-medium' : 'text-red-600 font-medium'}>
           {last.clockChecks ? (last.passed ? 'normal' : 'anormal') : (last.passed ? 'réussi (ancien protocole)' : 'échec (ancien protocole)')} le {formatDate(last.createdAt)} (horloge {last.clockTestPassed ? '✓' : '✗'}, mots {last.wordRecallPassed ? '✓' : '✗'})
