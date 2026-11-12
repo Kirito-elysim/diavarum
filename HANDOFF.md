@@ -148,3 +148,7 @@ Limite alignée (API déjà à six ; éditeur sur une constante unique ; tests a
 ## Profil retiré, ratio, chronomètre — J-030
 
 Onglet et carte « Profil patient » retirés (données conservées en base) ; ratio de progression corrigé (séances sélectionnées des deux côtés) ; chronomètre recetté par `e2e/stopwatch.mjs`. 190 tests API réussis. Non commité (depuis 795bcb3). Reste du lot 2 : parcours de bout en bout, tablette physique, questionnaire médical (plus d'emplacement dans la fiche), recette archivage/restauration.
+
+## Parcours de bout en bout — J-031
+
+Rejoué par un test d'API complet sur la base de test et par les scripts navigateur à écritures simulées (tous réussis). Le scénario réel `make e2e` n'a pas été lancé (il efface la base locale ; sauvegarde existante dans `backups/`). Écart à trancher : rappel dès un cours inachevé (code) ou à partir de trois (feuille de route). Non commité (depuis e1cf37e).

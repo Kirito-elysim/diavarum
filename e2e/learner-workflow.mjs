@@ -34,6 +34,7 @@ try {
  await page.route(/\/api\/training_programs\/[0-9a-f-]{36}$/, async route => {
   const response = await route.fetch();
   const program = await response.json();
+  program.status = 'actif'; program.activityStatus = 'actif'; // indépendant de l'état local du parcours (clôturé, interrompu…)
   for (const item of program.modules ?? []) {
    if (!item.module.mandatory) item.selected = false;
    if (!validation) { item.startedAt = null; item.status = 'non_demarre'; }
