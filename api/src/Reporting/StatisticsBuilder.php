@@ -39,7 +39,7 @@ final class StatisticsBuilder
      *
      * @return array<string, mixed>
      */
-    public function build(array $centers, bool $national, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null, bool $screen = false): array
+    public function build(array $centers, bool $national, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null): array
     {
         $inPeriod = static fn (?\DateTimeInterface $date): bool => null !== $date
             && (null === $from || $date >= $from) && (null === $to || $date <= $to);
@@ -60,6 +60,15 @@ final class StatisticsBuilder
         foreach ($programs as $program) {
             $programsByCenter[$program->getPatient()->getCenter()->getId()->toRfc4122()][] = $program;
         }
+        // Archivés à date : comptés à part, jamais dans les indicateurs
+        $archivedByCenter = [];
+        foreach ($this->entityManager->createQueryBuilder()
+            ->select('IDENTITY(p.center) AS center', 'COUNT(p.id) AS archived')->from(Patient::class, 'p')
+            ->andWhere('p.center IN (:centers)')->andWhere('p.removedAt IS NOT NULL')->groupBy('p.center')
+            ->setParameter('centers', $centers)->getQuery()->getArrayResult() as $row) {
+            $archivedByCenter[(string) $row['center']] = (int) $row['archived'];
+        }
+
         $patientsByCenter = [];
         foreach ($patients as $patient) {
             $patientsByCenter[$patient->getCenter()->getId()->toRfc4122()][] = $patient;
@@ -69,7 +78,7 @@ final class StatisticsBuilder
             $patientsByCenter[$center->getId()->toRfc4122()] ?? [],
             $programsByCenter[$center->getId()->toRfc4122()] ?? [],
             $inPeriod,
-            $screen,
+            $archivedByCenter[$center->getId()->toRfc4122()] ?? 0,
         ), $centers);
 
         return [
@@ -78,9 +87,9 @@ final class StatisticsBuilder
             'generatedAt' => new \DateTimeImmutable(),
             'period' => ['from' => $from?->format('Y-m-d'), 'to' => $to?->format('Y-m-d')],
             'centers' => $perCenter,
-            'total' => ['center' => $national ? 'National' : 'Total'] + $this->aggregate($patients, $programs, $inPeriod, $screen),
+            'total' => ['center' => $national ? 'National' : 'Total'] + $this->aggregate($patients, $programs, $inPeriod, array_sum($archivedByCenter)),
             'courses' => $this->courses($programs, $inPeriod),
-            'nurses' => $this->nurses($centers, $from, $to, $screen),
+            'nurses' => $this->nurses($centers, $from, $to),
             'monthly' => $this->monthly($programs, $inPeriod, $from, $to),
             'interruptionReasons' => $this->interruptionReasons($programs, $inPeriod),
         ];
@@ -93,7 +102,7 @@ final class StatisticsBuilder
      *
      * @return array<string, mixed>
      */
-    private function aggregate(array $patients, array $programs, \Closure $inPeriod, bool $screen = false): array
+    private function aggregate(array $patients, array $programs, \Closure $inPeriod, int $archived = 0): array
     {
         $sessionScores = [];
         $validatedSessions = 0;
@@ -111,6 +120,7 @@ final class StatisticsBuilder
         $registered = \count($patients);
         $countPatients = static fn (EligibilityStatus $status) => \count(array_filter($patients, static fn (Patient $p) => $p->getEligibilityStatus() === $status));
         $totalPrograms = \count($programs);
+        $countActivity = static fn (string $status) => \count(array_filter($programs, static fn (TrainingProgram $p) => $status === $p->getActivityStatus()));
         $countPrograms = static fn (ProgramStatus $status) => \count(array_filter($programs, static fn (TrainingProgram $p) => $p->getStatus() === $status));
 
         // Score d'un parcours : cours validés (score définitif), post-test exclu ; compte dès qu'un cours est validé dans la période
@@ -133,15 +143,16 @@ final class StatisticsBuilder
         return [
             'patients' => [
                 'registered' => $registered,
+                'archived' => $archived,
                 'eligible' => self::share($countPatients(EligibilityStatus::Eligible), $registered),
                 'notEligible' => self::share($countPatients(EligibilityStatus::NotEligible), $registered),
                 'pending' => self::share($countPatients(EligibilityStatus::Registered), $registered),
             ],
             'programs' => [
                 'total' => $totalPrograms,
-                'inactive' => self::share($screen ? \count(array_filter($programs, static fn (TrainingProgram $p) => 'non_actif' === $p->getActivityStatus())) : $countPrograms(ProgramStatus::Inactive), $totalPrograms),
-                ...($screen ? ['notStarted' => self::share(\count(array_filter($programs, static fn (TrainingProgram $p) => 'non_demarre' === $p->getActivityStatus())), $totalPrograms)] : []),
-                'active' => self::share($screen ? \count(array_filter($programs, static fn (TrainingProgram $p) => 'actif' === $p->getActivityStatus())) : $countPrograms(ProgramStatus::Active), $totalPrograms),
+                'inactive' => self::share($countActivity('non_actif'), $totalPrograms),
+                'notStarted' => self::share($countActivity('non_demarre'), $totalPrograms),
+                'active' => self::share($countActivity('actif'), $totalPrograms),
                 'interrupted' => self::share($countPrograms(ProgramStatus::Interrupted), $totalPrograms),
                 'completed' => self::share($countPrograms(ProgramStatus::Completed), $totalPrograms),
             ],
@@ -205,7 +216,7 @@ final class StatisticsBuilder
      *
      * @return list<array<string, mixed>>
      */
-    private function nurses(array $centers, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to, bool $screen = false): array
+    private function nurses(array $centers, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to): array
     {
         if ([] === $centers) {
             return [];
@@ -215,7 +226,7 @@ final class StatisticsBuilder
             ->select('IDENTITY(s.nurse) AS nurse', 'COUNT(s.id) AS sessions', 'COALESCE(SUM(s.durationSeconds), 0) AS duration',
                 'COUNT(DISTINCT s.patient) AS patients', "AVG(CASE WHEN m.code <> 'PT' THEN s.score ELSE NULL END) AS score")
             ->from(TrainingSession::class, 's')->join('s.patient', 'p')->join('s.module', 'm')
-            ->andWhere('p.center IN (:centers)')->andWhere('s.status = :validated')
+            ->andWhere('p.center IN (:centers)')->andWhere('p.removedAt IS NULL')->andWhere('s.status = :validated')
             ->setParameter('centers', $centers)->setParameter('validated', SessionStatus::Validated)
             ->groupBy('s.nurse');
         LatestValidation::restrict($query);
@@ -225,7 +236,6 @@ final class StatisticsBuilder
         if (null !== $to) {
             $query->andWhere('s.completedAt <= :to')->setParameter('to', $to, Types::DATETIMETZ_IMMUTABLE);
         }
-        if ($screen) $query->andWhere('p.removedAt IS NULL');
         $activity = $query->getQuery()->getArrayResult();
         $byNurse = array_column($activity, null, 'nurse');
 

@@ -83,7 +83,7 @@ final class ReportingController
     #[IsGranted('ROLE_CADRE')]
     public function statistics(Request $request, #[CurrentUser] User $user): JsonResponse
     {
-        $stats = $this->buildStatistics($request, $user, true);
+        $stats = $this->buildStatistics($request, $user);
         $stats['generatedAt'] = $stats['generatedAt']->format(\DATE_ATOM);
 
         return new JsonResponse($stats);
@@ -119,13 +119,13 @@ final class ReportingController
     /**
      * @return array<string, mixed>
      */
-    private function buildStatistics(Request $request, User $user, bool $screen = false): array
+    private function buildStatistics(Request $request, User $user): array
     {
         $requested = $request->query->all('centers');
         $centers = $this->scope->centers($user, $requested);
         [$from, $to] = self::period($request);
 
-        return $this->statistics->build($centers, $this->scope->isNationalAdmin() && [] === $requested, $from, $to, $screen);
+        return $this->statistics->build($centers, $this->scope->isNationalAdmin() && [] === $requested, $from, $to);
     }
 
     /**

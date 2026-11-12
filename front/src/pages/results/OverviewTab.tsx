@@ -2,7 +2,7 @@ import { Bar, CartesianGrid, Cell, ComposedChart, Legend, Line, Pie, PieChart, R
 import { BarChart2, CirclePause } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import type { Statistics } from '../../api/types';
-import { formatDate } from '../../lib/format';
+import { formatDate, formatDuration } from '../../lib/format';
 import { DIAVERUM_GREEN, ORANGE } from './shared';
 import { EmptyState } from '../../components/ListParts';
 
@@ -11,7 +11,7 @@ const STATUS_COLORS = { notStarted: '#d1d5db', inactive: '#f97316', active: '#3b
 /** Vue d'ensemble : entonnoir des patients, statut des parcours, activité mensuelle, motifs de clôture */
 export function OverviewTab({ stats }: { stats: Statistics }) {
   const { patients, programs } = stats.total;
-  const inProgram = programs.active.count + (programs.notStarted ? programs.inactive.count : 0) + programs.interrupted.count + programs.completed.count;
+  const inProgram = programs.active.count + programs.inactive.count + programs.interrupted.count + programs.completed.count;
   const funnel = [
     { label: 'Patients non archivés', value: patients.registered },
     { label: 'Éligibles', value: patients.eligible.count },
@@ -19,8 +19,8 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
     { label: 'Parcours achevés', value: programs.completed.count },
   ];
   const statuses = [
-    { key: 'notStarted', label: 'Non démarrés', value: programs.notStarted?.count ?? programs.inactive.count },
-    { key: 'inactive', label: 'Inactifs (15 jours)', value: programs.notStarted ? programs.inactive.count : 0 },
+    { key: 'notStarted', label: 'Non démarrés', value: programs.notStarted.count },
+    { key: 'inactive', label: 'Inactifs (15 jours)', value: programs.inactive.count },
     { key: 'active', label: 'En cours', value: programs.active.count },
     { key: 'interrupted', label: 'Clôturés', value: programs.interrupted.count },
     { key: 'completed', label: 'Achevés', value: programs.completed.count },
@@ -30,6 +30,21 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
 
   return (
     <div className="grid gap-5 lg:grid-cols-2">
+      <Card className="border-0 shadow-sm ring-1 ring-gray-100 lg:col-span-2">
+        <CardContent className="grid gap-4 p-5 sm:grid-cols-2">
+          <div>
+            <p className="text-sm text-gray-500">Score moyen des parcours</p>
+            <p className="text-3xl font-bold tabular-nums text-gray-900">{stats.total.averageProgramScore != null ? `${stats.total.averageProgramScore} %` : '—'}</p>
+            <p className="text-xs text-gray-400">Parcours avec au moins une séance validée sur la période, post-test exclu.</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Durée moyenne d'un parcours</p>
+            <p className="text-3xl font-bold tabular-nums text-gray-900">{stats.total.averageCompletedProgramDurationSeconds != null ? formatDuration(stats.total.averageCompletedProgramDurationSeconds) : '—'}</p>
+            <p className="text-xs text-gray-400">Parcours achevés sur la période.</p>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="border-0 shadow-sm ring-1 ring-gray-100">
         <CardHeader className="pb-2"><CardTitle className="text-base">Du patient enregistré au parcours achevé</CardTitle></CardHeader>
         <CardContent className="space-y-3">
@@ -50,7 +65,7 @@ export function OverviewTab({ stats }: { stats: Statistics }) {
           <div className="border-t border-gray-100 pt-3 space-y-2">
             {[{label: 'Éligibles', share: patients.eligible}, {label: 'Non éligibles', share: patients.notEligible}, {label: 'En attente de décision', share: patients.pending}].map(({label, share}) => <div key={label} className="flex justify-between text-sm"><span className="text-gray-600">{label}</span><span className="tabular-nums font-medium">{share.count} <span className="font-normal text-gray-400">({share.percent != null ? `${share.percent} %` : '—'})</span></span></div>)}
           </div>
-          <p className="text-xs text-gray-400 pt-1">Effectifs à date, en pourcentage des patients non archivés.</p>
+          <p className="text-xs text-gray-400 pt-1">Effectifs à date, en pourcentage des patients non archivés. Archivés, hors indicateurs : {patients.archived}.</p>
         </CardContent>
       </Card>
 

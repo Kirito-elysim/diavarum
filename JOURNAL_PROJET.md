@@ -232,3 +232,17 @@ Ajouter les nouvelles entrées à la suite. Utiliser un identifiant stable, une 
 - **Test** : `testOnlyTheLatestValidationOfACourseCountsForSessionBasedFigures` (deux validations du même cours : une seule compte pour l'IDE, les statistiques et le tableau de bord). Le test existant `testNurseSeesOnlyHerOwnSessionsInHerCenters` validait trois fois le même cours dans le même parcours : ses séances portent maintenant sur des cours distincts.
 - **Vérifications** : suite API 176 tests / 1053 assertions. Non vérifié : performance du sous-select sur un gros volume (à mesurer avec le lot « volume représentatif » des améliorations à planifier) ; affichage des écrans.
 - **Reste** : les séances interrompues (traitement à confirmer : elles ne comptent déjà pas comme validées) ; vérifier en production s'il existe réellement des doublons ; point 5.
+
+## J-025 — 12 novembre 2026 — Point 5 : écrans et exports alignés
+
+- **Décisions validées par l'utilisateur** : exports sur les mêmes règles que les écrans ; ligne « Archivés (hors indicateurs) » par centre dans les statistiques ; score moyen et durée moyenne des parcours affichés à l'écran.
+- **Changements** : suppression du mode « historique » : `StatisticsBuilder::build` n'a plus de paramètre `screen` (statuts d'activité partout, archivés exclus de l'activité des IDE), `ReportingController` simplifié ; nouveaux champs `patients.archived` (compte à date par centre, jamais dans les indicateurs) et `programs.notStarted` toujours présent ; Excel : colonnes « Non démarrés », « Inactifs (15 jours) » (remplace « Non actifs »), « Archivés (hors indicateurs) » ; PDF : mêmes colonnes ; écran Vue d'ensemble : tuiles « Score moyen des parcours » et « Durée moyenne d'un parcours » avec leur règle, mention des archivés ; types front resserrés.
+- **Test** : `testStatisticsExcelMatchesTheScreenFigures` compare l'Excel à l'écran (patients, archivés, statuts de parcours, score moyen, séances des IDE) sur les mêmes filtres ; un archivé est compté à part et absent des indicateurs.
+- **Vérifications** : suite API 177 tests / 1060 assertions ; TypeScript et ESLint sans erreur ; navigateur : tuiles affichées sur les résultats nationaux (score 63 %, durée 3 h 21). `KPI_REGLES.md` réécrit (moyennes, périodes, post-test, doublons, écrans = exports).
+- **Non vérifié** : rendu visuel des PDF statistiques ; rapprochement automatisé du PDF (même source de données que l'Excel mais non comparé cellule à cellule) ; droits IDE/cadre/administrateur des exports revérifiés par la suite existante seulement ; volumes importants.
+- **Reste du lot 1** : logs de connexion/déconnexion (décision utilisateur en attente) ; doublons de production à compter ; revue visuelle des PDF ; le lot 1 n'est pas marqué terminé.
+
+## J-026 — 12 novembre 2026 — Logs de connexion : pas d'export
+
+- **Décision validée par l'utilisateur** : aucun export des connexions et déconnexions (option « pas de logs » retenue). Clôt la question laissée en attente en J-014. Le journal d'accès existant reste inchangé (lecture réservée à l'administrateur national).
+- **Reste du lot 1** : doublons de production à compter, revue visuelle des PDF, recette des droits par rôle sur les exports. Lot 1 non terminé.

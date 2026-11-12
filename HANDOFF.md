@@ -124,3 +124,11 @@ Statistiques : score moyen des parcours (avec une séance validée dans la péri
 ## Point 4 — J-024
 
 Dernière validation par cours et parcours pour l'activité des IDE et le tableau de bord (`LatestValidation`) ; historique conservé. 176 tests API réussis. Non commité (depuis b4467d0). Reste : point 5 (écrans/exports, mode screen), logs de connexion, comptage des doublons en production.
+
+## Point 5 — J-025
+
+Écrans, Excel et PDF des statistiques partagent un seul calcul ; archivés comptés à part ; score moyen et durée moyenne affichés à l'écran ; test de rapprochement Excel/écran. 177 tests API réussis. `KPI_REGLES.md` mis à jour. Non commité (depuis a21e410). Lot 1 non terminé : logs de connexion (décision), doublons en production, revue visuelle des PDF.
+
+## Logs de connexion — J-026
+
+Décision : pas d'export des connexions/déconnexions. Reste du lot 1 : comptage des doublons en production, revue visuelle des PDF, recette des droits par rôle.

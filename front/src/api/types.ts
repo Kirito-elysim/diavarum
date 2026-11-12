@@ -226,8 +226,8 @@ export interface Share {
 
 export interface AreaStatistics {
   center: string;
-  patients: { registered: number; eligible: Share; notEligible: Share; pending: Share };
-  programs: { total: number; notStarted?: Share; inactive: Share; active: Share; interrupted: Share; completed: Share };
+  patients: { registered: number; archived: number; eligible: Share; notEligible: Share; pending: Share };
+  programs: { total: number; notStarted: Share; inactive: Share; active: Share; interrupted: Share; completed: Share };
   averageProgramScore: number | null;
   averageCompletedProgramDurationSeconds: number | null;
   /** Activité sur la période demandée (toute l'activité sans période) */

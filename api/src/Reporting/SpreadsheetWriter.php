@@ -109,20 +109,22 @@ final class SpreadsheetWriter
 
         $patients = $book->getActiveSheet()->setTitle('Patients');
         $this->table($patients, [
-            'Centre', 'Patients enregistrés', 'Éligibles', '% éligibles', 'Non éligibles', '% non éligibles', 'Éligibilité à statuer', '% à statuer',
+            'Centre', 'Patients enregistrés', 'Éligibles', '% éligibles', 'Non éligibles', '% non éligibles', 'Éligibilité à statuer', '% à statuer', 'Archivés (hors indicateurs)',
         ], array_map(static fn (array $a) => [
             $a['center'], $a['patients']['registered'],
             $a['patients']['eligible']['count'], $a['patients']['eligible']['percent'],
             $a['patients']['notEligible']['count'], $a['patients']['notEligible']['percent'],
             $a['patients']['pending']['count'], $a['patients']['pending']['percent'],
+            $a['patients']['archived'],
         ], $areas), $this->caption($stats));
 
         $programs = $book->createSheet()->setTitle('Parcours');
         $this->table($programs, [
-            'Centre', 'Parcours', 'Non actifs', '%', 'En cours', '%', 'Interrompus', '%', 'Achevés', '%',
+            'Centre', 'Parcours', 'Non démarrés', '%', 'Inactifs (15 jours)', '%', 'En cours', '%', 'Interrompus', '%', 'Achevés', '%',
             'Score moyen des parcours (%) · parcours avec une séance validée dans la période', 'Durée moyenne d\'un parcours (min) · parcours achevés dans la période',
         ], array_map(static fn (array $a) => [
             $a['center'], $a['programs']['total'],
+            $a['programs']['notStarted']['count'], $a['programs']['notStarted']['percent'],
             $a['programs']['inactive']['count'], $a['programs']['inactive']['percent'],
             $a['programs']['active']['count'], $a['programs']['active']['percent'],
             $a['programs']['interrupted']['count'], $a['programs']['interrupted']['percent'],

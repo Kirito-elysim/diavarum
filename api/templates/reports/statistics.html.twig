@@ -18,12 +18,12 @@
 
 <h2>Patients</h2>
 <table>
-    <thead><tr><th>Centre</th><th class="num">Enregistrés</th><th class="num">Éligibles</th><th class="num">Non éligibles</th><th class="num">À statuer</th></tr></thead>
+    <thead><tr><th>Centre</th><th class="num">Enregistrés</th><th class="num">Éligibles</th><th class="num">Non éligibles</th><th class="num">À statuer</th><th class="num">Archivés <span class="small">(hors indicateurs)</span></th></tr></thead>
     <tbody>
     {% for a in s.centers|merge([s.total]) %}
         <tr class="{{ loop.last ? 'total' }}">
             <td>{{ a.center }}</td><td class="num">{{ a.patients.registered }}</td>
-            <td class="num">{{ f.share(a.patients.eligible) }}</td><td class="num">{{ f.share(a.patients.notEligible) }}</td><td class="num">{{ f.share(a.patients.pending) }}</td>
+            <td class="num">{{ f.share(a.patients.eligible) }}</td><td class="num">{{ f.share(a.patients.notEligible) }}</td><td class="num">{{ f.share(a.patients.pending) }}</td><td class="num">{{ a.patients.archived }}</td>
         </tr>
     {% endfor %}
     </tbody>
@@ -31,12 +31,12 @@
 
 <h2>Parcours</h2>
 <table>
-    <thead><tr><th>Centre</th><th class="num">Non actifs</th><th class="num">En cours</th><th class="num">Interrompus</th><th class="num">Achevés</th><th class="num">Score moyen</th><th class="num">Durée moy. (achevés)</th></tr></thead>
+    <thead><tr><th>Centre</th><th class="num">Non démarrés</th><th class="num">Inactifs (15 j)</th><th class="num">En cours</th><th class="num">Interrompus</th><th class="num">Achevés</th><th class="num">Score moyen</th><th class="num">Durée moy. (achevés)</th></tr></thead>
     <tbody>
     {% for a in s.centers|merge([s.total]) %}
         <tr class="{{ loop.last ? 'total' }}">
             <td>{{ a.center }}</td>
-            <td class="num">{{ f.share(a.programs.inactive) }}</td><td class="num">{{ f.share(a.programs.active) }}</td>
+            <td class="num">{{ f.share(a.programs.notStarted) }}</td><td class="num">{{ f.share(a.programs.inactive) }}</td><td class="num">{{ f.share(a.programs.active) }}</td>
             <td class="num">{{ f.share(a.programs.interrupted) }}</td><td class="num">{{ f.share(a.programs.completed) }}</td>
             <td class="num">{{ a.averageProgramScore is not null ? a.averageProgramScore ~ ' %' : '—' }}</td>
             <td class="num">{{ f.minutes(a.averageCompletedProgramDurationSeconds) }}</td>

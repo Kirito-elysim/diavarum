@@ -23,14 +23,15 @@ Les compteurs de statuts ont pour dénominateur les parcours des patients non ar
 
 La migration reprend la plus récente des dates connues : premier démarrage, démarrages de séances, validations de séances et dates de suivi des modules. Elle ne peut pas reconstituer un événement absent de l’historique.
 
-## Calculs existants conservés, à revoir avec les bilans et exports
+## Moyennes, durées et période (J-019, J-023, J-024)
 
-L’activité filtrée par période inclut les dates de validation entre les deux bornes incluses. Les dates de filtre sont interprétées dans le fuseau Europe/Paris côté reporting. Les moyennes ignorent les scores absents et conservent les vrais zéros. Les durées de séances interrompues ne sont pas comptées comme des durées validées.
+- **Score d'un cours** : pourcentage de réponses justes sur les exercices notés ; une validation est définitive. Chaque cours pèse autant. Un cours sans note est exclu des moyennes, un vrai 0 est inclus ; arrondi à l'entier.
+- **Score de chapitre** (Parcours bis) : moyenne simple des cours validés et notés du chapitre, désélectionnés compris, post-test exclu ; « — » sans cours noté.
+- **Score d'un parcours** : moyenne de ses cours validés, post-test exclu. Le post-test est affiché à part.
+- **Statistiques, avec une période** : score moyen des parcours = parcours ayant au moins une séance validée dans la période (post-test exclu), chacun avec son score ; durée moyenne d'un parcours = parcours **achevés dans la période** (date de clôture) ; « — » si aucun. Sans période : tout l'historique. Bornes incluses, heure de Paris. Effectifs et statuts : à date.
+- **Post-test** : hors de toutes les moyennes de score, ligne distincte dans le tableau des cours, compté comme séance réalisée.
+- **Anciennes validations répétées** : pour les chiffres fondés sur les séances (activité des IDE, tableau de bord), seule la dernière validation de chaque cours dans chaque parcours compte ; l'historique est conservé (`LatestValidation`). Les durées de séances interrompues ne sont pas comptées comme validées.
 
-Les statistiques générales retiennent le suivi validé par module du parcours ; les activités IDE et certains compteurs du tableau de bord interrogent les séances validées. Pour les nouveaux parcours sans doublon, ces règles convergent. Un arbitrage reste nécessaire pour d’anciennes validations répétées ; elles ne sont ni supprimées ni fusionnées dans cette passe.
+## Écrans et exports (J-025)
 
-La durée moyenne des parcours est actuellement celle des parcours achevés, toutes dates. Le score moyen des parcours est calculé à date sur les parcours ayant une note ; les moyennes de cours et l’activité suivent la période choisie. La pondération par chapitre, le rôle du post-test et la portée temporelle des moyennes de parcours restent à préciser avant changement.
-
-## Bilans et exports en attente
-
-À la demande utilisateur, les générateurs de bilans patient, Excel et PDF et leurs calculs ne sont pas modifiés en J-008. La synthèse exportée conserve temporairement l’ancienne classification des parcours et le périmètre historique de l’activité IDE. Les écrans et exports ne sont donc pas encore certifiés équivalents. Un point fonctionnel est requis avant modification et rapprochement des résultats. Le lot 1 reste ouvert.
+Écrans, Excel et PDF des statistiques utilisent le même calcul (plus de mode « historique ») : statuts d'activité (non démarré, inactif 15 jours, en cours, clôturé, achevé), patients archivés exclus de tous les indicateurs, y compris l'activité des IDE. Les archivés sont comptés à part, par centre (« Archivés, hors indicateurs »). Un test compare les cellules de l'Excel aux chiffres de l'écran sur les mêmes filtres.

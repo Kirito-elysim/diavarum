@@ -174,6 +174,42 @@ final class ReportingTest extends ApiTestCaseBase
         self::assertStringStartsWith('%PDF', $stats->getContent());
     }
 
+    public function testStatisticsExcelMatchesTheScreenFigures(): void
+    {
+        $archived = $this->createPatient($this->paris, $this->ideParis, 'Ancien');
+        $archived->archive();
+        $this->em()->flush();
+        $today = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))->format('Y-m-d');
+        $query = "?from=$today&to=$today";
+
+        $screen = $this->statisticsAs($this->cadreParis, $query);
+        $response = $this->requestAs($this->cadreParis, 'GET', '/api/exports/statistics.xlsx'.$query);
+        $file = tempnam(sys_get_temp_dir(), 'xlsx');
+        file_put_contents($file, $response->getContent());
+        $book = IOFactory::load($file);
+        unlink($file);
+        $lastRow = static function (string $sheet) use ($book): array {
+            $rows = array_values(array_filter($book->getSheetByName($sheet)->toArray(null, true, false), static fn (array $r) => null !== $r[0]));
+
+            return end($rows);
+        };
+
+        $total = $screen['total'];
+        $patients = $lastRow('Patients');
+        self::assertSame([$total['patients']['registered'], $total['patients']['eligible']['count'], $total['patients']['archived']], [$patients[1], $patients[2], $patients[8]]);
+        self::assertSame(1, $total['patients']['archived'], 'Archivé compté à part');
+        self::assertSame(2, $total['patients']['registered'], 'Et jamais dans les indicateurs');
+
+        $programs = $lastRow('Parcours');
+        self::assertSame(
+            [$total['programs']['total'], $total['programs']['notStarted']['count'], $total['programs']['inactive']['count'], $total['programs']['active']['count'], $total['programs']['interrupted']['count'], $total['programs']['completed']['count'], $total['averageProgramScore']],
+            [$programs[1], $programs[2], $programs[4], $programs[6], $programs[8], $programs[10], $programs[12]],
+        );
+
+        $nurses = array_values(array_filter($book->getSheetByName('IDE')->toArray(null, true, false), static fn (array $r) => null !== $r[0] && 'IDE' !== $r[0] && !str_starts_with((string) $r[0], 'Activité')));
+        self::assertSame(array_sum(array_column($screen['nurses'], 'validatedSessions')), array_sum(array_column($nurses, 2)));
+    }
+
     public function testOnlyTheLatestValidationOfACourseCountsForSessionBasedFigures(): void
     {
         $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => 'S97']);
