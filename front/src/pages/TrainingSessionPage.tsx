@@ -128,7 +128,7 @@ function InfoCardView({ block }: { block: InfoCardBlock }) {
         {c.iconUrl ? <img src={c.iconUrl} alt="" className="w-full h-full object-contain" /> : <Icon className="w-5 h-5 text-white" />}
       </div>
       <div className="flex-1">
-        <p className={cn('text-center text-[25px] leading-snug whitespace-pre-line break-words', c.body)} style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
+        <p className={cn('text-[25px] leading-snug whitespace-pre-line break-words', c.body)} style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
       </div>
     </div>
   );
