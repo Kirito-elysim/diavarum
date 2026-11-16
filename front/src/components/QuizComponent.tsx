@@ -45,7 +45,6 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
     <div className="space-y-6">
       {/* Question */}
       <QuestionHeader label="Question" text={block.question} />
-      {ungraded && <p className="text-[#1FABC7] font-medium">Question non notée.</p>}
 
       {/* Options */}
       <div className="space-y-3">
@@ -143,7 +142,6 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
   return (
     <div className="space-y-6">
       <QuestionHeader label="Plusieurs réponses" text={block.question} multi />
-      {ungraded && <p className="text-[#1FABC7] font-medium">Question non notée.</p>}
 
       <div className="space-y-3">
         {block.options?.map((opt: QuizOption) => {

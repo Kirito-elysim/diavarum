@@ -80,7 +80,6 @@ try {
  await page.getByText('Verso test',{exact:true}).waitFor();
  async function next(title){await page.getByRole('button',{name:/Page suivante|Terminer/}).tap();if(title) await page.getByRole('heading',{name:title,exact:true}).waitFor();}
  await next('Réflexion');
- await page.getByText('Question non notée.',{exact:true}).waitFor();
  assert.equal(await page.getByRole('button',{name:/Page suivante/}).isDisabled(),true);
  await page.getByRole('button',{name:'Mon choix',exact:true}).tap();
  await page.getByRole('button',{name:'Valider mes réponses',exact:true}).tap();
