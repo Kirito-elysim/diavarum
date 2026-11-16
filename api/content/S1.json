@@ -51,33 +51,33 @@
           "type": "reveal-legends",
           "question": "Le personnel soignant garantit le respect de :",
           "imageUrl": "/courses/S1/droits-suite.png",
-          "alt": "Une patiente accompagnée par une infirmière",
+          "alt": "Un patient, de profil",
           "points": [
             {
               "id": "s1-respect-1",
-              "x": 18,
-              "y": 22,
+              "x": 34,
+              "y": 30,
               "label": "Votre dignité",
               "description": ""
             },
             {
               "id": "s1-respect-2",
-              "x": 82,
-              "y": 22,
+              "x": 66,
+              "y": 30,
               "label": "Votre intimité",
               "description": ""
             },
             {
               "id": "s1-respect-3",
-              "x": 18,
-              "y": 78,
+              "x": 34,
+              "y": 70,
               "label": "Votre vie privée",
               "description": ""
             },
             {
               "id": "s1-respect-4",
-              "x": 82,
-              "y": 78,
+              "x": 66,
+              "y": 70,
               "label": "Du secret médical",
               "description": ""
             }
@@ -231,7 +231,7 @@
           "id": "s1-da-intro",
           "type": "image-text",
           "imageUrl": "/courses/S1/anticipees-intro.png",
-          "alt": "Une patiente accompagnée, songeuse",
+          "alt": "Une patiente accompagnée d’un proche, songeuse",
           "size": "image",
           "content": "Le sujet de la fin de vie n’est pas facile à envisager, mais anticiper ce type d’évènement peut en alléger le fardeau, pour vous ou vos proches, dans un moment particulièrement difficile."
         }
@@ -321,7 +321,7 @@
           "id": "s1-sedation",
           "type": "image-text",
           "imageUrl": "/courses/S1/sedation.png",
-          "alt": "Coucher de soleil, symbole d’apaisement",
+          "alt": "Un patient endormi, un soleil couchant derrière lui",
           "size": "image",
           "content": "La loi française n’autorise pas l’euthanasie, mais la loi permet la sédation profonde et continue jusqu’au décès.\n\nCela signifie que si les traitements ne peuvent plus soulager le patient, il est possible de l’endormir profondément pour qu’il ne ressente plus la douleur, et ce jusqu’à la fin."
         },
@@ -342,7 +342,7 @@
           "id": "s1-conclusion-image",
           "type": "image",
           "url": "/courses/S1/conclusion.png",
-          "alt": "Deux personnes qui échangent"
+          "alt": "Un patient entouré de deux proches et d’une soignante qui arrosent une plante"
         },
         {
           "id": "s1-conclusion",
