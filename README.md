@@ -45,8 +45,8 @@ make fixtures
 Mot de passe de tous les comptes : `Diaverum2026!` — code de sécurité IDE : `1234` — code national : `9999`.
 
 Le **catalogue des séances** ([liste officielle](doc/Liste-seances.pdf)) est créé par les migrations, dans
-tous les environnements : séance de démarrage `S0`, séances systématiques `S1` à `S24`, post-test `PT`
-(cochés par défaut dans un parcours) et séances optionnelles `O1` à `O7`, soit 33 séances en 10 thématiques. Le code de séance est
+tous les environnements : séances systématiques `S1` à `S24`, post-test `PT`
+(cochés par défaut dans un parcours) et séances optionnelles `O1` à `O7`, soit 32 séances actives. La séance de démarrage `S0` est archivée (migration `Version20261116150000`). Le code de séance est
 l'identifiant stable utilisé pour intégrer les contenus. En démo, seules S4, S14 et S17 ont un contenu
 (repris de la maquette Bolt).
 

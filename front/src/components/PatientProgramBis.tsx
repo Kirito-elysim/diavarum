@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { useQueries } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { BarChart3, BookOpen, Calendar, Check, CheckCircle2, ChevronDown, Clock, Eye, Folder, ListChecks, Lock, Play, User } from 'lucide-react';
+import { BarChart3, BookOpen, Calendar, Check, CheckCircle2, ChevronDown, Clock, Folder, ListChecks, Lock, Play, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSessions, useToggleProgramModule } from '../api/hooks';
 import type { Patient, ProgramModule, TrainingProgram, TrainingSession } from '../api/types';
@@ -85,7 +84,6 @@ export function PatientProgramBis({patient, program, actions}: {patient: Patient
   const [sort, setSort] = useState('position');
   const [choosing, setChoosing] = useState(false);
   const {launch} = useCourseLaunch(patient.id, program);
-  const navigate = useNavigate();
   const {latest, isLoading, isError, refetch} = useProgramSessions(patient, program);
   const selected = program.modules.filter(m => m.selected);
   const validated = selected.filter(m => m.status === 'valide').length;
@@ -125,7 +123,7 @@ export function PatientProgramBis({patient, program, actions}: {patient: Patient
         const session = latest.get(item.module.id);
         return <article key={item.id} className="grid items-center gap-4 rounded-xl bg-stone-50/80 p-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1.1fr)]">
           <div className="flex items-center gap-3">{item.status === 'valide' ? <CheckCircle2 className="h-6 w-6 shrink-0 text-green-600"/> : <Play className="h-6 w-6 shrink-0 text-orange-500"/>}<div><h3 className="text-sm font-semibold leading-snug">{item.module.title}</h3><p className="mt-1 text-xs text-slate-500">{sessionLabel(item.module.code)} · {item.module.estimatedDuration} min</p>{item.status === 'non_termine' && <p className="mt-1 text-xs text-orange-600">Séance non terminée · reprise depuis le début</p>}</div></div>
-          {item.status === 'valide' ? <><div className="space-y-1 text-xs text-slate-600"><p className="flex items-center gap-2"><User className="h-4 w-4"/>{session ? `Validé par ${session.nurse.firstName} ${session.nurse.lastName}` : isLoading ? 'Chargement…' : 'Validation enregistrée'}</p><p className="flex items-center gap-2"><Calendar className="h-4 w-4"/>{formatDate(item.validatedAt, 'dd/MM/yyyy à HH:mm')}</p><p className="flex items-center gap-2"><Clock className="h-4 w-4"/>Temps passé : {item.durationSeconds != null ? formatDuration(item.durationSeconds) : 'Non renseigné'}</p><p className="flex items-center gap-2 font-semibold text-slate-800"><BarChart3 className="h-4 w-4"/>Score : {item.score != null ? `${item.score} %` : 'Non renseigné'}</p></div><div>{session ? <CompetencyList session={session}/> : <p className="text-xs text-slate-500">Détail des compétences {isLoading ? 'en cours de chargement' : 'indisponible'}.</p>}<p className="mt-2 flex items-center gap-1 text-xs text-gray-400"><Lock className="h-3 w-3"/>Séance validée et verrouillée</p></div></> : <div className="flex flex-wrap justify-end gap-2 lg:col-span-2">{canStart && <Button size="sm" className="gap-2 bg-orange-500 text-white hover:bg-orange-600" onClick={() => launch(item.module.id)}><Play className="h-4 w-4"/>{item.status === 'non_termine' ? 'Reprendre' : 'Lancer'}</Button>}{!patient.removedAt && <Button size="sm" variant="outline" className="gap-2" title="Prévisualiser le cours sans lancer de séance" aria-label={`Prévisualiser ${item.module.title}`} onClick={() => navigate(`/sessions/run?moduleId=${item.module.id}&preview=1`)}><Eye className="h-4 w-4"/>Aperçu</Button>}</div>}
+          {item.status === 'valide' ? <><div className="space-y-1 text-xs text-slate-600"><p className="flex items-center gap-2"><User className="h-4 w-4"/>{session ? `Validé par ${session.nurse.firstName} ${session.nurse.lastName}` : isLoading ? 'Chargement…' : 'Validation enregistrée'}</p><p className="flex items-center gap-2"><Calendar className="h-4 w-4"/>{formatDate(item.validatedAt, 'dd/MM/yyyy à HH:mm')}</p><p className="flex items-center gap-2"><Clock className="h-4 w-4"/>Temps passé : {item.durationSeconds != null ? formatDuration(item.durationSeconds) : 'Non renseigné'}</p><p className="flex items-center gap-2 font-semibold text-slate-800"><BarChart3 className="h-4 w-4"/>Score : {item.score != null ? `${item.score} %` : 'Non renseigné'}</p></div><div>{session ? <CompetencyList session={session}/> : <p className="text-xs text-slate-500">Détail des compétences {isLoading ? 'en cours de chargement' : 'indisponible'}.</p>}<p className="mt-2 flex items-center gap-1 text-xs text-gray-400"><Lock className="h-3 w-3"/>Séance validée et verrouillée</p></div></> : <div className="flex flex-wrap justify-end gap-2 lg:col-span-2">{canStart && <Button size="sm" className="gap-2 bg-orange-500 text-white hover:bg-orange-600" onClick={() => launch(item.module.id)}><Play className="h-4 w-4"/>{item.status === 'non_termine' ? 'Reprendre' : 'Lancer'}</Button>}</div>}
         </article>;
       })}</div></details>;
     })}</div>

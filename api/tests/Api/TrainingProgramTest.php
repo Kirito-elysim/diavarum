@@ -40,7 +40,7 @@ final class TrainingProgramTest extends ApiTestCaseBase
         self::assertArrayNotHasKey('S91', $selection, 'Séance non publiée absente du parcours');
     }
 
-    public function testOfficialCatalogueGives26PreselectedAnd7OptionalSessions(): void
+    public function testOfficialCatalogueGives25PreselectedAnd7OptionalSessions(): void
     {
         $center = $this->createCenter();
         $ide = $this->createUser(UserRole::Ide, [$center]);
@@ -49,12 +49,12 @@ final class TrainingProgramTest extends ApiTestCaseBase
 
         $modules = $this->requestAs($ide, 'POST', '/api/training_programs', ['patient' => $this->iri($patient)])->toArray()['modules'];
 
-        // Démarrage + 24 séances systématiques + post-test pré-cochés, 7 séances optionnelles
-        self::assertCount(33, $modules);
-        self::assertCount(26, array_filter($modules, static fn (array $m) => $m['selected']));
-        self::assertSame('S0', $modules[0]['module']['code']);
-        self::assertSame('O7', $modules[31]['module']['code']);
-        self::assertSame('PT', $modules[32]['module']['code']);
+        // 24 séances systématiques + post-test pré-cochés, 7 séances optionnelles (S0 est archivée)
+        self::assertCount(32, $modules);
+        self::assertCount(25, array_filter($modules, static fn (array $m) => $m['selected']));
+        self::assertSame('S1', $modules[0]['module']['code']);
+        self::assertSame('O7', $modules[30]['module']['code']);
+        self::assertSame('PT', $modules[31]['module']['code']);
     }
 
     public function testNotEligiblePatientCannotGetAProgram(): void
