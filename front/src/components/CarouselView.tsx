@@ -20,7 +20,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
 
   return (
     <div className="space-y-4">
-      {block.question && <p className="course-copy font-semibold text-[#004138] leading-snug">{block.question}</p>}
+      {block.question && <p className="course-copy font-semibold text-[#004138] leading-snug whitespace-pre-line [&_strong]:text-[#E86825]"><CourseText text={block.question} /></p>}
 
       {/* Le geste horizontal reste dans le carrousel ; le défilement vertical reste disponible. */}
       <div

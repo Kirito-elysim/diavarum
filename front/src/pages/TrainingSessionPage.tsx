@@ -243,7 +243,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
 
   return (
     <div className="space-y-5">
-    {block.question && <p className="text-[25px] font-bold text-[#004138] leading-snug">{block.question}</p>}
+    {block.question && <p className="text-[25px] font-bold text-[#004138] leading-snug whitespace-pre-line [&_strong]:text-[#E86825]"><CourseText text={block.question} /></p>}
     <div className="rounded-3xl overflow-hidden bg-white ring-1 ring-gray-100/80 shadow-sm">
       {/* Image with markers */}
       <div className="relative select-none" onClick={() => setActiveId(null)}>

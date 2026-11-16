@@ -4,7 +4,7 @@ import type { CategorizeBlock, ContentBlock, HotspotBlock, HotspotPoint } from '
 import { DEFAULT_INSTRUCTIONS, INFO_CARD_CATEGORIES, PICTOS, infoCardCategory, markerWidth } from '../../lib/courseVisuals';
 import { HotspotMarker, SheetMarker } from '../HotspotMarker';
 import { Button } from '../ui/button';
-import { Field, ImageField, ItemActions, Toggle } from './Fields';
+import { Field, ImageField, ItemActions, QUESTION_HINT, Toggle } from './Fields';
 import { move, uid } from './model';
 
 export function BlockFields({ block: b, onChange }: { block: ContentBlock; onChange: (block: ContentBlock) => void }) {
@@ -31,7 +31,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
     <Field label="Explication de l’ordre attendu" multiline value={b.explanation} onChange={explanation => onChange({ ...b, explanation })} />
   </>;
   if (b.type === 'quiz' && b.questionType === 'drag-drop') return <>
-    <Field label="Question de l’exercice « Relier »" multiline value={b.question} onChange={question => onChange({ ...b, question })} />
+    <Field label="Question de l’exercice « Relier »" multiline hint={QUESTION_HINT} value={b.question} onChange={question => onChange({ ...b, question })} />
     <Field label="Consigne de l’encadré au doigt" value={b.instruction ?? DEFAULT_INSTRUCTIONS.connect} onChange={instruction => onChange({ ...b, instruction })} />
     <p className="rounded-xl bg-orange-50 p-4 text-sm">Chaque association relie une destination à un seul élément. Les éléments à déplacer seront mélangés pour l’apprenant. Utilisez des textes différents pour chacun. L’activité est notée et affiche une correction. Pour déposer plusieurs éléments dans une même zone, utilisez l’activité « Glisser-déposer ».</p>
     {(b.pairs ?? []).map((pair, index) => <section key={pair.id} className="rounded-xl border p-4 space-y-3">
@@ -99,7 +99,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
         const first = b.options?.find(o => o.isCorrect)?.id;
         onChange({ ...b, questionType, options: b.options?.map(o => ({ ...o, isCorrect: questionType === 'qcu' ? o.id === first : o.isCorrect })) });
       }}><option value="qcu">QCU — une seule réponse</option><option value="qcm">QCM — plusieurs réponses possibles</option></select></label>
-      <Field label="Question" multiline value={b.question} onChange={question => onChange({ ...b, question })} />
+      <Field label="Question" multiline hint={QUESTION_HINT} value={b.question} onChange={question => onChange({ ...b, question })} />
       <div className="rounded-xl bg-orange-50 p-4"><Toggle label="Compter cette question dans le score" checked={b.graded !== false} onChange={graded => onChange({ ...b, graded })} /><Toggle label="Afficher la correction après la réponse" checked={b.showCorrection ?? b.graded !== false} onChange={showCorrection => onChange({ ...b, showCorrection })} /></div>
       {b.options?.map((option, index) => <section key={option.id} className="rounded-xl border p-4 space-y-3">
         <Field label={`Proposition ${index + 1}`} multiline value={option.label} onChange={label => onChange({ ...b, options: b.options?.map(o => o.id === option.id ? { ...o, label } : o) })} />
@@ -122,7 +122,7 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
     <details className="rounded-xl border p-4" open={!b.imageUrl}><summary className="cursor-pointer text-sm font-medium">Question, image et légende</summary>
       <div className="mt-3 space-y-3">
         <ImageField url={b.imageUrl} alt={b.alt} onChange={(imageUrl, alt) => onChange({ ...b, imageUrl, alt })} />
-        <Field label="Question au-dessus de l’image" value={b.question} onChange={question => onChange({ ...b, question })} />
+        <Field label="Question au-dessus de l’image" multiline hint={QUESTION_HINT} value={b.question} onChange={question => onChange({ ...b, question })} />
         <Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
       </div></details>
     <details className="rounded-xl border-2 border-orange-200 p-4" open={!b.sheet?.url}><summary className="cursor-pointer font-semibold">Planche de pictos{b.sheet?.url ? ' (importée)' : ''}</summary>
@@ -200,7 +200,7 @@ function CategorizeFields({ block: b, onChange }: { block: CategorizeBlock; onCh
     onChange({ ...b, categories, items: b.items.map(item => item.category === removed ? { ...item, category: categories[0] ?? '' } : item) });
   };
   return <>
-    <Field label="Question du glisser-déposer" multiline value={b.question} onChange={question => onChange({ ...b, question })} />
+    <Field label="Question du glisser-déposer" multiline hint={QUESTION_HINT} value={b.question} onChange={question => onChange({ ...b, question })} />
     <Field label="Consigne de l’encadré au doigt" value={b.instruction ?? DEFAULT_INSTRUCTIONS.categorize} onChange={instruction => onChange({ ...b, instruction })} />
     <p className="rounded-xl bg-orange-50 p-4 text-sm">Créez une ou plusieurs zones de destination, puis les éléments à déplacer en indiquant la zone attendue pour chacun. Une même zone peut recevoir plusieurs éléments. Les éléments seront mélangés pour l’apprenant. L’activité est notée et affiche une correction.</p>
     <h4 className="font-semibold">Zones de destination</h4>

@@ -5,11 +5,11 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 
-export function Field({ label, value, onChange, multiline = false }: { label: string; value?: string; onChange: (value: string) => void; multiline?: boolean }) {
+export function Field({ label, value, onChange, multiline = false, hint }: { label: string; value?: string; onChange: (value: string) => void; multiline?: boolean; hint?: string }) {
   const id = useId();
   return <div className="space-y-2 min-w-0"><label htmlFor={id} className="text-sm font-medium">{label}</label>{multiline
     ? <Textarea id={id} rows={4} value={value ?? ''} onChange={e => onChange(e.target.value)} />
-    : <Input id={id} value={value ?? ''} onChange={e => onChange(e.target.value)} />}</div>;
+    : <Input id={id} value={value ?? ''} onChange={e => onChange(e.target.value)} />}{hint && <p className="text-xs text-gray-500">{hint}</p>}</div>;
 }
 export function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) {
   return <label className="flex items-center gap-3 min-h-11 cursor-pointer text-sm"><input type="checkbox" className="h-5 w-5 accent-orange-600" checked={checked} onChange={e => onChange(e.target.checked)} />{label}</label>;
@@ -40,3 +40,6 @@ export function ImageField({ url, alt, onChange }: { url: string; alt: string; o
 export function ItemActions({ index, count, onMove, onRemove }: { index: number; count: number; onMove: (direction: number) => void; onRemove: () => void }) {
   return <div className="flex flex-wrap gap-2"><Button type="button" variant="outline" disabled={index === 0} onClick={() => onMove(-1)} aria-label="Monter">↑</Button><Button type="button" variant="outline" disabled={index === count - 1} onClick={() => onMove(1)} aria-label="Descendre">↓</Button><Button type="button" variant="ghost" className="text-red-700" onClick={onRemove}>Retirer</Button></div>;
 }
+
+/** Mise en forme disponible dans les questions : saut de ligne avec Entrée, gras entre deux ** */
+export const QUESTION_HINT = 'Entrée pour sauter une ligne · entourez un passage de ** pour le mettre en gras (affiché en orange).';

@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { CourseText } from './CourseText';
 import { cn } from '../lib/utils';
 import { DEFAULT_INSTRUCTIONS } from '../lib/courseVisuals';
 import {
@@ -15,7 +16,7 @@ import type {
 
 /* Shared sub-components (mirror QuizComponent styles) ──────────────────── */
 function BlockHeader({ text }: { label?: string; text: string }) {
-  return <p className="text-[25px] font-bold text-[#004138] leading-snug">{text}</p>;
+  return <p className="text-[25px] font-bold text-[#004138] leading-snug whitespace-pre-line [&_strong]:text-[#E86825]"><CourseText text={text} /></p>;
 }
 
 function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disabled: boolean; label: string }) {
