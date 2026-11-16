@@ -40,8 +40,8 @@ final class CourseContentTest extends TestCase
 
         $evaluated = (new ScoreCalculator())->evaluatedBlocks($module);
 
-        // 6 questions du quiz final : Q1, Q2, Q5 (1 bonne réponse), Q3 (3), Q4 (2), Q6 (3)
-        self::assertSame(['s1-q1' => 1, 's1-q2' => 1, 's1-q3' => 3, 's1-q4' => 2, 's1-q5' => 1, 's1-q6' => 3], $evaluated);
+        // 4 questions du quiz final (version retouchée dans l'éditeur le 16 novembre 2026) : Q3 (3 bonnes réponses), Q4 (2), Q5 (1), Q6 (3)
+        self::assertSame(['s1-q3' => 3, 's1-q4' => 2, 's1-q5' => 1, 's1-q6' => 3], $evaluated);
         self::assertArrayNotHasKey('s1-pc-designee', $evaluated, '« Avez-vous désigné quelqu’un ? » n’est pas noté');
         self::assertCount(2, $course['competencies']);
     }
