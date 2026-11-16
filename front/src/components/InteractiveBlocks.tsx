@@ -1059,24 +1059,18 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
                 key={pt.id}
                 onClick={() => handleTap(pt.id)}
                 disabled={submitted || disabled}
-                aria-label={pt.label}
                 className={cn(
-                  'absolute flex items-center justify-center rounded-full font-black transition-all duration-200 touch-manipulation',
-                  pt.icon
-                    ? cn('w-14 h-14 active:scale-95', isActive && 'scale-110 z-20')
-                    : 'shadow-lg',
-                  pt.icon ? '' : isActive
+                  'absolute flex items-center justify-center rounded-full font-black shadow-lg transition-all duration-200 touch-manipulation',
+                  isActive
                     ? 'w-12 h-12 bg-orange-500 text-white scale-110 ring-4 ring-orange-300/60 z-20'
                     : isRevealed
                       ? 'w-10 h-10 bg-emerald-500 text-white ring-2 ring-emerald-300/50'
                       : 'w-11 h-11 bg-white/90 text-orange-600 hover:scale-110 ring-2 ring-orange-400/60 active:scale-95'
                 )}
-                style={pt.icon ? { left: `calc(${pt.x}% - 28px)`, top: `calc(${pt.y}% - 28px)` } : { left: `calc(${pt.x}% - 20px)`, top: `calc(${pt.y}% - 20px)` }}
+                style={{ left: `calc(${pt.x}% - 20px)`, top: `calc(${pt.y}% - 20px)` }}
               >
-                {pt.icon
-                  ? <img src={isRevealed ? (pt.iconDone ?? pt.icon) : pt.icon} alt="" className="w-full h-full" draggable={false} />
-                  : isRevealed ? <CheckCircle className="w-5 h-5" /> : i + 1}
-                {!pt.icon && !isRevealed && !isActive && (
+                {isRevealed ? <CheckCircle className="w-5 h-5" /> : i + 1}
+                {!isRevealed && !isActive && (
                   <span className="absolute inset-0 rounded-full bg-orange-400/40 animate-ping" style={{ animationDuration: `${1.5 + i * 0.3}s` }} />
                 )}
               </button>

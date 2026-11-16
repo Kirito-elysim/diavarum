@@ -128,7 +128,7 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
         else { const point = { id: uid(), x, y, label: '', description: '' }; onChange({ ...b, hotspots: [...b.hotspots, point] }); setSelected(point.id); }
       }}>
         <img src={b.imageUrl} alt={b.alt} className="block max-h-96 max-w-full rounded-xl" draggable={false} />
-        {b.hotspots.map((h, i) => <button key={h.id} aria-label={`Sélectionner le repère ${i + 1}`} onClick={e => { e.stopPropagation(); setSelected(h.id); }} className={`absolute h-11 w-11 -translate-x-1/2 -translate-y-1/2 rounded-full text-white font-bold border-2 border-white ${selected === h.id ? 'bg-orange-600' : 'bg-emerald-800'}`} style={{ left: `${h.x}%`, top: `${h.y}%` }}><span className="flex h-full w-full items-center justify-center"><HotspotMarker point={h} index={i} /></span></button>)}
+        {b.hotspots.map((h, i) => <button key={h.id} aria-label={`Sélectionner le repère ${i + 1}`} onClick={e => { e.stopPropagation(); setSelected(h.id); }} className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full font-bold ${h.iconUrl ? (selected === h.id ? 'ring-4 ring-orange-500' : '') : `text-white border-2 border-white ${selected === h.id ? 'bg-orange-600' : 'bg-emerald-800'}`}`} style={{ left: `${h.x}%`, top: `${h.y}%`, width: h.size ?? 48, height: h.size ?? 48 }}>{h.iconUrl ? <img src={h.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} /> : <span className="flex h-full w-full items-center justify-center"><HotspotMarker point={h} index={i} /></span>}</button>)}
       </div></>}
     {b.hotspots.map((h, index) => <section key={h.id} className={`rounded-xl border p-4 space-y-3 ${selected === h.id ? 'border-orange-500' : ''}`}>
       <Button variant="outline" onClick={() => setSelected(h.id)}>Positionner le repère {index + 1}</Button>
@@ -153,7 +153,13 @@ function MarkerFields({ point, index, onChange }: { point: HotspotPoint; index: 
       {Object.entries(PICTOS).map(([key, { label, icon: Icon }]) => <button key={key} type="button" role="radio" aria-checked={point.icon === key} aria-label={label} title={label} onClick={() => onChange({ ...point, icon: key, iconUrl: undefined })}
         className={`flex h-11 items-center justify-center rounded-lg border ${point.icon === key ? 'border-orange-500 bg-orange-50 text-orange-700' : 'bg-white text-emerald-900'}`}><Icon className="h-5 w-5" /></button>)}
     </div>}
-    {kind === 'image' && <ImageField url={point.iconUrl ?? ''} alt="" onChange={iconUrl => onChange({ ...point, iconUrl, icon: undefined })} />}
+    {kind === 'image' && <>
+      <ImageField url={point.iconUrl ?? ''} alt="" onChange={iconUrl => onChange({ ...point, iconUrl, icon: undefined })} />
+      <p className="text-sm font-medium">Picto une fois la légende consultée (facultatif)</p>
+      <ImageField url={point.iconSeenUrl ?? ''} alt="" onChange={iconSeenUrl => onChange({ ...point, iconSeenUrl: iconSeenUrl || undefined })} />
+    </>}
+    <label className="block space-y-2"><span className="text-sm font-medium">Taille du repère : {point.size ?? 48} px</span>
+      <input type="range" min={24} max={160} step={2} className="w-full" value={point.size ?? 48} onChange={e => onChange({ ...point, size: Number(e.target.value) })} /></label>
   </div>;
 }
 

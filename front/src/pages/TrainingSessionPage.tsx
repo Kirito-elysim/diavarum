@@ -234,6 +234,7 @@ function TimelineBlockView({ block }: { block: TimelineBlock }) {
 /* ─── Hotspot block (click-to-legend) ────────────────────────────────────── */
 function HotspotBlockView({ block }: { block: HotspotBlock }) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [seen, setSeen] = useState<Set<string>>(new Set());
   const active = block.hotspots.find((h) => h.id === activeId) ?? null;
 
   return (
@@ -242,26 +243,35 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
       <div className="relative select-none" onClick={() => setActiveId(null)}>
         <img src={block.imageUrl} alt={block.alt} className="w-full h-auto" loading="lazy" />
         {activeId && <div className="absolute inset-0 bg-black/30 transition-opacity" />}
-        {block.hotspots.map((hs, i) => (
-          <button
-            key={hs.id}
-            onClick={(e) => { e.stopPropagation(); setActiveId(hs.id === activeId ? null : hs.id); }}
-            className={cn(
-              'absolute flex items-center justify-center rounded-full font-black course-caption shadow-lg transition-all duration-200 touch-manipulation',
-              hs.id === activeId
-                ? 'w-12 h-12 bg-orange-500 text-white scale-110 ring-4 ring-orange-300/60'
-                : 'w-12 h-12 bg-white/90 text-orange-600 hover:scale-110 ring-2 ring-orange-400/60'
-            )}
-            aria-label={`Afficher la légende ${i + 1} : ${hs.label}`}
-            aria-expanded={activeId === hs.id}
-            style={{ left: `clamp(24px, ${hs.x}%, calc(100% - 24px))`, top: `clamp(24px, ${hs.y}%, calc(100% - 24px))`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
-          >
-            <HotspotMarker point={hs} index={i} />
-            {hs.id !== activeId && (
-              <span className="absolute inset-0 rounded-full bg-orange-400/40 animate-ping" style={{ animationDuration: `${1.5 + i * 0.4}s` }} />
-            )}
-          </button>
-        ))}
+        {block.hotspots.map((hs, i) => {
+          const size = hs.size ?? 48;
+          const bare = !!hs.iconUrl; // picto importé : affiché tel quel, sans pastille
+          const isSeen = seen.has(hs.id) || hs.id === activeId;
+          return (
+            <button
+              key={hs.id}
+              onClick={(e) => { e.stopPropagation(); setActiveId(hs.id === activeId ? null : hs.id); setSeen((prev) => new Set(prev).add(hs.id)); }}
+              className={cn(
+                'absolute flex items-center justify-center rounded-full font-black course-caption transition-all duration-200 touch-manipulation',
+                bare
+                  ? cn('hover:scale-110', hs.id === activeId && 'scale-110')
+                  : cn('shadow-lg', hs.id === activeId
+                    ? 'scale-110 bg-orange-500 text-white ring-4 ring-orange-300/60'
+                    : 'bg-white/90 text-orange-600 hover:scale-110 ring-2 ring-orange-400/60')
+              )}
+              aria-label={`Afficher la légende ${i + 1} : ${hs.label}`}
+              aria-expanded={activeId === hs.id}
+              style={{ width: size, height: size, left: `clamp(${size / 2}px, ${hs.x}%, calc(100% - ${size / 2}px))`, top: `clamp(${size / 2}px, ${hs.y}%, calc(100% - ${size / 2}px))`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
+            >
+              {bare
+                ? <img src={isSeen && hs.iconSeenUrl ? hs.iconSeenUrl : hs.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} />
+                : <HotspotMarker point={hs} index={i} />}
+              {!bare && hs.id !== activeId && (
+                <span className="absolute inset-0 rounded-full bg-orange-400/40 animate-ping" style={{ animationDuration: `${1.5 + i * 0.4}s` }} />
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {block.caption && (

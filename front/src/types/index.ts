@@ -282,9 +282,6 @@ export interface RevealLegendPoint {
   y: number;                  // percentage 0-100
   label: string;
   description: string;
-  /** Picto cliquable à la place du point numéroté (couleur d'interactivité), et sa version « consultée » */
-  icon?: string;
-  iconDone?: string;
 }
 
 export interface RevealLegendsBlock {
@@ -415,6 +412,10 @@ export interface HotspotPoint {
   /** Repère affiché à la place du numéro : picto de la bibliothèque (clé) ou image importée */
   icon?: string;
   iconUrl?: string;
+  /** Version du picto importé une fois la légende consultée (optionnel) */
+  iconSeenUrl?: string;
+  /** Taille du repère en pixels (48 par défaut) */
+  size?: number;
 }
 
 export interface HotspotBlock {
