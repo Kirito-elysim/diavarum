@@ -416,6 +416,8 @@ export interface HotspotPoint {
   iconSeenUrl?: string;
   /** Taille du repère en pixels (48 par défaut) */
   size?: number;
+  /** Ligne (à partir de 0) de la planche de pictos du bloc ; remplace le numéro */
+  sheetRow?: number;
 }
 
 export interface HotspotBlock {
@@ -424,6 +426,8 @@ export interface HotspotBlock {
   imageUrl: string;
   alt: string;
   caption?: string;
+  /** Planche de pictos : lignes = pictos, colonnes = états (1re : normal, 2e : consulté) */
+  sheet?: { url: string; cols: number; rows: number };
   hotspots: HotspotPoint[];
 }
 

@@ -63,9 +63,8 @@
               "y": 30,
               "label": "Votre dignité",
               "description": "Le personnel soignant garantit le respect de votre dignité.",
-              "iconUrl": "/courses/S1/picto-coeur.png",
-              "iconSeenUrl": "/courses/S1/picto-coeur-vert.png",
-              "size": 64
+              "size": 64,
+              "sheetRow": 3
             },
             {
               "id": "s1-respect-2",
@@ -73,9 +72,8 @@
               "y": 30,
               "label": "Votre intimité",
               "description": "Le personnel soignant garantit le respect de votre intimité.",
-              "iconUrl": "/courses/S1/picto-intimite.png",
-              "iconSeenUrl": "/courses/S1/picto-intimite-vert.png",
-              "size": 64
+              "size": 64,
+              "sheetRow": 1
             },
             {
               "id": "s1-respect-3",
@@ -83,9 +81,8 @@
               "y": 70,
               "label": "Votre vie privée",
               "description": "Le personnel soignant garantit le respect de votre vie privée.",
-              "iconUrl": "/courses/S1/picto-poignee.png",
-              "iconSeenUrl": "/courses/S1/picto-poignee-vert.png",
-              "size": 64
+              "size": 64,
+              "sheetRow": 0
             },
             {
               "id": "s1-respect-4",
@@ -93,11 +90,15 @@
               "y": 70,
               "label": "Du secret médical",
               "description": "Le personnel soignant garantit le respect du secret médical.",
-              "iconUrl": "/courses/S1/picto-cadenas.png",
-              "iconSeenUrl": "/courses/S1/picto-cadenas-vert.png",
-              "size": 64
+              "size": 64,
+              "sheetRow": 2
             }
-          ]
+          ],
+          "sheet": {
+            "url": "/courses/S1/planche-pictos-droits.png",
+            "cols": 2,
+            "rows": 4
+          }
         }
       ]
     },

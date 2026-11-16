@@ -33,7 +33,7 @@ import type {
 // New block types are imported by their component props; no extra type imports needed here.
 import { cn } from '../lib/utils';
 import { infoCardCategory } from '../lib/courseVisuals';
-import { HotspotMarker } from '../components/HotspotMarker';
+import { HotspotMarker, SheetMarker } from '../components/HotspotMarker';
 
 /* ─── Fullscreen helpers ──────────────────────────────────────────────────── */
 /** API plein écran préfixée des anciens WebKit (tablettes Android et iPad plus anciennes) */
@@ -245,7 +245,8 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
         {activeId && <div className="absolute inset-0 bg-black/30 transition-opacity" />}
         {block.hotspots.map((hs, i) => {
           const size = hs.size ?? 48;
-          const bare = !!hs.iconUrl; // picto importé : affiché tel quel, sans pastille
+          const sheetCell = block.sheet?.url && hs.sheetRow !== undefined ? block.sheet : null;
+          const bare = !!hs.iconUrl || !!sheetCell; // picto importé : affiché tel quel, sans pastille
           const isSeen = seen.has(hs.id) || hs.id === activeId;
           return (
             <button
@@ -263,7 +264,9 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
               aria-expanded={activeId === hs.id}
               style={{ width: size, height: size, left: `clamp(${size / 2}px, ${hs.x}%, calc(100% - ${size / 2}px))`, top: `clamp(${size / 2}px, ${hs.y}%, calc(100% - ${size / 2}px))`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
             >
-              {bare
+              {sheetCell
+                ? <SheetMarker sheet={sheetCell} row={hs.sheetRow ?? 0} col={isSeen ? 1 : 0} />
+                : bare
                 ? <img src={isSeen && hs.iconSeenUrl ? hs.iconSeenUrl : hs.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} />
                 : <HotspotMarker point={hs} index={i} />}
               {!bare && hs.id !== activeId && (

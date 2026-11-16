@@ -2,7 +2,7 @@ import { TextStyleFields } from './TextStyleFields';
 import { useState } from 'react';
 import type { CategorizeBlock, ContentBlock, HotspotBlock, HotspotPoint } from '../../types';
 import { DEFAULT_INSTRUCTIONS, INFO_CARD_CATEGORIES, PICTOS, infoCardCategory } from '../../lib/courseVisuals';
-import { HotspotMarker } from '../HotspotMarker';
+import { HotspotMarker, SheetMarker } from '../HotspotMarker';
 import { Button } from '../ui/button';
 import { Field, ImageField, ItemActions, Toggle } from './Fields';
 import { move, uid } from './model';
@@ -119,6 +119,15 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
   return <>
     <ImageField url={b.imageUrl} alt={b.alt} onChange={(imageUrl, alt) => onChange({ ...b, imageUrl, alt })} />
     <Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
+    <details className="rounded-xl border p-4" open={!!b.sheet?.url}><summary className="cursor-pointer text-sm font-medium">Planche de pictos (facultatif)</summary>
+      <div className="mt-3 space-y-3">
+        <p className="text-sm text-gray-600">Importez une planche où chaque ligne est un picto et chaque colonne un état : 1re colonne = normal, 2e colonne = une fois la légende consultée. Vous choisissez ensuite la ligne de chaque repère.</p>
+        <ImageField url={b.sheet?.url ?? ''} alt="" onChange={url => onChange({ ...b, sheet: { cols: 2, rows: 1, ...b.sheet, url } })} />
+        {b.sheet?.url && <div className="grid grid-cols-2 gap-3">
+          <label className="block space-y-2"><span className="text-sm font-medium">Colonnes de la planche</span><input type="number" min={1} max={4} className="w-full rounded-lg border p-3" value={b.sheet.cols} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, cols: Math.max(1, Math.min(4, Number(e.target.value) || 1)) } })} /></label>
+          <label className="block space-y-2"><span className="text-sm font-medium">Lignes de la planche</span><input type="number" min={1} max={20} className="w-full rounded-lg border p-3" value={b.sheet.rows} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, rows: Math.max(1, Math.min(20, Number(e.target.value) || 1)) } })} /></label>
+        </div>}
+      </div></details>
     {b.imageUrl && <><p className="text-sm text-gray-600">{selectedPoint ? 'Touchez l’image pour déplacer le repère sélectionné.' : 'Touchez l’image pour ajouter un repère.'}</p>
       <div className="relative w-fit max-w-full cursor-crosshair" onClick={e => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -128,27 +137,34 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
         else { const point = { id: uid(), x, y, label: '', description: '' }; onChange({ ...b, hotspots: [...b.hotspots, point] }); setSelected(point.id); }
       }}>
         <img src={b.imageUrl} alt={b.alt} className="block max-h-96 max-w-full rounded-xl" draggable={false} />
-        {b.hotspots.map((h, i) => <button key={h.id} aria-label={`Sélectionner le repère ${i + 1}`} onClick={e => { e.stopPropagation(); setSelected(h.id); }} className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full font-bold ${h.iconUrl ? (selected === h.id ? 'ring-4 ring-orange-500' : '') : `text-white border-2 border-white ${selected === h.id ? 'bg-orange-600' : 'bg-emerald-800'}`}`} style={{ left: `${h.x}%`, top: `${h.y}%`, width: h.size ?? 48, height: h.size ?? 48 }}>{h.iconUrl ? <img src={h.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} /> : <span className="flex h-full w-full items-center justify-center"><HotspotMarker point={h} index={i} /></span>}</button>)}
+        {b.hotspots.map((h, i) => { const cell = b.sheet?.url && h.sheetRow !== undefined ? b.sheet : null; const bare = !!h.iconUrl || !!cell;
+          return <button key={h.id} aria-label={`Sélectionner le repère ${i + 1}`} onClick={e => { e.stopPropagation(); setSelected(h.id); }} className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full font-bold ${bare ? (selected === h.id ? 'ring-4 ring-orange-500' : '') : `text-white border-2 border-white ${selected === h.id ? 'bg-orange-600' : 'bg-emerald-800'}`}`} style={{ left: `${h.x}%`, top: `${h.y}%`, width: h.size ?? 48, height: h.size ?? 48 }}>{cell ? <SheetMarker sheet={cell} row={h.sheetRow ?? 0} /> : h.iconUrl ? <img src={h.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} /> : <span className="flex h-full w-full items-center justify-center"><HotspotMarker point={h} index={i} /></span>}</button>; })}
       </div></>}
     {b.hotspots.map((h, index) => <section key={h.id} className={`rounded-xl border p-4 space-y-3 ${selected === h.id ? 'border-orange-500' : ''}`}>
       <Button variant="outline" onClick={() => setSelected(h.id)}>Positionner le repère {index + 1}</Button>
       <Field label={`Titre de la légende ${index + 1}`} value={h.label} onChange={label => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? { ...p, label } : p) })} />
       <Field label={`Texte de la légende ${index + 1}`} multiline value={h.description} onChange={description => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? { ...p, description } : p) })} />
-      <MarkerFields point={h} index={index} onChange={point => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? point : p) })} />
+      <MarkerFields point={h} index={index} sheet={b.sheet} onChange={point => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? point : p) })} />
       <ItemActions index={index} count={b.hotspots.length} onMove={direction => onChange({ ...b, hotspots: move(b.hotspots, index, direction) })} onRemove={() => onChange({ ...b, hotspots: b.hotspots.filter(p => p.id !== h.id) })} />
     </section>)}
     <Button variant="outline" onClick={() => { const point = { id: uid(), x: 50, y: 50, label: '', description: '' }; onChange({ ...b, hotspots: [...b.hotspots, point] }); setSelected(point.id); }}>Ajouter une légende</Button>
   </>;
 }
 
-/** Repère d'une légende : numéro (par défaut), picto de la bibliothèque ou image importée */
-function MarkerFields({ point, index, onChange }: { point: HotspotPoint; index: number; onChange: (point: HotspotPoint) => void }) {
-  const kind = point.iconUrl ? 'image' : point.icon ? 'picto' : 'number';
+/** Repère d'une légende : numéro (par défaut), picto de la bibliothèque, picto de la planche ou image importée */
+function MarkerFields({ point, index, sheet, onChange }: { point: HotspotPoint; index: number; sheet?: HotspotBlock['sheet']; onChange: (point: HotspotPoint) => void }) {
+  const kind = point.sheetRow !== undefined ? 'sheet' : point.iconUrl !== undefined ? 'image' : point.icon ? 'picto' : 'number';
   return <div className="space-y-3 rounded-xl bg-gray-50 p-3">
     <label className="block space-y-2"><span className="text-sm font-medium">Repère affiché sur l’image</span><select className="w-full rounded-lg border bg-white p-3" value={kind} onChange={e => {
       const next = e.target.value;
-      onChange({ ...point, icon: next === 'picto' ? (point.icon ?? Object.keys(PICTOS)[0]) : undefined, iconUrl: next === 'image' ? (point.iconUrl ?? '') : undefined });
-    }}><option value="number">Numéro ({index + 1})</option><option value="picto">Picto de la bibliothèque</option><option value="image">Picto importé (image)</option></select></label>
+      onChange({ ...point, icon: next === 'picto' ? (point.icon ?? Object.keys(PICTOS)[0]) : undefined, iconUrl: next === 'image' ? (point.iconUrl ?? '') : undefined, iconSeenUrl: next === 'image' ? point.iconSeenUrl : undefined, sheetRow: next === 'sheet' ? (point.sheetRow ?? 0) : undefined });
+    }}><option value="number">Numéro ({index + 1})</option><option value="picto">Picto de la bibliothèque</option><option value="sheet">Picto de la planche</option><option value="image">Picto importé (image seule)</option></select></label>
+    {kind === 'sheet' && (sheet?.url
+      ? <div role="radiogroup" aria-label="Choix du picto dans la planche" className="flex flex-wrap gap-2">
+          {Array.from({ length: sheet.rows }, (_, row) => <button key={row} type="button" role="radio" aria-checked={point.sheetRow === row} aria-label={`Ligne ${row + 1} de la planche`} onClick={() => onChange({ ...point, sheetRow: row })}
+            className={`h-14 w-14 rounded-lg border bg-white p-1 ${point.sheetRow === row ? 'border-orange-500 ring-2 ring-orange-300' : ''}`}><SheetMarker sheet={sheet} row={row} /></button>)}
+        </div>
+      : <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Importez d’abord la planche de pictos, en haut du bloc.</p>)}
     {kind === 'picto' && <div role="radiogroup" aria-label="Choix du picto" className="grid grid-cols-6 gap-2 sm:grid-cols-9">
       {Object.entries(PICTOS).map(([key, { label, icon: Icon }]) => <button key={key} type="button" role="radio" aria-checked={point.icon === key} aria-label={label} title={label} onClick={() => onChange({ ...point, icon: key, iconUrl: undefined })}
         className={`flex h-11 items-center justify-center rounded-lg border ${point.icon === key ? 'border-orange-500 bg-orange-50 text-orange-700' : 'bg-white text-emerald-900'}`}><Icon className="h-5 w-5" /></button>)}
