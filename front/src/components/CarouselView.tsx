@@ -49,7 +49,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
         )}
       </div>
 
-      <p key={`t-${slide.id}`} className="rounded-xl px-5 py-4 text-[25px] text-[#004138] leading-snug text-center min-h-[3.5rem] whitespace-pre-line fade-scale-in" style={{ border: '2px solid #1C5335' }}><CourseText text={slide.text} /></p>
+      <p key={`t-${slide.id}`} className="rounded-2xl px-5 py-4 text-[25px] text-[#004138] leading-snug text-center min-h-[3.5rem] whitespace-pre-line fade-scale-in" style={{ border: '3px solid #1C5335' }}><CourseText text={slide.text} /></p>
 
       <div className="flex items-center justify-center gap-2">
         {block.slides.map((s, i) => (
