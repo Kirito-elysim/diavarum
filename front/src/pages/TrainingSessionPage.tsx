@@ -769,7 +769,7 @@ function ModuleCompletionScreen({
         {onNext && nextModuleName && (
           <button
             onClick={onNext}
-            className="w-full h-16 px-5 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold course-label flex items-center justify-center gap-3 shadow-lg shadow-orange-900/20 active:scale-[0.98] transition-transform touch-manipulation"
+            className="w-full min-h-[4rem] py-2 px-5 rounded-full bg-[#E86825] hover:bg-[#CC5518] text-white font-bold course-label flex items-center justify-center gap-3 shadow-lg shadow-orange-900/20 active:scale-[0.98] transition-transform touch-manipulation"
           >
             <div className="flex-1 min-w-0 text-left">
               <p className="course-caption font-normal opacity-75 mb-0.5">Cours suivant (rendre la tablette au patient)</p>

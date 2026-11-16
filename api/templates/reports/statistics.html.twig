@@ -30,8 +30,8 @@
 </table>
 
 <h2>Parcours</h2>
-<table>
-    <thead><tr><th>Centre</th><th class="num">Non démarrés</th><th class="num">Inactifs (15 j)</th><th class="num">En cours</th><th class="num">Interrompus</th><th class="num">Validés</th><th class="num">Score moyen</th><th class="num">Durée moy. (achevés)</th></tr></thead>
+<table class="dense">
+    <thead><tr><th>Centre</th><th class="num">Non démarrés</th><th class="num">Inactifs (15 j)</th><th class="num">En cours</th><th class="num">Interrompus</th><th class="num">Validés</th><th class="num">Score moyen</th><th class="num">Durée moy. (validés)</th></tr></thead>
     <tbody>
     {% for a in s.centers|merge([s.total]) %}
         <tr class="{{ loop.last ? 'total' }}">
