@@ -9,6 +9,8 @@ services:
     image: diaverum-php:dev
     environment:
       APP_ENV: dev
+      # Clé de développement uniquement (jamais celle de la production)
+      NATIONAL_CODE_KEY: boYTw1nNrGmmsTa1OXB7IPbD/QoRGrFXdPbOlzuZRPo=
     volumes:
       - ./api:/app
 

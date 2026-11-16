@@ -51,6 +51,8 @@ final class UserProcessor implements ProcessorInterface
         if (null !== $data->getPlainPassword()) {
             $data->setPassword($this->passwordHasher->hashPassword($data, $data->getPlainPassword()));
             $data->setPlainPassword(null);
+            // Mot de passe choisi par un cadre ou un administrateur : la personne devra le remplacer
+            $data->setMustChangePassword(true);
             if ($this->entityManager->contains($data)) {
                 $this->revokeSessions($data);
             }

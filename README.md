@@ -112,7 +112,10 @@ Aucune suppression physique : patients, comptes et centres sont archivés (traç
 | `GET /api/me` | Profil connecté (rôle, centres, code configuré ou non) |
 | `PUT /api/me/security-code` `{password, code}` | Définir / changer son code (4 à 6 chiffres) |
 | `POST /api/security-code/verify` `{code}` | Vérifier un code en sortie de séance (5 essais / 15 min) |
-| `PUT /api/national-security-code` `{password, code}` | Admin national : change le code garde-fou, envoyé par email aux admins |
+| `PUT /api/national-security-code` `{password, code}` | Admin national : change le code garde-fou (chiffré avec `NATIONAL_CODE_KEY`, haché pour la vérification) |
+| `GET /api/national-security-code` | Admin national : état du code (défini le… par…, affichable, `notice` = changement à signaler) |
+| `POST /api/national-security-code/reveal` `{password}` | Admin national : affiche le code (mot de passe redemandé, 5 essais / 15 min, tracé au journal) |
+| `POST /api/national-security-code/acknowledge` | Admin national : a pris connaissance du changement (sans l'afficher) |
 
 ### Bilans et statistiques (Excel / PDF)
 

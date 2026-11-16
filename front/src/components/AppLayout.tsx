@@ -7,6 +7,8 @@ import { useSetSecurityCode } from '../api/hooks';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 import Sidebar from './Sidebar';
 import { SecurityCodeForm } from './SecurityCodeForm';
+import { NationalCodeNotice } from './NationalCodeNotice';
+import { ForcedPasswordDialog } from './ForcedPasswordDialog';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 
 export default function AppLayout() {
@@ -16,7 +18,8 @@ export default function AppLayout() {
 
   // Première connexion : l'IDE doit définir son code personnel (demandé pour quitter une séance).
   // Les administrateurs nationaux utilisent le code national.
-  const mustConfigureCode = !!user && user.role !== 'admin_national' && !user.securityCodeConfigured;
+  const mustChangePassword = !!user?.mustChangePassword;
+  const mustConfigureCode = !!user && !mustChangePassword && user.role !== 'admin_national' && !user.securityCodeConfigured;
 
   return (
     <div className="flex min-h-screen bg-gray-50/50">
@@ -38,6 +41,9 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
+
+      {mustChangePassword && <ForcedPasswordDialog />}
+      {user?.role === 'admin_national' && !mustChangePassword && <NationalCodeNotice />}
 
       <Dialog open={mustConfigureCode}>
         <DialogContent className="sm:max-w-md [&>button]:hidden" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>

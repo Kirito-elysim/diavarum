@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { ListPagination } from '../components/ListPagination';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -17,10 +17,10 @@ import {
 } from '../components/ui/alert-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { AlertTriangle, Archive, Building2, Check, Download, FileSpreadsheet, Filter, KeyRound, Loader2, Pencil, Plus, Link2, RotateCcw, ScrollText, Search, ShieldCheck, Unlink, Upload, UserRoundX, Users } from 'lucide-react';
+import { AlertTriangle, Archive, Building2, Check, Download, Eye, FileSpreadsheet, Filter, KeyRound, Loader2, Pencil, Plus, Link2, RotateCcw, ScrollText, Search, ShieldCheck, Unlink, Upload, UserRoundX, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import {
-  useUpdateUser, useResetPassword, useSetUserCenters, useRestoreUser, useRestoreCenter, type ArchiveStatus, useAccessLogs, useArchiveUser, useArchiveCenter, useCenters, useCreateUser, useSetNationalSecurityCode, useUsers, type UserInput,
+  useUpdateUser, useResetPassword, useSetUserCenters, useRestoreUser, useRestoreCenter, type ArchiveStatus, useAccessLogs, useArchiveUser, useArchiveCenter, useCenters, useCreateUser, useSetNationalSecurityCode, useNationalCodeStatus, useRevealNationalCode, useUsers, type UserInput,
 } from '../api/hooks';
 import { ROLE_LABELS, type Center, type UserAccount, type UserRole } from '../api/types';
 import { ApiError, downloadFile } from '../lib/api';
@@ -464,7 +464,7 @@ function NewUserDialog({ open, onOpenChange, account, defaultCenter }: { open: b
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{account ? 'Modifier le compte' : isAdmin ? 'Nouvel utilisateur' : 'Nouvelle IDE d\'entraînement'}</DialogTitle>
-          <DialogDescription>{account ? 'Mettez à jour les informations et les accès de ce compte.' : 'Tous les champs sont obligatoires. Communiquez le mot de passe provisoire à la personne ; elle choisira son code de sécurité à la première connexion.'}</DialogDescription>
+          <DialogDescription>{account ? 'Mettez à jour les informations et les accès de ce compte.' : 'Tous les champs sont obligatoires. Communiquez le mot de passe provisoire à la personne : elle devra choisir le sien à sa première connexion, puis son code de sécurité.'}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <h3 className="font-semibold text-emerald-950">Identité</h3><div className="grid sm:grid-cols-2 gap-3">
@@ -612,7 +612,7 @@ function ResetPasswordDialog({ account, onClose }: { account: UserAccount; onClo
           <DialogDescription>
             {done
               ? `Communiquez ce mot de passe à ${name}. Il ne sera plus affiché après fermeture.`
-              : `${name} (${account.email}) devra utiliser ce nouveau mot de passe. Ses sessions ouvertes seront fermées.`}
+              : `${name} (${account.email}) devra utiliser ce mot de passe provisoire, puis en choisir un nouveau dès sa connexion. Ses sessions ouvertes seront fermées.`}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -897,26 +897,115 @@ function CentersPanel({ creating, onCreatingChange }: { creating: boolean; onCre
 
 function NationalCodePanel() {
   const setNationalCode = useSetNationalSecurityCode();
+  const { data: status } = useNationalCodeStatus();
+  const reveal = useRevealNationalCode();
+  const [asking, setAsking] = useState(false);
+  const [password, setPassword] = useState('');
+  const [shown, setShown] = useState<string | null>(null);
+  const [error, setError] = useState('');
+
+  // Le code reste affiché 30 secondes, puis disparaît (jamais conservé dans le cache de l'application)
+  useEffect(() => {
+    if (shown === null) return;
+    const timer = setTimeout(() => setShown(null), 30_000);
+    return () => clearTimeout(timer);
+  }, [shown]);
+
+  const show = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const { code } = await reveal.mutateAsync(password);
+      setShown(code);
+      setAsking(false);
+      setPassword('');
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Une erreur est survenue.');
+    }
+  };
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(shown ?? '');
+      toast.success('Code copié');
+    } catch {
+      toast.error('Copie impossible : recopiez le code affiché.');
+    }
+  };
 
   return (
-    <Card className="border-0 shadow-sm ring-1 ring-gray-100 max-w-lg">
-      <CardHeader>
-        <CardTitle className="text-base flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-gray-400" />Code de sécurité national</CardTitle>
-        <CardDescription>
-          Accepté en plus du code personnel de chaque IDE pour quitter une séance en cours (oubli de code, remplacement).
-          Après modification, il est envoyé automatiquement par email à tous les administrateurs nationaux.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <SecurityCodeForm
-          submitLabel="Changer le code national"
-          onSubmit={async (input) => {
-            await setNationalCode.mutateAsync(input);
-            toast.success('Code national modifié et transmis aux administrateurs');
-          }}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-6 max-w-lg">
+      <Card className="border-0 shadow-sm ring-1 ring-gray-100">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-gray-400" />Code de sécurité national</CardTitle>
+          <CardDescription>
+            Accepté en plus du code personnel de chaque IDE pour quitter une séance en cours (oubli de code, remplacement).
+            Tous les administrateurs nationaux peuvent l'afficher ; chaque affichage est tracé.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {status?.configured ? (
+            <p className="text-sm text-gray-600">
+              Code défini le <strong>{formatDate(status.updatedAt, "d MMMM yyyy 'à' HH:mm")}</strong>{status.updatedBy && <> par <strong>{status.updatedBy}</strong></>}.
+            </p>
+          ) : status && <p className="text-sm text-amber-700">Aucun code national n'est défini.</p>}
+
+          {status?.configured && !status.revealable && (
+            <p className="rounded-xl bg-amber-50 ring-1 ring-amber-100 px-4 py-3 text-sm text-amber-800">
+              Ce code ne peut pas être affiché (défini avant cette fonction, ou clé de chiffrement absente du serveur). Redéfinissez-le ci-dessous pour pouvoir l'afficher.
+            </p>
+          )}
+
+          {status?.revealable && shown !== null && (
+            <div className="rounded-xl bg-emerald-50 ring-1 ring-emerald-100 px-4 py-4 text-center space-y-2" aria-live="polite">
+              <p className="text-3xl font-black tracking-[0.4em] text-emerald-900 tabular-nums pl-[0.4em]" data-testid="national-code">{shown}</p>
+              <p className="text-xs text-emerald-800/70">Masqué automatiquement dans 30 secondes. Ne le communiquez pas au patient.</p>
+              <div className="flex justify-center gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={copy}>Copier</Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShown(null)}>Masquer</Button>
+              </div>
+            </div>
+          )}
+
+          {status?.revealable && shown === null && !asking && (
+            <Button variant="outline" className="h-10 gap-2" onClick={() => { setAsking(true); setError(''); }}><Eye className="w-4 h-4" />Afficher le code</Button>
+          )}
+          {asking && (
+            <form onSubmit={show} className="space-y-3 rounded-xl ring-1 ring-gray-100 p-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="nc-password">Mot de passe du compte</Label>
+                <Input id="nc-password" type="password" autoComplete="current-password" autoFocus value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <p className="text-xs text-gray-400">Pour confirmer que c'est bien vous.</p>
+              </div>
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <div className="flex gap-2">
+                <Button type="submit" disabled={reveal.isPending} className="bg-orange-500 hover:bg-orange-600 text-white">
+                  {reveal.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Afficher
+                </Button>
+                <Button type="button" variant="ghost" onClick={() => { setAsking(false); setPassword(''); }}>Annuler</Button>
+              </div>
+            </form>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="border-0 shadow-sm ring-1 ring-gray-100">
+        <CardHeader>
+          <CardTitle className="text-base">Changer le code national</CardTitle>
+          <CardDescription>Les autres administrateurs nationaux en seront prévenus à leur prochaine connexion.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SecurityCodeForm
+            submitLabel="Changer le code national"
+            onSubmit={async (input) => {
+              await setNationalCode.mutateAsync(input);
+              setShown(null);
+              toast.success('Code national modifié : les autres administrateurs en seront prévenus');
+            }}
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

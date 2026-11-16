@@ -496,8 +496,34 @@ export function useSetSecurityCode() {
 }
 
 export function useSetNationalSecurityCode() {
+  const client = useQueryClient();
   return useMutation({
     mutationFn: (input: { password: string; code: string }) => api<void>('/national-security-code', { method: 'PUT', body: input }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['national-code'] }),
+  });
+}
+
+/** État du code national pour l'administrateur connecté (jamais le code) ; `notice` : changement à signaler */
+export interface NationalCodeStatus { configured: boolean; revealable: boolean; updatedAt: string | null; updatedBy: string | null; notice: boolean }
+
+export function useNationalCodeStatus(enabled = true) {
+  return useQuery({ queryKey: ['national-code'], queryFn: () => api<NationalCodeStatus>('/national-security-code'), enabled });
+}
+
+/** Affiche le code national (mot de passe redemandé) ; le résultat n'est pas mis en cache */
+export function useRevealNationalCode() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (password: string) => api<{ code: string }>('/national-security-code/reveal', { method: 'POST', body: { password } }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['national-code'] }),
+  });
+}
+
+export function useAcknowledgeNationalCode() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: () => api<void>('/national-security-code/acknowledge', { method: 'POST' }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['national-code'] }),
   });
 }
 

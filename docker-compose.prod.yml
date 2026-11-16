@@ -27,6 +27,8 @@ services:
       MAILER_FROM: ${MAILER_FROM:-noreply@diaverum.fr}
       # Jeton du prestataire pour l'intégration des contenus (vide = API d'intégration désactivée)
       CONTENT_API_TOKEN: ${CONTENT_API_TOKEN:-}
+      # Clé de chiffrement du code national (openssl rand -base64 32). Vide = code national non affichable aux administrateurs.
+      NATIONAL_CODE_KEY: ${NATIONAL_CODE_KEY:-}
     volumes:
       - jwt_keys:/app/config/jwt
       - course_media:/app/var/course-media

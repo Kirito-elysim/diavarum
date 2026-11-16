@@ -114,6 +114,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Archiva
     #[Groups(['user:write'])]
     private ?string $plainPassword = null;
 
+    /** Mot de passe provisoire (création ou réinitialisation par un cadre ou un administrateur) : à remplacer à la prochaine connexion */
+    #[ORM\Column(options: ['default' => false])]
+    #[Groups(['user:read', 'me:read'])]
+    private bool $mustChangePassword = false;
+
     /** Code personnel de l'IDE (haché) pour quitter une séance en cours vers le back office */
     #[ORM\Column(nullable: true)]
     private ?string $securityCodeHash = null;
@@ -293,6 +298,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Archiva
     public function eraseCredentials(): void
     {
         // Déprécié depuis Symfony 7.3 : le mot de passe en clair est effacé par UserProcessor
+    }
+
+    public function isMustChangePassword(): bool
+    {
+        return $this->mustChangePassword;
+    }
+
+    public function setMustChangePassword(bool $mustChangePassword): static
+    {
+        $this->mustChangePassword = $mustChangePassword;
+
+        return $this;
     }
 
     public function getSecurityCodeHash(): ?string

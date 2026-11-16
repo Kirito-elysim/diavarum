@@ -25,7 +25,10 @@ joignables, via Traefik et le réseau `coolify`.
 2. **Docker Compose Location** : `/docker-compose.prod.yml`.
 3. **Environment Variables** : reprendre `.env.prod.example`. Obligatoires : `APP_SECRET`,
    `JWT_PASSPHRASE`, `POSTGRES_PASSWORD`, `MAILPIT_UI_AUTH`. Générer chaque secret avec
-   `openssl rand -hex 32`.
+   `openssl rand -hex 32`. Recommandée : `NATIONAL_CODE_KEY` (`openssl rand -base64 32`), qui
+   chiffre le code de sécurité national pour l'afficher aux administrateurs nationaux ; à définir
+   **avant** le déploiement et à conserver (perdue ou changée, le code ne s'affiche plus et un
+   administrateur doit le redéfinir ; la vérification des codes n'est pas affectée). Vide = affichage désactivé.
 4. **Domaines** : sur le service `nginx`, `https://diaverum.votredomaine.fr`, port 80, HTTPS
    activé. Facultatif : un domaine pour `mailer` (8025) et, ponctuellement, pour `adminer` (8080).
 5. **Deploy**. Le premier build prend quelques minutes (extensions PHP, Composer, build du front).

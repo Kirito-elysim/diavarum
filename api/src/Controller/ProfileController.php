@@ -47,6 +47,7 @@ final class ProfileController
         $credentialsChanged = $previousEmail !== $user->getEmail() || null !== $request->newPassword;
         if (null !== $request->newPassword) {
             $user->setPassword($this->passwordHasher->hashPassword($user, $request->newPassword));
+            $user->setMustChangePassword(false);
         }
         if ($credentialsChanged) {
             $this->entityManager->createQueryBuilder()

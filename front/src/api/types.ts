@@ -62,6 +62,8 @@ export interface Me {
   centers: { id: string; name: string; city: string }[];
   securityCodeConfigured: boolean;
   securityCodeUpdatedAt: string | null;
+  /** Mot de passe provisoire : à remplacer dès la connexion */
+  mustChangePassword: boolean;
   createdAt: string;
 }
 
@@ -70,6 +72,7 @@ export interface UserAccount extends Author {
   role: UserRole;
   centers: CenterRef[];
   securityCodeConfigured: boolean;
+  mustChangePassword?: boolean;
   lastLoginAt?: string | null;
   createdAt: string;
   archivedAt?: string | null;
