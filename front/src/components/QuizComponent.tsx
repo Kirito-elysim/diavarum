@@ -387,7 +387,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
 function QuestionHeader({ text, multi }: { label?: string; text: string; multi?: boolean }) {
   return (
     <div className="flex flex-wrap items-start gap-2">
-      <p className="flex-1 text-[25px] font-bold text-[#004138] leading-snug whitespace-pre-line [&_strong]:text-[#E86825]"><CourseText text={text} /></p>
+      <p className="flex-1 text-[25px] font-normal text-[#004138] leading-snug whitespace-pre-line [&_strong]:font-bold"><CourseText text={text} /></p>
       {multi && <span className="mt-1 bg-[#E86825]/15 text-[#A64314] px-2 py-1 rounded-md course-label font-bold">Plusieurs réponses</span>}
     </div>
   );

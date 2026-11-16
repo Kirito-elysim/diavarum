@@ -42,4 +42,4 @@ export function ItemActions({ index, count, onMove, onRemove }: { index: number;
 }
 
 /** Mise en forme disponible dans les questions : saut de ligne avec Entrée, gras entre deux ** */
-export const QUESTION_HINT = 'Entrée pour sauter une ligne · entourez un passage de ** pour le mettre en gras (affiché en orange).';
+export const QUESTION_HINT = 'Entrée pour sauter une ligne · entourez un passage de ** pour le mettre en gras.';

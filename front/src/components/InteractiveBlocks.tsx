@@ -16,7 +16,7 @@ import type {
 
 /* Shared sub-components (mirror QuizComponent styles) ──────────────────── */
 function BlockHeader({ text }: { label?: string; text: string }) {
-  return <p className="text-[25px] font-bold text-[#004138] leading-snug whitespace-pre-line [&_strong]:text-[#E86825]"><CourseText text={text} /></p>;
+  return <p className="text-[25px] font-normal text-[#004138] leading-snug whitespace-pre-line [&_strong]:font-bold"><CourseText text={text} /></p>;
 }
 
 function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disabled: boolean; label: string }) {
