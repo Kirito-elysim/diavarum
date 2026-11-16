@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { CarouselBlock } from '../types';
 import { CourseText } from './CourseText';
-import { cn } from '../lib/utils';
 
 /**
  * Carrousel : images défilantes avec leur texte (interactivité prévue par le cahier des charges).
@@ -36,7 +35,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
           startX.current = null;
         }}
       >
-        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="w-full object-contain fade-scale-in" style={{ height: 'clamp(220px, calc(100dvh - 495px), 400px)' }} draggable={false} />
+        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="w-full object-contain fade-scale-in" style={{ height: 'clamp(220px, calc(100dvh - 470px), 400px)' }} draggable={false} />
         {index > 0 && (
           <button onClick={() => go(index - 1)} aria-label="Image précédente" className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 text-[#E86825] flex items-center justify-center touch-manipulation">
             <ChevronLeft className="w-11 h-11" />
@@ -51,19 +50,6 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
 
       <p key={`t-${slide.id}`} className="rounded-2xl px-5 py-4 text-[25px] text-[#004138] leading-snug text-center min-h-[3.5rem] whitespace-pre-line fade-scale-in" style={{ border: '3px solid #1C5335' }}><CourseText text={slide.text} /></p>
 
-      <div className="flex items-center justify-center gap-2">
-        {block.slides.map((s, i) => (
-          <button
-            key={s.id}
-            onClick={() => go(i)}
-            aria-label={`Image ${i + 1}`}
-            aria-current={i === index ? 'true' : undefined}
-            className="w-11 h-11 flex items-center justify-center"
-          >
-            <span className={cn('h-2.5 rounded-full transition-all', i === index ? 'w-8 bg-[#E86825]' : 'w-2.5 bg-[#004138]/15')} />
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
