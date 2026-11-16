@@ -54,38 +54,38 @@
           "hotspots": [
             {
               "id": "s1-respect-1",
-              "x": 34,
-              "y": 30,
+              "x": 30,
+              "y": 26,
               "label": "Votre dignité",
               "description": "",
-              "size": 64,
+              "size": 88,
               "sheetRow": 3
             },
             {
               "id": "s1-respect-2",
-              "x": 66,
-              "y": 30,
+              "x": 70,
+              "y": 26,
               "label": "Votre intimité",
               "description": "",
-              "size": 64,
+              "size": 88,
               "sheetRow": 1
             },
             {
               "id": "s1-respect-3",
-              "x": 34,
-              "y": 70,
+              "x": 30,
+              "y": 74,
               "label": "Votre vie privée",
               "description": "",
-              "size": 64,
+              "size": 88,
               "sheetRow": 0
             },
             {
               "id": "s1-respect-4",
-              "x": 66,
-              "y": 70,
+              "x": 70,
+              "y": 74,
               "label": "Du secret médical",
               "description": "",
-              "size": 64,
+              "size": 88,
               "sheetRow": 2
             }
           ],
