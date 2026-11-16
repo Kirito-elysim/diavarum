@@ -84,7 +84,7 @@ export function PatientProgramBis({patient, program, actions}: {patient: Patient
   const [filter, setFilter] = useState<Filter>('all');
   const [sort, setSort] = useState('position');
   const [choosing, setChoosing] = useState(false);
-  const {launch, confirmation} = useCourseLaunch(patient.id, program);
+  const {launch} = useCourseLaunch(patient.id, program);
   const navigate = useNavigate();
   const {latest, isLoading, isError, refetch} = useProgramSessions(patient, program);
   const selected = program.modules.filter(m => m.selected);
@@ -107,7 +107,6 @@ export function PatientProgramBis({patient, program, actions}: {patient: Patient
   const canStart = !patient.removedAt && patient.eligibilityStatus === 'eligible' && ['actif', 'non_actif'].includes(program.status);
   const filters = [{key:'todo', label:'À réaliser', count:todo, icon:Clock}, {key:'started', label:'En cours', count:started, icon:Play}, {key:'validated', label:'Validés', count:validated, icon:CheckCircle2}, {key:'all', label:'Tous', count:selected.length, icon:BookOpen}] as const;
   return <section className="space-y-5">
-    {confirmation}
     <div className="flex flex-wrap items-center justify-between gap-4"><div><h2 className="text-2xl font-bold text-slate-950">Parcours de formation</h2><p className="mt-1 text-sm text-slate-500">Suivi des modules, validation des compétences et historique des séances.</p></div><fieldset disabled={!!patient.removedAt}>{actions}</fieldset></div>
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4"><div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full" style={{background:`conic-gradient(#ff6200 ${percent}%, #fff0e8 0)`}}><div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-sm font-bold">{percent}%</div></div><div><p className="font-semibold">Progression globale</p><p className="text-sm text-slate-600">{validated} / {selected.length} séances validées</p></div></div>

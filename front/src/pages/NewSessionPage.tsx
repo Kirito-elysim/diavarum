@@ -22,7 +22,7 @@ export default function NewSessionPage() {
   const { data: patients } = usePatients({ eligibilityStatus: 'eligible' });
   const patient = patients?.member.find((p) => p.id === patientId);
   const { data: program, isLoading: programLoading } = usePatientProgram(patient?.['@id']);
-  const { launch, confirmation } = useCourseLaunch(patientId, program);
+  const { launch } = useCourseLaunch(patientId, program);
   const selection = program?.modules.filter((m) => m.selected && m.status !== 'valide') ?? [];
 
   const canLaunch = selection.some((m) => m.module.id === moduleId);
@@ -35,7 +35,6 @@ export default function NewSessionPage() {
 
   return (
     <div className="max-w-lg mx-auto space-y-6">
-      {confirmation}
       <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="text-gray-500 -ml-1">
         <ArrowLeft className="w-4 h-4 mr-1.5" />
         Retour

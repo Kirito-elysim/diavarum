@@ -277,7 +277,7 @@ export default function PatientDetailPage() {
 
 function ProgramSection({ patient, program }: { patient: Patient; program: TrainingProgram | null }) {
   const [creating, setCreating] = useState(false);
-  const { launch, confirmation } = useCourseLaunch(patient.id, program);
+  const { launch } = useCourseLaunch(patient.id, program);
 
   if (patient.eligibilityStatus !== 'eligible') {
     return (
@@ -318,7 +318,6 @@ function ProgramSection({ patient, program }: { patient: Patient; program: Train
 
   return (
     <div className="space-y-4">
-      {confirmation}
       <CodexSummary patient={patient} />
       <ProgramActions program={program} />
       <p className="text-sm text-gray-500">

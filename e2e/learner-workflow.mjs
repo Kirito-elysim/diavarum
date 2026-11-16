@@ -54,11 +54,6 @@ try {
  if(await prompt.isVisible()) await prompt.getByRole('button',{name:/^(Fermer|Non)$/}).tap();
  await page.getByRole('tab',{name:'Parcours',exact:true}).tap();
  await page.locator('div.p-3.rounded-xl',{hasText:'Droits et devoirs du patient'}).getByRole('button',{name:/Lancer|Reprendre/}).tap();
- await page.getByRole('alertdialog').getByRole('heading',{name:'Aucun cours optionnel sélectionné'}).waitFor();
- await page.getByRole('button',{name:'Revoir le parcours',exact:true}).tap();
- assert.equal(starts,0);
- await page.locator('div.p-3.rounded-xl',{hasText:'Droits et devoirs du patient'}).getByRole('button',{name:/Lancer|Reprendre/}).tap();
- await page.getByRole('alertdialog').getByRole('button',{name:'Lancer le cours',exact:true}).tap();
  await page.getByRole('button',{name:/Commencer la séance/}).tap();
  await page.getByRole('heading',{name:'Découvrir',exact:true}).waitFor();
  assert.equal(starts,1,'Une seule création de séance');

@@ -54,17 +54,6 @@ try {
   await page.getByRole('tab',{name:'Parcours',exact:true}).tap();
   await clock.runFor(500);
   await course().getByRole('button',{name:/Lancer|Reprendre/}).tap();
-  const start=page.getByRole('button',{name:'Lancer le cours',exact:true});
-  const review=page.getByRole('button',{name:'Revoir le parcours',exact:true});
-  await clock.runFor(500);
-  await start.or(review).first().waitFor();
-  if(await review.isVisible()){
-   await review.tap();
-   await clock.runFor(500);
-   await course().getByRole('button',{name:/Lancer|Reprendre/}).tap();
-   await clock.runFor(500);
-  }
-  await start.tap();
   await clock.runFor(500);
   await page.getByRole('button',{name:/Commencer la séance/}).tap();
   await clock.runFor(500);
