@@ -117,4 +117,17 @@ final class ListFiltersTest extends ApiTestCaseBase
 
         self::assertSame(1, $this->requestAs($this->ideParis, 'GET', '/api/summaries/training_programs')->toArray()['total'], 'Périmètre de l\'IDE');
     }
+
+    public function testSeveralCentersCanBeSelectedAtOnce(): void
+    {
+        $both = '?center[]='.urlencode($this->iri($this->paris)).'&center[]='.urlencode($this->iri($this->lyon));
+        $paris = '?center[]='.urlencode($this->iri($this->paris));
+
+        $all = $this->requestAs($this->admin, 'GET', '/api/summaries/training_programs')->toArray()['total'];
+        self::assertSame($all, $this->requestAs($this->admin, 'GET', '/api/summaries/training_programs'.$both)->toArray()['total']);
+        self::assertSame($all, \count($this->requestAs($this->admin, 'GET', '/api/training_programs'.$both)->toArray()));
+        self::assertLessThan($all, $this->requestAs($this->admin, 'GET', '/api/summaries/training_programs'.$paris)->toArray()['total']);
+        $centersOfParisPatients = array_unique(array_map(static fn (array $p) => $p['center']['name'], $this->requestAs($this->admin, 'GET', '/api/patients'.$paris)->toArray()));
+        self::assertSame(['Paris'], array_values($centersOfParisPatients));
+    }
 }

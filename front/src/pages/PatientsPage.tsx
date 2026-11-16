@@ -16,6 +16,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { ELIGIBILITY_LABELS, type Patient } from '../api/types';
 import { api, ApiError } from '../lib/api';
 import { ExportButton } from '../components/ExportButton';
+import { CenterMultiSelect } from '../components/CenterMultiSelect';
 import { ImportDialog } from '../components/ImportDialog';
 import { eligibilityBadge, formatDate } from '../lib/format';
 
@@ -32,7 +33,7 @@ function useDebounced<T>(value: T, delay = 300) {
 
 export default function PatientsPage() {
   const [search, setSearch] = useState('');
-  const [centerFilter, setCenterFilter] = useState('all');
+  const [centerFilter, setCenterFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState('all');
   const [archiveFilter, setArchiveFilter] = useState<ArchiveStatus>('active');
   const [creating, setCreating] = useState(false);
@@ -43,12 +44,13 @@ export default function PatientsPage() {
   const debouncedSearch = useDebounced(search);
   const [selected, setSelected] = useState<string[]>([]);
   // La sélection ne survit pas à un changement de liste : rien de coché hors de vue
-  useEffect(() => setSelected([]), [debouncedSearch, centerFilter, statusFilter, archiveFilter]);
+  const centerKey = centerFilter.join();
+  useEffect(() => setSelected([]), [debouncedSearch, centerKey, statusFilter, archiveFilter]);
 
   const { data: centers } = useCenters();
   const { data, isLoading, isError } = usePatients({
     search: debouncedSearch || undefined,
-    center: centerFilter === 'all' ? undefined : centerFilter,
+    center: centerFilter,
     eligibilityStatus: statusFilter === 'all' ? undefined : statusFilter,
     status: archiveFilter === 'active' ? undefined : archiveFilter,
   });
@@ -106,19 +108,7 @@ export default function PatientsPage() {
             </div>
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-400" />
-              {showCenter && (
-                <Select value={centerFilter} onValueChange={setCenterFilter}>
-                  <SelectTrigger className="h-10 w-52 bg-gray-50 border-gray-100">
-                    <SelectValue placeholder="Tous les centres" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tous les centres</SelectItem>
-                    {centers?.member.map((c) => (
-                      <SelectItem key={c.id} value={c['@id']}>{c.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              {showCenter && <CenterMultiSelect centers={centers?.member ?? []} value={centerFilter} onChange={setCenterFilter} />}
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="h-10 w-44 bg-gray-50 border-gray-100">
                   <SelectValue placeholder="Toutes éligibilités" />

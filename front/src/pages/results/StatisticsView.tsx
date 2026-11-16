@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../components/ui/dropdown-menu';
-import { SearchableSelect } from '../../components/SearchableSelect';
+import { CenterMultiSelect } from '../../components/CenterMultiSelect';
 import { useAuth } from '../../contexts/AuthContext';
 import { statisticsQuery, useCenters, useStatistics } from '../../api/hooks';
 import { ApiError, downloadFile } from '../../lib/api';
@@ -35,7 +35,7 @@ export function StatisticsView() {
   const { data: centers } = useCenters();
   const [params, setParams] = useSearchParams();
   const tab = TABS.some((t) => t.value === params.get('onglet')) ? params.get('onglet')! : 'apercu';
-  const [center, setCenter] = useState('all');
+  const [centerFilter, setCenterFilter] = useState<string[]>([]);
   const [preset, setPreset] = useState<PeriodPreset>('12m');
   const [custom, setCustom] = useState<Period>({ from: null, to: null });
 
@@ -51,7 +51,7 @@ export function StatisticsView() {
     if (previous) { setPresetB('custom'); setCustomB(previous); } else setPresetB('12m');
     setComparing(true);
   };
-  const selection = center === 'all' ? [] : [center];
+  const selection = centerFilter.map((iri) => iri.split('/').pop()!);
   const { data: stats, isLoading, isError, error } = useStatistics(selection, period);
   const { data: statsB, isLoading: loadingB, isError: errorB } = useStatistics(selection, periodB, comparing);
   const compare = comparing ? statsB : undefined;
@@ -73,15 +73,12 @@ export function StatisticsView() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {multiCenter && (
-            <SearchableSelect
-              aria-label="Filtrer par centre"
+            <CenterMultiSelect
               className="w-60 bg-white border-gray-200"
-              value={center}
-              onChange={setCenter}
-              placeholder={isAdmin ? 'National (tous les centres)' : 'Tous mes centres'}
-              searchPlaceholder="Rechercher un centre…"
-              emptyText="Aucun centre trouvé"
-              options={[{ value: 'all', label: isAdmin ? 'National (tous les centres)' : 'Tous mes centres' }, ...(centers?.member ?? []).map((c) => ({ value: c.id, label: c.name, hint: c.city }))]}
+              centers={centers?.member ?? []}
+              value={centerFilter}
+              onChange={setCenterFilter}
+              allLabel={isAdmin ? 'National (tous les centres)' : 'Tous mes centres'}
             />
           )}
           <PeriodPicker className="w-60" preset={preset} custom={custom} onChange={(nextPreset, nextCustom) => { setPreset(nextPreset); setCustom(nextCustom); }} />
@@ -160,7 +157,7 @@ export function StatisticsView() {
             <TabsContent value="apercu" className="mt-5"><OverviewTab stats={stats} compare={compare} /></TabsContent>
             <TabsContent value="parcours" className="mt-5">
               {comparing && <p className="mb-3 rounded-lg bg-gray-50 px-4 py-2 text-sm text-gray-500">Cette liste présente les parcours à date : elle ne dépend pas de la période, la comparaison A / B ne s'y applique pas.</p>}
-              <ProgramsTable centerId={center === 'all' ? null : center} />
+              <ProgramsTable centerIds={selection} />
             </TabsContent>
             <TabsContent value="seances" className="mt-5"><CoursesTab courses={stats.courses} compare={compare?.courses} /></TabsContent>
             <TabsContent value="centres" className="mt-5"><CentersTab centers={stats.centers} total={stats.total} compare={compare ? { centers: compare.centers, total: compare.total } : undefined} /></TabsContent>

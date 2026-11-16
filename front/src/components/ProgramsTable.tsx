@@ -6,7 +6,7 @@ import { Card, CardContent } from './ui/card';
 import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { ListPagination } from './ListPagination';
-import { SearchableSelect } from './SearchableSelect';
+import { CenterMultiSelect } from './CenterMultiSelect';
 import { EmptyState, HEAD, ProgressBar, ScoreBar, SortableHead } from './ListParts';
 import { useCenters, useInterruptionReasons, useProgramList, useProgramSummary, type ListSort } from '../api/hooks';
 import { PROGRAM_ACTIVITY_LABELS, type ProgramActivityStatus } from '../api/types';
@@ -22,21 +22,20 @@ const STATUS_ORDER: ProgramActivityStatus[] = ['actif', 'non_demarre', 'non_acti
 
 /**
  * Parcours paginés côté serveur : pastilles de statut avec leurs effectifs, recherche, centre, tri.
- * `centerId` fixe le centre (Résultats filtrés sur un centre) et masque le choix du centre.
+ * `centerIds` (identifiants) impose les centres (écran Résultats, vide = tous) et masque le choix du centre.
  */
-export function ProgramsTable({ centerId }: { centerId?: string | null } = {}) {
+export function ProgramsTable({ centerIds }: { centerIds?: string[] } = {}) {
   const navigate = useNavigate();
   const { data: centers } = useCenters();
   const { data: reasons } = useInterruptionReasons();
   const [search, setSearch] = useState('');
-  const [center, setCenter] = useState('all');
+  const [centerFilter, setCenterFilter] = useState<string[]>([]);
   const [status, setStatus] = useState<'all' | ProgramActivityStatus>('all');
   const [sort, setSort] = useState<ListSort>({ key: 'created', desc: true });
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounced(search.trim());
-  const selectedCenter = centerId ?? (center === 'all' ? null : center);
-  const filters = { search: debouncedSearch, center: selectedCenter ? `/api/centers/${selectedCenter}` : undefined };
+  const filters = { search: debouncedSearch, center: centerIds ? centerIds.map((id) => `/api/centers/${id}`) : centerFilter };
   const listFilters = { ...filters, status: status === 'all' ? undefined : status };
   const filterKey = JSON.stringify(listFilters);
   useEffect(() => setPage(1), [filterKey]);
@@ -82,17 +81,8 @@ export function ProgramsTable({ centerId }: { centerId?: string | null } = {}) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input aria-label="Rechercher un patient" placeholder="Rechercher un patient…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-10 bg-gray-50 border-gray-100" />
           </div>
-          {!centerId && (centers?.member.length ?? 0) > 1 && (
-            <SearchableSelect
-              aria-label="Filtrer par centre"
-              className="w-56"
-              value={center}
-              onChange={setCenter}
-              placeholder="Tous les centres"
-              searchPlaceholder="Rechercher un centre…"
-              emptyText="Aucun centre trouvé"
-              options={[{ value: 'all', label: 'Tous les centres' }, ...(centers?.member ?? []).map((c) => ({ value: c.id, label: c.name, hint: c.city }))]}
-            />
+          {!centerIds && (centers?.member.length ?? 0) > 1 && (
+            <CenterMultiSelect centers={centers?.member ?? []} value={centerFilter} onChange={setCenterFilter} />
           )}
           <span className="ml-auto flex items-center gap-2 text-sm text-gray-500">
             {isFetching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Route className="w-4 h-4" />}{total} parcours

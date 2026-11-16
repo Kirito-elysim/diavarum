@@ -26,9 +26,13 @@ import type {
   UserRole,
 } from './types';
 
-const query = (params: Record<string, string | undefined>) => {
+/** Une liste de valeurs devient `clé[]=a&clé[]=b` ; une liste vide ne filtre pas */
+const query = (params: Record<string, string | string[] | undefined>) => {
   const search = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => value && search.set(key, value));
+  Object.entries(params).forEach(([key, value]) => {
+    if (Array.isArray(value)) value.forEach((v) => search.append(`${key}[]`, v));
+    else if (value) search.set(key, value);
+  });
   const qs = search.toString();
 
   return qs ? `?${qs}` : '';
@@ -46,7 +50,7 @@ export function useCenters(status: ArchiveStatus = 'active') {
   });
 }
 
-export function usePatients(params: { search?: string; center?: string; eligibilityStatus?: string; status?: ArchiveStatus } = {}) {
+export function usePatients(params: { search?: string; center?: string[]; eligibilityStatus?: string; status?: ArchiveStatus } = {}) {
   return useQuery({
     queryKey: ['patients', params],
     queryFn: () => allPages<Patient>(`/patients${query(params)}`),
@@ -231,7 +235,7 @@ export function useSessionSummary(filters: SessionFilters) {
   });
 }
 
-export interface ProgramFilters { search?: string; center?: string; status?: string }
+export interface ProgramFilters { search?: string; center?: string[]; status?: string }
 
 const PROGRAM_SORT: Record<string, string> = { patient: 'patient', status: 'activityStatus', start: 'startedAt', created: 'createdAt' };
 

@@ -107,8 +107,10 @@ final class SummaryController
 
     private function filterCommon(QueryBuilder $qb, Request $request, string $alias, string $patientAlias): void
     {
-        if ($center = self::id($request->query->getString('center'))) {
-            $qb->andWhere("IDENTITY($patientAlias.center) = :center")->setParameter('center', $center, 'uuid');
+        // « center=<iri> » ou « center[]=<iri>&center[]=<iri> »
+        $centers = array_values(array_filter(array_map(self::id(...), (array) ($request->query->all()['center'] ?? []))));
+        if ($centers) {
+            $qb->andWhere("IDENTITY($patientAlias.center) IN (:centers)")->setParameter('centers', $centers);
         }
     }
 
