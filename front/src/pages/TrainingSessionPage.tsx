@@ -99,7 +99,7 @@ function ImageBlockView({ block }: { block: ImageBlock }) {
     <>
       <figure className="space-y-3">
         <div className="relative overflow-hidden rounded-2xl cursor-zoom-in" onClick={() => setZoomed(true)}>
-          <img src={block.url} alt={block.alt} className="block w-full h-auto" loading="lazy" />
+          <img src={block.url} alt={block.alt} className={cn('mx-auto block max-w-full', block.maxHeight ? 'w-full object-contain' : 'h-auto')} style={block.maxHeight ? { height: block.maxHeight } : undefined} loading="lazy" />
           <div className="absolute top-3 right-3 bg-[#004138]/70 backdrop-blur-sm rounded-xl p-2">
             <ZoomIn className="w-4 h-4 text-white" />
           </div>
@@ -342,7 +342,7 @@ function ImageTextView({ block }: { block: ImageTextBlock }) {
   const picto = block.size === 'picto';
   return (
     <div className={cn('course-image-text flex items-start gap-10', !picto && 'flex-col sm:flex-row', block.imageSide === 'right' && 'sm:flex-row-reverse')}>
-      {block.imageUrl ? <img src={block.imageUrl} alt={block.alt} loading="lazy" className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full sm:w-[48%] rounded-3xl bg-[#FFE0D0]')} /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
+      {block.imageUrl ? <img src={block.imageUrl} alt={block.alt} loading="lazy" className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full sm:w-[48%] rounded-3xl')} /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
       <p className="min-w-0 flex-1 text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
     </div>
   );

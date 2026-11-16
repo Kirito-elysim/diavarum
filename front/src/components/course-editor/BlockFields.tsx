@@ -46,7 +46,12 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
     <Field label="Explication des associations" multiline value={b.explanation} onChange={explanation => onChange({ ...b, explanation })} />
   </>;
   if (b.type === 'text') return <><Field label="Texte" multiline value={b.content} onChange={content => onChange({ ...b, content })} /><TextStyleFields value={b.textStyle} onChange={textStyle => onChange({ ...b, textStyle })} /></>;
-  if (b.type === 'image') return <><ImageField url={b.url} alt={b.alt} onChange={(url, alt) => onChange({ ...b, url, alt })} /><Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} /></>;
+  if (b.type === 'image') return <><ImageField url={b.url} alt={b.alt} onChange={(url, alt) => onChange({ ...b, url, alt })} /><Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
+    <div className="space-y-2 rounded-xl bg-gray-50 p-3">
+      <Toggle label="Taille automatique : taille d’origine, sans dépasser la largeur de la page" checked={b.maxHeight === undefined} onChange={auto => onChange({ ...b, maxHeight: auto ? undefined : 300 })} />
+      {b.maxHeight !== undefined && <label className="block space-y-2"><span className="text-sm font-medium">Hauteur de l’image : {b.maxHeight} px</span>
+        <input type="range" min={100} max={500} step={4} className="w-full" value={b.maxHeight} onChange={e => onChange({ ...b, maxHeight: Number(e.target.value) })} /></label>}
+    </div></>;
   if (b.type === 'info-card') {
     const current = infoCardCategory(b.variant);
     return <>

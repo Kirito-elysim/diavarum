@@ -30,6 +30,8 @@ export interface ImageBlock {
   url: string;
   caption?: string;
   alt: string;
+  /** Hauteur maximale en pixels ; absente = pleine largeur, hauteur automatique */
+  maxHeight?: number;
 }
 
 /** Catégories d'encadré ; les anciennes valeurs (info, success, tip) restent lisibles */
