@@ -89,3 +89,9 @@ export const markerWidth = (size = 48) => `${size / 720 * 100}%`;
 
 /** Page réduite à des cartes à retourner de hauteur automatique : elles occupent toute la place disponible */
 export const pageFills = (blocks: { type: string; cardHeight?: number }[]) => blocks.length === 1 && blocks[0].type === 'flip-cards' && !blocks[0].cardHeight;
+
+/** Page réduite à une image (ou un picto) accompagnée de son texte : l'activité est centrée au milieu de la page */
+export const pageCenters = (blocks: { type: string }[]) => blocks.length === 1 && blocks[0].type === 'image-text';
+
+/** Pages dont les blocs s'étirent sur toute la hauteur (cartes) ou se centrent (image + texte) : le conteneur doit être une colonne flex */
+export const pageStretches = (blocks: { type: string; cardHeight?: number }[]) => pageFills(blocks) || pageCenters(blocks);

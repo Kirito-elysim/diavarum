@@ -32,7 +32,7 @@ import type {
 } from '../types';
 // New block types are imported by their component props; no extra type imports needed here.
 import { cn } from '../lib/utils';
-import { infoCardCategory, markerWidth, pageFills } from '../lib/courseVisuals';
+import { infoCardCategory, markerWidth, pageCenters, pageFills, pageStretches } from '../lib/courseVisuals';
 import { HotspotMarker, SheetMarker } from '../components/HotspotMarker';
 
 /* ─── Fullscreen helpers ──────────────────────────────────────────────────── */
@@ -1034,7 +1034,8 @@ export function PageBlocks({ blocks, keyPrefix, quizAnswers, onQuizAnswer }: {
   blocks: ContentBlock[]; keyPrefix: string; quizAnswers: Record<string, { isCorrect: boolean; score: number; selected?: string[] }>; onQuizAnswer: (id: string, isCorrect: boolean, score: number, selected?: string[]) => void;
 }) {
   const fill = pageFills(blocks);
-  return <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0')}>
+  const center = pageCenters(blocks);
+  return <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0', center && 'flex flex-1 flex-col justify-center space-y-0')}>
     {blocks.map((block) => <div key={`${keyPrefix}:${block.id}`} className={cn(fill && 'flex flex-1 flex-col')}>
       <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={onQuizAnswer} fill={fill} />
     </div>)}
@@ -1381,7 +1382,7 @@ function SessionRunner({
   }
 
   // Page réduite à des cartes à retourner : elles occupent toute la place disponible
-  const fillPage = pageFills(currentPage.blocks);
+  const fillPage = pageStretches(currentPage.blocks);
 
   return (
     <div className="course-theme fixed inset-0 z-[9999] flex flex-col" style={{ userSelect: 'none', background: '#ECF5E9' }}>

@@ -3,7 +3,7 @@ import { CourseHeader } from '../CourseHeader';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { ModulePage } from '../../types';
-import { pageFills } from '../../lib/courseVisuals';
+import { pageStretches } from '../../lib/courseVisuals';
 import { Button } from '../ui/button';
 
 const PageBlocks = lazy(() => import('../../pages/TrainingSessionPage').then(module => ({ default: module.PageBlocks })));
@@ -63,7 +63,7 @@ function TabletContent({ pages, start }: { pages: ModulePage[]; start: number })
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
   return <div className="course-theme h-dvh flex flex-col">
     <CourseHeader page={page} pageNumber={index + 1} totalPages={pages.length} actions={<button className="min-h-11 px-4 rounded-full bg-white/10 course-label" onClick={() => { setIndex(start); setAnswers({}); setAttempt(a => a + 1); }}>Recommencer</button>} />
-    <main ref={scroll} className="flex-1 min-h-0 overflow-y-auto overscroll-contain"><div className={`px-4 sm:px-10 py-5${pageFills(page.blocks) ? ' flex min-h-full flex-col' : ''}`}><Suspense fallback={<p>Chargement…</p>}><PageBlocks blocks={page.blocks} keyPrefix={`${attempt}:${page.id}`} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} /></Suspense></div></main>
+    <main ref={scroll} className="flex-1 min-h-0 overflow-y-auto overscroll-contain"><div className={`px-4 sm:px-10 py-5${pageStretches(page.blocks) ? ' flex min-h-full flex-col' : ''}`}><Suspense fallback={<p>Chargement…</p>}><PageBlocks blocks={page.blocks} keyPrefix={`${attempt}:${page.id}`} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} /></Suspense></div></main>
     <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />
   </div>;
 }
