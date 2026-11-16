@@ -1,0 +1,607 @@
+{
+  "code": "S2",
+  "title": "Hygiène au centre de dialyse",
+  "description": "Identifier les principales mesures d’hygiène à respecter avant, pendant et après une séance de dialyse. Reconnaître les situations à risque infectieux et adopter les comportements adaptés pour protéger son abord vasculaire et sa santé.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut citer les signes d’alerte pouvant évoquer une infection.",
+    "Le patient peut décrire les étapes d’hygiène avant/après la séance.",
+    "Le patient peut citer les comportements contribuant à la sécurité de tous."
+  ],
+  "content": [
+    {
+      "id": "p01",
+      "title": "Infections et dialyse",
+      "blocks": [
+        {
+          "id": "s2-infections",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Un patient dialysé est plus vulnérable aux infections par rapport à une personne non dialysée.",
+          "options": [
+            {
+              "id": "s2-infections-1",
+              "label": "Vrai",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-infections-2",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ],
+          "graded": false,
+          "showCorrection": false
+        }
+      ],
+      "instruction": "Touchez la réponse qui vous paraît exacte."
+    },
+    {
+      "id": "p02",
+      "title": "Pourquoi un patient dialysé est-il plus vulnérable aux infections ?",
+      "blocks": [
+        {
+          "id": "s2-vulnerable",
+          "type": "hotspot",
+          "imageUrl": "/courses/S2/infections.png",
+          "alt": "Un patient âgé assis",
+          "sheet": {
+            "url": "/courses/S2/infections-pictos.png",
+            "cols": 2,
+            "rows": 3
+          },
+          "hotspots": [
+            {
+              "id": "s2-vulnerable-1",
+              "x": 26,
+              "y": 45,
+              "label": "L’IRCT",
+              "description": "elle altère l’immunité des patients dialysés.",
+              "sheetRow": 0,
+              "size": 88
+            },
+            {
+              "id": "s2-vulnerable-2",
+              "x": 74,
+              "y": 25,
+              "label": "L’abord vasculaire",
+              "description": "le cathéter ou la fistule constituent des portes d’entrée pour les germes, qui peuvent provoquer des infections potentiellement graves.",
+              "sheetRow": 1,
+              "size": 88
+            },
+            {
+              "id": "s2-vulnerable-3",
+              "x": 74,
+              "y": 70,
+              "label": "Fréquence des soins",
+              "description": "le patient dialysé est plus souvent amené à fréquenter les milieux de soins (centre de dialyse, hôpitaux). Les germes y sont plus présents qu’ailleurs.",
+              "sheetRow": 2,
+              "size": 88
+            }
+          ]
+        },
+        {
+          "id": "s2-vulnerable-regle",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Le respect des mesures d'hygiène permet de réduire le risque d'infection, de protéger l'abord vasculaire et d'assurer la sécurité de tous les patients et des professionnels."
+        }
+      ],
+      "instruction": "Touchez une icône orange pour dévoiler les informations associées."
+    },
+    {
+      "id": "p03",
+      "title": "Que sont les précautions d’hygiène standard ?",
+      "blocks": [
+        {
+          "id": "s2-standard",
+          "type": "image-text",
+          "imageUrl": "/courses/S2/precautions.png",
+          "alt": "Une soignante présente un livret de précautions à une patiente",
+          "size": "image",
+          "content": "En milieu hospitalier, il existe des règles d’hygiène précises à respecter en toute circonstance, dans tous les services et avec tous les patients, pour tous les professionnels de santé comme pour les patients et les visiteurs : il s’agit des précautions standard d’hygiène.\n\nPar exemple, l’hygiène des mains en fait partie, la bonne gestion des déchets, le port des équipements de protection (tablier, gants, visière, masque), etc."
+        }
+      ]
+    },
+    {
+      "id": "p04",
+      "title": "Hygiène des mains et contaminations croisées",
+      "blocks": [
+        {
+          "id": "s2-croisees",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "s2-croisees-1",
+              "imageUrl": "/courses/S2/anim-01.png",
+              "alt": "Image 1 de l’histoire de Mme D. et M. V.",
+              "text": "Mme D., patiente en dialyse, est un peu malade."
+            },
+            {
+              "id": "s2-croisees-2",
+              "imageUrl": "/courses/S2/anim-02.png",
+              "alt": "Image 2 de l’histoire de Mme D. et M. V.",
+              "text": "Elle ne le sait pas encore, mais elle a la grippe."
+            },
+            {
+              "id": "s2-croisees-3",
+              "imageUrl": "/courses/S2/anim-03.png",
+              "alt": "Image 3 de l’histoire de Mme D. et M. V.",
+              "text": "Elle a donc du virus de la grippe sur les mains."
+            },
+            {
+              "id": "s2-croisees-4",
+              "imageUrl": "/courses/S2/anim-04.png",
+              "alt": "Image 4 de l’histoire de Mme D. et M. V.",
+              "text": "Elle arrive au centre de dialyse sans se laver pas les mains et contamine l’environnement."
+            },
+            {
+              "id": "s2-croisees-5",
+              "imageUrl": "/courses/S2/anim-05.png",
+              "alt": "Image 5 de l’histoire de Mme D. et M. V.",
+              "text": "Elle arrive au centre de dialyse sans se laver pas les mains et contamine l’environnement."
+            },
+            {
+              "id": "s2-croisees-6",
+              "imageUrl": "/courses/S2/anim-06.png",
+              "alt": "Image 6 de l’histoire de Mme D. et M. V.",
+              "text": "M. V. arrive après Mme D. au centre de dialyse."
+            },
+            {
+              "id": "s2-croisees-7",
+              "imageUrl": "/courses/S2/anim-07.png",
+              "alt": "Image 7 de l’histoire de Mme D. et M. V.",
+              "text": "Il contamine ses mains avec le virus de la grippe."
+            },
+            {
+              "id": "s2-croisees-8",
+              "imageUrl": "/courses/S2/anim-08.png",
+              "alt": "Image 8 de l’histoire de Mme D. et M. V.",
+              "text": "Puis va contaminer l’environnement avec le virus, y compris son poste de dialyse…"
+            },
+            {
+              "id": "s2-croisees-9",
+              "imageUrl": "/courses/S2/anim-09.png",
+              "alt": "Image 9 de l’histoire de Mme D. et M. V.",
+              "text": "…Et sa fistule."
+            },
+            {
+              "id": "s2-croisees-10",
+              "imageUrl": "/courses/S2/anim-10.png",
+              "alt": "Image 10 de l’histoire de Mme D. et M. V.",
+              "text": "Si M. V. avait réalisé une friction hydro-alcoolique avant de s’installer à son poste de dialyse, il ne l’aurait pas contaminé."
+            },
+            {
+              "id": "s2-croisees-11",
+              "imageUrl": "/courses/S2/anim-11.png",
+              "alt": "Image 11 de l’histoire de Mme D. et M. V.",
+              "text": "De même que si Mme D. s’était lavée les mains en arrivant au centre…"
+            },
+            {
+              "id": "s2-croisees-12",
+              "imageUrl": "/courses/S2/anim-12.png",
+              "alt": "Image 12 de l’histoire de Mme D. et M. V.",
+              "text": "… elle n’aurait pas contaminé la poignée de la porte."
+            }
+          ]
+        }
+      ],
+      "instruction": "Faites défiler les images avec les textes associés."
+    },
+    {
+      "id": "p05",
+      "title": "Comment réaliser une hygiène des mains ?",
+      "blocks": [
+        {
+          "id": "s2-techniques",
+          "type": "picto-grid",
+          "question": "Il existe 2 techniques différentes pour réaliser une hygiène des mains.",
+          "columns": 2,
+          "items": [
+            {
+              "id": "s2-techniques-1",
+              "imageUrl": "/courses/S2/lavage.png",
+              "alt": "Lavage des mains",
+              "text": "Lavage des mains à l’eau et au savon"
+            },
+            {
+              "id": "s2-techniques-2",
+              "imageUrl": "/courses/S2/friction.png",
+              "alt": "Friction hydro-alcoolique",
+              "text": "Friction avec solution hydro-alcoolique (FHA)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p06",
+      "title": "Dans quel cas faire un lavage des mains ou une FHA ?",
+      "blocks": [
+        {
+          "id": "s2-cas",
+          "type": "picto-grid",
+          "question": "Selon les situations, une technique différente est indiquée.",
+          "columns": 2,
+          "items": [
+            {
+              "id": "s2-cas-1",
+              "imageUrl": "/courses/S2/lavage.png",
+              "alt": "Lavage des mains",
+              "text": "Lavage des mains\n• Après un passage aux WC\n• Si saleté visible sur les mains\n• Si sécrétions, ou risque de sécrétions, sur les mains (salive, sécrétions nasales, etc.)"
+            },
+            {
+              "id": "s2-cas-2",
+              "imageUrl": "/courses/S2/friction.png",
+              "alt": "Friction hydro-alcoolique",
+              "text": "Friction hydro-alcoolique (FHA)\nDans toutes les autres situations comme :\n• entrée/sortie du centre ;\n• installation au poste de dialyse ;\n• avant de faire porter des gants pour faire son pansement…"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p07",
+      "title": "Quelle hygiène des mains dans quelle situation ? 1/2",
+      "blocks": [
+        {
+          "id": "s2-situation-1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "À l’arrivée au centre de dialyse, je me mouche ou j’éternue dans un mouchoir. Faut-il réaliser une hygiène des mains ?",
+          "options": [
+            {
+              "id": "s2-situation-1-1",
+              "label": "Oui, il le faut",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-situation-1-2",
+              "label": "Non, car j’ai utilisé un mouchoir",
+              "isCorrect": false
+            }
+          ],
+          "graded": false,
+          "showCorrection": true
+        }
+      ],
+      "instruction": "Touchez la réponse qui vous paraît exacte."
+    },
+    {
+      "id": "p08",
+      "title": "Quelle hygiène des mains dans quelle situation ? 2/2",
+      "blocks": [
+        {
+          "id": "s2-situation-2",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Dans ce contexte, quelle hygiène des mains dois-je réaliser ?",
+          "options": [
+            {
+              "id": "s2-situation-2-1",
+              "label": "Lavage des mains à l’eau et au savon",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-situation-2-2",
+              "label": "Friction hydro-alcoolique",
+              "isCorrect": false
+            }
+          ],
+          "graded": false,
+          "showCorrection": true
+        }
+      ],
+      "instruction": "Touchez la réponse qui vous paraît exacte."
+    },
+    {
+      "id": "p09",
+      "title": "Que faire pour limiter les contaminations au centre ?",
+      "blocks": [
+        {
+          "id": "s2-mesures",
+          "type": "picto-grid",
+          "layout": "stacked",
+          "question": "Pour limiter la prolifération des germes au centre de dialyse, certaines mesures doivent être respectées.",
+          "items": [
+            {
+              "id": "s2-mesures-1",
+              "imageUrl": "/courses/S2/picto-douche.png",
+              "alt": "Douche",
+              "text": "Hygiène personnelle : douche ou toilette quotidienne et vêtements propres"
+            },
+            {
+              "id": "s2-mesures-2",
+              "imageUrl": "/courses/S2/picto-friction.png",
+              "alt": "Friction hydro-alcoolique",
+              "text": "À l’arrivée et au départ du centre : friction hydro-alcoolique pour éviter le manuportage (transmission par les mains) des germes."
+            },
+            {
+              "id": "s2-mesures-3",
+              "imageUrl": "/courses/S2/picto-gants.png",
+              "alt": "Gant",
+              "text": "Port de gants : impératif pour comprimer la fistule, afin d’éviter de contaminer vos mains avec du sang et de le propager ensuite sur les parties communes (poignées de porte, balance, tables, etc.)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p10",
+      "title": "Infections manuportées et respiratoires",
+      "blocks": [
+        {
+          "id": "s2-resp-q",
+          "type": "text",
+          "content": "Covid 19, bronchite, grippe, angine, gastro-entérite…\nConnaissez-vous ces infections ?"
+        },
+        {
+          "id": "s2-resp",
+          "type": "image-text",
+          "imageUrl": "/courses/S2/manuportees.png",
+          "alt": "Une patiente et un soignant portant un masque",
+          "size": "image",
+          "content": "Elles sont transportées par les mains mais parfois aussi dans l’air.\n\nC’est pour les dépister à temps et limiter leur propagation que les soignants contrôlent votre température avant votre séance de dialyse.\n\nC’est aussi pour cette raison que le personnel peut vous demander de porter un masque."
+        }
+      ]
+    },
+    {
+      "id": "p11",
+      "title": "Que faire pour limiter les risques d’infections au centre ?",
+      "blocks": [
+        {
+          "id": "s2-limiter",
+          "type": "carousel",
+          "question": "En tant que patient, je peux limiter la propagation d’une infection dans mon centre de dialyse en :",
+          "slides": [
+            {
+              "id": "s2-limiter-1",
+              "imageUrl": "/courses/S2/limiter-1.png",
+              "alt": "Une soignante et un patient qui lève la main",
+              "text": "Signalant immédiatement à l’équipe si je suis malade (toux, vomissements, diarrhées, fièvre…)."
+            },
+            {
+              "id": "s2-limiter-2",
+              "imageUrl": "/courses/S2/limiter-2.png",
+              "alt": "Un patient qui fait une friction hydro-alcoolique",
+              "text": "Réalisant une hygiène des mains (lavage ou friction) le plus fréquemment possible pour éviter les contaminations manuportées."
+            },
+            {
+              "id": "s2-limiter-3",
+              "imageUrl": "/courses/S2/limiter-3.png",
+              "alt": "Un patient et une soignante portant un masque",
+              "text": "Portant un masque en cas de toux, fièvre, contact avec une personne malade (grippe, covid…) et selon les recommandations du centre."
+            },
+            {
+              "id": "s2-limiter-4",
+              "imageUrl": "/courses/S2/limiter-4.png",
+              "alt": "Un bras de patient avec une zone douloureuse",
+              "text": "Signalant à l'équipe tout signe d’infection sur la voie d’abord (fistule ou du cathéter) : plaie, rougeur ou écoulement, douleur ou gonflement inhabituel…"
+            }
+          ]
+        },
+        {
+          "id": "s2-limiter-regle",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Le respect des consignes d'hygiène protège à la fois le patient, les autres patients et les soignants."
+        }
+      ],
+      "instruction": "Faites défiler les images avec les textes associés."
+    },
+    {
+      "id": "p12",
+      "title": "Focus sur les infections respiratoires",
+      "blocks": [
+        {
+          "id": "s2-focus",
+          "type": "image-text",
+          "imageUrl": "/courses/S2/respiratoires.png",
+          "alt": "Une femme qui éternue",
+          "size": "image",
+          "content": "Une infection respiratoire se propage lorsqu'une personne infectée par un virus tousse ou éternue.\nElle projette alors des micro-gouttelettes : au moins à un mètre de distance, et jusqu’à 8 mètres."
+        },
+        {
+          "id": "s2-focus-masque",
+          "type": "image-text",
+          "imageUrl": "/courses/S2/picto-masque.png",
+          "alt": "Masque",
+          "size": "picto",
+          "content": "La période hivernale est très propice à la circulation des virus, notamment celui de la grippe : porter un masque vous protège et protège les autres."
+        }
+      ]
+    },
+    {
+      "id": "p13",
+      "title": "Que faire pour protéger ma voie d’abord des infections ?",
+      "blocks": [
+        {
+          "id": "s2-abord",
+          "type": "carousel",
+          "question": "Je peux limiter le risque d’infection sur ma voie d’abord (cathéter et/ou fistule) en :",
+          "slides": [
+            {
+              "id": "s2-abord-1",
+              "imageUrl": "/courses/S2/abord-1.png",
+              "alt": "Un patient qui se lave les mains",
+              "text": "Lavant ma fistule avant chaque dialyse, selon les recommandations du centre."
+            },
+            {
+              "id": "s2-abord-2",
+              "imageUrl": "/courses/S2/abord-2.png",
+              "alt": "Une patiente avec le pansement de son cathéter, propre",
+              "text": "Gardant le pansement de mon cathéter sec et propre en permanence."
+            },
+            {
+              "id": "s2-abord-3",
+              "imageUrl": "/courses/S2/abord-3.png",
+              "alt": "Un panneau d’interdiction près du pansement du cathéter",
+              "text": "Évitant de retirer ou même de manipuler le pansement seul (sauf consigne de l’équipe soignante)."
+            },
+            {
+              "id": "s2-abord-4",
+              "imageUrl": "/courses/S2/abord-4.png",
+              "alt": "Une soignante et une patiente, le pansement décollé",
+              "text": "Signalant à l’équipe soignante tout décollement du pansement."
+            }
+          ]
+        },
+        {
+          "id": "s2-abord-regle",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Important",
+          "content": "Le risque d’infection sur cathéter est plus important que celui sur fistule car le cathéter induit une petite plaie ouverte et un matériel invasif."
+        }
+      ],
+      "instruction": "Faites défiler les images avec les textes associés."
+    },
+    {
+      "id": "p14",
+      "title": "Exercices de fin de module — question 1/4",
+      "blocks": [
+        {
+          "id": "s2-q1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "Quel est le geste le plus important pour prévenir les infections ?",
+          "options": [
+            {
+              "id": "s2-q1-1",
+              "label": "Le port de gants",
+              "isCorrect": false
+            },
+            {
+              "id": "s2-q1-2",
+              "label": "Ne pas venir au centre si je suis malade",
+              "isCorrect": false
+            },
+            {
+              "id": "s2-q1-3",
+              "label": "L’hygiène des mains",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-q1-4",
+              "label": "Le port systématique du masque",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p15",
+      "title": "Exercices de fin de module — question 2/4",
+      "blocks": [
+        {
+          "id": "s2-q2",
+          "type": "categorize",
+          "question": "Classez chaque situation selon la technique d’hygiène des mains indiquée.",
+          "categories": [
+            "LAVAGE DES MAINS À L’EAU ET AU SAVON",
+            "FRICTION HYDRO-ALCOOLIQUE"
+          ],
+          "items": [
+            {
+              "id": "s2-q2-1",
+              "label": "Après m’être mouché",
+              "category": "LAVAGE DES MAINS À L’EAU ET AU SAVON"
+            },
+            {
+              "id": "s2-q2-2",
+              "label": "Après un passage aux WC",
+              "category": "LAVAGE DES MAINS À L’EAU ET AU SAVON"
+            },
+            {
+              "id": "s2-q2-3",
+              "label": "Après le retrait des gants",
+              "category": "FRICTION HYDRO-ALCOOLIQUE"
+            },
+            {
+              "id": "s2-q2-4",
+              "label": "Arrivée/Départ du poste de dialyse",
+              "category": "FRICTION HYDRO-ALCOOLIQUE"
+            },
+            {
+              "id": "s2-q2-5",
+              "label": "Entrée/Sortie du centre",
+              "category": "FRICTION HYDRO-ALCOOLIQUE"
+            },
+            {
+              "id": "s2-q2-6",
+              "label": "Après avoir fumé",
+              "category": "LAVAGE DES MAINS À L’EAU ET AU SAVON"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p16",
+      "title": "Exercices de fin de module — question 3/4",
+      "blocks": [
+        {
+          "id": "s2-q3",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Sélectionnez les signes ou symptômes pouvant évoquer une infection de votre fistule ou de votre cathéter.",
+          "options": [
+            {
+              "id": "s2-q3-1",
+              "label": "Douleur",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-q3-2",
+              "label": "Gonflement inhabituel/chaleur",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-q3-3",
+              "label": "Démangeaisons",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p17",
+      "title": "Exercices de fin de module — question 4/4",
+      "blocks": [
+        {
+          "id": "s2-q4",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Que devez-vous faire si vous présentez de la fièvre avant une séance, à votre arrivée au centre ?",
+          "options": [
+            {
+              "id": "s2-q4-1",
+              "label": "Prévenir l’équipe soignante immédiatement",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-q4-2",
+              "label": "Porter un masque",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-q4-3",
+              "label": "Me laver les mains plus souvent que d’habitude (friction ou lavage)",
+              "isCorrect": true
+            },
+            {
+              "id": "s2-q4-4",
+              "label": "Prendre ma température",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

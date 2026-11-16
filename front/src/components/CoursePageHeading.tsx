@@ -19,7 +19,7 @@ export function CoursePageHeading({ title, instruction, pageNumber, totalPages, 
         </span>
       )}
       <div className="min-w-0">
-        <Heading className="font-sans text-[28px] sm:text-[40px] font-bold uppercase leading-snug tracking-normal break-words text-[#E86825]">{title}</Heading>
+        <Heading className={`font-sans text-[28px] ${title.length > 45 ? 'sm:text-[30px]' : 'sm:text-[40px]'} font-bold uppercase leading-snug tracking-normal break-words text-[#E86825]`}>{title}</Heading>
         {instruction?.trim() && <p className="mt-1 text-xl sm:text-[25px] text-[#FFE0D0] whitespace-pre-line break-words">{instruction}</p>}
       </div>
     </div>
