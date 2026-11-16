@@ -36,7 +36,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
           startX.current = null;
         }}
       >
-        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="w-full h-64 sm:h-[400px] object-contain fade-scale-in" draggable={false} />
+        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="w-full object-contain fade-scale-in" style={{ height: 'clamp(220px, calc(100dvh - 495px), 400px)' }} draggable={false} />
         {index > 0 && (
           <button onClick={() => go(index - 1)} aria-label="Image précédente" className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 text-[#E86825] flex items-center justify-center touch-manipulation">
             <ChevronLeft className="w-11 h-11" />
