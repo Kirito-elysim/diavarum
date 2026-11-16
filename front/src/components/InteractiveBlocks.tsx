@@ -576,7 +576,8 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
 }
 
 /* ─── 7. Flip Cards (tap to reveal) ────────────────────────────────────── */
-export function FlipCardsView({ block }: { block: FlipCardsBlock }) {
+/** `fill` : les cartes occupent toute la hauteur disponible (page qui ne contient que ces cartes) */
+export function FlipCardsView({ block, fill }: { block: FlipCardsBlock; fill?: boolean }) {
   const [flipped, setFlipped] = useState<Set<string>>(new Set());
 
   const toggle = (id: string) => {
@@ -589,10 +590,10 @@ export function FlipCardsView({ block }: { block: FlipCardsBlock }) {
   };
 
   return (
-    <div className="space-y-5">
+    <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0 gap-5')}>
       <BlockHeader label="Cartes interactives" text={block.question} />
 
-      <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-5", (block.columns ?? (block.cards.length >= 6 ? 3 : 2)) === 3 && "md:grid-cols-3")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-5", fill && 'flex-1 auto-rows-fr', (block.columns ?? (block.cards.length >= 6 ? 3 : 2)) === 3 && "md:grid-cols-3")}>
         {block.cards.map((card) => {
           const isFlipped = flipped.has(card.id);
           return (

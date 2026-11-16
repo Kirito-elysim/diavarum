@@ -953,8 +953,9 @@ function CompetencyValidationScreen({
 
 /* ─── Block card ─────────────────────────────────────────────────────────── */
 export function BlockCard({
-  block, quizAnswers, onQuizAnswer,
+  block, quizAnswers, onQuizAnswer, fill,
 }: {
+  fill?: boolean;
   block: ContentBlock;
   quizAnswers: Record<string, { isCorrect: boolean; score: number; selected?: string[] }>;
   onQuizAnswer: (id: string, isCorrect: boolean, score: number, selected?: string[]) => void;
@@ -1000,7 +1001,7 @@ export function BlockCard({
   if (block.type === 'tap-sequence')
     return interactiveWrapper(<TapSequenceView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
   if (block.type === 'flip-cards')
-    return interactiveWrapper(<FlipCardsView block={block as FlipCardsBlock} />);
+    return interactiveWrapper(<FlipCardsView block={block as FlipCardsBlock} fill={fill} />);
   if (block.type === 'categorize')
     return interactiveWrapper(<CategorizeView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
   if (block.type === 'drawing')
@@ -1366,6 +1367,9 @@ function SessionRunner({
     );
   }
 
+  // Page réduite à des cartes à retourner : elles occupent toute la place disponible
+  const fillPage = currentPage.blocks.length === 1 && currentPage.blocks[0].type === 'flip-cards';
+
   return (
     <div className="course-theme fixed inset-0 z-[9999] flex flex-col" style={{ userSelect: 'none', background: '#ECF5E9' }}>
 
@@ -1403,11 +1407,11 @@ function SessionRunner({
 
       {/* ── Content (défile ; la navigation reste fixée en bas, hors du défilement) ── */}
       <main ref={contentRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <div className={cn('mx-4 sm:mx-10 py-5 [@media(max-height:820px)]:py-3', slideClass)}>
-          <div className="space-y-5">
+        <div className={cn('mx-4 sm:mx-10 py-5 [@media(max-height:820px)]:py-3', fillPage && 'flex min-h-full flex-col', slideClass)}>
+          <div className={cn('space-y-5', fillPage && 'flex flex-1 flex-col space-y-0')}>
             {currentPage.blocks.map((block) => (
-              <div key={`${currentPage.id}:${block.id}`}>
-                <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} />
+              <div key={`${currentPage.id}:${block.id}`} className={cn(fillPage && 'flex flex-1 flex-col')}>
+                <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} fill={fillPage} />
               </div>
             ))}
           </div>
