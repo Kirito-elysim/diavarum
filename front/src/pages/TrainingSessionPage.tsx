@@ -123,13 +123,12 @@ function InfoCardView({ block }: { block: InfoCardBlock }) {
   const c = infoCardCategory(block.variant);
   const Icon = c.icon;
   return (
-    <div className="course-info-card rounded-2xl px-5 py-3 flex items-center gap-5" style={{ backgroundColor: c.bg, border: `2px solid ${c.border}` }}>
+    <div className="course-info-card rounded-2xl px-5 py-3 flex items-center gap-5" style={{ backgroundColor: c.bg, border: `3px solid ${c.border}` }}>
       <div className="w-20 h-20 flex items-center justify-center flex-shrink-0" style={c.iconUrl ? undefined : { backgroundColor: c.iconBg }}>
         {c.iconUrl ? <img src={c.iconUrl} alt="" className="w-full h-full object-contain" /> : <Icon className="w-5 h-5 text-white" />}
       </div>
-      <div>
-        {block.title && <p className={cn('font-bold text-[25px]', c.title)}>{block.title}</p>}
-        <p className={cn('text-[25px] leading-snug whitespace-pre-line break-words', c.body)} style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
+      <div className="flex-1">
+        <p className={cn('text-center text-[25px] leading-snug whitespace-pre-line break-words', c.body)} style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
       </div>
     </div>
   );
