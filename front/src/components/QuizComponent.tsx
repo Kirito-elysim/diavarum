@@ -398,7 +398,7 @@ function SubmitButton({ onClick, disabled, label }: { onClick: () => void; disab
     <button
       onClick={onClick}
       disabled={disabled}
-      className="course-action w-full transition-colors"
+      className="course-action mx-auto block min-w-[18rem] px-12 transition-colors"
     >
       {label}
     </button>
