@@ -1403,7 +1403,7 @@ function SessionRunner({
 
       {/* ── Content (défile ; la navigation reste fixée en bas, hors du défilement) ── */}
       <main ref={contentRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <div className={cn('mx-4 sm:mx-10 py-5', slideClass)}>
+        <div className={cn('mx-4 sm:mx-10 py-5 [@media(max-height:820px)]:py-3', slideClass)}>
           <div className="space-y-5">
             {currentPage.blocks.map((block) => (
               <div key={`${currentPage.id}:${block.id}`}>

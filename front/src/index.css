@@ -232,6 +232,13 @@ html { scroll-behavior: smooth; }
   .course-info-card > :first-child { width: 56px; height: 56px; }
 }
 
+/* Tablettes peu hautes : marges du bandeau et de la navigation réduites pour garder plus de place au contenu (les cadres gardent leur taille). */
+@media (max-height: 820px) {
+  .course-header { margin-top: 16px; }
+  .course-header > div:first-of-type { padding-top: 10px !important; padding-bottom: 10px !important; }
+  .course-navigation { padding-top: 10px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+
 /* XD : deux boutons de même largeur, sans ombre ni bordure, toujours en bas. */
 .course-navigation { display: flex; flex-shrink: 0; gap: 40px; margin: 0 40px; padding: 16px 0 max(40px, env(safe-area-inset-bottom)); }
 .course-navigation button { display: flex; align-items: center; justify-content: center; gap: 4px; flex: 1 1 0; min-width: 0; min-height: 50px; padding: 8px 16px; border: 0; border-radius: 999px; font-size: 20px; font-weight: 700; line-height: 1.2; touch-action: manipulation; }
