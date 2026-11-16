@@ -98,8 +98,8 @@ function ImageBlockView({ block }: { block: ImageBlock }) {
   return (
     <>
       <figure className="space-y-3">
-        <div className="relative overflow-hidden rounded-2xl bg-[#FFE0D0]/50 cursor-zoom-in" onClick={() => setZoomed(true)}>
-          <img src={block.url} alt={block.alt} className="w-full object-contain max-h-72 transition-transform duration-300 hover:scale-[1.02]" loading="lazy" />
+        <div className="relative overflow-hidden rounded-2xl cursor-zoom-in" onClick={() => setZoomed(true)}>
+          <img src={block.url} alt={block.alt} className="block w-full h-auto" loading="lazy" />
           <div className="absolute top-3 right-3 bg-[#004138]/70 backdrop-blur-sm rounded-xl p-2">
             <ZoomIn className="w-4 h-4 text-white" />
           </div>
