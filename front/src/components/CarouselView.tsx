@@ -25,7 +25,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
       {/* Le geste horizontal reste dans le carrousel ; le défilement vertical reste disponible. */}
       <div
         className="relative rounded-2xl overflow-hidden"
-        style={{ background: '#1C5335', touchAction: 'pan-y' }}
+        style={{ touchAction: 'pan-y' }}
         data-course-gesture
         onTouchStart={(e) => { startX.current = e.touches[0].clientX; startY.current = e.touches[0].clientY; }}
         onTouchCancel={() => { startX.current = null; startY.current = null; }}
