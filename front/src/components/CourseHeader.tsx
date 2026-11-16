@@ -15,7 +15,7 @@ export function CourseHeader({ page, pageNumber, totalPages, actions, level = 'h
   return <header className="course-header shrink-0 overflow-hidden">
     <div className="flex flex-wrap items-end gap-x-6 gap-y-3 px-5 py-4">
       <div className="min-w-0 flex-1 basis-72">
-        <CoursePageHeading title={page.title} instruction={meta.instruction} icon={meta.icon} level={level} showCounter={false} pageNumber={pageNumber} totalPages={totalPages} />
+        <CoursePageHeading title={page.title} instruction={meta.instruction} showIcon={meta.icon} level={level} showCounter={false} pageNumber={pageNumber} totalPages={totalPages} />
       </div>
       <div className="flex items-center gap-2 shrink-0 self-end">
         {actions}

@@ -1,5 +1,5 @@
 import {
-  Activity, AlertTriangle, Apple, Bed, BookOpen, CircleAlert, Clock, Droplet, Footprints, Hand, HelpCircle, Heart, HeartPulse,
+  Activity, AlertTriangle, Apple, Bed, BookOpen, CircleAlert, Clock, Droplet, Footprints, Hand, Heart, HeartPulse,
   Info, Lightbulb, Pill, ShieldCheck, Star, Stethoscope, Syringe, Target, Thermometer, Utensils, type LucideIcon,
 } from 'lucide-react';
 import type { InfoCardBlock, InfoCardVariant, ModulePage } from '../types';
@@ -25,31 +25,35 @@ export const INFO_CARD_CATEGORIES: { value: InfoCardVariant; label: string; icon
  * de la charte (confirmé sur quiz et cartes interactives dans le XD) ; seule la consigne varie selon le
  * premier bloc interactif de la page.
  */
-export function pageHeaderMeta(page: ModulePage): { icon: LucideIcon; instruction?: string } {
-  if (page.instruction?.trim()) return { icon: HelpCircle, instruction: page.instruction };
+/** Types de blocs dont la page affiche le picto « ? » dans son bandeau : QCU/QCM, relier, glisser-déposer, remettre dans l'ordre, grille de pictos, cartes à retourner, image à légendes */
+const ICON_BLOCKS: string[] = ['quiz', 'categorize', 'reorder', 'picto-grid', 'flip-cards', 'hotspot'];
+
+export function pageHeaderMeta(page: ModulePage): { icon: boolean; instruction?: string } {
+  const icon = page.blocks.some(block => ICON_BLOCKS.includes(block.type));
+  if (page.instruction?.trim()) return { icon, instruction: page.instruction };
   for (const block of page.blocks) {
     switch (block.type) {
       case 'quiz':
-        if (block.questionType === 'qcu') return { icon: HelpCircle, instruction: 'Choisissez la réponse qui vous paraît exacte.' };
-        if (block.questionType === 'qcm') return { icon: HelpCircle, instruction: 'Choisissez toutes les réponses qui vous paraissent exactes.' };
-        return { icon: HelpCircle, instruction: 'Associez chaque élément à son origine.' };
+        if (block.questionType === 'qcu') return { icon, instruction: 'Choisissez la réponse qui vous paraît exacte.' };
+        if (block.questionType === 'qcm') return { icon, instruction: 'Choisissez toutes les réponses qui vous paraissent exactes.' };
+        return { icon, instruction: 'Associez chaque élément à son origine.' };
       case 'true-false':
-        return { icon: HelpCircle, instruction: 'Indiquez si chaque affirmation est vraie ou fausse.' };
+        return { icon, instruction: 'Indiquez si chaque affirmation est vraie ou fausse.' };
       case 'carousel':
-        return { icon: HelpCircle, instruction: 'Faites défiler les images avec les textes associés.' };
+        return { icon, instruction: 'Faites défiler les images avec les textes associés.' };
       case 'flip-cards':
-        return { icon: HelpCircle, instruction: 'Touchez une carte pour la retourner.' };
+        return { icon, instruction: 'Touchez une carte pour la retourner.' };
       case 'reveal-legends':
-        return { icon: HelpCircle, instruction: 'Touchez chaque point pour révéler sa légende.' };
+        return { icon, instruction: 'Touchez chaque point pour révéler sa légende.' };
       case 'hotspot':
-        return { icon: HelpCircle, instruction: 'Touchez chaque repère pour en savoir plus.' };
+        return { icon, instruction: 'Touchez chaque repère pour en savoir plus.' };
       case 'reorder': case 'tap-sequence': case 'categorize': case 'sort-bin':
       case 'connect-dots': case 'drawing': case 'scenario': case 'fill-blank':
       case 'memory': case 'slider': case 'word-search': case 'yes-no-path': case 'pull-timeline':
-        return { icon: HelpCircle, instruction: page.instruction };
+        return { icon, instruction: page.instruction };
     }
   }
-  return { icon: HelpCircle, instruction: page.instruction };
+  return { icon, instruction: page.instruction };
 }
 
 /** Anciennes présentations des encadrés, rattachées aux nouvelles catégories */
