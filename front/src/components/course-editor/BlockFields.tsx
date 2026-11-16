@@ -119,9 +119,10 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
   const patch = (id: string, change: Partial<HotspotPoint>) => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === id ? { ...p, ...change } : p) });
   const add = () => { const point = { id: uid(), x: 50, y: 50, label: '', description: '' }; onChange({ ...b, hotspots: [...b.hotspots, point] }); setSelected(point.id); };
   return <>
-    <details className="rounded-xl border p-4" open={!b.imageUrl}><summary className="cursor-pointer text-sm font-medium">Image et légende sous l’image</summary>
+    <details className="rounded-xl border p-4" open={!b.imageUrl}><summary className="cursor-pointer text-sm font-medium">Question, image et légende</summary>
       <div className="mt-3 space-y-3">
         <ImageField url={b.imageUrl} alt={b.alt} onChange={(imageUrl, alt) => onChange({ ...b, imageUrl, alt })} />
+        <Field label="Question au-dessus de l’image" value={b.question} onChange={question => onChange({ ...b, question })} />
         <Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
       </div></details>
     <details className="rounded-xl border-2 border-orange-200 p-4" open={!b.sheet?.url}><summary className="cursor-pointer font-semibold">Planche de pictos{b.sheet?.url ? ' (importée)' : ''}</summary>

@@ -426,6 +426,8 @@ export interface HotspotBlock {
   imageUrl: string;
   alt: string;
   caption?: string;
+  /** Question affichée en gras au-dessus de l'image */
+  question?: string;
   /** Planche de pictos : lignes = pictos, colonnes = états (1re : normal, 2e : consulté) */
   sheet?: { url: string; cols: number; rows: number };
   hotspots: HotspotPoint[];

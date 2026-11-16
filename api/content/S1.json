@@ -47,11 +47,6 @@
       "title": "Droits du patient (suite)",
       "blocks": [
         {
-          "id": "s1-respect-q",
-          "type": "text",
-          "content": "Le personnel soignant garantit le respect de :"
-        },
-        {
           "id": "s1-respect",
           "type": "hotspot",
           "imageUrl": "/courses/S1/droits-suite.png",
@@ -98,9 +93,11 @@
             "url": "/courses/S1/planche-pictos-droits.png",
             "cols": 2,
             "rows": 4
-          }
+          },
+          "question": "Le personnel soignant garantit le respect de :"
         }
-      ]
+      ],
+      "instruction": "Touchez une icône pour dévoiler les informations associées."
     },
     {
       "id": "p03",

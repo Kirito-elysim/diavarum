@@ -238,6 +238,8 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
   const active = block.hotspots.find((h) => h.id === activeId) ?? null;
 
   return (
+    <div className="space-y-5">
+    {block.question && <p className="text-[25px] font-bold text-[#004138] leading-snug">{block.question}</p>}
     <div className="rounded-3xl overflow-hidden bg-white ring-1 ring-gray-100/80 shadow-sm">
       {/* Image with markers */}
       <div className="relative select-none" onClick={() => setActiveId(null)}>
@@ -322,6 +324,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
           </button>
         ))}
       </div>
+    </div>
     </div>
   );
 }
