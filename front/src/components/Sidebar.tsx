@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
   { to: '/patients', icon: Users, label: 'Patients' },
   { to: '/parcours', icon: Route, label: 'Parcours' },
   { to: '/sessions', icon: Activity, label: 'Séances' },
-  { to: '/courses', icon: Library, label: 'Bibliothèque' },
+  { to: '/courses', icon: Library, label: 'Bibliothèque des cours' },
   { to: '/results', icon: BarChart2, label: 'Résultats' },
   { to: '/account', icon: CircleUserRound, label: 'Mon compte' },
 ];

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { CheckCircle2, EyeOff, Loader2, X, XCircle } from 'lucide-react';
-import { useCreateCodexTest, useEligibilityReasons, usePatient, useUpdatePatient } from '../api/hooks';
+import { useCodexTests, useCreateCodexTest, useEligibilityReasons, usePatient, useUpdatePatient } from '../api/hooks';
 import { ClockFace, type ClockStroke } from '../components/ClockFace';
 import type { CodexTestResult } from '../api/types';
 import { ApiError } from '../lib/api';
@@ -36,6 +36,7 @@ export default function CodexTestPage() {
   const navigate = useNavigate();
   const { data: patient, isError: patientError } = usePatient(id);
   const { data: reasons, refetch: refetchReasons } = useEligibilityReasons();
+  const { data: previous } = useCodexTests(patient?.['@id']);
   const createTest = useCreateCodexTest();
   const updatePatient = useUpdatePatient(id ?? '');
   const [screen, setScreen] = useState<Screen>('intro');
@@ -97,6 +98,8 @@ export default function CodexTestPage() {
   };
 
   if (!patient) return <Shell>{patientError ? <p>Impossible de charger le patient. <button onClick={back}>Retour</button></p> : <Loader2 className="animate-spin" />}</Shell>;
+  // Un seul test par patient (le test qu'on vient d'enregistrer ne bloque pas la fin de la validation)
+  if (previous && previous.member.length > 0 && !saved) return <Shell><p className="mt-24 text-center">Le test CODEX a déjà été passé par ce patient : il ne peut l’être qu’une seule fois. <button className="underline" onClick={back}>Retour à la fiche</button></p></Shell>;
   const patientName = `${patient.firstName} ${patient.lastName.toUpperCase()}`;
   const stage = stages.find(s => s.screens.includes(screen));
 

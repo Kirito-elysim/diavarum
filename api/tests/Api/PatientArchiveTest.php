@@ -61,6 +61,7 @@ final class PatientArchiveTest extends ApiTestCaseBase
 
         self::assertNull($this->requestAs($ide, 'GET', $iri)->toArray()['eligibilityDecidedAt'] ?? null);
 
+        $this->requestAs($ide, 'POST', '/api/codex_tests', ['patient' => $iri, 'words' => \App\Entity\CodexTest::WORD_LISTS[0], 'clockTime' => '05:10', 'clockChecks' => [true, true, true, true], 'wordRecallPassed' => true]);
         $decided = $this->requestAs($ide, 'PATCH', $iri, ['eligibilityStatus' => 'eligible'])->toArray()['eligibilityDecidedAt'];
         self::assertNotNull($decided);
         self::assertEqualsWithDelta(time(), strtotime($decided), 60);

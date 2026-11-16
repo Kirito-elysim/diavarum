@@ -101,6 +101,44 @@ final class CodexTest extends ApiTestCaseBase
         self::assertResponseStatusCodeSame(201);
     }
 
+    public function testTheTestCanOnlyBePassedOncePerPatient(): void
+    {
+        $center = $this->createCenter();
+        $ide = $this->createUser(UserRole::Ide, [$center]);
+        $patient = $this->createPatient($center, $ide);
+        $other = $this->createPatient($center, $ide, 'Autre');
+        $payload = fn ($p) => ['patient' => $this->iri($p), 'words' => Result::WORD_LISTS[0], 'clockTime' => '05:10', 'clockChecks' => [true, true, true, true], 'wordRecallPassed' => true];
+
+        $this->requestAs($ide, 'POST', '/api/codex_tests', $payload($patient));
+        self::assertResponseStatusCodeSame(201);
+        $this->requestAs($ide, 'POST', '/api/codex_tests', $payload($patient));
+        self::assertResponseStatusCodeSame(422);
+        self::assertCount(1, $this->requestAs($ide, 'GET', '/api/codex_tests?patient='.urlencode($this->iri($patient)))->toArray());
+
+        $this->requestAs($ide, 'POST', '/api/codex_tests', $payload($other));
+        self::assertResponseStatusCodeSame(201, 'Un autre patient peut le passer');
+    }
+
+    public function testPatientCanOnlyBeDeclaredEligibleAfterTheCodex(): void
+    {
+        $center = $this->createCenter();
+        $ide = $this->createUser(UserRole::Ide, [$center]);
+        $patient = $this->createPatient($center, $ide);
+        $iri = $this->iri($patient);
+
+        $this->requestAs($ide, 'PATCH', $iri, ['eligibilityStatus' => 'eligible', 'eligibilityReasons' => []]);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSame('enregistre', $this->requestAs($ide, 'GET', $iri)->toArray()['eligibilityStatus']);
+
+        $reasons = $this->requestAs($ide, 'GET', '/api/eligibility_reasons')->toArray();
+        $this->requestAs($ide, 'PATCH', $iri, ['eligibilityStatus' => 'non_eligible', 'eligibilityReasons' => ['/api/eligibility_reasons/'.$reasons[0]['id']]]);
+        self::assertResponseIsSuccessful('Non éligible reste possible sans CODEX');
+
+        $this->requestAs($ide, 'POST', '/api/codex_tests', ['patient' => $iri, 'words' => Result::WORD_LISTS[0], 'clockTime' => '05:10', 'clockChecks' => [true, true, true, true], 'wordRecallPassed' => true]);
+        $this->requestAs($ide, 'PATCH', $iri, ['eligibilityStatus' => 'eligible', 'eligibilityReasons' => []]);
+        self::assertResponseIsSuccessful();
+    }
+
     public function testLegacyResultsKeepTheirInterpretation(): void
     {
         $legacy = (new Result())->setClockTestPassed(true)->setWordRecallPassed(false);

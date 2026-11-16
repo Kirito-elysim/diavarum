@@ -480,6 +480,12 @@ export function useProgramAction() {
   });
 }
 
+export interface ProfileInput { firstName: string; lastName: string; email: string; currentPassword: string; newPassword?: string }
+
+export function useUpdateProfile() {
+  return useMutation({ mutationFn: (input: ProfileInput) => api<void>('/me', { method: 'PATCH', body: input }) });
+}
+
 export function useSetSecurityCode() {
   return useMutation({
     mutationFn: (input: { password: string; code: string }) => api<void>('/me/security-code', { method: 'PUT', body: input }),

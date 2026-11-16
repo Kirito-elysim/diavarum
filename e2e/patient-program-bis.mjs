@@ -23,7 +23,7 @@ try {
   return r.fulfill({json});
  });
  await page.goto((process.env.E2E_BASE_URL??'http://127.0.0.1:5173')+'/patients/test');
- await page.getByRole('tab',{name:'Parcours bis',exact:true}).click();
+ await page.getByRole('tab',{name:'Parcours',exact:true}).click();
  await page.getByText('Connaître ses droits et devoirs',{exact:true}).waitFor();
  assert.equal(await page.getByText('33%',{exact:true}).count(),1);
  assert.equal(await page.getByRole('button',{name:'Valider le parcours',exact:true}).count(),1);
@@ -31,7 +31,7 @@ try {
  assert.equal(await page.getByRole('button',{name:'Voir les compétences globales'}).count(),0);
  const validated=page.locator('article').filter({hasText:'Droits et devoirs du patient'});
  assert.equal(await validated.getByRole('button').count(),0);
- const active=page.getByRole('tab',{name:'Parcours bis',exact:true});
+ const active=page.getByRole('tab',{name:'Parcours',exact:true});
  await page.waitForFunction(()=>getComputedStyle(document.querySelector('[role=tab][data-state=active]')).color==='rgb(245, 102, 0)');
  assert.equal(await active.evaluate(e=>getComputedStyle(e).color),'rgb(245, 102, 0)');
  assert.equal(await active.locator('svg').evaluate(e=>getComputedStyle(e).color),'rgb(245, 102, 0)');
@@ -48,7 +48,6 @@ try {
  for(const width of [768,1024,390]){await page.setViewportSize({width,height:1024});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`Débordement à ${width}`);}
  await page.setViewportSize({width:768,height:1024});await page.screenshot({path:'/tmp/parcours-bis-tablet.png',fullPage:true});
  await page.getByRole('tab',{name:'Compétences',exact:true}).click();await page.getByText('Connaître ses droits et devoirs',{exact:true}).waitFor();
- await page.getByRole('tab',{name:'Parcours',exact:true}).click();assert.equal(await page.getByRole('checkbox').count(),3);
  assert.deepEqual(errors,[]);
- console.log('Parcours bis : KPI, filtres, tri, accordéon, compétences, verrouillage, actions, onglets orange et responsive 1536/1024/768/390 — OK');
+ console.log('Parcours : KPI, filtres, tri, accordéon, compétences, verrouillage, actions, onglets orange et responsive 1536/1024/768/390 — OK');
 }finally{await browser.close();}

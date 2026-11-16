@@ -55,7 +55,7 @@ export default function CourseLibraryPage() {
             <BookOpen className="w-5 h-5 text-orange-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Bibliothèque de cours</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Bibliothèque des cours</h1>
             <p className="text-sm text-gray-500">
               Prévisualisez les cours du parcours (mode démo : aucune séance n'est enregistrée)
             </p>

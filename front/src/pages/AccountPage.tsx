@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { AlertTriangle, ArrowRight, Building2, CalendarDays, CheckCircle2, Info, KeyRound, LogOut, Mail, ShieldCheck, Tablet } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Building2, CalendarDays, CheckCircle2, Info, KeyRound, Loader2, LogOut, Mail, Pencil, ShieldCheck, Tablet } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { useAuth } from '../contexts/AuthContext';
-import { useSetSecurityCode } from '../api/hooks';
+import { ApiError } from '../lib/api';
+import { useSetSecurityCode, useUpdateProfile } from '../api/hooks';
 import { ROLE_LABELS, type UserRole } from '../api/types';
 import { SecurityCodeForm } from '../components/SecurityCodeForm';
 import { formatDate } from '../lib/format';
@@ -26,6 +30,7 @@ const ROLE_DESCRIPTIONS: Record<UserRole, string> = {
 /** Espace personnel : identité, rattachements et code de sécurité */
 export default function AccountPage() {
   const { user } = useAuth();
+  const [editing, setEditing] = useState(false);
   if (!user) return null;
 
   const initials = `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.toUpperCase();
@@ -59,6 +64,8 @@ export default function AccountPage() {
             <InfoItem icon={Mail} label="Email de connexion">{user.email}</InfoItem>
             <InfoItem icon={CalendarDays} label="Compte créé le">{formatDate(user.createdAt, 'd MMMM yyyy')}</InfoItem>
           </dl>
+          <Button variant="outline" className="mt-6 h-10 gap-2" onClick={() => setEditing(true)}><Pencil className="w-4 h-4" />Modifier mon compte</Button>
+          {editing && <EditProfileDialog onClose={() => setEditing(false)} />}
         </CardContent>
       </Card>
 
@@ -84,7 +91,7 @@ export default function AccountPage() {
             )}
             <p className="flex gap-2 text-xs text-gray-400">
               <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-              Vos informations, vos centres et votre mot de passe sont gérés par {isAdmin ? 'un autre administrateur national' : 'votre cadre de service ou un administrateur'}.
+              Votre rôle et vos centres sont gérés par {isAdmin ? 'un autre administrateur national' : 'votre cadre de service ou un administrateur'}.
             </p>
           </CardContent>
         </Card>
@@ -93,6 +100,91 @@ export default function AccountPage() {
         {isAdmin ? <NationalCodeCard /> : <SecurityCodeCard />}
       </div>
     </div>
+  );
+}
+
+/** Nom, prénom, email et mot de passe ; le mot de passe actuel confirme toujours la demande */
+function EditProfileDialog({ onClose }: { onClose: () => void }) {
+  const { user, refreshUser, logout } = useAuth();
+  const updateProfile = useUpdateProfile();
+  const [form, setForm] = useState({ firstName: user?.firstName ?? '', lastName: user?.lastName ?? '', email: user?.email ?? '', newPassword: '', confirm: '', currentPassword: '' });
+  const [error, setError] = useState<ApiError | string | null>(null);
+  if (!user) return null;
+
+  const set = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [field]: e.target.value });
+  const fieldError = (field: string) => error instanceof ApiError && error.fieldError(field) && <p className="text-xs text-red-600">{error.fieldError(field)}</p>;
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (form.newPassword !== form.confirm) return setError('Les deux mots de passe ne correspondent pas.');
+    try {
+      await updateProfile.mutateAsync({ firstName: form.firstName, lastName: form.lastName, email: form.email, currentPassword: form.currentPassword, newPassword: form.newPassword || undefined });
+      if (form.newPassword || form.email.trim().toLowerCase() !== user.email) {
+        toast.success('Compte modifié : reconnectez-vous avec vos nouveaux identifiants');
+        await logout();
+        return;
+      }
+      await refreshUser();
+      toast.success('Compte modifié');
+      onClose();
+    } catch (err) {
+      setError(err instanceof ApiError ? err : 'Une erreur est survenue.');
+    }
+  };
+
+  return (
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Modifier mon compte</DialogTitle>
+          <DialogDescription>Un changement d'email ou de mot de passe vous déconnecte : vous vous reconnectez avec les nouveaux identifiants.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={submit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="acc-first">Prénom</Label>
+              <Input id="acc-first" value={form.firstName} onChange={set('firstName')} required />
+              {fieldError('firstName')}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="acc-last">Nom</Label>
+              <Input id="acc-last" value={form.lastName} onChange={set('lastName')} required />
+              {fieldError('lastName')}
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="acc-email">Email de connexion</Label>
+            <Input id="acc-email" type="email" value={form.email} onChange={set('email')} required />
+            {fieldError('email')}
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="acc-new">Nouveau mot de passe</Label>
+              <Input id="acc-new" type="password" autoComplete="new-password" placeholder="Laisser vide pour le garder" value={form.newPassword} onChange={set('newPassword')} />
+              {fieldError('newPassword')}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="acc-confirm">Confirmation</Label>
+              <Input id="acc-confirm" type="password" autoComplete="new-password" value={form.confirm} onChange={set('confirm')} />
+            </div>
+          </div>
+          <p className="text-xs text-gray-400 -mt-2">12 caractères minimum, avec lettres, chiffres et symboles.</p>
+          <div className="space-y-1.5">
+            <Label htmlFor="acc-current">Mot de passe actuel</Label>
+            <Input id="acc-current" type="password" autoComplete="current-password" value={form.currentPassword} onChange={set('currentPassword')} required />
+            <p className="text-xs text-gray-400">Pour confirmer que c'est bien vous.</p>
+          </div>
+          {error && (typeof error === 'string' || error.violations.length === 0) && <p className="text-sm text-red-600">{typeof error === 'string' ? error : error.message}</p>}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>Annuler</Button>
+            <Button type="submit" disabled={updateProfile.isPending} className="bg-orange-500 hover:bg-orange-600 text-white">
+              {updateProfile.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Enregistrer
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

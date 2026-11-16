@@ -6,7 +6,7 @@ Lire et appliquer `AGENTS.md`, puis lire `HANDOFF.md`, `KPI_REGLES.md` et le lot
 
 L’utilisateur confie à Claude la suite du lot 1, bilans et exports. Il a explicitement demandé un point fonctionnel **avant modification**. Les propositions présentées en J-009 ne sont pas encore validées : commencer par les arbitrer avec lui, puis implémenter celles acceptées.
 
-Déjà validé et implémenté : KPI des écrans sur les patients non archivés ; archives séparées et restaurables ; inactivité après 15 jours sans lancement ni validation ; une seule validation définitive par cours et parcours, reprise possible seulement si non validé. La consultation ne constitue pas une activité. Conserver les deux onglets Parcours et Parcours bis, le verrouillage des cours validés et les logos officiels intégrés.
+Déjà validé et implémenté : KPI des écrans sur les patients non archivés ; archives séparées et restaurables ; inactivité après 15 jours sans lancement ni validation ; une seule validation définitive par cours et parcours, reprise possible seulement si non validé. La consultation ne constitue pas une activité. Depuis J-037, l'ancien onglet Parcours est supprimé et Parcours bis, renommé Parcours, est le seul parcours (onglets : Éligibilité, Parcours, Séances, Compétences). Conserver le verrouillage des cours validés et les logos officiels intégrés.
 
 ## Cinq arbitrages encore ouverts
 

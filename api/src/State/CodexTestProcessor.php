@@ -6,10 +6,11 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\CodexTest;
 use App\Exception\WorkflowException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * Enregistrement d'un test CODEX : validation du protocole.
+ * Enregistrement d'un test CODEX : validation du protocole ; un patient ne le passe qu'une seule fois.
  * L'orientation n'est proposée qu'en cas d'échec à une seule des deux épreuves ;
  * l'éligibilité reste une décision de l'IDE, enregistrée ensuite sur le patient.
  *
@@ -23,11 +24,15 @@ final class CodexTestProcessor implements ProcessorInterface
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private readonly ProcessorInterface $persistProcessor,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): CodexTest
     {
+        if ($this->entityManager->getRepository(CodexTest::class)->count(['patient' => $data->getPatient()]) > 0) {
+            throw new WorkflowException('Le test CODEX a déjà été passé par ce patient : il ne peut l’être qu’une seule fois.');
+        }
         if (!in_array($data->getWords(), CodexTest::WORD_LISTS, true) || '05:10' !== $data->getClockTime()) {
             throw new WorkflowException('Utilisez une liste de mots du protocole et l’heure 05:10.');
         }

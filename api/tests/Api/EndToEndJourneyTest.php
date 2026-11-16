@@ -101,8 +101,9 @@ final class EndToEndJourneyTest extends ApiTestCaseBase
         $this->requestAs($this->ide, 'POST', '/api/training_programs', ['patient' => $this->patientIri]);
         self::assertResponseStatusCodeSame(422, 'Non éligible : pas de parcours');
 
-        // 4. Nouveau CODEX normal puis décision d'éligibilité
-        $this->codex();
+        // 4. Le CODEX ne se repasse pas ; l'éligibilité se rétablit par décision de l'IDE
+        $this->requestAs($this->ide, 'POST', '/api/codex_tests', ['patient' => $this->patientIri, 'words' => ['Clé', 'ballon', 'citron'], 'clockTime' => '05:10', 'clockChecks' => [true, true, true, true], 'wordRecallPassed' => true]);
+        self::assertResponseStatusCodeSame(422, 'Un seul test CODEX par patient');
         $this->requestAs($this->ide, 'PATCH', $this->patientIri, ['eligibilityStatus' => 'eligible', 'eligibilityReasons' => []]);
         self::assertResponseIsSuccessful();
 

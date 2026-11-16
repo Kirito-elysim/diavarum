@@ -17,6 +17,7 @@ use App\Entity\Contract\AuthoredInterface;
 use App\Entity\Contract\CenterScopedInterface;
 use App\Enum\EligibilityStatus;
 use App\State\ArchiveProcessor;
+use App\State\PatientProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -54,7 +55,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         ]),
         new Get(),
         new Post(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)", validationContext: ['groups' => ['Default', 'patient:create']]),
-        new Patch(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)"),
+        new Patch(securityPostDenormalize: "is_granted('CENTER_SCOPE', object)", processor: PatientProcessor::class),
         new Delete(security: "is_granted('ROLE_CADRE')", processor: ArchiveProcessor::class),
     ],
     normalizationContext: ['groups' => ['patient:read', 'author:read']],

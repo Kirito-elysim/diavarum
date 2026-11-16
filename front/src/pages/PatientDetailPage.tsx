@@ -12,6 +12,7 @@ import { Progress } from '../components/ui/progress';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import {
   Award,
   AlertTriangle,
@@ -188,13 +189,10 @@ export default function PatientDetailPage() {
 
       <Tabs defaultValue={patient.eligibilityStatus === 'eligible' ? 'parcours' : 'eligibility'} className="space-y-4">
         <TabsList className="patient-detail-tabs w-full border-b border-slate-200 bg-transparent p-0 h-auto rounded-none">
-          <TabsTrigger value="parcours" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
-            <Route className="w-4 h-4 mr-2" />Parcours
-          </TabsTrigger>
-          <TabsTrigger value="parcours-bis" className="rounded-lg px-4 py-2 text-sm"><Route className="w-4 h-4 mr-2" />Parcours bis</TabsTrigger>
           <TabsTrigger value="eligibility" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <ShieldCheck className="w-4 h-4 mr-2" />Éligibilité
           </TabsTrigger>
+          <TabsTrigger value="parcours" className="rounded-lg px-4 py-2 text-sm"><Route className="w-4 h-4 mr-2" />Parcours</TabsTrigger>
           <TabsTrigger value="history" className="rounded-lg px-4 py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Activity className="w-4 h-4 mr-2" />Séances
           </TabsTrigger>
@@ -202,10 +200,7 @@ export default function PatientDetailPage() {
         </TabsList>
 
         {/* Patient archivé : consultation seule (un fieldset désactivé neutralise boutons et champs) */}
-        <TabsContent value="parcours" className="space-y-4">
-          <fieldset disabled={!!patient.removedAt} className="contents"><ProgramSection patient={patient} program={program ?? null} /></fieldset>
-        </TabsContent>
-        <TabsContent value="parcours-bis">
+        <TabsContent value="parcours">
           {program && patient.eligibilityStatus === 'eligible' ? <PatientProgramBis key={program.id} patient={patient} program={program} actions={<ProgramActions program={program} />} /> : <fieldset disabled={!!patient.removedAt} className="contents"><ProgramSection patient={patient} program={program ?? null} /></fieldset>}
         </TabsContent>
         <TabsContent value="competencies">
@@ -358,7 +353,7 @@ function CreateProgramDialog({ patient, open, onOpenChange }: { patient: Patient
       const results = await Promise.allSettled(wanted.map((pm) => api(pm['@id'].replace(/^\/api/, ''), { method: 'PATCH', body: { selected: true } })));
       client.invalidateQueries({ queryKey: ['program', 'patient', patient['@id']] });
       client.invalidateQueries({ queryKey: ['programs'] });
-      if (results.some((r) => r.status === 'rejected')) toast.warning('Parcours créé, mais certaines séances optionnelles n\'ont pas pu être ajoutées : utilisez « Choisir optionnel ».');
+      if (results.some((r) => r.status === 'rejected')) toast.warning('Parcours créé, mais certaines séances optionnelles n\'ont pas pu être ajoutées : utilisez « Sélection séances optionnelles ».');
       else toast.success('Parcours créé');
       onOpenChange(false);
     } catch (err) {
@@ -494,6 +489,8 @@ function CourseStatusBadge({ item }: { item: ProgramModule }) {
 }
 
 /** Actions sur le parcours : clôture justifiée, validation par un cadre, reprise d'un parcours interrompu */
+const CADRE_ONLY_MESSAGE = 'Seul un profil « Cadre de santé » peut valider définitivement le parcours d’EHD d’un patient.';
+
 function ProgramActions({ program }: { program: TrainingProgram }) {
   const { isCadre } = useAuth();
   const action = useProgramAction();
@@ -574,11 +571,23 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
-      {isCadre && program.status === 'actif' && (
+      {program.status === 'actif' && (isCadre ? (
         <Button size="sm" className="gap-1.5 bg-green-600 hover:bg-green-700 text-white" disabled={program.validatedCount === 0} onClick={() => setConfirmComplete(true)}>
           <CheckCircle2 className="w-4 h-4" />Valider le parcours
         </Button>
-      )}
+      ) : (
+        // aria-disabled (et non disabled) : le bouton grisé reste cliquable pour afficher le message
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="sm" aria-disabled className="gap-1.5 bg-green-600 text-white opacity-50 cursor-not-allowed hover:bg-green-600" onClick={() => toast.info(CADRE_ONLY_MESSAGE)}>
+                <CheckCircle2 className="w-4 h-4" />Valider le parcours
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{CADRE_ONLY_MESSAGE}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ))}
       <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setInterrupting(true)}>
         <CirclePause className="w-4 h-4" />Clôturer le parcours
       </Button>
@@ -725,9 +734,19 @@ function CodexSection({ patient }: { patient: Patient }) {
           <CardTitle className="text-base">Test CODEX</CardTitle>
           <p className="text-sm text-gray-500 mt-1">3 mots à mémoriser, horloge à dessiner, rappel des mots et orientation si nécessaire.</p>
         </div>
-        <Button className="bg-orange-500 hover:bg-orange-600 text-white gap-2" onClick={() => navigate(`/patients/${patient.id}/codex`)}>
-          <Play className="w-4 h-4" />Faire passer le test
-        </Button>
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {/* Un bouton désactivé ne reçoit pas le survol : c'est l'enveloppe qui porte l'info-bulle */}
+              <span tabIndex={tests.length > 0 ? 0 : undefined}>
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white gap-2" disabled={tests.length > 0} onClick={() => navigate(`/patients/${patient.id}/codex`)}>
+                  <Play className="w-4 h-4" />Faire passer le test
+                </Button>
+              </span>
+            </TooltipTrigger>
+            {tests.length > 0 && <TooltipContent>Le test CODEX a déjà été passé : il ne peut l’être qu’une seule fois.</TooltipContent>}
+          </Tooltip>
+        </TooltipProvider>
       </CardHeader>
       <CardContent>
         {tests.length === 0 ? (
@@ -772,7 +791,11 @@ function CodexSummary({ patient }: { patient: Patient }) {
 
 function EligibilitySection({ patient }: { patient: Patient }) {
   const { data: reasons } = useEligibilityReasons();
+  const { data: codex } = useCodexTests(patient['@id']);
   const updatePatient = useUpdatePatient(patient.id);
+  // « Éligible » n'est proposé qu'après le test CODEX (un patient déjà éligible garde son statut)
+  const codexDone = (codex?.member.length ?? 0) > 0;
+  const statuses = Object.entries(ELIGIBILITY_LABELS).filter(([value]) => value !== 'eligible' || codexDone || patient.eligibilityStatus === 'eligible');
   const [status, setStatus] = useState<EligibilityStatus>(patient.eligibilityStatus);
   const [selectedReasons, setSelectedReasons] = useState<string[]>(patient.eligibilityReasons);
   const [notes, setNotes] = useState(patient.eligibilityNotes ?? '');
@@ -806,9 +829,10 @@ function EligibilitySection({ patient }: { patient: Patient }) {
           <Select value={status} onValueChange={(v) => setStatus(v as EligibilityStatus)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              {Object.entries(ELIGIBILITY_LABELS).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
+              {statuses.map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
             </SelectContent>
           </Select>
+          {!codexDone && patient.eligibilityStatus !== 'eligible' && <p className="text-xs text-gray-400">« Éligible » sera proposé une fois le test CODEX passé.</p>}
         </div>
 
         {status === 'non_eligible' && (
