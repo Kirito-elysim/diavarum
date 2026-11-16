@@ -133,7 +133,7 @@ export function StatisticsView() {
               <>
                 <CompareKpi icon={<Activity className="w-5 h-5 text-orange-600" />} bg="bg-orange-50" label="Séances validées" hint="sur chaque période" a={stats.total.activity.validatedSessions} b={compare.total.activity.validatedSessions} />
                 <CompareKpi icon={<Trophy className="w-5 h-5 text-amber-500" />} bg="bg-amber-50" label="Score moyen des séances" hint="sur chaque période" a={stats.total.activity.averageSessionScore} b={compare.total.activity.averageSessionScore} format={asPercent} formatDiff={asPoints} />
-                <CompareKpi icon={<BarChart2 className="w-5 h-5 text-green-600" />} bg="bg-green-50" label="Parcours achevés" hint={`sur chaque période · clôturés : ${stats.total.activity.interruptedPrograms} (A) · ${compare.total.activity.interruptedPrograms} (B)`} a={stats.total.activity.completedPrograms} b={compare.total.activity.completedPrograms} />
+                <CompareKpi icon={<BarChart2 className="w-5 h-5 text-green-600" />} bg="bg-green-50" label="Parcours validés" hint={`sur chaque période · clôturés : ${stats.total.activity.interruptedPrograms} (A) · ${compare.total.activity.interruptedPrograms} (B)`} a={stats.total.activity.completedPrograms} b={compare.total.activity.completedPrograms} />
               </>
             ) : (
               <>
@@ -141,7 +141,7 @@ export function StatisticsView() {
                 <Kpi icon={<Route className="w-5 h-5 text-blue-600" />} bg="bg-blue-50" label="Parcours en cours" value={`${stats.total.programs.active.count}`} hint="à date" />
                 <Kpi icon={<Activity className="w-5 h-5 text-orange-600" />} bg="bg-orange-50" label="Séances validées" value={`${stats.total.activity.validatedSessions}`} hint="sur la période" />
                 <Kpi icon={<Trophy className="w-5 h-5 text-amber-500" />} bg="bg-amber-50" label="Score moyen des séances" value={stats.total.activity.averageSessionScore != null ? `${stats.total.activity.averageSessionScore}%` : '—'} hint="sur la période" />
-                <Kpi icon={<BarChart2 className="w-5 h-5 text-green-600" />} bg="bg-green-50" label="Parcours achevés" value={`${stats.total.activity.completedPrograms}`} hint={`sur la période · ${stats.total.activity.interruptedPrograms} clôturé${stats.total.activity.interruptedPrograms > 1 ? 's' : ''}`} />
+                <Kpi icon={<BarChart2 className="w-5 h-5 text-green-600" />} bg="bg-green-50" label="Parcours validés" value={`${stats.total.activity.completedPrograms}`} hint={`sur la période · ${stats.total.activity.interruptedPrograms} clôturé${stats.total.activity.interruptedPrograms > 1 ? 's' : ''}`} />
               </>
             )}
           </div>

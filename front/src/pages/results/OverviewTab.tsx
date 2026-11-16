@@ -18,14 +18,14 @@ export function OverviewTab({ stats, compare }: { stats: Statistics; compare?: S
     { label: 'Patients non archivés', value: patients.registered },
     { label: 'Éligibles', value: patients.eligible.count },
     { label: 'Parcours démarrés', value: inProgram },
-    { label: 'Parcours achevés', value: programs.completed.count },
+    { label: 'Parcours validés', value: programs.completed.count },
   ];
   const statuses = [
     { key: 'notStarted', label: 'Non démarrés', value: programs.notStarted.count },
     { key: 'inactive', label: 'Inactifs (15 jours)', value: programs.inactive.count },
     { key: 'active', label: 'En cours', value: programs.active.count },
     { key: 'interrupted', label: 'Clôturés', value: programs.interrupted.count },
-    { key: 'completed', label: 'Achevés', value: programs.completed.count },
+    { key: 'completed', label: 'Validés', value: programs.completed.count },
   ] as const;
   const monthly = stats.monthly.map((m) => ({ ...m, label: formatDate(`${m.month}-01`, 'MMM yy') }));
   const maxReason = Math.max(1, ...stats.interruptionReasons.map((r) => r.count));
@@ -52,13 +52,13 @@ export function OverviewTab({ stats, compare }: { stats: Statistics; compare?: S
                 <DeltaPill a={stats.total.averageCompletedProgramDurationSeconds} b={compare.total.averageCompletedProgramDurationSeconds} formatDiff={asMinutes} better="neutral" />
               </>
             ) : <p className="text-3xl font-bold tabular-nums text-gray-900">{stats.total.averageCompletedProgramDurationSeconds != null ? formatDuration(stats.total.averageCompletedProgramDurationSeconds) : '—'}</p>}
-            <p className="text-[11px] text-gray-400">Parcours achevés sur la période.</p>
+            <p className="text-[11px] text-gray-400">Parcours validés sur la période.</p>
           </div>
         </CardContent>
       </Card>
 
       <Card className="border-0 shadow-sm ring-1 ring-gray-100">
-        <CardHeader className="pb-2"><CardTitle className="text-base">Du patient enregistré au parcours achevé</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-base">Du patient enregistré au parcours validé</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           {funnel.map((step, i) => {
             const percent = patients.registered ? Math.round((100 * step.value) / patients.registered) : 0;

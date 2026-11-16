@@ -39,7 +39,7 @@ export function CentersTab({ centers, total, compare }: { centers: AreaStatistic
               {head('À statuer', 'pending')}
               {head('Parcours en cours', 'active')}
               {head('Inactifs (15 j)', 'inactive')}
-              {head('Achevés', 'completed')}
+              {head('Validés', 'completed')}
               {head('Clôturés', 'interrupted')}
               {head(compare ? 'Séances (A)' : 'Séances (période)', 'sessions')}
               <BAndDeltaHeads show={!!compare} />

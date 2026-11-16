@@ -433,6 +433,7 @@ function NewUserDialog({ open, onOpenChange, account, defaultCenter }: { open: b
   const empty: UserInput = { email: '', firstName: '', lastName: '', role: 'ide', centers: defaultCenter ? [defaultCenter] : [], plainPassword: '' };
   const [form, setForm] = useState<UserInput>(account ? { email: account.email, firstName: account.firstName, lastName: account.lastName, role: account.role, centers: account.centers.map(c => c['@id']), plainPassword: '' } : empty);
   const [error, setError] = useState<ApiError | null>(null);
+  const [centersMissing, setCentersMissing] = useState(false);
   const centerList = centers?.member ?? [];
   // Un seul centre accessible (cas habituel du cadre) : il est présélectionné à la création
   const selectedCenters = !account && form.centers.length === 0 && centerList.length === 1 ? [centerList[0]['@id']] : form.centers;
@@ -443,6 +444,8 @@ function NewUserDialog({ open, onOpenChange, account, defaultCenter }: { open: b
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setCentersMissing(false);
+    if (form.role !== 'admin_national' && selectedCenters.length === 0) return setCentersMissing(true);
     try {
       const input = { ...form, centers: form.role === 'admin_national' ? [] : selectedCenters };
       const user = account ? await updateUser.mutateAsync({ id: account.id, input }) : await createUser.mutateAsync(input);
@@ -461,27 +464,27 @@ function NewUserDialog({ open, onOpenChange, account, defaultCenter }: { open: b
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{account ? 'Modifier le compte' : isAdmin ? 'Nouvel utilisateur' : 'Nouvelle IDE d\'entraînement'}</DialogTitle>
-          <DialogDescription>{account ? 'Mettez à jour les informations et les accès de ce compte.' : 'Communiquez le mot de passe provisoire à la personne ; elle choisira son code de sécurité à la première connexion.'}</DialogDescription>
+          <DialogDescription>{account ? 'Mettez à jour les informations et les accès de ce compte.' : 'Tous les champs sont obligatoires. Communiquez le mot de passe provisoire à la personne ; elle choisira son code de sécurité à la première connexion.'}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <h3 className="font-semibold text-emerald-950">Identité</h3><div className="grid sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="u-last">Nom</Label>
+              <Label htmlFor="u-last">Nom *</Label>
               <Input id="u-last" value={form.lastName} onChange={set('lastName')} required />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="u-first">Prénom</Label>
+              <Label htmlFor="u-first">Prénom *</Label>
               <Input id="u-first" value={form.firstName} onChange={set('firstName')} required />
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="u-email">Email professionnel</Label>
+            <Label htmlFor="u-email">Email professionnel *</Label>
             <Input id="u-email" type="email" value={form.email} onChange={set('email')} required />
             {fieldError('email')}
           </div>
           {isAdmin && (
             <div className="space-y-1.5">
-              <Label>Droits d’accès</Label>
+              <Label>Droits d’accès *</Label>
               <Select value={form.role} onValueChange={(role) => setForm({ ...form, role: role as UserRole })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -492,14 +495,15 @@ function NewUserDialog({ open, onOpenChange, account, defaultCenter }: { open: b
           )}
           {form.role !== 'admin_national' && (
             <div className="space-y-1.5">
-              <Label>Centres de rattachement</Label>
-              <CenterPicker centers={centerList} value={selectedCenters} onChange={(value) => setForm({ ...form, centers: value })} invalid={!!error?.fieldError('centers')} />
+              <Label>Centres de rattachement *</Label>
+              <CenterPicker centers={centerList} value={selectedCenters} onChange={(value) => setForm({ ...form, centers: value })} invalid={centersMissing || !!error?.fieldError('centers')} />
               {fieldError('centers')}
+              {centersMissing && <p className="text-xs text-red-600">Choisissez au moins un centre.</p>}
             </div>
           )}
           <PasswordField
             id="u-pass"
-            label={account ? 'Nouveau mot de passe (facultatif)' : 'Mot de passe provisoire'}
+            label={account ? 'Nouveau mot de passe (facultatif)' : 'Mot de passe provisoire *'}
             value={form.plainPassword ?? ''}
             onChange={(plainPassword) => setForm({ ...form, plainPassword })}
             required={!account}

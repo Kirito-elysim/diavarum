@@ -70,6 +70,9 @@ final class CenterImporter
             foreach ($this->validator->validate($center) as $violation) {
                 $errors[] = self::label($violation->getPropertyPath()).' : '.$violation->getMessage();
             }
+            if ('' === trim($center->getCity())) {
+                $errors[] = 'Ville : cette valeur ne doit pas être vide.';
+            }
             $key = self::key($center->getName(), $center->getCity());
             if (isset($existingNames[$key])) {
                 $errors[] = 'Un centre de ce nom existe déjà dans cette ville.';

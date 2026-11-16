@@ -208,13 +208,13 @@ export const ELIGIBILITY_LABELS: Record<EligibilityStatus, string> = {
   non_eligible: 'Non éligible',
 };
 
-export const PROGRAM_ACTIVITY_LABELS: Record<ProgramActivityStatus, string> = {non_demarre: 'Non démarré', non_actif: 'Inactif', actif: 'En cours', interrompu: 'Interrompu', acheve: 'Achevé'};
+export const PROGRAM_ACTIVITY_LABELS: Record<ProgramActivityStatus, string> = {non_demarre: 'Non démarré', non_actif: 'Inactif', actif: 'En cours', interrompu: 'Interrompu', acheve: 'Validé'};
 
 export const PROGRAM_STATUS_LABELS: Record<ProgramStatus, string> = {
   non_actif: 'Non actif',
   actif: 'En cours',
   interrompu: 'Interrompu',
-  acheve: 'Achevé',
+  acheve: 'Validé',
 };
 
 /* ─── Statistiques (GET /api/statistics) ───────────────────────────────── */

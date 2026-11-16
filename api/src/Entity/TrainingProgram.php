@@ -45,6 +45,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             'patient' => new QueryParameter(filter: new IriFilter(), property: 'patient'),
             'status' => new QueryParameter(filter: new ExactFilter(), property: 'status'),
             'activityStatus' => new QueryParameter(filter: new \App\Doctrine\Filter\ProgramActivityFilter(), property: 'status'),
+            'readyToValidate' => new QueryParameter(filter: new \App\Doctrine\Filter\ProgramReadyToValidateFilter(), property: 'status'),
             'center' => new QueryParameter(filter: new IriFilter(), property: 'patient.center'),
             'search' => new QueryParameter(filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())), properties: ['patient.lastName', 'patient.firstName']),
             'order[patient]' => new QueryParameter(filter: new SortFilter(), property: 'patient.lastName'),

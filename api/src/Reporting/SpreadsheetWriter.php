@@ -120,8 +120,8 @@ final class SpreadsheetWriter
 
         $programs = $book->createSheet()->setTitle('Parcours');
         $this->table($programs, [
-            'Centre', 'Parcours', 'Non démarrés', '%', 'Inactifs (15 jours)', '%', 'En cours', '%', 'Interrompus', '%', 'Achevés', '%',
-            'Score moyen des parcours (%) · parcours avec une séance validée dans la période', 'Durée moyenne d\'un parcours (min) · parcours achevés dans la période',
+            'Centre', 'Parcours', 'Non démarrés', '%', 'Inactifs (15 jours)', '%', 'En cours', '%', 'Interrompus', '%', 'Validés', '%',
+            'Score moyen des parcours (%) · parcours avec une séance validée dans la période', 'Durée moyenne d\'un parcours (min) · parcours validés dans la période',
         ], array_map(static fn (array $a) => [
             $a['center'], $a['programs']['total'],
             $a['programs']['notStarted']['count'], $a['programs']['notStarted']['percent'],

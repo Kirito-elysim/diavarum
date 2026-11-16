@@ -374,10 +374,14 @@ final class TrainingWorkflowTest extends ApiTestCaseBase
         $programPath = $this->iri($this->program);
         $reason = $this->em()->getRepository(InterruptionReason::class)->findOneBy([]);
 
-        $this->requestAs($this->ide, 'POST', "$programPath/interrupt", ['reasons' => []]);
+        $cadre = $this->createUser(UserRole::Cadre, [$this->center]);
+        $this->requestAs($cadre, 'POST', "$programPath/interrupt", ['reasons' => []]);
         self::assertResponseStatusCodeSame(422);
 
-        $this->requestAs($this->ide, 'POST', "$programPath/interrupt", ['reasons' => [$reason->getId()->toRfc4122()], 'notes' => 'Hospitalisation prolongée']);
+        $this->requestAs($this->ide, 'POST', "$programPath/interrupt", ['reasons' => [$reason->getId()->toRfc4122()]]);
+        self::assertResponseStatusCodeSame(403, 'Seul un cadre clôture un parcours');
+
+        $this->requestAs($cadre, 'POST', "$programPath/interrupt", ['reasons' => [$reason->getId()->toRfc4122()], 'notes' => 'Hospitalisation prolongée']);
         self::assertResponseIsSuccessful();
         self::assertSame('interrompu', $this->tracking()['status']);
 

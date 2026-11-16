@@ -363,7 +363,7 @@ await step('Cadre : statistiques de son centre (onglets, période) et export Exc
   await page.getByRole('link', { name: 'Résultats' }).click();
   await page.getByRole('heading', { name: 'Résultats' }).waitFor();
   await page.getByText(/^Diaverum Paris Nord · activité/).waitFor();
-  await page.getByText('Du patient enregistré au parcours achevé').waitFor();
+  await page.getByText('Du patient enregistré au parcours validé').waitFor();
   await page.getByRole('tab', { name: 'Parcours', exact: true }).click();
   await page.getByRole('cell', { name: /DUPONT Jean/ }).waitFor();
   await page.getByRole('tab', { name: 'Centres', exact: true }).click();

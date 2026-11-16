@@ -8,6 +8,7 @@ import type {
   Dashboard,
   ModuleContent,
   Center,
+  ChapterRef,
   CenterInput,
   CodexTestResult,
   NurseActivity,
@@ -235,17 +236,19 @@ export function useSessionSummary(filters: SessionFilters) {
   });
 }
 
-export interface ProgramFilters { search?: string; center?: string[]; status?: string }
+export interface ProgramFilters { search?: string; center?: string[]; status?: string; readyToValidate?: boolean }
 
 const PROGRAM_SORT: Record<string, string> = { patient: 'patient', status: 'activityStatus', start: 'startedAt', created: 'createdAt' };
 
-export function useProgramList(filters: ProgramFilters, sort: ListSort, page: number, itemsPerPage = 25) {
+export function useProgramList(filters: ProgramFilters, sort: ListSort, page: number, itemsPerPage = 25, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ['programs', 'list', filters, sort, page, itemsPerPage],
     queryFn: () => api<Collection<TrainingProgramListItem>>(`/training_programs${query({
       search: filters.search || undefined,
       center: filters.center,
       activityStatus: filters.status,
+      readyToValidate: filters.readyToValidate ? 'true' : undefined,
       [`order[${PROGRAM_SORT[sort.key] ?? 'createdAt'}]`]: sort.desc ? 'desc' : 'asc',
       page: String(page),
       itemsPerPage: String(itemsPerPage),
@@ -258,7 +261,7 @@ export function useProgramList(filters: ProgramFilters, sort: ListSort, page: nu
 export function useProgramSummary(filters: Omit<ProgramFilters, 'status'>) {
   return useQuery({
     queryKey: ['programs', 'summary', filters],
-    queryFn: () => api<{ total: number; byStatus: Record<ProgramStatus, number>; activityByStatus?: Record<ProgramStatus | 'non_demarre', number> }>(`/summaries/training_programs${query({ search: filters.search || undefined, center: filters.center })}`),
+    queryFn: () => api<{ total: number; byStatus: Record<ProgramStatus, number>; activityByStatus?: Record<ProgramStatus | 'non_demarre', number>; toValidate?: number }>(`/summaries/training_programs${query({ search: filters.search || undefined, center: filters.center })}`),
     placeholderData: (previous) => previous,
   });
 }
@@ -504,6 +507,10 @@ export function verifySecurityCode(code: string) {
 }
 
 /* ─── Test CODEX ───────────────────────────────────────────────────────── */
+
+export function useChapters() {
+  return useQuery({ queryKey: ['chapters'], queryFn: () => allPages<ChapterRef>('/chapters') });
+}
 
 export function useCodexTests(patientIri: string | undefined) {
   return useQuery({

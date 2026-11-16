@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import { Users, Activity, BookOpen, Trophy, TrendingUp, Clock, CheckCircle, PlayCircle, ChevronRight, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useDashboard, usePatients } from '../api/hooks';
+import { useDashboard, usePatients, useProgramList } from '../api/hooks';
 import type { Dashboard } from '../api/types';
 import { formatDate } from '../lib/format';
 
@@ -44,9 +44,10 @@ const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? 's' : ''}`;
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isCadre } = useAuth();
   const { data } = useDashboard();
   const { data: pending } = usePatients({ eligibilityStatus: 'enregistre' });
+  const { data: toValidate } = useProgramList({ readyToValidate: true }, { key: 'patient' }, 1, 5, isCadre);
   const k: NonNullable<Dashboard['kpis']> | undefined = data?.kpis ?? undefined;
 
   return (
@@ -167,6 +168,58 @@ export default function DashboardPage() {
       {/* Bottom row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="space-y-6">
+          {/* Parcours terminés, en attente de la validation d'un cadre */}
+          {isCadre && (
+            <Card className="border-0 shadow-sm ring-1 ring-gray-100">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  Parcours d'EHD à valider
+                  {(toValidate?.totalItems ?? 0) > 0 && <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100">{toValidate?.totalItems}</Badge>}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-1">
+                {toValidate?.member.length === 0 && <p className="text-sm text-gray-400">Aucun parcours d'EHD à valider</p>}
+                {toValidate?.member.map((program) => (
+                  <button key={program.id} onClick={() => navigate(`/patients/${program.patient.id}`)} className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 text-left">
+                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-xs font-semibold">{program.patient.firstName[0]}{program.patient.lastName[0]}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">{program.patient.lastName.toUpperCase()} {program.patient.firstName}</p>
+                      <p className="text-xs text-gray-400 truncate">{program.patient.center?.name} · {program.validatedCount}/{program.selectedCount} séances validées</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-300" />
+                  </button>
+                ))}
+                {(toValidate?.totalItems ?? 0) > 5 && (
+                  <button onClick={() => navigate('/parcours?statut=a_valider')} className="w-full pt-1 text-sm font-medium text-orange-600 hover:underline text-left">Voir les {toValidate?.totalItems} parcours</button>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Eligibility pending */}
+          <Card className="border-0 shadow-sm ring-1 ring-gray-100">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-orange-500" />
+                Éligibilité à statuer
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1">
+              {pending?.member.length === 0 && <p className="text-sm text-gray-400">Rien en attente</p>}
+              {pending?.member.slice(0, 5).map((p) => (
+                <button key={p.id} onClick={() => navigate(`/patients/${p.id}`)} className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 text-left">
+                  <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 text-xs font-semibold">{p.firstName[0]}{p.lastName[0]}</div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{p.lastName.toUpperCase()} {p.firstName}</p>
+                    <p className="text-xs text-gray-400 truncate">{p.center.name} · enregistré le {formatDate(p.createdAt)}</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-gray-300" />
+                </button>
+              ))}
+            </CardContent>
+          </Card>
+
           {/* Active sessions */}
           <Card className="border-0 shadow-sm ring-1 ring-gray-100">
             <CardHeader className="pb-3">
@@ -190,29 +243,6 @@ export default function DashboardPage() {
                       </span>
                     </div>
                   </div>
-                </button>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Eligibility pending */}
-          <Card className="border-0 shadow-sm ring-1 ring-gray-100">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-orange-500" />
-                Éligibilité à statuer
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-1">
-              {pending?.member.length === 0 && <p className="text-sm text-gray-400">Rien en attente</p>}
-              {pending?.member.slice(0, 5).map((p) => (
-                <button key={p.id} onClick={() => navigate(`/patients/${p.id}`)} className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 text-left">
-                  <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 text-xs font-semibold">{p.firstName[0]}{p.lastName[0]}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{p.lastName.toUpperCase()} {p.firstName}</p>
-                    <p className="text-xs text-gray-400 truncate">{p.center.name} · enregistré le {formatDate(p.createdAt)}</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-gray-300" />
                 </button>
               ))}
             </CardContent>

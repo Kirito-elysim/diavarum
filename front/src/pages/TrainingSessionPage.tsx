@@ -902,10 +902,10 @@ function CompetencyValidationScreen({
         {confirming && (
           <div className="fixed inset-0 z-[10001] bg-black/60 flex items-center justify-center px-6">
             <div className="w-full max-w-sm rounded-3xl bg-[#1C5335] border border-white/15 p-6 text-center shadow-2xl">
-              <p className="text-white text-lg font-bold mb-2">Clôturer la séance ?</p>
+              <p className="text-white text-lg font-bold mb-2">Êtes-vous sûr ?</p>
               <p className="text-white/60 course-label mb-6">
                 {competencies.length ? `${validatedCount} compétence(s) validée(s) sur ${competencies.length}. ` : ''}
-                La durée et le score seront enregistrés ; cette action est définitive.
+                Vous ne pourrez pas modifier le score ou les compétences validées.
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <button onClick={() => setConfirming(false)} className="h-12 rounded-full bg-white/10 text-white/70 font-semibold">Annuler</button>

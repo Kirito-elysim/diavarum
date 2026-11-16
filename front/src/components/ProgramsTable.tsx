@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Route, Search } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Card, CardContent } from './ui/card';
@@ -30,13 +30,15 @@ export function ProgramsTable({ centerIds }: { centerIds?: string[] } = {}) {
   const { data: reasons } = useInterruptionReasons();
   const [search, setSearch] = useState('');
   const [centerFilter, setCenterFilter] = useState<string[]>([]);
-  const [status, setStatus] = useState<'all' | ProgramActivityStatus>('all');
+  // « a_valider » : parcours dont toutes les séances sélectionnées sont validées, en attente de la validation d'un cadre
+  const [searchParams] = useSearchParams();
+  const [status, setStatus] = useState<'all' | 'a_valider' | ProgramActivityStatus>(!centerIds && searchParams.get('statut') === 'a_valider' ? 'a_valider' : 'all');
   const [sort, setSort] = useState<ListSort>({ key: 'created', desc: true });
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounced(search.trim());
   const filters = { search: debouncedSearch, center: centerIds ? centerIds.map((id) => `/api/centers/${id}`) : centerFilter };
-  const listFilters = { ...filters, status: status === 'all' ? undefined : status };
+  const listFilters = { ...filters, status: status === 'all' || status === 'a_valider' ? undefined : status, readyToValidate: status === 'a_valider' || undefined };
   const filterKey = JSON.stringify(listFilters);
   useEffect(() => setPage(1), [filterKey]);
 
@@ -50,8 +52,9 @@ export function ProgramsTable({ centerIds }: { centerIds?: string[] } = {}) {
   }, [reasons]);
   const toggleSort = (key: string) => setSort((current) => ({ key, desc: current.key === key ? !current.desc : key === 'created' || key === 'start' }));
 
-  const chips: { value: 'all' | ProgramActivityStatus; label: string; count?: number }[] = [
+  const chips: { value: 'all' | 'a_valider' | ProgramActivityStatus; label: string; count?: number }[] = [
     { value: 'all', label: 'Tous', count: summary?.total },
+    { value: 'a_valider', label: 'À valider', count: summary?.toValidate },
     ...STATUS_ORDER.map((s) => ({ value: s, label: PROGRAM_LIST_LABELS[s], count: summary?.activityByStatus?.[s] ?? (s === 'non_demarre' ? undefined : summary?.byStatus[s]) })),
   ];
 
@@ -128,7 +131,7 @@ export function ProgramsTable({ centerIds }: { centerIds?: string[] } = {}) {
                         <TableCell className="text-right text-sm"><ScoreBar score={program.averageScore} /></TableCell>
                         <TableCell className="text-sm text-gray-600 whitespace-nowrap">{program.startedAt ? formatDate(program.startedAt) : <span className="text-gray-400">Non démarré</span>}</TableCell>
                         <TableCell className="text-sm text-gray-700 max-w-sm">
-                          {program.status === 'acheve' && <>Achevé le {formatDate(program.completedAt)}</>}
+                          {program.status === 'acheve' && <>Validé le {formatDate(program.completedAt)}</>}
                           {program.status === 'interrompu' && (
                             <>
                               Clôturé le {formatDate(program.interruptedAt)} : {program.interruptionReasons.map(reasonLabel).filter(Boolean).join(', ') || 'motif non précisé'}

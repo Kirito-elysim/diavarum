@@ -10,6 +10,17 @@ use App\Enum\UserRole;
  */
 final class CenterTest extends ApiTestCaseBase
 {
+    public function testOnlyTheNameIsRequired(): void
+    {
+        $admin = $this->createUser(UserRole::AdminNational);
+
+        $this->requestAs($admin, 'POST', '/api/centers', ['name' => 'Centre sans ville']);
+        self::assertResponseStatusCodeSame(201);
+
+        $this->requestAs($admin, 'POST', '/api/centers', ['city' => 'Lille']);
+        self::assertResponseStatusCodeSame(422);
+    }
+
     public function testAdminCreatesCenterWithFullDetails(): void
     {
         $admin = $this->createUser(UserRole::AdminNational);

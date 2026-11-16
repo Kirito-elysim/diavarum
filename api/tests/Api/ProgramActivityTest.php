@@ -58,6 +58,44 @@ final class ProgramActivityTest extends ApiTestCaseBase
         self::assertSame('actif', $this->requestAs($ide, 'GET', $path)->toArray()['activityStatus']);
     }
 
+    public function testProgramsWithEveryChosenSessionValidatedAreReadyToValidate(): void
+    {
+        $center = $this->createCenter('À valider');
+        $ide = $this->createUser(UserRole::Ide, [$center]);
+        $cadre = $this->createUser(UserRole::Cadre, [$center]);
+        $first = (new Module())->setCode('S_READY1')->setTitle('Prêt 1');
+        $second = (new Module())->setCode('S_READY2')->setTitle('Prêt 2');
+        $this->em()->persist($first);
+        $this->em()->persist($second);
+        $programs = [];
+        foreach (['Fini', 'Reste', 'Vide'] as $name) {
+            $patient = $this->createPatient($center, $ide, $name)->setEligibilityStatus(EligibilityStatus::Eligible);
+            $program = (new TrainingProgram())->setPatient($patient);
+            $program->setAuthor($ide);
+            foreach ('Vide' === $name ? [] : [$first, $second] as $module) {
+                $program->addModule($module);
+            }
+            $program->markActive();
+            $this->em()->persist($program);
+            $programs[$name] = $program;
+        }
+        foreach ($programs['Fini']->getModules() as $pm) {
+            $pm->markValidated(80, 600);
+        }
+        $programs['Reste']->getModules()->first()->markValidated(80, 600);
+        $this->em()->flush();
+
+        $names = fn (string $query) => array_map(static fn (array $p) => $p['patient']['lastName'], $this->requestAs($ide, 'GET', '/api/training_programs'.$query)->toArray());
+        self::assertSame(['Fini'], $names('?readyToValidate=true'));
+        self::assertCount(3, $names(''));
+        self::assertSame(1, $this->requestAs($ide, 'GET', '/api/summaries/training_programs')->toArray()['toValidate']);
+
+        $program = $this->em()->find(TrainingProgram::class, $programs['Fini']->getId());
+        $program->markCompleted($this->em()->find(\App\Entity\User::class, $cadre->getId()));
+        $this->em()->flush();
+        self::assertSame([], $names('?readyToValidate=true'), 'Un parcours validé n\'est plus à valider');
+    }
+
     public function testArchivedPatientsAreExcludedFromAllScreenKpisAndRestoreReturnsThem(): void
     {
         $center = $this->createCenter('Archive');

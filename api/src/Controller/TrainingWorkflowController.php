@@ -92,8 +92,9 @@ final class TrainingWorkflowController
         return new JsonResponse(['status' => $program->getStatus()->value]);
     }
 
-    /** Clôture anticipée d'un parcours, avec motifs */
+    /** Clôture anticipée d'un parcours, avec motifs (cadre de service ou administrateur) */
     #[Route('/api/training_programs/{id}/interrupt', name: 'api_program_interrupt', requirements: ['id' => Requirement::UUID], methods: ['POST'])]
+    #[IsGranted('ROLE_CADRE')]
     #[IsGranted('CENTER_SCOPE', subject: 'program')]
     public function interruptProgram(
         #[MapEntity] TrainingProgram $program,

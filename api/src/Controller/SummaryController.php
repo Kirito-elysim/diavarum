@@ -79,6 +79,7 @@ final class SummaryController
                 ->setParameter('search', '%'.mb_strtolower(addcslashes($search, '%_')).'%');
         }
 
+        $toValidate = (clone $qb)->select('COUNT(tp.id)')->andWhere(\App\Doctrine\Filter\ProgramReadyToValidateFilter::condition('tp'))->getQuery()->getSingleScalarResult();
         $activityQb = clone $qb;
         $activityExpression = \App\Doctrine\Filter\ProgramActivityFilter::expression('tp', 'activityBoundary');
         $activityCounts = array_fill_keys(['non_demarre', 'non_actif', 'actif', 'interrompu', 'acheve'], 0);
@@ -93,7 +94,7 @@ final class SummaryController
             $counts[$status] = (int) $row['total'];
         }
 
-        return new JsonResponse(['total' => array_sum($counts), 'byStatus' => $counts, 'activityByStatus' => $activityCounts]);
+        return new JsonResponse(['total' => array_sum($counts), 'byStatus' => $counts, 'activityByStatus' => $activityCounts, 'toValidate' => (int) $toValidate]);
     }
 
     /** Requête limitée aux centres de l'utilisateur, comme les collections de l'API */

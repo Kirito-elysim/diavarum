@@ -66,7 +66,6 @@ class Center implements ArchivableInterface
     private string $name = '';
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     #[Groups(['center:read', 'center:write', 'me:read'])]
     private string $city = '';

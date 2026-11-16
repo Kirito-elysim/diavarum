@@ -53,14 +53,14 @@ export function CenterDialog({ open, onOpenChange, center, onSaved }: { open: bo
       <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{center ? 'Modifier le centre' : 'Nouveau centre'}</DialogTitle>
-          <DialogDescription>Seuls le nom et la ville sont obligatoires ; complétez le reste dès que possible.</DialogDescription>
+          <DialogDescription>Seul le nom du centre est obligatoire ; complétez le reste dès que possible.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-5">
           <section className="space-y-3">
             <h3 className="font-semibold text-emerald-950">Établissement</h3>
             <div className="grid sm:grid-cols-[1fr_11rem] gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="c-name">Nom</Label>
+                <Label htmlFor="c-name">Nom *</Label>
                 <Input id="c-name" placeholder="Diaverum …" value={form.name} onChange={set('name')} required maxLength={255} />
                 {fieldError('name')}
               </div>
@@ -92,7 +92,7 @@ export function CenterDialog({ open, onOpenChange, center, onSaved }: { open: bo
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="c-city">Ville</Label>
-                <Input id="c-city" value={form.city} onChange={set('city')} required maxLength={255} />
+                <Input id="c-city" value={form.city} onChange={set('city')} maxLength={255} />
                 {fieldError('city')}
               </div>
             </div>

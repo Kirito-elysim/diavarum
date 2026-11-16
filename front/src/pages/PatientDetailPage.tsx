@@ -12,6 +12,7 @@ import { Progress } from '../components/ui/progress';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import {
   Award,
@@ -45,6 +46,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import {
   useArchivePatient,
+  useChapters,
   useCodexTests,
   useCreateProgram,
   useErasePatient,
@@ -341,10 +343,16 @@ function CreateProgramDialog({ patient, open, onOpenChange }: { patient: Patient
   const createProgram = useCreateProgram();
   const client = useQueryClient();
   const { data } = useModules();
+  const { data: chapterList } = useChapters();
   const [chosen, setChosen] = useState<string[]>([]);
   const modules = (data?.member ?? []).filter((m) => m.published).sort((a, b) => a.position - b.position);
   const mandatory = modules.filter((m) => m.mandatory);
   const optional = modules.filter((m) => !m.mandatory);
+  // Systématiques regroupées par chapitre, dans l'ordre des chapitres
+  const chapters = new Map((chapterList?.member ?? []).map((c) => [c['@id'], c]));
+  const mandatoryByChapter = new Map<string, typeof modules>();
+  for (const m of mandatory) mandatoryByChapter.set(m.chapter ?? '', [...(mandatoryByChapter.get(m.chapter ?? '') ?? []), m]);
+  const mandatoryGroups = [...mandatoryByChapter].sort(([a], [b]) => (chapters.get(a)?.position ?? 999) - (chapters.get(b)?.position ?? 999));
 
   const submit = async () => {
     try {
@@ -381,10 +389,22 @@ function CreateProgramDialog({ patient, open, onOpenChange }: { patient: Patient
           <DialogDescription>Les séances systématiques sont incluses d'office. Cochez les séances optionnelles adaptées au profil du patient.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-sm font-semibold text-gray-800">Séances systématiques ({mandatory.length}) · incluses</h3>
-            {mandatory.map((m) => row(m, true))}
-          </div>
+          {/* Un seul accordéon replié : on arrive directement sur les séances optionnelles */}
+          <Accordion type="single" collapsible className="rounded-lg border border-gray-100 px-3">
+            <AccordionItem value="mandatory" className="border-b-0">
+              <AccordionTrigger className="py-3 text-gray-800 hover:no-underline font-semibold">
+                <span className="flex-1 text-left">Séances systématiques ({mandatory.length}) · incluses d'office</span>
+              </AccordionTrigger>
+              <AccordionContent className="space-y-3 pb-3">
+                {mandatoryGroups.map(([chapter, items]) => (
+                  <div key={chapter || 'sans-chapitre'} className="space-y-1">
+                    <p className="text-xs font-medium text-gray-500">{chapters.get(chapter)?.title ?? 'Autres séances'}</p>
+                    {items.map((m) => row(m, true))}
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
           <div className="space-y-1">
             <h3 className="text-sm font-semibold text-gray-800">Séances optionnelles ({chosen.length}/{optional.length})</h3>
             {optional.map((m) => row(m, false))}
@@ -395,7 +415,7 @@ function CreateProgramDialog({ patient, open, onOpenChange }: { patient: Patient
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={createProgram.isPending}>Annuler</Button>
           <Button className="bg-orange-500 hover:bg-orange-600 text-white" disabled={createProgram.isPending} onClick={submit}>
             {createProgram.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            Créer le parcours
+            Valider
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -491,6 +511,22 @@ function CourseStatusBadge({ item }: { item: ProgramModule }) {
 /** Actions sur le parcours : clôture justifiée, validation par un cadre, reprise d'un parcours interrompu */
 const CADRE_ONLY_MESSAGE = 'Seul un profil « Cadre de santé » peut valider définitivement le parcours d’EHD d’un patient.';
 
+const CADRE_ONLY_CLOSE_MESSAGE = 'Seul un profil « Cadre de santé » peut clôturer le parcours d’EHD d’un patient.';
+
+/** Bouton grisé réservé aux cadres : aria-disabled (et non disabled) pour rester cliquable et afficher le message au clic comme au survol */
+function CadreOnlyButton({ message, className, children }: { message: string; className: string; children: React.ReactNode }) {
+  return (
+    <TooltipProvider delayDuration={100}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button size="sm" aria-disabled className={`gap-1.5 opacity-50 cursor-not-allowed ${className}`} onClick={() => toast.info(message)}>{children}</Button>
+        </TooltipTrigger>
+        <TooltipContent>{message}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
 function ProgramActions({ program }: { program: TrainingProgram }) {
   const { isCadre } = useAuth();
   const action = useProgramAction();
@@ -576,21 +612,15 @@ function ProgramActions({ program }: { program: TrainingProgram }) {
           <CheckCircle2 className="w-4 h-4" />Valider le parcours
         </Button>
       ) : (
-        // aria-disabled (et non disabled) : le bouton grisé reste cliquable pour afficher le message
-        <TooltipProvider delayDuration={100}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size="sm" aria-disabled className="gap-1.5 bg-green-600 text-white opacity-50 cursor-not-allowed hover:bg-green-600" onClick={() => toast.info(CADRE_ONLY_MESSAGE)}>
-                <CheckCircle2 className="w-4 h-4" />Valider le parcours
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{CADRE_ONLY_MESSAGE}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <CadreOnlyButton message={CADRE_ONLY_MESSAGE} className="bg-green-600 text-white hover:bg-green-600"><CheckCircle2 className="w-4 h-4" />Valider le parcours</CadreOnlyButton>
       ))}
-      <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setInterrupting(true)}>
-        <CirclePause className="w-4 h-4" />Clôturer le parcours
-      </Button>
+      {isCadre ? (
+        <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setInterrupting(true)}>
+          <CirclePause className="w-4 h-4" />Clôturer le parcours
+        </Button>
+      ) : (
+        <CadreOnlyButton message={CADRE_ONLY_CLOSE_MESSAGE} className="border border-input bg-background hover:bg-background"><CirclePause className="w-4 h-4" />Clôturer le parcours</CadreOnlyButton>
+      )}
 
       <AlertDialog open={confirmComplete} onOpenChange={setConfirmComplete}>
         <AlertDialogContent>

@@ -151,10 +151,12 @@ final class EndToEndJourneyTest extends ApiTestCaseBase
         self::assertSame('en_cours', $this->requestAs($this->ide, 'GET', "/api/sessions/$again")->toArray()['status']);
 
         // 10. Interruption du parcours avec motif, plus de séance, puis reprise
-        $this->requestAs($this->ide, 'POST', "$programIri/interrupt", ['reasons' => []]);
+        $this->requestAs($this->cadre, 'POST', "$programIri/interrupt", ['reasons' => []]);
         self::assertResponseStatusCodeSame(422, 'Motif obligatoire');
         $reason = $this->requestAs($this->ide, 'GET', '/api/interruption_reasons')->toArray()[0]['id'];
-        $this->requestAs($this->ide, 'POST', "$programIri/interrupt", ['reasons' => [$reason], 'notes' => 'Hospitalisation']);
+        $this->requestAs($this->ide, 'POST', "$programIri/interrupt", ['reasons' => [$reason]]);
+        self::assertResponseStatusCodeSame(403, 'Seul un cadre clôture un parcours');
+        $this->requestAs($this->cadre, 'POST', "$programIri/interrupt", ['reasons' => [$reason], 'notes' => 'Hospitalisation']);
         self::assertResponseIsSuccessful();
         self::assertSame('interrompu', $this->program($this->ide, $programIri)['status']);
         $module = $this->em()->getRepository(Module::class)->findOneBy(['code' => $codes[3]]);
