@@ -11,7 +11,7 @@
   "content": [
     {
       "id": "p01",
-      "title": "Droits du patient",
+      "title": "Droits du patient 1/2",
       "blocks": [
         {
           "id": "s1-droits",
@@ -44,7 +44,7 @@
     },
     {
       "id": "p02",
-      "title": "Droits du patient (suite)",
+      "title": "Droits du patient 2/2",
       "blocks": [
         {
           "id": "s1-respect",
@@ -141,7 +141,7 @@
     },
     {
       "id": "p04",
-      "title": "La personne de confiance",
+      "title": "Personne de confiance 1/3",
       "blocks": [
         {
           "id": "s1-pc-designee",
@@ -178,7 +178,7 @@
     },
     {
       "id": "p05",
-      "title": "Le rôle de la personne de confiance",
+      "title": "Personne de confiance 2/3",
       "blocks": [
         {
           "id": "s1-pc-role",
@@ -220,7 +220,7 @@
     },
     {
       "id": "p06",
-      "title": "Le rôle majeur de la personne de confiance",
+      "title": "Personne de confiance 3/3",
       "blocks": [
         {
           "id": "s1-pc-image",
@@ -239,7 +239,7 @@
     },
     {
       "id": "p06b",
-      "title": "Les directives anticipées",
+      "title": "Directives anticipées 1/3",
       "blocks": [
         {
           "id": "s1-da-intro",
@@ -253,7 +253,7 @@
     },
     {
       "id": "p07",
-      "title": "Les directives anticipées",
+      "title": "Directives anticipées 2/3",
       "blocks": [
         {
           "id": "s1-da-modalites",
@@ -293,7 +293,7 @@
     },
     {
       "id": "p08",
-      "title": "À quoi servent les directives anticipées ?",
+      "title": "Directives anticipées 3/3",
       "blocks": [
         {
           "id": "s1-da-role",
