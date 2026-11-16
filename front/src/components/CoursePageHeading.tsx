@@ -12,7 +12,7 @@ interface CoursePageHeadingProps {
 export function CoursePageHeading({ title, instruction, pageNumber, totalPages, level: Heading = 'h1', showCounter = true, showIcon }: CoursePageHeadingProps) {
   return <div className="flex items-end justify-between gap-4 text-white">
     <div className="min-w-0 flex-1 flex items-center gap-3">
-      {showIcon && <img src="/pictos/interactif.png" alt="" aria-hidden className="flex-shrink-0 w-12 h-12" draggable={false} />}
+      {showIcon && <img src="/pictos/interactif.png" alt="" aria-hidden className="flex-shrink-0 w-16 h-16" draggable={false} />}
       <div className="min-w-0">
         <Heading className={`font-sans text-[28px] ${title.length > 45 ? 'sm:text-[30px]' : 'sm:text-[40px]'} font-bold uppercase leading-snug tracking-normal break-words text-[#E86825]`}>{title}</Heading>
         {instruction?.trim() && <p className="mt-1 text-xl sm:text-[25px] text-[#FFE0D0] whitespace-pre-line break-words">{instruction}</p>}
