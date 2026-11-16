@@ -282,6 +282,9 @@ export interface RevealLegendPoint {
   y: number;                  // percentage 0-100
   label: string;
   description: string;
+  /** Picto cliquable à la place du point numéroté (couleur d'interactivité), et sa version « consultée » */
+  icon?: string;
+  iconDone?: string;
 }
 
 export interface RevealLegendsBlock {
