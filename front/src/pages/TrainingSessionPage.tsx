@@ -32,7 +32,7 @@ import type {
 } from '../types';
 // New block types are imported by their component props; no extra type imports needed here.
 import { cn } from '../lib/utils';
-import { infoCardCategory } from '../lib/courseVisuals';
+import { infoCardCategory, markerWidth } from '../lib/courseVisuals';
 import { HotspotMarker, SheetMarker } from '../components/HotspotMarker';
 
 /* ─── Fullscreen helpers ──────────────────────────────────────────────────── */
@@ -266,7 +266,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
               )}
               aria-label={`Afficher la légende ${i + 1} : ${hs.label}`}
               aria-expanded={activeId === hs.id}
-              style={{ width: size, height: size, left: `clamp(${size / 2}px, ${hs.x}%, calc(100% - ${size / 2}px))`, top: `clamp(${size / 2}px, ${hs.y}%, calc(100% - ${size / 2}px))`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
+              style={{ width: markerWidth(size), aspectRatio: '1', left: `${hs.x}%`, top: `${hs.y}%`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
             >
               {sheetCell
                 ? <SheetMarker sheet={sheetCell} row={hs.sheetRow ?? 0} col={isSeen ? 1 : 0} />

@@ -79,3 +79,6 @@ export const PICTOS: Record<string, { label: string; icon: LucideIcon }> = {
   info: { label: 'Information', icon: Info },
   star: { label: 'Étoile', icon: Star },
 };
+
+/** Taille d'un repère, en proportion de la largeur de l'image : `size` est exprimée pour une image de 720 px, de sorte que l'éditeur et la tablette donnent le même rendu */
+export const markerWidth = (size = 48) => `${size / 720 * 100}%`;

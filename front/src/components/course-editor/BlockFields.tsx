@@ -1,7 +1,7 @@
 import { TextStyleFields } from './TextStyleFields';
 import { useState } from 'react';
 import type { CategorizeBlock, ContentBlock, HotspotBlock, HotspotPoint } from '../../types';
-import { DEFAULT_INSTRUCTIONS, INFO_CARD_CATEGORIES, PICTOS, infoCardCategory } from '../../lib/courseVisuals';
+import { DEFAULT_INSTRUCTIONS, INFO_CARD_CATEGORIES, PICTOS, infoCardCategory, markerWidth } from '../../lib/courseVisuals';
 import { HotspotMarker, SheetMarker } from '../HotspotMarker';
 import { Button } from '../ui/button';
 import { Field, ImageField, ItemActions, Toggle } from './Fields';
@@ -145,7 +145,7 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
       }}>
         <img src={b.imageUrl} alt={b.alt} className="block max-h-56 max-w-full rounded-xl" draggable={false} />
         {b.hotspots.map((h, i) => { const cell = b.sheet?.url && h.sheetRow !== undefined ? b.sheet : null; const bare = !!h.iconUrl || !!cell;
-          return <button key={h.id} aria-label={`Sélectionner le repère ${i + 1}`} onClick={e => { e.stopPropagation(); setSelected(h.id); }} className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full font-bold ${bare ? (selected === h.id ? 'ring-4 ring-orange-500' : '') : `text-white border-2 border-white ${selected === h.id ? 'bg-orange-600' : 'bg-emerald-800'}`}`} style={{ left: `${h.x}%`, top: `${h.y}%`, width: h.size ?? 48, height: h.size ?? 48 }}>{cell ? <SheetMarker sheet={cell} row={h.sheetRow ?? 0} /> : h.iconUrl ? <img src={h.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} /> : <span className="flex h-full w-full items-center justify-center"><HotspotMarker point={h} index={i} /></span>}</button>; })}
+          return <button key={h.id} aria-label={`Sélectionner le repère ${i + 1}`} onClick={e => { e.stopPropagation(); setSelected(h.id); }} className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full font-bold ${bare ? (selected === h.id ? 'ring-4 ring-orange-500' : '') : `text-white border-2 border-white ${selected === h.id ? 'bg-orange-600' : 'bg-emerald-800'}`}`} style={{ left: `${h.x}%`, top: `${h.y}%`, width: markerWidth(h.size), aspectRatio: '1' }}>{cell ? <SheetMarker sheet={cell} row={h.sheetRow ?? 0} /> : h.iconUrl ? <img src={h.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} /> : <span className="flex h-full w-full items-center justify-center"><HotspotMarker point={h} index={i} /></span>}</button>; })}
       </div></div>}
     {b.hotspots.map((h, index) => <section key={h.id} className={`rounded-xl border ${selected === h.id ? 'border-orange-500 p-4 space-y-3' : ''}`}>
       <button type="button" aria-expanded={selected === h.id} onClick={() => setSelected(selected === h.id ? null : h.id)} className={`flex w-full items-center justify-between gap-3 text-left font-medium ${selected === h.id ? '' : 'p-3'}`}><span>{index + 1}. {h.label || 'Légende sans titre'}</span><span aria-hidden>{selected === h.id ? '▴' : '▾'}</span></button>
@@ -183,7 +183,7 @@ function MarkerFields({ point, index, sheet, onChange }: { point: HotspotPoint; 
       <p className="text-sm font-medium">Picto une fois la légende consultée (facultatif)</p>
       <ImageField url={point.iconSeenUrl ?? ''} alt="" onChange={iconSeenUrl => onChange({ ...point, iconSeenUrl: iconSeenUrl || undefined })} />
     </>}
-    <label className="block space-y-2"><span className="text-sm font-medium">Taille du repère : {point.size ?? 48} px</span>
+    <label className="block space-y-2"><span className="text-sm font-medium">Taille du repère : {point.size ?? 48} (proportionnelle à la largeur de l’image)</span>
       <input type="range" min={24} max={160} step={2} className="w-full" value={point.size ?? 48} onChange={e => onChange({ ...point, size: Number(e.target.value) })} /></label>
   </div>;
 }
