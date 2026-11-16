@@ -114,40 +114,48 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
 }
 
 function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: (block: HotspotBlock) => void }) {
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(b.hotspots[0]?.id ?? null);
   const selectedPoint = b.hotspots.find(h => h.id === selected);
+  const patch = (id: string, change: Partial<HotspotPoint>) => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === id ? { ...p, ...change } : p) });
+  const add = () => { const point = { id: uid(), x: 50, y: 50, label: '', description: '' }; onChange({ ...b, hotspots: [...b.hotspots, point] }); setSelected(point.id); };
   return <>
-    <ImageField url={b.imageUrl} alt={b.alt} onChange={(imageUrl, alt) => onChange({ ...b, imageUrl, alt })} />
-    <Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
-    <section className="space-y-3 rounded-xl border-2 border-orange-200 p-4">
-      <h4 className="font-semibold">Planche de pictos</h4>
+    <details className="rounded-xl border p-4" open={!b.imageUrl}><summary className="cursor-pointer text-sm font-medium">Image et légende sous l’image</summary>
+      <div className="mt-3 space-y-3">
+        <ImageField url={b.imageUrl} alt={b.alt} onChange={(imageUrl, alt) => onChange({ ...b, imageUrl, alt })} />
+        <Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
+      </div></details>
+    <details className="rounded-xl border-2 border-orange-200 p-4" open={!b.sheet?.url}><summary className="cursor-pointer font-semibold">Planche de pictos{b.sheet?.url ? ' (importée)' : ''}</summary>
+      <div className="mt-3 space-y-3">
       <p className="text-sm text-gray-600">À importer une seule fois pour tout le bloc : chaque ligne est un picto, chaque colonne un état (1re colonne = normal, 2e colonne = une fois la légende consultée). Vous choisissez ensuite la ligne de chaque repère, sans réimporter.</p>
       <ImageField url={b.sheet?.url ?? ''} alt="" onChange={url => onChange({ ...b, sheet: { cols: 2, rows: 1, ...b.sheet, url } })} />
       {b.sheet?.url && <div className="grid grid-cols-2 gap-3">
         <label className="block space-y-2"><span className="text-sm font-medium">Colonnes de la planche</span><input type="number" min={1} max={4} className="w-full rounded-lg border p-3" value={b.sheet.cols} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, cols: Math.max(1, Math.min(4, Number(e.target.value) || 1)) } })} /></label>
         <label className="block space-y-2"><span className="text-sm font-medium">Lignes de la planche</span><input type="number" min={1} max={20} className="w-full rounded-lg border p-3" value={b.sheet.rows} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, rows: Math.max(1, Math.min(20, Number(e.target.value) || 1)) } })} /></label>
       </div>}
-    </section>
-    {b.imageUrl && <><p className="text-sm text-gray-600">{selectedPoint ? 'Touchez l’image pour déplacer le repère sélectionné.' : 'Touchez l’image pour ajouter un repère.'}</p>
+      </div></details>
+    {b.imageUrl && <div className="sticky top-0 z-20 space-y-2 rounded-xl border bg-white/95 p-2 shadow-md backdrop-blur">
+      <p className="text-sm text-gray-600">{selectedPoint ? `Repère ${b.hotspots.indexOf(selectedPoint) + 1} sélectionné : touchez l’image pour le déplacer.` : 'Touchez l’image pour ajouter un repère.'}</p>
       <div className="relative w-fit max-w-full cursor-crosshair" onClick={e => {
         const rect = e.currentTarget.getBoundingClientRect();
         const x = Math.max(0, Math.min(100, Math.round((e.clientX - rect.left) / rect.width * 100)));
         const y = Math.max(0, Math.min(100, Math.round((e.clientY - rect.top) / rect.height * 100)));
-        if (selectedPoint) onChange({ ...b, hotspots: b.hotspots.map(h => h.id === selected ? { ...h, x, y } : h) });
+        if (selectedPoint) patch(selectedPoint.id, { x, y });
         else { const point = { id: uid(), x, y, label: '', description: '' }; onChange({ ...b, hotspots: [...b.hotspots, point] }); setSelected(point.id); }
       }}>
-        <img src={b.imageUrl} alt={b.alt} className="block max-h-96 max-w-full rounded-xl" draggable={false} />
+        <img src={b.imageUrl} alt={b.alt} className="block max-h-56 max-w-full rounded-xl" draggable={false} />
         {b.hotspots.map((h, i) => { const cell = b.sheet?.url && h.sheetRow !== undefined ? b.sheet : null; const bare = !!h.iconUrl || !!cell;
           return <button key={h.id} aria-label={`Sélectionner le repère ${i + 1}`} onClick={e => { e.stopPropagation(); setSelected(h.id); }} className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full font-bold ${bare ? (selected === h.id ? 'ring-4 ring-orange-500' : '') : `text-white border-2 border-white ${selected === h.id ? 'bg-orange-600' : 'bg-emerald-800'}`}`} style={{ left: `${h.x}%`, top: `${h.y}%`, width: h.size ?? 48, height: h.size ?? 48 }}>{cell ? <SheetMarker sheet={cell} row={h.sheetRow ?? 0} /> : h.iconUrl ? <img src={h.iconUrl} alt="" className="h-full w-full object-contain" draggable={false} /> : <span className="flex h-full w-full items-center justify-center"><HotspotMarker point={h} index={i} /></span>}</button>; })}
-      </div></>}
-    {b.hotspots.map((h, index) => <section key={h.id} className={`rounded-xl border p-4 space-y-3 ${selected === h.id ? 'border-orange-500' : ''}`}>
-      <Button variant="outline" onClick={() => setSelected(h.id)}>Positionner le repère {index + 1}</Button>
-      <Field label={`Titre de la légende ${index + 1}`} value={h.label} onChange={label => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? { ...p, label } : p) })} />
-      <Field label={`Texte de la légende ${index + 1}`} multiline value={h.description} onChange={description => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? { ...p, description } : p) })} />
-      <MarkerFields point={h} index={index} sheet={b.sheet} onChange={point => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? point : p) })} />
-      <ItemActions index={index} count={b.hotspots.length} onMove={direction => onChange({ ...b, hotspots: move(b.hotspots, index, direction) })} onRemove={() => onChange({ ...b, hotspots: b.hotspots.filter(p => p.id !== h.id) })} />
+      </div></div>}
+    {b.hotspots.map((h, index) => <section key={h.id} className={`rounded-xl border ${selected === h.id ? 'border-orange-500 p-4 space-y-3' : ''}`}>
+      <button type="button" aria-expanded={selected === h.id} onClick={() => setSelected(selected === h.id ? null : h.id)} className={`flex w-full items-center justify-between gap-3 text-left font-medium ${selected === h.id ? '' : 'p-3'}`}><span>{index + 1}. {h.label || 'Légende sans titre'}</span><span aria-hidden>{selected === h.id ? '▴' : '▾'}</span></button>
+      {selected === h.id && <>
+        <Field label={`Titre de la légende ${index + 1}`} value={h.label} onChange={label => patch(h.id, { label })} />
+        <Field label={`Texte de la légende ${index + 1}`} multiline value={h.description} onChange={description => patch(h.id, { description })} />
+        <MarkerFields point={h} index={index} sheet={b.sheet} onChange={point => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? point : p) })} />
+        <ItemActions index={index} count={b.hotspots.length} onMove={direction => onChange({ ...b, hotspots: move(b.hotspots, index, direction) })} onRemove={() => { onChange({ ...b, hotspots: b.hotspots.filter(p => p.id !== h.id) }); setSelected(null); }} />
+      </>}
     </section>)}
-    <Button variant="outline" onClick={() => { const point = { id: uid(), x: 50, y: 50, label: '', description: '' }; onChange({ ...b, hotspots: [...b.hotspots, point] }); setSelected(point.id); }}>Ajouter une légende</Button>
+    <Button variant="outline" onClick={add}>Ajouter une légende</Button>
   </>;
 }
 
