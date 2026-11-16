@@ -238,6 +238,8 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
   const active = block.hotspots.find((h) => h.id === activeId) ?? null;
   // Légendes sans texte : le titre sert de réponse, affiché sur une seule ligne une fois le repère touché
   const labelsOnly = block.hotspots.every((h) => !h.description);
+  // Repères en pictos : les titres restent cachés jusqu'au toucher de leur picto, sur une seule ligne
+  const hideUntilSeen = labelsOnly || !!block.sheet;
 
   return (
     <div className="space-y-5">
@@ -308,18 +310,18 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
       </div>
 
       {/* Hotspot buttons */}
-      <div className={cn('px-4 pb-4 pt-1', labelsOnly ? 'flex flex-nowrap gap-2' : 'grid grid-cols-2 gap-2')}>
+      <div className={cn('px-4 pb-4 pt-1', hideUntilSeen ? 'flex flex-nowrap gap-2' : 'grid grid-cols-2 gap-2')}>
         {block.hotspots.map((hs, i) => (
           <button
             key={hs.id}
             onClick={() => setActiveId(hs.id === activeId ? null : hs.id)}
-            disabled={labelsOnly && !seen.has(hs.id)}
-            aria-hidden={labelsOnly && !seen.has(hs.id) ? true : undefined}
-            tabIndex={labelsOnly && !seen.has(hs.id) ? -1 : undefined}
+            disabled={hideUntilSeen && !seen.has(hs.id)}
+            aria-hidden={hideUntilSeen && !seen.has(hs.id) ? true : undefined}
+            tabIndex={hideUntilSeen && !seen.has(hs.id) ? -1 : undefined}
             className={cn(
               'flex items-center gap-2 px-3 py-2.5 rounded-xl text-left transition-all touch-manipulation',
-              labelsOnly && 'flex-1 min-w-0',
-              labelsOnly && !seen.has(hs.id) && 'invisible',
+              hideUntilSeen && 'flex-1 min-w-0',
+              hideUntilSeen && !seen.has(hs.id) && 'invisible',
               hs.id === activeId
                 ? 'bg-orange-500 text-white shadow-md shadow-orange-200'
                 : 'bg-[#FAFAFA] text-[#004138] hover:bg-orange-50 ring-1 ring-[#004138]/15'
