@@ -119,15 +119,15 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
   return <>
     <ImageField url={b.imageUrl} alt={b.alt} onChange={(imageUrl, alt) => onChange({ ...b, imageUrl, alt })} />
     <Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
-    <details className="rounded-xl border p-4" open={!!b.sheet?.url}><summary className="cursor-pointer text-sm font-medium">Planche de pictos (facultatif)</summary>
-      <div className="mt-3 space-y-3">
-        <p className="text-sm text-gray-600">Importez une planche où chaque ligne est un picto et chaque colonne un état : 1re colonne = normal, 2e colonne = une fois la légende consultée. Vous choisissez ensuite la ligne de chaque repère.</p>
-        <ImageField url={b.sheet?.url ?? ''} alt="" onChange={url => onChange({ ...b, sheet: { cols: 2, rows: 1, ...b.sheet, url } })} />
-        {b.sheet?.url && <div className="grid grid-cols-2 gap-3">
-          <label className="block space-y-2"><span className="text-sm font-medium">Colonnes de la planche</span><input type="number" min={1} max={4} className="w-full rounded-lg border p-3" value={b.sheet.cols} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, cols: Math.max(1, Math.min(4, Number(e.target.value) || 1)) } })} /></label>
-          <label className="block space-y-2"><span className="text-sm font-medium">Lignes de la planche</span><input type="number" min={1} max={20} className="w-full rounded-lg border p-3" value={b.sheet.rows} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, rows: Math.max(1, Math.min(20, Number(e.target.value) || 1)) } })} /></label>
-        </div>}
-      </div></details>
+    <section className="space-y-3 rounded-xl border-2 border-orange-200 p-4">
+      <h4 className="font-semibold">Planche de pictos</h4>
+      <p className="text-sm text-gray-600">À importer une seule fois pour tout le bloc : chaque ligne est un picto, chaque colonne un état (1re colonne = normal, 2e colonne = une fois la légende consultée). Vous choisissez ensuite la ligne de chaque repère, sans réimporter.</p>
+      <ImageField url={b.sheet?.url ?? ''} alt="" onChange={url => onChange({ ...b, sheet: { cols: 2, rows: 1, ...b.sheet, url } })} />
+      {b.sheet?.url && <div className="grid grid-cols-2 gap-3">
+        <label className="block space-y-2"><span className="text-sm font-medium">Colonnes de la planche</span><input type="number" min={1} max={4} className="w-full rounded-lg border p-3" value={b.sheet.cols} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, cols: Math.max(1, Math.min(4, Number(e.target.value) || 1)) } })} /></label>
+        <label className="block space-y-2"><span className="text-sm font-medium">Lignes de la planche</span><input type="number" min={1} max={20} className="w-full rounded-lg border p-3" value={b.sheet.rows} onChange={e => b.sheet && onChange({ ...b, sheet: { ...b.sheet, rows: Math.max(1, Math.min(20, Number(e.target.value) || 1)) } })} /></label>
+      </div>}
+    </section>
     {b.imageUrl && <><p className="text-sm text-gray-600">{selectedPoint ? 'Touchez l’image pour déplacer le repère sélectionné.' : 'Touchez l’image pour ajouter un repère.'}</p>
       <div className="relative w-fit max-w-full cursor-crosshair" onClick={e => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -158,7 +158,7 @@ function MarkerFields({ point, index, sheet, onChange }: { point: HotspotPoint; 
     <label className="block space-y-2"><span className="text-sm font-medium">Repère affiché sur l’image</span><select className="w-full rounded-lg border bg-white p-3" value={kind} onChange={e => {
       const next = e.target.value;
       onChange({ ...point, icon: next === 'picto' ? (point.icon ?? Object.keys(PICTOS)[0]) : undefined, iconUrl: next === 'image' ? (point.iconUrl ?? '') : undefined, iconSeenUrl: next === 'image' ? point.iconSeenUrl : undefined, sheetRow: next === 'sheet' ? (point.sheetRow ?? 0) : undefined });
-    }}><option value="number">Numéro ({index + 1})</option><option value="picto">Picto de la bibliothèque</option><option value="sheet">Picto de la planche</option><option value="image">Picto importé (image seule)</option></select></label>
+    }}><option value="number">Numéro ({index + 1})</option><option value="picto">Picto de la bibliothèque</option><option value="sheet">Picto de la planche</option>{kind === 'image' && <option value="image">Picto importé (image seule)</option>}</select></label>
     {kind === 'sheet' && (sheet?.url
       ? <div role="radiogroup" aria-label="Choix du picto dans la planche" className="flex flex-wrap gap-2">
           {Array.from({ length: sheet.rows }, (_, row) => <button key={row} type="button" role="radio" aria-checked={point.sheetRow === row} aria-label={`Ligne ${row + 1} de la planche`} onClick={() => onChange({ ...point, sheetRow: row })}
