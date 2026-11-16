@@ -123,7 +123,7 @@ function InfoCardView({ block }: { block: InfoCardBlock }) {
   const c = infoCardCategory(block.variant);
   const Icon = c.icon;
   return (
-    <div className="course-info-card rounded-3xl px-5 py-3 flex items-center gap-5" style={{ backgroundColor: c.bg, border: `1.5px solid ${c.border}` }}>
+    <div className="course-info-card rounded-2xl px-5 py-3 flex items-center gap-5" style={{ backgroundColor: c.bg, border: `2px solid ${c.border}` }}>
       <div className="w-20 h-20 flex items-center justify-center flex-shrink-0" style={c.iconUrl ? undefined : { backgroundColor: c.iconBg }}>
         {c.iconUrl ? <img src={c.iconUrl} alt="" className="w-full h-full object-contain" /> : <Icon className="w-5 h-5 text-white" />}
       </div>

@@ -18,7 +18,7 @@ export const INFO_CARD_CATEGORIES: { value: InfoCardVariant; label: string; icon
   { value: 'objective', label: 'Objectif', icon: Target },
   { value: 'funfact', label: 'Fun fact', icon: Lightbulb },
   { value: 'warning', label: 'Alerte', icon: AlertTriangle },
-].map(category => ({ ...category, value: category.value as InfoCardVariant, iconUrl: `/pictos/${category.value}.png`, bg: '#FAFAFA', border: 'transparent', iconBg: 'transparent', title: 'text-[#004138]', body: 'text-[#004138]' }));
+].map(category => ({ ...category, value: category.value as InfoCardVariant, iconUrl: `/pictos/${category.value}.png`, bg: 'transparent', border: '#1C5335', iconBg: 'transparent', title: 'text-[#004138]', body: 'text-[#004138]' }));
 
 /**
  * Icône + consigne affichées dans le bandeau de l'écran. Le picto est toujours le point d'interrogation
