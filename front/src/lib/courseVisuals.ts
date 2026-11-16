@@ -82,3 +82,6 @@ export const PICTOS: Record<string, { label: string; icon: LucideIcon }> = {
 
 /** Taille d'un repère, en proportion de la largeur de l'image : `size` est exprimée pour une image de 720 px, de sorte que l'éditeur et la tablette donnent le même rendu */
 export const markerWidth = (size = 48) => `${size / 720 * 100}%`;
+
+/** Page réduite à des cartes à retourner de hauteur automatique : elles occupent toute la place disponible */
+export const pageFills = (blocks: { type: string; cardHeight?: number }[]) => blocks.length === 1 && blocks[0].type === 'flip-cards' && !blocks[0].cardHeight;

@@ -578,7 +578,8 @@ export function TapSequenceView({ block, onAnswer, disabled }: { block: TapSeque
 
 /* ─── 7. Flip Cards (tap to reveal) ────────────────────────────────────── */
 /** `fill` : les cartes occupent toute la hauteur disponible (page qui ne contient que ces cartes) */
-export function FlipCardsView({ block, fill }: { block: FlipCardsBlock; fill?: boolean }) {
+export function FlipCardsView({ block, fill: fillRequested }: { block: FlipCardsBlock; fill?: boolean }) {
+  const fill = fillRequested && !block.cardHeight;
   const [flipped, setFlipped] = useState<Set<string>>(new Set());
 
   const toggle = (id: string) => {
@@ -600,6 +601,7 @@ export function FlipCardsView({ block, fill }: { block: FlipCardsBlock; fill?: b
           return (
             <button
               key={card.id}
+              style={block.cardHeight ? { minHeight: block.cardHeight } : undefined}
               onClick={() => toggle(card.id)}
               aria-pressed={isFlipped}
               className={cn(

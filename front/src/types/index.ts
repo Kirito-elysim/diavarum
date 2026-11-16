@@ -223,6 +223,8 @@ export interface FlipCardsBlock {
   question: string;
   cards: FlipCard[];
   columns?: 2 | 3;
+  /** Hauteur minimale d'une carte en pixels ; absente = automatique (les cartes occupent la place disponible) */
+  cardHeight?: number;
   /** Consigne de l'encadré au doigt ; texte par défaut si absente */
   instruction?: string;
 }

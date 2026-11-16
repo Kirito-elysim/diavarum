@@ -32,7 +32,7 @@ import type {
 } from '../types';
 // New block types are imported by their component props; no extra type imports needed here.
 import { cn } from '../lib/utils';
-import { infoCardCategory, markerWidth } from '../lib/courseVisuals';
+import { infoCardCategory, markerWidth, pageFills } from '../lib/courseVisuals';
 import { HotspotMarker, SheetMarker } from '../components/HotspotMarker';
 
 /* ─── Fullscreen helpers ──────────────────────────────────────────────────── */
@@ -1030,6 +1030,18 @@ export function BlockCard({
   return null;
 }
 
+/** Blocs d'une page : même rendu dans le lecteur et dans les aperçus de l'éditeur. Le parent doit être une colonne flex (`flex min-h-full flex-col`) si `pageFills`. */
+export function PageBlocks({ blocks, keyPrefix, quizAnswers, onQuizAnswer }: {
+  blocks: ContentBlock[]; keyPrefix: string; quizAnswers: Record<string, { isCorrect: boolean; score: number; selected?: string[] }>; onQuizAnswer: (id: string, isCorrect: boolean, score: number, selected?: string[]) => void;
+}) {
+  const fill = pageFills(blocks);
+  return <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0')}>
+    {blocks.map((block) => <div key={`${keyPrefix}:${block.id}`} className={cn(fill && 'flex flex-1 flex-col')}>
+      <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={onQuizAnswer} fill={fill} />
+    </div>)}
+  </div>;
+}
+
 /* ─── Main session page ──────────────────────────────────────────────────── */
 /** pre → active (patient) → score (patient) → handover (code IDE) → competencies (IDE) → done ; pin-exit = sortie anticipée */
 type Phase = 'pre' | 'active' | 'score' | 'handover' | 'competencies' | 'done' | 'pin-exit';
@@ -1370,7 +1382,7 @@ function SessionRunner({
   }
 
   // Page réduite à des cartes à retourner : elles occupent toute la place disponible
-  const fillPage = currentPage.blocks.length === 1 && currentPage.blocks[0].type === 'flip-cards';
+  const fillPage = pageFills(currentPage.blocks);
 
   return (
     <div className="course-theme fixed inset-0 z-[9999] flex flex-col" style={{ userSelect: 'none', background: '#ECF5E9' }}>
@@ -1410,13 +1422,7 @@ function SessionRunner({
       {/* ── Content (défile ; la navigation reste fixée en bas, hors du défilement) ── */}
       <main ref={contentRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div className={cn('mx-4 sm:mx-10 py-5 [@media(max-height:820px)]:py-3', fillPage && 'flex min-h-full flex-col', slideClass)}>
-          <div className={cn('space-y-5', fillPage && 'flex flex-1 flex-col space-y-0')}>
-            {currentPage.blocks.map((block) => (
-              <div key={`${currentPage.id}:${block.id}`} className={cn(fillPage && 'flex flex-1 flex-col')}>
-                <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} fill={fillPage} />
-              </div>
-            ))}
-          </div>
+          <PageBlocks blocks={currentPage.blocks} keyPrefix={currentPage.id} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} />
 
           {pageIndex === 0 && totalPages > 1 && (
             <div className="flex items-center justify-center gap-3 pt-4 text-[#004138]/35">

@@ -13,10 +13,11 @@ import { Button } from '../components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Field, ItemActions, Toggle } from '../components/course-editor/Fields';
 import { BlockFields } from '../components/course-editor/BlockFields';
+import { pageFills } from '../lib/courseVisuals';
 import { TabletPreview } from '../components/course-editor/TabletPreview';
 import { activities, blockLabel, MAX_COMPETENCIES, move, newBlock, newPage, uid, validateCourse } from '../components/course-editor/model';
 
-const PreviewBlock = lazy(() => import('./TrainingSessionPage').then(module => ({ default: module.BlockCard })));
+const PageBlocks = lazy(() => import('./TrainingSessionPage').then(module => ({ default: module.PageBlocks })));
 
 export default function CourseEditorPage() {
   const { code } = useParams<{ code: string }>();
@@ -151,8 +152,8 @@ function Preview({ pages, start }: { pages: ModulePage[]; start: number }) {
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
   return <div className="course-theme rounded-2xl flex flex-col h-[70dvh] min-h-0">
     <CourseHeader page={page} pageNumber={index + 1} totalPages={pages.length} level="h2" />
-    <main key={page.id} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-10 py-5 space-y-5"><Suspense fallback={<p>Chargement de l’aperçu…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense>
-      <button className="course-action" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</button>
+    <main key={page.id} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-10 py-5"><div className={pageFills(page.blocks) ? 'flex min-h-full flex-col gap-5' : 'space-y-5'}><Suspense fallback={<p>Chargement de l’aperçu…</p>}><PageBlocks blocks={page.blocks} keyPrefix={`${attempt}:${page.id}`} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} /></Suspense>
+      <button className="course-action" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</button></div>
     </main>
     <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />
   </div>;

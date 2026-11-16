@@ -82,6 +82,11 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
   </>;
   if (b.type === 'flip-cards') return <>
     <label className="block text-sm">Colonnes de cartes<select className="block w-full rounded-lg border p-3" value={b.columns ?? (b.cards.length >= 6 ? 3 : 2)} onChange={e => onChange({ ...b, columns: Number(e.target.value) as 2 | 3 })}><option value={2}>2 colonnes</option><option value={3}>3 colonnes</option></select></label>
+    <div className="space-y-2 rounded-xl bg-gray-50 p-3">
+      <Toggle label="Hauteur automatique : les cartes occupent toute la place disponible" checked={b.cardHeight === undefined} onChange={auto => onChange({ ...b, cardHeight: auto ? undefined : 160 })} />
+      {b.cardHeight !== undefined && <label className="block space-y-2"><span className="text-sm font-medium">Hauteur d’une carte : {b.cardHeight} px</span>
+        <input type="range" min={80} max={400} step={4} className="w-full" value={b.cardHeight} onChange={e => onChange({ ...b, cardHeight: Number(e.target.value) })} /></label>}
+    </div>
     <Field label="Introduction des cartes" multiline value={b.question} onChange={question => onChange({ ...b, question })} />
     <Field label="Consigne de l’encadré au doigt" value={b.instruction ?? DEFAULT_INSTRUCTIONS.flipCards} onChange={instruction => onChange({ ...b, instruction })} />
     {b.cards.map((card, index) => <section key={card.id} className="rounded-xl border p-4 space-y-4"><h4 className="font-semibold">Carte {index + 1}</h4>

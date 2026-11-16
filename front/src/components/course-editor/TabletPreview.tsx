@@ -3,9 +3,11 @@ import { CourseHeader } from '../CourseHeader';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { ModulePage } from '../../types';
+import { pageFills } from '../../lib/courseVisuals';
 import { Button } from '../ui/button';
 
-const PreviewBlock = lazy(() => import('../../pages/TrainingSessionPage').then(module => ({ default: module.BlockCard })));
+const PageBlocks = lazy(() => import('../../pages/TrainingSessionPage').then(module => ({ default: module.PageBlocks })));
+
 const frameDocument = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="margin:0"><div id="tablet-root"></div></body></html>';
 
 /** Isolated viewport: media queries and fixed overlays follow the tablet, not the editor window. */
@@ -61,7 +63,7 @@ function TabletContent({ pages, start }: { pages: ModulePage[]; start: number })
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
   return <div className="course-theme h-dvh flex flex-col">
     <CourseHeader page={page} pageNumber={index + 1} totalPages={pages.length} actions={<button className="min-h-11 px-4 rounded-full bg-white/10 course-label" onClick={() => { setIndex(start); setAnswers({}); setAttempt(a => a + 1); }}>Recommencer</button>} />
-    <main ref={scroll} className="flex-1 min-h-0 overflow-y-auto overscroll-contain"><div className="space-y-5 px-4 sm:px-10 py-5"><Suspense fallback={<p>Chargement…</p>}>{page.blocks.map(block => <PreviewBlock key={`${attempt}:${page.id}:${block.id}`} block={block} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} />)}</Suspense></div></main>
+    <main ref={scroll} className="flex-1 min-h-0 overflow-y-auto overscroll-contain"><div className={`px-4 sm:px-10 py-5${pageFills(page.blocks) ? ' flex min-h-full flex-col' : ''}`}><Suspense fallback={<p>Chargement…</p>}><PageBlocks blocks={page.blocks} keyPrefix={`${attempt}:${page.id}`} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} /></Suspense></div></main>
     <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />
   </div>;
 }
