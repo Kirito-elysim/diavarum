@@ -94,7 +94,7 @@ export function validateCourse(course: ModuleContent): string[] {
       if (b.type === 'hotspot') {
         missing(b.imageUrl, 'ajoutez une image');
         if (!b.hotspots.length) errors.push(`${name} : ajoutez une légende.`);
-        b.hotspots.forEach(h => { missing(h.label, 'complétez le titre de la légende'); missing(h.description, 'complétez la légende'); });
+        b.hotspots.forEach(h => { missing(h.label, 'complétez le titre de la légende') });
       }
       if (b.type === 'quiz' && b.questionType !== 'drag-drop') {
         missing(b.question, 'complétez la question');

@@ -151,7 +151,7 @@ function HotspotFields({ block: b, onChange }: { block: HotspotBlock; onChange: 
       <button type="button" aria-expanded={selected === h.id} onClick={() => setSelected(selected === h.id ? null : h.id)} className={`flex w-full items-center justify-between gap-3 text-left font-medium ${selected === h.id ? '' : 'p-3'}`}><span>{index + 1}. {h.label || 'Légende sans titre'}</span><span aria-hidden>{selected === h.id ? '▴' : '▾'}</span></button>
       {selected === h.id && <>
         <Field label={`Titre de la légende ${index + 1}`} value={h.label} onChange={label => patch(h.id, { label })} />
-        <Field label={`Texte de la légende ${index + 1}`} multiline value={h.description} onChange={description => patch(h.id, { description })} />
+        <Field label={`Texte de la légende ${index + 1} (facultatif)`} multiline value={h.description} onChange={description => patch(h.id, { description })} />
         <MarkerFields point={h} index={index} sheet={b.sheet} onChange={point => onChange({ ...b, hotspots: b.hotspots.map(p => p.id === h.id ? point : p) })} />
         <ItemActions index={index} count={b.hotspots.length} onMove={direction => onChange({ ...b, hotspots: move(b.hotspots, index, direction) })} onRemove={() => { onChange({ ...b, hotspots: b.hotspots.filter(p => p.id !== h.id) }); setSelected(null); }} />
       </>}

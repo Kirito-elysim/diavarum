@@ -185,7 +185,7 @@ final class ContentValidator
                     'categorize' => ['label', 'category'], 'picto-grid' => ['imageUrl', 'text'],
                     'flip-cards' => ['front', 'back'], 'memory' => ['pairId', 'content'],
                     'carousel' => ['imageUrl'], 'true-false' => ['statement'],
-                    'hotspot' => ['label', 'description'], 'reveal-legends' => ['label'],
+                    'hotspot' => ['label'], 'reveal-legends' => ['label'],
                     default => [],
                 };
                 foreach ($texts as $text) {
