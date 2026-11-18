@@ -1,6 +1,6 @@
 # Reprise du projet Diaverum
 
-Dernière mise à jour : 12 novembre 2026 · entrée J-022 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
+Dernière mise à jour : 18 novembre 2026 · entrée J-060 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
 
 ## Point de départ
 
@@ -160,3 +160,31 @@ Rejoué par un test d'API complet sur la base de test et par les scripts navigat
 ## Comparaison de périodes — J-033
 
 Résultats : bouton Comparer, période B choisie comme A, écarts A − B sur la Vue d'ensemble, Séances, Centres, IDE ; sans export. Tests `e2e/compare-logic.mjs` et `e2e/results-compare.mjs`. Build de production réparé (import du profil supprimé dans `NewSessionPage`, cassé depuis e1cf37e) ; vérifier le front avec `npm run typecheck && npm run build`, pas avec `tsc -p .`. Non commité (depuis 4ff7e78).
+
+## Intégration S1 — Lancement de séance (J-053)
+
+Le bloc blanc de « Prêt à commencer ? » présente le titre complet et les compétences déjà configurées dans le cours. Les deux blocs sont élargis ; le rappel de sécurité tient sur deux lignes aux tailles tablette simulées, et le lancement de S1 ouvre bien sa première page. Typecheck et build réussis, vérification navigateur avec API simulée ; tablette physique et police Euclid encore à vérifier. Aucun import ni déploiement. Prochaine action : valider ce rendu et reprendre la relecture de S1 page par page. Les sources et le contexte d'intégration S1/S2 sont consignés en J-052.
+
+## Intégration S1 — Consigne page 1 (J-054)
+
+« Touchez une carte pour répondre à la question. » est renseigné sur la page « Droits du patient 1/2 » dans le contenu versionné et la base Docker de développement. Libellé vérifié dans Chromium avec API simulée. Poursuivre la relecture de S1 page par page.
+
+## Cartes à retourner — Consigne par défaut (J-055)
+
+Le lecteur et les aperçus affichent « Touchez une carte pour répondre à la question. » pour les cartes à retourner lorsque ni la page ni le bloc ne renseigne de consigne. L'éditeur affiche le défaut sous le champ du bloc. Priorités vérifiées et rendu testé dans Chromium aux dimensions tablette en portrait et paysage. Poursuivre la relecture de S1.
+
+## Questions non notées — S1 page 4 et règle commune (J-056)
+
+Les QCU, QCM et associations non notés acceptent une validation neutre et ne contribuent pas au score, même si un ancien réglage active la correction. Règle partagée entre lecteur et aperçus, avec options de correction masquées dans l'éditeur pour les questions non notées. Page 4 de S1 déjà configurée ainsi dans la base de développement. Build, tests unitaires, tests API ciblés et vérifications Chromium réussis. Reprendre la relecture de S1 à la page suivante.
+
+## S1 page 6 — Zoom des images (J-057)
+
+Les blocs Image, dont l'illustration de la page 6 de S1, s'affichent sans loupe par défaut. La case « Autoriser le zoom sur cette image » active l'agrandissement dans le lecteur et les aperçus. Enregistrement et rendu testés avec API simulée en portrait et paysage. Poursuivre la relecture de S1.
+
+## Carrousels — Coins arrondis (J-058)
+
+Les illustrations des carrousels utilisent le même rayon de 16 px que les autres images dans le lecteur et les aperçus. Proportions et défilement vérifiés dans Chromium en portrait et paysage sur la page 5 de S1. Poursuivre la relecture de S1.
+
+## S1 page 5 — Hauteur du carrousel (J-059)
+
+Le carrousel « Personne de confiance 2/3 » utilise une zone d'image plus haute dans le contenu versionné et la base de développement. Hauteur et proportions vérifiées en portrait et paysage, avec contrôle du carrousel standard de la page 8. Poursuivre la relecture de S1.

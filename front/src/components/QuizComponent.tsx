@@ -6,8 +6,8 @@ import type { QuizBlock, QuizOption, DragDropPair } from '../types';
 
 interface QuizProps {
   block: QuizBlock;
-  onAnswer: (isCorrect: boolean, score: number, selected?: string[]) => void;
-  previousResult?: { isCorrect: boolean; score: number; selected?: string[] };
+  onAnswer: (isCorrect: boolean, score: number | null, selected?: string[]) => void;
+  previousResult?: { isCorrect: boolean; score: number | null; selected?: string[] };
   disabled?: boolean;
 }
 
@@ -30,15 +30,19 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
 
   // Question de réflexion (non notée) : ni correction, ni score, une seule réponse
   const ungraded = block.graded === false;
-  const showCorrection = block.showCorrection ?? !ungraded;
+  const showCorrection = !ungraded && block.showCorrection !== false;
 
   const handleSubmit = () => {
     if (!selected) return;
+    setSubmitted(true);
+    if (ungraded) {
+      onAnswer(false, null, [selected]);
+      return;
+    }
     const opt       = block.options?.find((o: QuizOption) => o.id === selected);
     const isCorrect = opt?.isCorrect ?? false;
-    setSubmitted(true);
     if (!isCorrect && showCorrection) { setShake(true); setTimeout(() => setShake(false), 400); }
-    onAnswer(ungraded && !showCorrection || isCorrect, isCorrect ? 100 : 0, [selected]);
+    onAnswer(isCorrect, isCorrect ? 100 : 0, [selected]);
   };
 
   return (
@@ -114,7 +118,7 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
   const [selected,  setSelected]  = useState<Set<string>>(() => new Set(previousResult?.selected));
   const [submitted, setSubmitted] = useState(!!previousResult);
   const ungraded = block.graded === false;
-  const showCorrection = block.showCorrection ?? !ungraded;
+  const showCorrection = !ungraded && block.showCorrection !== false;
 
   const toggle = (id: string) => {
     if (submitted || disabled) return;
@@ -128,6 +132,11 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
 
   const handleSubmit = () => {
     if (selected.size === 0) return;
+    setSubmitted(true);
+    if (ungraded) {
+      onAnswer(false, null, [...selected]);
+      return;
+    }
     const correctIds = new Set(block.options?.filter((o: QuizOption) => o.isCorrect).map((o: QuizOption) => o.id));
     const allOk = [...correctIds].every((id) => selected.has(id as string));
     const noWrong = [...selected].every((id) => correctIds.has(id));
@@ -135,8 +144,7 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
     // Score proportionnel aux bonnes réponses cochées, sans pénalité pour les mauvaises (cahier des charges §4)
     const correctSel = [...selected].filter((id) => correctIds.has(id)).length;
     const score = correctIds.size > 0 ? Math.round((correctSel / correctIds.size) * 100) : 0;
-    setSubmitted(true);
-    onAnswer(ungraded || isCorrect, score, [...selected]);
+    onAnswer(isCorrect, score, [...selected]);
   };
 
   return (
@@ -201,12 +209,20 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
 }
 
 /* ─── Drag & Drop (pointer events — tablet-native) ───────────────────────── */
-function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
-  const [matches,    setMatches]    = useState<Record<string, string>>({});
-  const [submitted,  setSubmitted]  = useState(false);
+function DragDropQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
+  const [matches,    setMatches]    = useState<Record<string, string>>(() =>
+    Object.fromEntries((block.pairs ?? []).flatMap((pair, index) => {
+      const value = previousResult?.selected?.[index];
+      return value === undefined ? [] : [[pair.id, value]];
+    })),
+  );
+  const [submitted,  setSubmitted]  = useState(!!previousResult);
   const [dragging,   setDragging]   = useState<string | null>(null);
   const [dragPos,    setDragPos]    = useState({ x: 0, y: 0 });
   const [hoveredZone,setHoveredZone]= useState<string | null>(null);
+  const ungraded = block.graded === false;
+  const showCorrection = !ungraded && block.showCorrection !== false;
+  const correcting = submitted && showCorrection;
 
   const rightItems = block.pairs?.map((p: DragDropPair) => p.right) ?? [];
   const [shuffled] = useState(() => [...rightItems].sort(() => Math.random() - 0.5));
@@ -255,10 +271,15 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
   };
 
   const handleSubmit = () => {
-    const correct = block.pairs?.filter((p: DragDropPair) => matches[p.id] === p.right).length ?? 0;
-    const total   = block.pairs?.length ?? 1;
+    const pairs = block.pairs ?? [];
+    const selected = pairs.map(pair => matches[pair.id]);
     setSubmitted(true);
-    onAnswer(correct === total, Math.round((correct / total) * 100));
+    if (ungraded) {
+      onAnswer(false, null, selected);
+      return;
+    }
+    const correct = pairs.filter(pair => matches[pair.id] === pair.right).length;
+    onAnswer(correct === pairs.length, Math.round((correct / pairs.length) * 100), selected);
   };
 
   const allMatched = (block.pairs?.length ?? 0) > 0 && block.pairs?.every((p: DragDropPair) => matches[p.id]);
@@ -273,8 +294,8 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
           <p className="course-caption font-bold text-[#004138]/50 uppercase tracking-widest px-1">Concepts</p>
           {block.pairs?.map((pair: DragDropPair) => {
             const matched    = matches[pair.id];
-            const isCorrect  = submitted && matched === pair.right;
-            const isWrong    = submitted && matched && matched !== pair.right;
+            const isCorrect  = correcting && matched === pair.right;
+            const isWrong    = correcting && matched && matched !== pair.right;
             const isHovered  = hoveredZone === pair.id && dragging;
 
             return (
@@ -293,16 +314,17 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
                 <span className="font-bold text-[#004138] course-label">{pair.left}</span>
                 {matched && (
                   <button
-                    onClick={() => !submitted && removeMatch(pair.id)}
+                    onClick={() => removeMatch(pair.id)}
+                    disabled={submitted || disabled}
                     className={cn(
                       'flex items-center gap-1.5 px-3 py-1.5 rounded-xl course-label font-semibold transition-all touch-manipulation',
-                      submitted
+                      correcting
                         ? isCorrect ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100'
-                        : 'text-[#A64314] bg-[#FFE0D0] hover:bg-[#FCC6A8] active:scale-95'
+                        : submitted ? 'text-[#0E6477] bg-[#1FABC7]/10' : 'text-[#A64314] bg-[#FFE0D0] hover:bg-[#FCC6A8] active:scale-95'
                     )}
                   >
                     <span>{matched}</span>
-                    {submitted && (isCorrect
+                    {correcting && (isCorrect
                       ? <CheckCircle className="w-4 h-4" />
                       : <XCircle className="w-4 h-4" />
                     )}
@@ -371,7 +393,7 @@ function DragDropQuestion({ block, onAnswer, disabled }: QuizProps) {
         <SubmitButton onClick={handleSubmit} disabled={!allMatched || !!disabled} label="Valider les associations" />
       )}
 
-      {submitted && (
+      {correcting && (
         <div className="p-5 bg-[#1FABC7]/10 border border-[#1FABC7]/25 rounded-2xl">
           <p className="course-label font-bold text-[#0E6477]">
             {block.pairs?.filter((p: DragDropPair) => matches[p.id] === p.right).length} / {block.pairs?.length} associations correctes

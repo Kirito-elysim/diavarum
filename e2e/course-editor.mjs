@@ -25,20 +25,24 @@ try {
  await page.getByLabel('Importer une image',{exact:true}).setInputFiles({name:'image.png',mimeType:'image/png',buffer:Buffer.from(picture.split(',')[1],'base64')});
  await page.getByLabel('Texte associé à l’image',{exact:true}).fill('Texte de la diapositive');
  await page.getByRole('button',{name:'Image à légendes',exact:true}).click();
- await page.getByLabel('Importer une image',{exact:true}).last().setInputFiles({name:'image.png',mimeType:'image/png',buffer:Buffer.from(picture.split(',')[1],'base64')});
+ const hotspotImage=page.locator('details').filter({has:page.getByText('Question, image et légende',{exact:true})});
+ await hotspotImage.getByLabel('Importer une image',{exact:true}).setInputFiles({name:'image.png',mimeType:'image/png',buffer:Buffer.from(picture.split(',')[1],'base64')});
+ await hotspotImage.locator('img').waitFor({state:'attached'});
  await page.getByRole('button',{name:'Ajouter une légende',exact:true}).click();await page.getByLabel('Titre de la légende 1').fill('Repère');await page.getByLabel('Texte de la légende 1').fill('Description du repère');
  await page.getByRole('button',{name:'Ajouter un écran',exact:true}).click();await page.getByLabel('Titre de l’écran',{exact:true}).fill('Question formative');
  await page.getByRole('button',{name:'QCM — plusieurs réponses',exact:true}).click();
  await page.getByLabel('Question',{exact:true}).fill('Quels choix ?');await page.getByLabel('Proposition 1',{exact:true}).fill('Choix A');await page.getByLabel('Proposition 2',{exact:true}).fill('Choix B');
- await page.getByLabel('Compter cette question dans le score').uncheck();
  await page.getByLabel('Bonne réponse — proposition 1',{exact:true}).check();await page.getByLabel('Explication de la correction').fill('Explication formative');
+ await page.getByLabel('Compter cette question dans le score').uncheck();
+ assert.equal(await page.getByLabel('Afficher la correction après la réponse').count(),0);
  // Contrôle du brouillon après rechargement.
  await page.waitForFunction(()=>Object.keys(localStorage).some(k=>k.includes('course-draft')&&localStorage.getItem(k).includes('Explication formative')));
  page.once('dialog',d=>d.accept());await page.reload();await page.getByRole('button',{name:'Reprendre le brouillon'}).click();
  await page.getByRole('button',{name:/02 Question formative/}).click();
  await page.getByRole('button',{name:'Aperçu apprenant',exact:true}).click();
  const dialog=page.getByRole('dialog',{name:'Aperçu apprenant'});
- await dialog.getByRole('button',{name:'Choix A',exact:true}).click();await dialog.getByRole('button',{name:'Valider mes réponses'}).click();await dialog.getByText('Explication formative',{exact:true}).waitFor();
+ await dialog.getByRole('button',{name:'Choix A',exact:true}).click();await dialog.getByRole('button',{name:'Valider mes réponses'}).click();assert.equal(await dialog.getByText('Explication formative',{exact:true}).count(),0);
+ assert.equal(await dialog.getByRole('button',{name:'Choix A',exact:true}).isDisabled(),true);
  await dialog.getByRole('button',{name:'Recommencer l’aperçu'}).click();await dialog.getByRole('button',{name:'Valider mes réponses'}).waitFor();
  await dialog.getByRole('button',{name:'Fermer',exact:true}).click();
  // Erreur serveur puis nouvel enregistrement.

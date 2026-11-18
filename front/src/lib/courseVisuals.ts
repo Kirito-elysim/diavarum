@@ -6,7 +6,7 @@ import type { InfoCardBlock, InfoCardVariant, ModulePage } from '../types';
 
 /** Consignes de l'encadré au doigt, utilisées tant que l'auteur ne les a pas personnalisées */
 export const DEFAULT_INSTRUCTIONS = {
-  flipCards: 'Touchez une carte pour la retourner',
+  flipCards: 'Touchez une carte pour répondre à la question.',
   connect: 'Faites glisser les définitions sur les concepts correspondants',
   categorize: 'Faites glisser chaque élément dans la bonne zone',
 } as const;
@@ -42,7 +42,7 @@ export function pageHeaderMeta(page: ModulePage): { icon: boolean; instruction?:
       case 'carousel':
         return { icon, instruction: 'Faites défiler les images avec les textes associés.' };
       case 'flip-cards':
-        return { icon, instruction: 'Touchez une carte pour la retourner.' };
+        return { icon, instruction: block.instruction?.trim() || DEFAULT_INSTRUCTIONS.flipCards };
       case 'reveal-legends':
         return { icon, instruction: 'Touchez chaque point pour révéler sa légende.' };
       case 'hotspot':

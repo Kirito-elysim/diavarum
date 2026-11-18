@@ -56,7 +56,7 @@ export function TabletPreview({ pages, start }: { pages: ModulePage[]; start: nu
 function TabletContent({ pages, start }: { pages: ModulePage[]; start: number }) {
   const [index, setIndex] = useState(start);
   const [attempt, setAttempt] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, { isCorrect: boolean; score: number; selected?: string[] }>>({});
+  const [answers, setAnswers] = useState<Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>>({});
   const scroll = useRef<HTMLElement>(null);
   const page = pages[index];
   useEffect(() => { scroll.current?.scrollTo({ top: 0 }); }, [index]);

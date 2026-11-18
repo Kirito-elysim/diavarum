@@ -13,6 +13,9 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
   const startY = useRef<number | null>(null);
   const slide = block.slides[index];
   const last = block.slides.length - 1;
+  const imageHeight = block.imageHeight === 'large'
+    ? 'clamp(280px, calc(100dvh - 400px), 480px)'
+    : 'clamp(220px, calc(100dvh - 470px), 400px)';
   const go = (i: number) => setIndex(Math.max(0, Math.min(last, i)));
 
   if (!slide) return null;
@@ -23,8 +26,8 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
 
       {/* Le geste horizontal reste dans le carrousel ; le défilement vertical reste disponible. */}
       <div
-        className="relative rounded-2xl overflow-hidden"
-        style={{ touchAction: 'pan-y' }}
+        className="relative flex items-center justify-center overflow-hidden rounded-2xl"
+        style={{ height: imageHeight, touchAction: 'pan-y' }}
         data-course-gesture
         onTouchStart={(e) => { startX.current = e.touches[0].clientX; startY.current = e.touches[0].clientY; }}
         onTouchCancel={() => { startX.current = null; startY.current = null; }}
@@ -35,7 +38,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
           startX.current = null;
         }}
       >
-        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="w-full object-contain fade-scale-in" style={{ height: 'clamp(220px, calc(100dvh - 470px), 400px)' }} draggable={false} />
+        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="max-h-full max-w-full rounded-2xl fade-scale-in" draggable={false} />
         {index > 0 && (
           <button onClick={() => go(index - 1)} aria-label="Image précédente" className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 text-[#E86825] flex items-center justify-center touch-manipulation">
             <ChevronLeft className="w-11 h-11" />

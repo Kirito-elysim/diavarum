@@ -32,6 +32,7 @@ export interface ImageBlock {
   alt: string;
   /** Hauteur maximale en pixels ; absente = pleine largeur, hauteur automatique */
   maxHeight?: number;
+  zoomEnabled?: boolean;
 }
 
 /** Catégories d'encadré ; les anciennes valeurs (info, success, tip) restent lisibles */
@@ -80,7 +81,7 @@ export interface QuizBlock {
   questionType: QuestionType;
   /** false = question de réflexion sans score ni correction (ex. « Avez-vous désigné quelqu'un ? ») */
   graded?: boolean;
-  /** Defaults to graded for older courses. Independent from score participation. */
+  /** Correction des questions notées, affichée par défaut. Ignorée si graded vaut false. */
   showCorrection?: boolean;
   question: string;
   options?: QuizOption[];
@@ -121,6 +122,7 @@ export interface CarouselBlock {
   type: 'carousel';
   id: string;
   question?: string;
+  imageHeight?: 'large';
   slides: CarouselSlide[];
 }
 

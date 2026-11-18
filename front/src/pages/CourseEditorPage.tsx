@@ -147,7 +147,7 @@ function Editor({ initial }: { initial: ModuleContent }) {
 function Preview({ pages, start }: { pages: ModulePage[]; start: number }) {
   const [index, setIndex] = useState(start);
   const [attempt, setAttempt] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, { isCorrect: boolean; score: number; selected?: string[] }>>({});
+  const [answers, setAnswers] = useState<Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>>({});
   const page = pages[index];
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
   return <div className="course-theme rounded-2xl flex flex-col h-[70dvh] min-h-0">

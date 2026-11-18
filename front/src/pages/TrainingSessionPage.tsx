@@ -94,26 +94,29 @@ function TextBlockView({ block }: { block: TextBlock }) {
 }
 
 function ImageBlockView({ block }: { block: ImageBlock }) {
-  const [zoomed, setZoomed] = useState(false);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const zoomEnabled = block.zoomEnabled === true;
   return (
     <>
       <figure className="space-y-3">
-        <div className="relative overflow-hidden rounded-2xl cursor-zoom-in" onClick={() => setZoomed(true)}>
+        <div className="relative overflow-hidden rounded-2xl">
           <img src={block.url} alt={block.alt} className={cn('mx-auto block max-w-full', block.maxHeight ? 'w-full object-contain' : 'h-auto')} style={block.maxHeight ? { height: block.maxHeight } : undefined} loading="lazy" />
-          <div className="absolute top-3 right-3 bg-[#004138]/70 backdrop-blur-sm rounded-xl p-2">
-            <ZoomIn className="w-4 h-4 text-white" />
-          </div>
+          {zoomEnabled && (
+            <button type="button" aria-label="Agrandir l’image" aria-haspopup="dialog" onClick={() => dialog.current?.showModal()} className="absolute top-3 right-3 flex h-11 w-11 items-center justify-center rounded-xl bg-[#004138]/80 text-white">
+              <ZoomIn className="h-5 w-5" aria-hidden="true" />
+            </button>
+          )}
         </div>
         {block.caption && <figcaption className="course-label text-[#004138]/60 text-center font-medium italic px-2">{block.caption}</figcaption>}
       </figure>
-      {zoomed && (
-        <div className="fixed inset-0 z-[10000] bg-black/95 flex items-center justify-center p-4" onClick={() => setZoomed(false)}>
-          <button className="absolute top-5 right-5 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors" onClick={() => setZoomed(false)}>
-            <X className="w-6 h-6" />
+      {zoomEnabled && (
+        <dialog ref={dialog} aria-label="Image agrandie" className="m-auto max-h-[100dvh] max-w-[100vw] overflow-auto bg-transparent p-4 text-white backdrop:bg-black/95">
+          <button type="button" aria-label="Fermer le zoom" className="ml-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" onClick={() => dialog.current?.close()}>
+            <X className="w-6 h-6" aria-hidden="true" />
           </button>
-          <img src={block.url} alt={block.alt} className="max-w-full max-h-[90vh] rounded-2xl object-contain fade-scale-in" onClick={(e) => e.stopPropagation()} />
-          {block.caption && <p className="absolute bottom-6 left-0 right-0 text-center text-white/60 course-label">{block.caption}</p>}
-        </div>
+          <img src={block.url} alt={block.alt} className="mx-auto max-w-full max-h-[calc(100dvh-8rem)] rounded-2xl object-contain" loading="lazy" />
+          {block.caption && <p className="mt-2 text-center course-label">{block.caption}</p>}
+        </dialog>
       )}
     </>
   );
@@ -457,12 +460,13 @@ function IframeBlockView({ block }: { block: IframeBlock }) {
 /* ─── Pre-session screen ─────────────────────────────────────────────────── */
 function PreSessionScreen({
   patientFirstName, patientLastName,
-  moduleTitle, modulePages, moduleDuration,
+  moduleTitle, modulePages, moduleDuration, competencies,
   parcoursTitle, parcoursModuleIndex, parcoursModuleTotal,
   onStart,
 }: {
   patientFirstName: string; patientLastName: string;
   moduleTitle: string; modulePages: number; moduleDuration: number;
+  competencies: PlayerModule['competencies'];
   parcoursTitle?: string; parcoursModuleIndex?: number; parcoursModuleTotal?: number;
   onStart: () => void;
 }) {
@@ -474,17 +478,17 @@ function PreSessionScreen({
   return (
     <div className="course-theme session-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6 text-center overflow-auto" style={{ userSelect: 'none', background: '#ECF5E9' }}>
       {/* Logo */}
-      <div className="relative w-20 h-20 rounded-3xl bg-[#E86825] flex items-center justify-center mb-10 shadow-xl shadow-orange-900/15">
-        <BookOpen className="w-10 h-10 text-white" />
+      <div className="w-16 h-16 rounded-3xl bg-[#E86825] flex items-center justify-center mb-5 shadow-xl shadow-orange-900/15">
+        <BookOpen className="w-8 h-8 text-white" aria-hidden="true" />
       </div>
 
       <h1 className="text-4xl font-black text-[#004138] mb-2 tracking-tight">Prêt à commencer ?</h1>
-      <p className="text-[#004138]/60 text-lg mb-10">
+      <p className="text-[#004138]/60 text-lg mb-6">
         {patientFirstName} {patientLastName}
       </p>
 
       {/* Module info card */}
-      <div className="w-full max-w-sm rounded-3xl p-6 mb-6 space-y-3 text-left bg-white shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
+      <div className="w-full max-w-xl rounded-3xl p-5 sm:px-6 mb-4 text-left bg-white shadow-sm" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
         {parcoursTitle && (
           <div className="flex items-center gap-2 text-[#E86825] mb-4">
             <Route className="w-4 h-4 flex-shrink-0" />
@@ -501,14 +505,22 @@ function PreSessionScreen({
             <BookOpen className="w-6 h-6 text-[#E86825]" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-[#004138] text-lg truncate">{moduleTitle}</p>
+            <p className="font-bold text-[#004138] text-lg break-words">{moduleTitle}</p>
             <p className="text-[#004138]/50 course-label">{modulePages} pages · {moduleDuration} min</p>
           </div>
         </div>
+        {competencies.length > 0 && (
+          <section aria-labelledby="pre-session-competencies" className="mt-4 border-t border-[#004138]/15 pt-4">
+            <h2 id="pre-session-competencies" className="course-label font-bold">Compétences à valider</h2>
+            <ul role="list" className="mt-2 list-disc space-y-1 pl-5 course-label marker:text-[#A64314]">
+              {competencies.map(({ id, label }) => <li key={id} className="break-words">{label}</li>)}
+            </ul>
+          </section>
+        )}
       </div>
 
       {/* Sortie protégée : le code n'est jamais affiché à l'écran (le patient pourrait le voir) */}
-      <div className="w-full max-w-sm rounded-3xl p-5 mb-10 flex items-start gap-3 text-left bg-[#FFFBEB]" style={{ border: '1px solid rgba(245,158,11,0.3)' }}>
+      <div className="w-full max-w-xl rounded-3xl p-5 sm:px-6 mb-6 flex items-start gap-3 text-left bg-[#FFFBEB]" style={{ border: '1px solid rgba(245,158,11,0.3)' }}>
         <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
         <p className="course-label text-amber-800">
           Pour quitter la séance, votre code de sécurité personnel vous sera demandé.
@@ -958,8 +970,8 @@ export function BlockCard({
 }: {
   fill?: boolean;
   block: ContentBlock;
-  quizAnswers: Record<string, { isCorrect: boolean; score: number; selected?: string[] }>;
-  onQuizAnswer: (id: string, isCorrect: boolean, score: number, selected?: string[]) => void;
+  quizAnswers: Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>;
+  onQuizAnswer: (id: string, isCorrect: boolean, score: number | null, selected?: string[]) => void;
 }) {
   if (block.type === 'picto-grid') return <PictoGridView block={block} />;
   if (block.type === 'text')
@@ -1031,7 +1043,7 @@ export function BlockCard({
 
 /** Blocs d'une page : même rendu dans le lecteur et dans les aperçus de l'éditeur. Le parent doit être une colonne flex (`flex min-h-full flex-col`) si `pageFills`. */
 export function PageBlocks({ blocks, keyPrefix, quizAnswers, onQuizAnswer }: {
-  blocks: ContentBlock[]; keyPrefix: string; quizAnswers: Record<string, { isCorrect: boolean; score: number; selected?: string[] }>; onQuizAnswer: (id: string, isCorrect: boolean, score: number, selected?: string[]) => void;
+  blocks: ContentBlock[]; keyPrefix: string; quizAnswers: Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>; onQuizAnswer: (id: string, isCorrect: boolean, score: number | null, selected?: string[]) => void;
 }) {
   const fill = pageFills(blocks);
   const center = pageCenters(blocks);
@@ -1158,7 +1170,7 @@ function SessionRunner({
   const skipPre = searchParams.get('skipPre') === '1';
   const [phase,        setPhase]        = useState<Phase>((skipPre || isPreview) ? 'active' : 'pre');
   const [pageIndex,    setPageIndex]    = useState(0);
-  const [quizAnswers,  setQuizAnswers]  = useState<Record<string, { isCorrect: boolean; score: number; selected?: string[] }>>({});
+  const [quizAnswers,  setQuizAnswers]  = useState<Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>>({});
   const [slideClass,   setSlideClass]   = useState('slide-in-right');
   const [animating,    setAnimating]    = useState(false);
   const [paused,       setPaused]       = useState(false);
@@ -1192,7 +1204,7 @@ function SessionRunner({
   const interactiveBlocks = isPreview ? [] : currentPage.blocks.filter((b) => interactiveTypes.includes(b.type));
   const allQuizAnswered = isPreview || interactiveBlocks.length === 0 || interactiveBlocks.every((b) => quizAnswers[b.id] !== undefined);
 
-  const handleQuizAnswer = (id: string, isCorrect: boolean, score: number, selected?: string[]) =>
+  const handleQuizAnswer = (id: string, isCorrect: boolean, score: number | null, selected?: string[]) =>
     setQuizAnswers((p) => ({ ...p, [id]: { isCorrect, score, selected } }));
 
   const navigatePage = useCallback((dir: 'next' | 'prev') => {
@@ -1269,6 +1281,7 @@ function SessionRunner({
         moduleTitle={module.title}
         modulePages={module.pages.length}
         moduleDuration={module.estimatedDuration}
+        competencies={module.competencies}
         parcoursTitle={programPosition ? "Parcours d'entraînement" : undefined}
         parcoursModuleIndex={programPosition?.index}
         parcoursModuleTotal={programPosition?.total}

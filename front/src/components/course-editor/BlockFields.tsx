@@ -48,6 +48,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
   if (b.type === 'text') return <><Field label="Texte" multiline value={b.content} onChange={content => onChange({ ...b, content })} /><TextStyleFields value={b.textStyle} onChange={textStyle => onChange({ ...b, textStyle })} /></>;
   if (b.type === 'image') return <><ImageField url={b.url} alt={b.alt} onChange={(url, alt) => onChange({ ...b, url, alt })} /><Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
     <div className="space-y-2 rounded-xl bg-gray-50 p-3">
+      <Toggle label="Autoriser le zoom sur cette image" checked={b.zoomEnabled === true} onChange={zoomEnabled => onChange({ ...b, zoomEnabled })} />
       <Toggle label="Taille automatique : taille d’origine, sans dépasser la largeur de la page" checked={b.maxHeight === undefined} onChange={auto => onChange({ ...b, maxHeight: auto ? undefined : 300 })} />
       {b.maxHeight !== undefined && <label className="block space-y-2"><span className="text-sm font-medium">Hauteur de l’image : {b.maxHeight} px</span>
         <input type="range" min={100} max={500} step={4} className="w-full" value={b.maxHeight} onChange={e => onChange({ ...b, maxHeight: Number(e.target.value) })} /></label>}
@@ -93,7 +94,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
         <input type="range" min={80} max={400} step={4} className="w-full" value={b.cardHeight} onChange={e => onChange({ ...b, cardHeight: Number(e.target.value) })} /></label>}
     </div>
     <Field label="Introduction des cartes" multiline value={b.question} onChange={question => onChange({ ...b, question })} />
-    <Field label="Consigne de l’encadré au doigt" value={b.instruction ?? DEFAULT_INSTRUCTIONS.flipCards} onChange={instruction => onChange({ ...b, instruction })} />
+    <Field label="Consigne des cartes" value={b.instruction} hint={`Par défaut : ${DEFAULT_INSTRUCTIONS.flipCards}`} onChange={instruction => onChange({ ...b, instruction })} />
     {b.cards.map((card, index) => <section key={card.id} className="rounded-xl border p-4 space-y-4"><h4 className="font-semibold">Carte {index + 1}</h4>
       <div className="grid gap-4 md:grid-cols-2"><Field label="Recto" multiline value={card.front} onChange={front => onChange({ ...b, cards: b.cards.map(c => c.id === card.id ? { ...c, front } : c) })} /><Field label="Verso" multiline value={card.back} onChange={back => onChange({ ...b, cards: b.cards.map(c => c.id === card.id ? { ...c, back } : c) })} /></div>
       <ItemActions index={index} count={b.cards.length} onMove={direction => onChange({ ...b, cards: move(b.cards, index, direction) })} onRemove={() => onChange({ ...b, cards: b.cards.filter(c => c.id !== card.id) })} />
@@ -102,7 +103,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
   </>;
   if (b.type === 'hotspot') return <HotspotFields block={b} onChange={onChange} />;
   if (b.type === 'quiz' && b.questionType !== 'drag-drop') {
-    const needsCorrection = b.graded !== false || (b.showCorrection ?? b.graded !== false);
+    const graded = b.graded !== false;
     return <>
       <label className="block space-y-2"><span className="text-sm font-medium">Type de question</span><select className="w-full rounded-lg border p-3" value={b.questionType} onChange={e => {
         const questionType = e.target.value as 'qcu' | 'qcm';
@@ -110,14 +111,17 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
         onChange({ ...b, questionType, options: b.options?.map(o => ({ ...o, isCorrect: questionType === 'qcu' ? o.id === first : o.isCorrect })) });
       }}><option value="qcu">QCU — une seule réponse</option><option value="qcm">QCM — plusieurs réponses possibles</option></select></label>
       <Field label="Question" multiline hint={QUESTION_HINT} value={b.question} onChange={question => onChange({ ...b, question })} />
-      <div className="rounded-xl bg-orange-50 p-4"><Toggle label="Compter cette question dans le score" checked={b.graded !== false} onChange={graded => onChange({ ...b, graded })} /><Toggle label="Afficher la correction après la réponse" checked={b.showCorrection ?? b.graded !== false} onChange={showCorrection => onChange({ ...b, showCorrection })} /></div>
+      <div className="rounded-xl bg-orange-50 p-4">
+        <Toggle label="Compter cette question dans le score" checked={graded} onChange={graded => onChange({ ...b, graded })} />
+        {graded && <Toggle label="Afficher la correction après la réponse" checked={b.showCorrection !== false} onChange={showCorrection => onChange({ ...b, showCorrection })} />}
+      </div>
       {b.options?.map((option, index) => <section key={option.id} className="rounded-xl border p-4 space-y-3">
         <Field label={`Proposition ${index + 1}`} multiline value={option.label} onChange={label => onChange({ ...b, options: b.options?.map(o => o.id === option.id ? { ...o, label } : o) })} />
-        {needsCorrection && <Toggle label={`Bonne réponse — proposition ${index + 1}`} checked={option.isCorrect} onChange={isCorrect => onChange({ ...b, options: b.options?.map(o => o.id === option.id ? { ...o, isCorrect } : b.questionType === 'qcu' && isCorrect ? { ...o, isCorrect: false } : o) })} />}
+        {graded && <Toggle label={`Bonne réponse — proposition ${index + 1}`} checked={option.isCorrect} onChange={isCorrect => onChange({ ...b, options: b.options?.map(o => o.id === option.id ? { ...o, isCorrect } : b.questionType === 'qcu' && isCorrect ? { ...o, isCorrect: false } : o) })} />}
         <ItemActions index={index} count={b.options?.length ?? 0} onMove={direction => onChange({ ...b, options: move(b.options ?? [], index, direction) })} onRemove={() => onChange({ ...b, options: b.options?.filter(o => o.id !== option.id) })} />
       </section>)}
       <Button variant="outline" onClick={() => onChange({ ...b, options: [...(b.options ?? []), { id: uid(), label: '', isCorrect: false }] })}>Ajouter une proposition</Button>
-      <Field label="Explication de la correction" multiline value={b.explanation} onChange={explanation => onChange({ ...b, explanation })} />
+      {graded && <Field label="Explication de la correction" multiline value={b.explanation} onChange={explanation => onChange({ ...b, explanation })} />}
     </>;
   }
   return <p className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">Cette activité complémentaire est conservée. Son formulaire d’édition n’est pas encore disponible ; vous pouvez la déplacer ou la retirer.</p>;

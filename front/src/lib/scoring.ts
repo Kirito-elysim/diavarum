@@ -39,13 +39,13 @@ export interface ExerciseResult {
  * Les exercices renvoient un pourcentage de réponses justes : on retrouve le nombre de bonnes
  * réponses (conversion exacte tant que le total reste inférieur à 100).
  */
-export function exerciseResults(pages: ModulePage[], scores: Record<string, { score: number }>): ExerciseResult[] {
+export function exerciseResults(pages: ModulePage[], scores: Record<string, { score: number | null }>): ExerciseResult[] {
   const results: ExerciseResult[] = [];
   for (const page of pages) {
     for (const block of page.blocks) {
       const total = expectedAnswers(block);
       const answer = scores[block.id];
-      if (!total || !answer) continue;
+      if (!total || answer?.score == null) continue;
       results.push({ blockId: block.id, total, correct: Math.min(total, Math.max(0, Math.round((answer.score * total) / 100))) });
     }
   }

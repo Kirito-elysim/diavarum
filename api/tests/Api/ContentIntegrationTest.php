@@ -155,7 +155,7 @@ final class ContentIntegrationTest extends ApiTestCaseBase
         self::assertResponseStatusCodeSame(422);
     }
 
-    public function testUnscoredQuestionCanHaveCorrectionWithoutAffectingScore(): void
+    public function testUnscoredQuestionDoesNotRequireCorrectAnswersWithLegacyCorrectionFlag(): void
     {
         $payload = $this->payload();
         $payload['content'][0]['instruction'] = 'Touchez une réponse.';
@@ -171,7 +171,7 @@ final class ContentIntegrationTest extends ApiTestCaseBase
 
         $quiz['options'][0]['isCorrect'] = false;
         $this->put('S2', $payload);
-        self::assertResponseStatusCodeSame(422);
+        self::assertResponseIsSuccessful();
 
         $quiz['showCorrection'] = false;
         $this->put('S2', $payload);

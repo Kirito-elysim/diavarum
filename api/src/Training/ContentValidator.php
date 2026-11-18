@@ -96,8 +96,7 @@ final class ContentValidator
                         $correct += $option['isCorrect'] ? 1 : 0;
                     }
                     $graded = $block['graded'] ?? true;
-                    $correction = $block['showCorrection'] ?? $graded;
-                    if (($graded || $correction) && (0 === $correct || ('qcu' === $block['questionType'] && 1 !== $correct))) {
+                    if ($graded && (0 === $correct || ('qcu' === $block['questionType'] && 1 !== $correct))) {
                         $errors[] = "$at : indiquez les bonnes réponses (une seule pour un QCU).";
                     }
                     if ($invalidOption) {

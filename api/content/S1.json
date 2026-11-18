@@ -12,6 +12,7 @@
         {
             "id": "p01",
             "title": "Droits du patient 1/2",
+            "instruction": "Touchez une carte pour répondre à la question.",
             "blocks": [
                 {
                     "id": "s1-droits",
@@ -183,6 +184,7 @@
                 {
                     "id": "s1-pc-role",
                     "type": "carousel",
+                    "imageHeight": "large",
                     "slides": [
                         {
                             "id": "s1-pc-role-1",

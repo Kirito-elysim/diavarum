@@ -100,7 +100,7 @@ export function validateCourse(course: ModuleContent): string[] {
         missing(b.question, 'complétez la question');
         if ((b.options?.length ?? 0) < 2) errors.push(`${name} : ajoutez au moins deux propositions.`);
         b.options?.forEach(o => missing(o.label, 'complétez chaque proposition'));
-        if (b.graded !== false || (b.showCorrection ?? b.graded !== false)) {
+        if (b.graded !== false) {
           const correct = b.options?.filter(o => o.isCorrect).length ?? 0;
           if (correct === 0 || (b.questionType === 'qcu' && correct !== 1)) errors.push(`${name} : indiquez ${b.questionType === 'qcu' ? 'une seule bonne réponse' : 'au moins une bonne réponse'}.`);
         }
