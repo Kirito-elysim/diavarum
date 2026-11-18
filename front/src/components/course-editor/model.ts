@@ -6,7 +6,7 @@ export const MAX_COMPETENCIES = 6;
 
 export const uid = () => crypto.randomUUID();
 export const activities = [
-  ['text', 'Texte'], ['image', 'Image'], ['image-text', 'Image ou picto + texte'], ['info-card', 'Encadré'], ['carousel', 'Carrousel'],
+  ['text', 'Texte'], ['image', 'Image'], ['video', 'Vidéo'], ['image-text', 'Image ou picto + texte'], ['info-card', 'Encadré'], ['carousel', 'Carrousel'],
   ['picto-grid', 'Grille de pictos'], ['hotspot', 'Image à légendes'], ['flip-cards', 'Cartes à retourner'], ['qcu', 'QCU — une réponse'], ['qcm', 'QCM — plusieurs réponses'],
   ['drag-drop', 'Relier'], ['categorize', 'Glisser-déposer'], ['reorder', 'Remettre dans l’ordre'],
 ] as const;
@@ -17,6 +17,7 @@ export function newBlock(type: Activity): ContentBlock {
     case 'picto-grid': return { id, type, question: '', columns: 3, items: Array.from({ length: 6 }, () => ({ id: uid(), imageUrl: '', alt: '', text: '' })) };
     case 'text': return { id, type, content: '' };
     case 'image': return { id, type, url: '', alt: '', caption: '' };
+    case 'video': return { id, type, url: '', title: '' };
     case 'image-text': return { id, type, imageUrl: '', alt: '', content: '', size: 'picto' };
     case 'info-card': return { id, type, title: 'Important', content: '', variant: 'important' };
     case 'categorize': return { id, type, question: '', categories: ['Zone 1'], items: [0, 1].map(() => ({ id: uid(), label: '', category: 'Zone 1' })) };
@@ -74,6 +75,7 @@ export function validateCourse(course: ModuleContent): string[] {
         b.items.forEach(item => { missing(item.imageUrl, 'ajoutez chaque picto'); missing(item.text, 'complétez le texte de chaque picto'); });
       }
       if (b.type === 'image') missing(b.url, 'ajoutez une image');
+      if (b.type === 'video') { missing(b.url, 'ajoutez une adresse de vidéo'); missing(b.title, 'renseignez le titre de la vidéo'); }
       if (b.type === 'image-text') { missing(b.imageUrl, 'ajoutez une image ou un picto'); missing(b.content, 'complétez le texte'); }
       if (b.type === 'categorize') {
         missing(b.question, 'complétez la consigne');

@@ -1,6 +1,6 @@
 # Reprise du projet Diaverum
 
-Dernière mise à jour : 18 novembre 2026 · entrée J-066 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
+Dernière mise à jour : 18 novembre 2026 · entrée J-079 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
 
 ## Point de départ
 
@@ -212,3 +212,51 @@ Le bandeau utilise « Touchez la ou les réponses qui vous paraissent exactes. �
 ## S1 validé par l'utilisateur — J-066
 
 La validation éditoriale du cours 1 est explicite. Les dernières retouches de S1 et du gabarit partagé sont regroupées pour le commit local. Reprendre l'intégration du cours suivant. La recette sur tablette physique et la publication restent à traiter.
+
+## S2 intégré en développement — J-067
+
+Les 17 écrans de « Hygiène au centre de dialyse » sont disponibles localement avec le MP4 fourni à la page 4, sa transcription et les deux tentatives de classement à la page 15. Les questions non notées suivent la règle commune. L'import S2 local correspond au JSON du dépôt. Contrôles Chrome réussis en portrait et paysage. Poursuivre la relecture utilisateur à partir de la page 3. La validation éditoriale et la recette sur tablette physique restent à faire.
+
+## S2 pages 1 et 2 — Relecture (J-069)
+
+L'affirmation de la page 1 est en gras. La page 2 tient sur un écran aux dimensions tablette testées, avec trois légendes en fenêtres. Les autres pages à légendes conservent le rendu intégré. À la demande explicite de l'utilisateur, appliquer les retours suivants uniquement aux pages citées, sauf demande de généralisation.
+
+## S2 page 3 — Précautions standard d'hygiène (J-070)
+
+Illustration limitée à 320 px, texte centré en hauteur et expression demandée en gras. La page tient sans défilement aux quatre tailles tablette simulées. Contenu et base de développement mis à jour. Poursuivre avec les pages suivantes de S2.
+
+## S2 page 5 — Deux techniques d'hygiène des mains (J-071)
+
+Les deux illustrations ont été agrandies et leurs légendes sont en gras. La phrase est dans un encadré Important, avec seulement « 2 techniques différentes » en gras. Correction chargée en développement et vérifiée sans défilement aux quatre tailles tablette simulées. Poursuivre la relecture de S2.
+
+## S2 page 5 — Encadré Important compact (J-072)
+
+Encadré centré, ajusté à son contenu et espacé de 40 px des images. Variante activée uniquement sur cet encadré. Correction chargée en développement et vérifiée sans défilement aux quatre tailles tablette simulées. Poursuivre la relecture de S2.
+
+## S2 page 5 — Icône Important à taille standard (J-073)
+
+L'icône retrouve sa taille de 80 px sur tablette. L'encadré reste centré avec 40 px avant les images. Testé sans défilement en naviguant depuis la page précédente. Poursuivre la relecture de S2.
+
+## S2 pages 5 et 6 — Espacement et comparaison (J-074)
+
+Page 5, l'espace sous l'encadré Important passe à 52 px. Page 6, titres gras au-dessus des images agrandies, explications alignées à gauche et introduction en texte normal. Corrections chargées en développement et vérifiées sans défilement aux quatre tailles tablette simulées.
+
+## S2 page 6 — Blocs d'explication centrés (J-075)
+
+Illustrations portées à 320 px maximum et blocs d'explication de même largeur, centrés sous les images avec texte aligné à gauche. Correction chargée en développement et vérifiée sans défilement aux quatre tailles tablette simulées.
+
+## S2 pages 6, 9 et 10 — Puces, pictos et texte (J-076)
+
+Tirets à gauche et carrés à droite à p06. Sur l'écran des trois pictos (p09, identifié par le texte cité), introduction en texte normal, gras sélectif et pictos répartis sur la hauteur. À p10, tout le texte est à droite de l'image, centré en hauteur, avec le gras du storyboard. Corrections chargées en développement et vérifiées dans Chrome aux tailles tablette habituelles.
+
+## S2 page 12 — Centrage et espace vertical (J-077)
+
+Les textes sont centrés en hauteur par rapport à leur illustration et les gras suivent le storyboard. Disposition aérée activée uniquement pour la page 12, chargée localement et vérifiée sans défilement aux quatre tailles tablette simulées. Appliquer le principe de centrage, d'utilisation de l'espace et de fidélité aux gras du storyboard aux prochaines pages reprises, dans le périmètre demandé.
+
+## S2 — Retrait de la page 16 (J-078)
+
+La question sur les symptômes d'infection de l'abord a été retirée à la demande de l'utilisateur. Le cours comporte 16 écrans et les trois exercices restants sont numérotés de 1/3 à 3/3. Contenu versionné et base locale concordants sur cette modification.
+
+## S2 — Commit demandé (J-079)
+
+Le contenu final de la relecture S2 comporte 16 écrans et ses médias sont présents. Les changements sont regroupés dans le commit local de S2. La suite du lot 3 porte sur les cours suivants et la recette sur tablette physique.

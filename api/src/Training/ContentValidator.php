@@ -10,7 +10,7 @@ final class ContentValidator
 {
     /** Types de blocs gérés par le lecteur (front/src/types/index.ts) */
     public const BLOCK_TYPES = [
-        'text', 'image', 'info-card', 'quiz', 'timeline', 'hotspot', 'iframe',
+        'text', 'image', 'video', 'info-card', 'quiz', 'timeline', 'hotspot', 'iframe',
         'reorder', 'fill-blank', 'true-false', 'memory', 'slider', 'tap-sequence', 'flip-cards',
         'categorize', 'drawing', 'scenario', 'reveal-legends', 'pull-timeline', 'sort-bin',
         'connect-dots', 'word-search', 'yes-no-path', 'carousel', 'image-text', 'picto-grid',
@@ -196,7 +196,7 @@ final class ContentValidator
             'text', 'info-card' => ['content'], 'image' => ['url'],
             'image-text' => ['imageUrl', 'content'],
             'hotspot', 'reveal-legends', 'connect-dots' => ['imageUrl'],
-            'iframe' => ['url', 'title'], 'fill-blank' => ['text'],
+            'iframe', 'video' => ['url', 'title'], 'fill-blank' => ['text'],
             default => [],
         };
         foreach ($texts as $field) {

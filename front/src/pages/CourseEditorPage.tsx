@@ -152,7 +152,7 @@ function Preview({ pages, start }: { pages: ModulePage[]; start: number }) {
   if (!page) return <p>Ajoutez un écran pour le prévisualiser.</p>;
   return <div className="course-theme rounded-2xl flex flex-col h-[70dvh] min-h-0">
     <CourseHeader page={page} pageNumber={index + 1} totalPages={pages.length} level="h2" />
-    <main key={page.id} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-10 py-5"><div className={pageStretches(page.blocks) ? 'flex min-h-full flex-col gap-5' : 'space-y-5'}><Suspense fallback={<p>Chargement de l’aperçu…</p>}><PageBlocks blocks={page.blocks} keyPrefix={`${attempt}:${page.id}`} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} /></Suspense>
+    <main key={page.id} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-10 py-5"><div className={pageStretches(page) ? 'flex min-h-full flex-col gap-5' : 'space-y-5'}><Suspense fallback={<p>Chargement de l’aperçu…</p>}><PageBlocks page={page} keyPrefix={`${attempt}:${page.id}`} quizAnswers={answers} onQuizAnswer={(id, isCorrect, score, selected) => setAnswers(current => ({ ...current, [id]: { isCorrect, score, selected } }))} /></Suspense>
       <button className="course-action" onClick={() => { setAnswers({}); setIndex(start); setAttempt(a => a + 1); }}>Recommencer l’aperçu</button></div>
     </main>
     <CourseNavigation previousDisabled={index === 0} nextDisabled={index === pages.length - 1} onPrevious={() => setIndex(i => i - 1)} onNext={() => setIndex(i => i + 1)} />

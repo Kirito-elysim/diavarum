@@ -6,6 +6,7 @@ import { chromium } from 'playwright';
 const base = process.env.E2E_BASE_URL ?? 'http://localhost:8091';
 const reference = JSON.parse(readFileSync(new URL('../api/content/S99.json', import.meta.url)));
 const sessionOne = JSON.parse(readFileSync(new URL('../api/content/S1.json', import.meta.url)));
+const sessionTwo = JSON.parse(readFileSync(new URL('../api/content/S2.json', import.meta.url)));
 const image = '/pictos/objective.png';
 const legacy = [
   { type: 'image', url: image, alt: 'Objectif', caption: 'Illustration du cours' },
@@ -25,7 +26,8 @@ const legacy = [
   { type: 'word-search', gridSize: 3, letters: 'CLEABCDEF', words: [{ id: 'a', word: 'CLE', clue: 'Un objet' }] },
   { type: 'yes-no-path', startStepId: 'a', steps: [{ id: 'a', question: 'Le matériel est prêt ?', yesStepId: 'b', noStepId: 'b' }, { id: 'b', result: 'Demandez à l’équipe.', isCorrectEnd: true }] },
 ].map((block, i) => ({ id: `legacy-page-${i}`, title: `Activité ${block.type}`, blocks: [{ id: `legacy-${i}`, question: 'Essayez cette activité', ...block }] }));
-const course = { ...reference, code: 'S2', content: [...sessionOne.content, ...reference.content, ...legacy] };
+const videoPage = sessionTwo.content.find(page => page.blocks.some(block => block.type === 'video'));
+const course = { ...reference, code: 'S2', content: [...sessionOne.content, ...reference.content, ...legacy, { ...videoPage, id: 's2-video' }] };
 const declaredTypes = [...readFileSync(new URL('../front/src/types/index.ts', import.meta.url), 'utf8').split('export interface')[0].matchAll(/'([a-z-]+)'/g)].map(m => m[1]);
 const coveredTypes = new Set(course.content.flatMap(p => p.blocks.map(b => b.type)));
 assert.deepEqual(declaredTypes.filter(type => !coveredTypes.has(type)), []);

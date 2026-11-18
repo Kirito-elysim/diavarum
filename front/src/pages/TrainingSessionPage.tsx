@@ -126,8 +126,8 @@ function InfoCardView({ block }: { block: InfoCardBlock }) {
   const c = infoCardCategory(block.variant);
   const Icon = c.icon;
   return (
-    <div className="course-info-card rounded-2xl px-5 py-3 flex items-center gap-5" style={{ backgroundColor: c.bg, border: `3px solid ${c.border}` }}>
-      <div className="w-20 h-20 flex items-center justify-center flex-shrink-0" style={c.iconUrl ? undefined : { backgroundColor: c.iconBg }}>
+    <div className={cn('course-info-card rounded-2xl flex items-center', block.compact ? 'mx-auto w-fit max-w-full gap-3 px-4 py-2' : 'gap-5 px-5 py-3')} style={{ backgroundColor: c.bg, border: `3px solid ${c.border}` }}>
+      <div className="h-20 w-20 flex items-center justify-center flex-shrink-0" style={c.iconUrl ? undefined : { backgroundColor: c.iconBg }}>
         {c.iconUrl ? <img src={c.iconUrl} alt="" className="w-full h-full object-contain" /> : <Icon className="w-5 h-5 text-white" />}
       </div>
       <div className="flex-1">
@@ -237,6 +237,7 @@ function TimelineBlockView({ block }: { block: TimelineBlock }) {
 function HotspotBlockView({ block }: { block: HotspotBlock }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [seen, setSeen] = useState<Set<string>>(new Set());
+  const legendDialog = useRef<HTMLDialogElement>(null);
   const active = block.hotspots.find((h) => h.id === activeId) ?? null;
   // Légendes sans texte : le titre sert de réponse, affiché sur une seule ligne une fois le repère touché
   const labelsOnly = block.hotspots.every((h) => !h.description);
@@ -246,11 +247,11 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
   return (
     <div className="space-y-5">
     {block.question && <p className="text-[25px] font-normal text-[#004138] leading-snug whitespace-pre-line [&_strong]:font-bold"><CourseText text={block.question} /></p>}
-    <div className="rounded-3xl overflow-hidden bg-white ring-1 ring-gray-100/80 shadow-sm">
+    <div className={cn('rounded-3xl overflow-hidden bg-white ring-1 ring-gray-100/80 shadow-sm', block.legendDialog && 'mx-auto max-w-[980px] landscape:max-w-[min(980px,calc(100vw-290px),max(420px,calc(250dvh-850px)))]')}>
       {/* Image with markers */}
       <div className="relative select-none" onClick={() => setActiveId(null)}>
         <img src={block.imageUrl} alt={block.alt} className="w-full h-auto" loading="lazy" />
-        {activeId && !labelsOnly && <div className="absolute inset-0 bg-black/30 transition-opacity" />}
+        {activeId && !labelsOnly && !block.legendDialog && <div className="absolute inset-0 bg-black/30 transition-opacity" />}
         {block.hotspots.map((hs, i) => {
           const size = hs.size ?? 48;
           const sheetCell = block.sheet?.url && hs.sheetRow !== undefined ? block.sheet : null;
@@ -259,7 +260,12 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
           return (
             <button
               key={hs.id}
-              onClick={(e) => { e.stopPropagation(); setActiveId(hs.id === activeId ? null : hs.id); setSeen((prev) => new Set(prev).add(hs.id)); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveId(hs.id === activeId ? null : hs.id);
+                setSeen((prev) => new Set(prev).add(hs.id));
+                legendDialog.current?.showModal();
+              }}
               className={cn(
                 'absolute flex items-center justify-center rounded-full font-black course-caption transition-all duration-200 touch-manipulation',
                 bare
@@ -270,6 +276,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
               )}
               aria-label={`Afficher la légende ${i + 1} : ${hs.label}`}
               aria-expanded={activeId === hs.id}
+              aria-haspopup={block.legendDialog ? 'dialog' : undefined}
               style={{ width: markerWidth(size), aspectRatio: '1', left: `${hs.x}%`, top: `${hs.y}%`, transform: 'translate(-50%, -50%)', zIndex: hs.id === activeId ? 20 : 10 }}
             >
               {sheetCell
@@ -291,6 +298,17 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
         </p>
       )}
 
+      {block.legendDialog ? (
+        <dialog ref={legendDialog} aria-label={active?.label ?? 'Légende'} onClose={() => setActiveId(null)} className="m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto rounded-3xl border border-[#004138]/15 bg-white p-6 text-[#004138] shadow-lg backdrop:bg-black/45">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="course-copy font-bold">{active?.label}</h2>
+            <button type="button" aria-label="Fermer la légende" onClick={() => legendDialog.current?.close()} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#ECF5E9]">
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+          {active?.description && <p className="course-copy"><CourseText text={active.description} /></p>}
+        </dialog>
+      ) : <>
       {/* Info panel */}
       <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-none opacity-100' : 'max-h-0 opacity-0')}>
         {active && !labelsOnly && (
@@ -335,6 +353,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
           </button>
         ))}
       </div>
+      </>}
     </div>
     </div>
   );
@@ -345,7 +364,7 @@ function ImageTextView({ block }: { block: ImageTextBlock }) {
   const picto = block.size === 'picto';
   return (
     <div className={cn('course-image-text flex gap-10', block.verticalAlign === 'center' ? 'items-center' : 'items-start', !picto && 'flex-col sm:flex-row', block.imageSide === 'right' && 'sm:flex-row-reverse')}>
-      {block.imageUrl ? <img src={block.imageUrl} alt={block.alt} loading="lazy" className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full sm:w-[48%] rounded-3xl')} /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
+      {block.imageUrl ? <img src={block.imageUrl} alt={block.alt} loading="lazy" className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full sm:w-[48%] rounded-3xl')} style={!picto && block.imageMaxWidth ? { maxWidth: block.imageMaxWidth } : undefined} /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
       <p className="min-w-0 flex-1 text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
     </div>
   );
@@ -973,7 +992,7 @@ export function BlockCard({
   quizAnswers: Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>;
   onQuizAnswer: (id: string, isCorrect: boolean, score: number | null, selected?: string[]) => void;
 }) {
-  if (block.type === 'picto-grid') return <PictoGridView block={block} />;
+  if (block.type === 'picto-grid') return <PictoGridView block={block} fill={fill} />;
   if (block.type === 'text')
     return <TextBlockView block={block} />;
   if (block.type === 'image')
@@ -1016,7 +1035,7 @@ export function BlockCard({
   if (block.type === 'flip-cards')
     return interactiveWrapper(<FlipCardsView block={block as FlipCardsBlock} fill={fill} />);
   if (block.type === 'categorize')
-    return interactiveWrapper(<CategorizeView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
+    return interactiveWrapper(<CategorizeView block={block} onAnswer={(isCorrect, score, selected) => onQuizAnswer(block.id, isCorrect, score, selected)} previousResult={quizAnswers[block.id]} />);
   if (block.type === 'drawing')
     return interactiveWrapper(<DrawingView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
   if (block.type === 'scenario')
@@ -1035,6 +1054,14 @@ export function BlockCard({
     return interactiveWrapper(<WordSearchView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
   if (block.type === 'carousel')
     return interactiveWrapper(<CarouselView block={block} fill={fill} />);
+  if (block.type === 'video')
+    return <figure className="space-y-4">
+      <video src={block.url} aria-label={block.title} controls playsInline preload="metadata" data-course-gesture className="mx-auto block max-h-[60dvh] max-w-full rounded-2xl bg-black" />
+      {block.transcript && <details className="course-label">
+        <summary className="cursor-pointer">Lire la transcription</summary>
+        <p className="mt-3 whitespace-pre-line"><CourseText text={block.transcript} /></p>
+      </details>}
+    </figure>;
   if (block.type === 'yes-no-path')
     return interactiveWrapper(<YesNoPathView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
 
@@ -1042,13 +1069,18 @@ export function BlockCard({
 }
 
 /** Blocs d'une page : même rendu dans le lecteur et dans les aperçus de l'éditeur. Le parent doit être une colonne flex (`flex min-h-full flex-col`) si `pageFills`. */
-export function PageBlocks({ blocks, keyPrefix, quizAnswers, onQuizAnswer }: {
-  blocks: ContentBlock[]; keyPrefix: string; quizAnswers: Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>; onQuizAnswer: (id: string, isCorrect: boolean, score: number | null, selected?: string[]) => void;
+export function PageBlocks({ page, keyPrefix, quizAnswers, onQuizAnswer }: {
+  page: ModulePage; keyPrefix: string; quizAnswers: Record<string, { isCorrect: boolean; score: number | null; selected?: string[] }>; onQuizAnswer: (id: string, isCorrect: boolean, score: number | null, selected?: string[]) => void;
 }) {
+  const { blocks } = page;
   const fill = pageFills(blocks);
   const center = pageCenters(blocks);
-  return <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0', center && 'flex flex-1 flex-col justify-center space-y-0')}>
-    {blocks.map((block) => <div key={`${keyPrefix}:${block.id}`} className={cn(fill && 'flex flex-1 flex-col')}>
+  return <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0', center && 'flex flex-1 flex-col justify-center space-y-0', page.layout === 'spread' && 'flex flex-1 flex-col justify-evenly gap-5 space-y-0')}>
+    {blocks.map((block) => <div
+      key={`${keyPrefix}:${block.id}`}
+      className={cn(fill && 'flex flex-1 flex-col', block.type === 'info-card' && block.compact && 'pb-5')}
+      style={block.type === 'info-card' && block.spaceAfter !== undefined ? { paddingBottom: block.spaceAfter } : undefined}
+    >
       <BlockCard block={block} quizAnswers={quizAnswers} onQuizAnswer={onQuizAnswer} fill={fill} />
     </div>)}
   </div>;
@@ -1202,7 +1234,10 @@ function SessionRunner({
 
   const interactiveTypes = ['quiz', 'reorder', 'fill-blank', 'true-false', 'memory', 'scenario', 'sort-bin', 'yes-no-path', 'tap-sequence', 'categorize'];
   const interactiveBlocks = isPreview ? [] : currentPage.blocks.filter((b) => interactiveTypes.includes(b.type));
-  const allQuizAnswered = isPreview || interactiveBlocks.length === 0 || interactiveBlocks.every((b) => quizAnswers[b.id] !== undefined);
+  const allQuizAnswered = isPreview || interactiveBlocks.every((block) => {
+    const answer = quizAnswers[block.id];
+    return !!answer && (block.type !== 'categorize' || answer.score !== null);
+  });
 
   const handleQuizAnswer = (id: string, isCorrect: boolean, score: number | null, selected?: string[]) =>
     setQuizAnswers((p) => ({ ...p, [id]: { isCorrect, score, selected } }));
@@ -1395,7 +1430,7 @@ function SessionRunner({
   }
 
   // Page réduite à des cartes à retourner : elles occupent toute la place disponible
-  const fillPage = pageStretches(currentPage.blocks);
+  const fillPage = pageStretches(currentPage);
 
   return (
     <div className="course-theme fixed inset-0 z-[9999] flex flex-col" style={{ userSelect: 'none', background: '#ECF5E9' }}>
@@ -1435,7 +1470,7 @@ function SessionRunner({
       {/* ── Content (défile ; la navigation reste fixée en bas, hors du défilement) ── */}
       <main ref={contentRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div className={cn('mx-4 sm:mx-10 py-5 [@media(max-height:820px)]:py-3', fillPage && 'flex min-h-full flex-col', slideClass)}>
-          <PageBlocks blocks={currentPage.blocks} keyPrefix={currentPage.id} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} />
+          <PageBlocks page={currentPage} keyPrefix={currentPage.id} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} />
 
           {pageIndex === 0 && totalPages > 1 && (
             <div className="flex items-center justify-center gap-3 pt-4 text-[#004138]/35">

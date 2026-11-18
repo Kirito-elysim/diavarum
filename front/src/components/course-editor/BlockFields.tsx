@@ -15,6 +15,7 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
     {b.items.map((item, index) => <section key={item.id} className="rounded-xl border p-4 space-y-3"><h4>Picto {index + 1}</h4>
       <div className="flex flex-wrap gap-2">{INFO_CARD_CATEGORIES.map(c => <button type="button" key={c.value} title={c.label} aria-label={`Utiliser le picto ${c.label} pour l’élément ${index + 1}`} className="rounded-lg border p-2 hover:bg-orange-50" onClick={() => onChange({ ...b, items: b.items.map(i => i.id === item.id ? { ...i, imageUrl: c.iconUrl, alt: c.label } : i) })}><img src={c.iconUrl} alt={c.label} className="h-10 w-10 object-contain" /></button>)}</div>
       <ImageField url={item.imageUrl} alt={item.alt} onChange={(imageUrl, alt) => onChange({ ...b, items: b.items.map(i => i.id === item.id ? { ...i, imageUrl, alt } : i) })} />
+      {b.comparison && <Field label={`Titre au-dessus du picto ${index + 1}`} value={item.title} onChange={title => onChange({ ...b, items: b.items.map(i => i.id === item.id ? { ...i, title } : i) })} />}
       <Field label={`Texte du picto ${index + 1}`} multiline value={item.text} onChange={text => onChange({ ...b, items: b.items.map(i => i.id === item.id ? { ...i, text } : i) })} />
       <ItemActions index={index} count={b.items.length} onMove={direction => onChange({ ...b, items: move(b.items, index, direction) })} onRemove={() => onChange({ ...b, items: b.items.filter(i => i.id !== item.id) })} />
     </section>)}
@@ -46,6 +47,11 @@ export function BlockFields({ block: b, onChange }: { block: ContentBlock; onCha
     <Field label="Explication des associations" multiline value={b.explanation} onChange={explanation => onChange({ ...b, explanation })} />
   </>;
   if (b.type === 'text') return <><Field label="Texte" multiline value={b.content} onChange={content => onChange({ ...b, content })} /><TextStyleFields value={b.textStyle} onChange={textStyle => onChange({ ...b, textStyle })} /></>;
+  if (b.type === 'video') return <>
+    <Field label="Titre de la vidéo" value={b.title} onChange={title => onChange({ ...b, title })} />
+    <Field label="Adresse de la vidéo" value={b.url} onChange={url => onChange({ ...b, url })} />
+    <Field label="Transcription" multiline value={b.transcript} onChange={transcript => onChange({ ...b, transcript })} />
+  </>;
   if (b.type === 'image') return <><ImageField url={b.url} alt={b.alt} onChange={(url, alt) => onChange({ ...b, url, alt })} /><Field label="Légende sous l’image" value={b.caption} onChange={caption => onChange({ ...b, caption })} />
     <div className="space-y-2 rounded-xl bg-gray-50 p-3">
       <Toggle label="Autoriser le zoom sur cette image" checked={b.zoomEnabled === true} onChange={zoomEnabled => onChange({ ...b, zoomEnabled })} />
@@ -215,6 +221,7 @@ function CategorizeFields({ block: b, onChange }: { block: CategorizeBlock; onCh
   };
   return <>
     <Field label="Question du glisser-déposer" multiline hint={QUESTION_HINT} value={b.question} onChange={question => onChange({ ...b, question })} />
+    <Toggle label="Autoriser une deuxième tentative" checked={b.allowRetry === true} onChange={allowRetry => onChange({ ...b, allowRetry })} />
     <Field label="Consigne de l’encadré au doigt" value={b.instruction ?? DEFAULT_INSTRUCTIONS.categorize} onChange={instruction => onChange({ ...b, instruction })} />
     <p className="rounded-xl bg-orange-50 p-4 text-sm">Créez une ou plusieurs zones de destination, puis les éléments à déplacer en indiquant la zone attendue pour chacun. Une même zone peut recevoir plusieurs éléments. Les éléments seront mélangés pour l’apprenant. L’activité est notée et affiche une correction.</p>
     <h4 className="font-semibold">Zones de destination</h4>

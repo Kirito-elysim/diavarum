@@ -4,7 +4,7 @@
  */
 
 export type ContentBlockType =
-  | 'text' | 'image' | 'info-card' | 'quiz' | 'timeline' | 'hotspot' | 'iframe'
+  | 'text' | 'image' | 'video' | 'info-card' | 'quiz' | 'timeline' | 'hotspot' | 'iframe'
   | 'reorder' | 'fill-blank' | 'true-false' | 'memory' | 'slider'
   | 'tap-sequence' | 'flip-cards' | 'categorize' | 'drawing' | 'scenario'
   | 'reveal-legends' | 'pull-timeline' | 'sort-bin'
@@ -35,6 +35,14 @@ export interface ImageBlock {
   zoomEnabled?: boolean;
 }
 
+export interface VideoBlock {
+  type: 'video';
+  id: string;
+  url: string;
+  title: string;
+  transcript?: string;
+}
+
 /** Catégories d'encadré ; les anciennes valeurs (info, success, tip) restent lisibles */
 export type InfoCardVariant = 'important' | 'definition' | 'objective' | 'funfact' | 'warning';
 export type LegacyInfoCardVariant = 'info' | 'success' | 'tip';
@@ -46,6 +54,8 @@ export interface InfoCardBlock {
   content: string;
   textStyle?: CourseTextStyle;
   variant: InfoCardVariant | LegacyInfoCardVariant;
+  compact?: boolean;
+  spaceAfter?: number;
 }
 
 /** Image (ou picto) à gauche, texte à droite, sur une même ligne */
@@ -60,6 +70,7 @@ export interface ImageTextBlock {
   size: 'picto' | 'image';
   imageSide?: 'left' | 'right';
   verticalAlign?: 'center';
+  imageMaxWidth?: number;
 }
 
 export type QuestionType = 'qcu' | 'qcm' | 'drag-drop';
@@ -93,7 +104,7 @@ export interface QuizBlock {
 }
 
 export type ContentBlock =
-  | TextBlock | ImageBlock | InfoCardBlock | QuizBlock
+  | TextBlock | ImageBlock | VideoBlock | InfoCardBlock | QuizBlock
   | TimelineBlock | HotspotBlock | IframeBlock
   | ReorderBlock | FillBlankBlock | TrueFalseBlock | MemoryBlock
   | SliderBlock | TapSequenceBlock | FlipCardsBlock | CategorizeBlock
@@ -105,10 +116,13 @@ export type ContentBlock =
 export interface PictoGridBlock {
   type: 'picto-grid';
   layout?: 'grid' | 'stacked';
+  comparison?: boolean;
+  spread?: boolean;
   id: string;
   question?: string;
   columns?: 2 | 3;
-  items: { id: string; imageUrl: string; alt: string; text: string }[];
+  imageWidth?: number;
+  items: { id: string; imageUrl: string; alt: string; text: string; title?: string }[];
 }
 
 /* Carrousel : images défilantes accompagnées d'un texte (interactivité du cahier des charges) */
@@ -247,6 +261,7 @@ export interface CategorizeBlock {
   question: string;
   categories: string[];
   items: CategorizeItem[];
+  allowRetry?: boolean;
   explanation?: string;
   /** Consigne de l'encadré au doigt ; texte par défaut si absente */
   instruction?: string;
@@ -433,6 +448,7 @@ export interface HotspotBlock {
   id: string;
   imageUrl: string;
   alt: string;
+  legendDialog?: boolean;
   caption?: string;
   /** Question affichée en gras au-dessus de l'image */
   question?: string;
@@ -445,5 +461,6 @@ export interface ModulePage {
   id: string;
   title: string;
   instruction?: string;
+  layout?: 'spread';
   blocks: ContentBlock[];
 }

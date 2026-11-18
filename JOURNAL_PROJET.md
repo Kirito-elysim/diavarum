@@ -544,3 +544,79 @@ Ajouter les nouvelles entrées à la suite. Utiliser un identifiant stable, une 
 - Validation explicite de l'utilisateur : le cours 1 est validé. Il demande un commit local des révisions J-061 à J-065, en complément de J-060.
 - Périmètre : contenu S1, rendu partagé et champ de justification de l'éditeur, avec la traçabilité associée. Le diff est sans erreur et les médias référencés par S1 sont suivis dans Git. Les vérifications navigateur et les limites sont consignées dans J-061 à J-065. La note J-034 et les fichiers non suivis restent locaux.
 - Suite : reprendre le lot 3 sur le cours suivant, avec la recette sur tablette physique et la publication comme étapes distinctes. Aucun critère global du lot 3 à cocher.
+
+## J-067 — 18 novembre 2026 — Reprise de l'intégration du cours S2 (lot 3)
+
+- Demande utilisateur : intégrer le cours 2 après validation du cours 1. Reprise de la version locale de J-052, qui comporte 17 écrans et trois compétences. Sources : storyboard `S2_EHD_diaverum_VF.pptx` et graphismes de la séance 2 fournis dans `doc/integration/`.
+- Comparaison de la copie locale avec Git avant import : contenu et métadonnées identiques. Le premier export de vérification préfixait le JSON par l'affichage de la base, retiré avant comparaison. Correspondance avec le storyboard vérifiée pour le déroulé, les exercices et les compétences. La page 4 du storyboard (diapositives 9 à 19) prévoit une vidéo : remplacement du carrousel provisoire par le MP4 fourni dans `front/public/courses/S2/contaminations-croisees.mp4` et ajout de la transcription issue du contenu existant. Le bloc vidéo est reconnu par le validateur, le lecteur et l'éditeur. La couverture de rendu `e2e/course-theme.mjs` inclut ce type.
+- Page 15 (diapositives 36 et 37) : jusqu'à deux tentatives pour le classement. Premier essai entièrement juste validé immédiatement. En cas d'erreur, nouvelle tentative sur les choix précédents, correction et score à la dernière validation. Choix d'implémentation : seul le dernier résultat est compté, selon le calcul existant du §4 du cahier des charges. Le lecteur et les aperçus réutilisent le même bloc. Les réponses attendues existantes sont conservées, la grille de correspondance du storyboard étant ambiguë sur certains éléments et les explications de la page 6 soutenant le classement intégré.
+- Pages 7 et 8 : consigne commune et aucune correction ni note, conformément à la décision générale J-056 qui prime ici sur « Notifier la solution » du storyboard. Clés des exercices et trois compétences existantes conservées. Les changements touchent `api/content/S2.json`, `ContentValidator.php`, `TrainingSessionPage.tsx`, `InteractiveBlocks.tsx`, l'éditeur (`model.ts` et `BlockFields.tsx`) et `types/index.ts`.
+- Vérifications : typecheck, build, tests unitaires front et 13 tests PHP de contenu (24 assertions) réussis. Chrome, API simulée : 17 écrans et médias contrôlés à 1280 × 800 et 800 × 1280, vidéo lue avec commandes natives et transcription, carrousels de quatre images parcourus, trois compétences affichées avant lancement, second essai du classement réussi et avance débloquée. Un premier mesurage relevait le débordement transitoire de l'animation de navigation, contrôle repris une fois le rendu stabilisé.
+- Import S2 uniquement en base Docker de développement `diaverum`, 17 pages confirmées et export final identique au fichier du dépôt. Pas de déploiement. Suite : relecture utilisateur page par page, en reprenant à partir de la page 3, avec validation éditoriale et recette sur tablette physique encore à obtenir. Aucun critère complet du lot 3 à cocher.
+
+## J-069 — 18 novembre 2026 — Relecture de S2 pages 1 et 2 (lot 3)
+
+- Demande utilisateur : mettre l'affirmation de la page 1 en gras et faire tenir la page 2 sur un seul écran, avec des fenêtres pour les légendes si nécessaire.
+- Précision utilisateur : un retour qui désigne une page s'applique uniquement à cette page dans ce cours. Généraliser un comportement seulement si la demande le précise. Cette règle guidera les retouches suivantes.
+- `api/content/S2.json` met l'affirmation de p01 en gras et active `legendDialog` uniquement sur le bloc à légendes de p02. Le lecteur et les aperçus partagent cette variante facultative via `TrainingSessionPage.tsx` et `types/index.ts`. Dans ce mode, les trois pictogrammes ouvrent une légende en fenêtre et l'illustration est redimensionnée en paysage étroit. Mise à jour ciblée de ces deux champs dans la base de développement `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chromium avec API simulée : gras de p01, trois fenêtres et p02 sans défilement en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Contrôle sur une autre page à légendes (S3) : légende intégrée, sans fenêtre. Un premier essai a nécessité de cibler l'illustration précisément et de réduire la largeur à 1024 × 768. Tablette physique à recetter, aucun déploiement. Poursuivre la relecture de S2.
+
+## J-070 — 18 novembre 2026 — Relecture de S2 page 3 (lot 3)
+
+- Demande utilisateur : réduire l'image, tenir sur un écran, centrer le texte en hauteur et mettre « précautions standard d’hygiène. » en gras. Ce passage identifie la page 3 de S2.
+- `api/content/S2.json` ajoute au seul bloc `s2-standard` le centrage vertical existant et une largeur d'image maximale de 320 px, déclarée dans `front/src/types/index.ts` et lue par le gabarit partagé `TrainingSessionPage.tsx`. Les autres blocs sans ce champ utilisent leur largeur habituelle. Mise à jour ciblée de p03 dans la base Docker locale `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chromium avec API simulée : gras, largeur maximale, centrage et absence de défilement vérifiés en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. La tablette physique reste à recetter. Aucun déploiement ni critère complet du lot 3 à cocher. Poursuivre la relecture de S2.
+
+## J-071 — 18 novembre 2026 — Relecture de S2 page 5 (lot 3)
+
+- Demande utilisateur : agrandir les deux images, mettre leurs légendes en gras et placer la phrase introductive dans un encadré Important, avec seulement « 2 techniques différentes » en gras. La phrase identifie S2 p05.
+- `api/content/S2.json` applique au seul bloc p05 une largeur d'image de 340 px maximum et met les deux légendes en gras. La phrase passe dans un encadré Important utilisant le gabarit existant. Le champ optionnel `imageWidth` dans `types/index.ts` et `PictoGridView.tsx` est limité aux blocs qui le renseignent. Mise à jour ciblée en base locale `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chromium avec API simulée : largeur, légendes en gras, gras partiel dans l'encadré et absence de défilement vérifiés en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Page 6 contrôlée à 100 px pour ses pictos. Tablette physique à recetter, aucun déploiement. Poursuivre la relecture de S2.
+
+## J-072 — 18 novembre 2026 — Encadré Important de S2 page 5 (lot 3)
+
+- Demande utilisateur : centrer et resserrer l'encadré Important, puis accentuer l'espace qui le sépare des images, sur la page 5 uniquement.
+- Variante facultative `compact` activée sur le seul bloc `s2-techniques-important` dans `api/content/S2.json`. Le gabarit (`TrainingSessionPage.tsx`, type dans `types/index.ts`) ajuste la largeur au contenu, réduit les marges internes et l'icône, et augmente l'intervalle avant les images de 20 à 40 px. Mise à jour ciblée en base Docker de développement `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chromium avec API simulée : centrage, boîte resserrée, intervalle d'environ 40 px et absence de défilement vérifiés en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Le contrôle de largeur des images a été rejoué avec une tolérance d'arrondi d'un pixel. Aucun déploiement ni recette sur tablette physique. Poursuivre la relecture de S2.
+
+## J-073 — 18 novembre 2026 — Taille de l'icône de S2 page 5 (lot 3)
+
+- Demande utilisateur : conserver la taille d'origine de l'icône Important. Ce choix remplace la réduction d'icône de J-072.
+- `front/src/pages/TrainingSessionPage.tsx` rend à l'icône de l'encadré compact sa taille standard de 80 px sur tablette. L'encadré reste ajusté au contenu et centré avec 40 px avant les images. Aucun changement du JSON ou de la base locale.
+- Build et diff réussis. Le premier test isolait p05 comme premier écran et affichait l'indication supplémentaire de navigation, avec défilement à 1024 × 768. Test repris en avançant depuis p04 : icône de 80 px, centrage, intervalle et absence de défilement confirmés dans Chromium aux quatre dimensions tablette habituelles. Aucun déploiement. Poursuivre la relecture de S2.
+
+## J-074 — 18 novembre 2026 — Espacement et comparaison en S2 pages 5 et 6 (lot 3)
+
+- Demande utilisateur : augmenter l'espace sous l'encadré à la page 5. À la page 6, mettre l'introduction en texte normal, agrandir les images, mettre les deux titres en gras au-dessus des images et aligner les explications à gauche sous chaque image.
+- `api/content/S2.json` porte à environ 52 px l'écart sous le seul encadré de p05. À p06, la comparaison utilise deux illustrations de 250 px maximum, les titres au-dessus en gras, les explications alignées à gauche et l'introduction en graisse normale. Options limitées aux blocs concernés dans `types/index.ts`, `TrainingSessionPage.tsx` et `PictoGridView.tsx`. Titres modifiables dans `BlockFields.tsx` sur les blocs de comparaison. Mise à jour ciblée en base Docker locale `diaverum`, une ligne confirmée.
+- Build et diff réussis. Lecteur Chromium avec API simulée : écart p05, taille de l'icône, styles et placement des textes et images p06, absence de défilement sur p05 et p06 en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Aucun déploiement, tablette physique à recetter. Poursuivre la relecture de S2.
+
+## J-075 — 18 novembre 2026 — Images et explications de S2 page 6 (lot 3)
+
+- Demande utilisateur : agrandir les images et centrer chaque bloc de texte sous son image, en conservant le texte aligné à gauche. La demande suit la comparaison de la page 6 (J-074).
+- `api/content/S2.json` porte la largeur de 250 à 320 px sur p06. En mode comparaison (`PictoGridView.tsx`), le texte utilise la largeur de l'image et se centre sous celle-ci avec les lignes alignées à gauche. Application ciblée en base Docker de développement `diaverum`, une ligne confirmée.
+- Build, diff et vérification Chromium avec API simulée réussis : même largeur et même bord gauche pour l'image et son texte sur les deux colonnes, alignement à gauche et absence de défilement à 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Page 5 également contrôlée. Aucun déploiement. Poursuivre la relecture de S2.
+
+## J-076 — 18 novembre 2026 — Puces, pictos et mise en page de S2 (lot 3)
+
+- Demande utilisateur : tirets à gauche et carrés à droite à la page 6. Aérer les pictos et appliquer le gras sélectif sur l'écran identifié par la phrase « Pour limiter la prolifération… » (p09 dans S2). Page 10, mettre tout le texte à droite de l'image, centré verticalement, avec le gras du storyboard.
+- `api/content/S2.json` applique les tirets et carrés à p06, les trois passages demandés en gras à p09, et réunit le texte de p10 dans le bloc image-texte. Le gras de p10 suit les portions de la diapositive 25 du storyboard. La mention « page 7 » a été interprétée comme p09, seule page qui contient la phrase citée et les trois pictos. La vraie p07 est un QCU.
+- La variante facultative `spread` (type dans `types/index.ts`) étire le bloc de pictos de p09 et répartit ses lignes verticalement via `PictoGridView.tsx`, `courseVisuals.ts` et `TrainingSessionPage.tsx`. Rien d'autre ne l'active. Application ciblée des trois pages sur la base Docker de développement `diaverum`, après contrôle des anciens blocs, une mise à jour confirmée.
+- Build et diff réussis. Chrome avec API simulée : puces de p06, gras et répartition de p09, position, centrage et gras de p10 contrôlés à 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. P09 et p10 tiennent sans défilement à ces tailles. Aucun déploiement. Poursuivre la relecture de S2.
+
+## J-077 — 18 novembre 2026 — S2 page 12, espacements et gras (lot 3)
+
+- Demande utilisateur : centrer verticalement le texte face à l'image et au picto, reprendre le gras du storyboard et répartir les blocs sur la hauteur. Pour les prochaines pages traitées, appliquer ce principe de mise en page et suivre le gras du storyboard, en gardant la règle de périmètre de J-069.
+- `api/content/S2.json` reprend les deux passages en gras de la diapositive 30 du storyboard, centre les deux textes par rapport aux illustrations et active la disposition facultative `layout: spread` uniquement sur p12. Dans `types/index.ts`, `courseVisuals.ts`, le lecteur et les aperçus (`TrainingSessionPage.tsx`, `CourseEditorPage.tsx`, `TabletPreview.tsx`), cette disposition distribue l'espace vertical disponible autour des blocs. Variante absente des autres pages.
+- Build et diff réussis. Chromium avec API simulée : centres verticaux et passages en gras contrôlés, espace de 57 à 185 px entre les blocs selon le format, aucun défilement à 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Page 13 vérifiée dans sa disposition habituelle. Application ciblée de p12 dans la base Docker locale `diaverum`, une ligne confirmée. Aucun déploiement. Poursuivre la relecture S2 avec ce principe.
+
+## J-078 — 18 novembre 2026 — Retrait de S2 page 16 (lot 3)
+
+- Demande utilisateur : retirer l'écran p16 du cours 2, la question sur les symptômes d'une infection de l'abord. Ajuster la numérotation des trois exercices restants sans modifier leurs réponses.
+- `api/content/S2.json` supprime p16 et renumérote les titres p14, p15 et p17 de 1/3 à 3/3. La page p17 occupe maintenant la 16e position. Le score est calculé sur les exercices restants selon le calcul existant. Les réponses et identifiants des exercices conservés ont été comparés à l'export précédent et sont identiques.
+- JSON, diff et 16 tests PHP de validation des contenus réussis (36 assertions). Mise à jour ciblée de la fin du cours dans la base Docker de développement `diaverum` après comparaison des quatre écrans, une ligne confirmée et 16 écrans en base. Aucun déploiement. Poursuivre la relecture de S2.
+
+## J-079 — 18 novembre 2026 — Commit du cours S2 (lot 3)
+
+- Demande utilisateur : créer le commit local du cours 2. Périmètre : contenu S2, vidéo, gabarit partagé, éditeur, validation et recette liées aux interventions J-067 et J-069 à J-078.
+- Vérifications : index initialement vide, diff sans erreur, 16 écrans et médias référencés présents. Les tests de rendu et de contenu sont détaillés dans les entrées précédentes. Les fichiers et notes d'intégration S3 à S5 (J-068) et la note J-034 restent dans le dossier de travail. Aucun déploiement.

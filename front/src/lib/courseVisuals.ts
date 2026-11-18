@@ -93,11 +93,12 @@ export function pageFills(blocks: ContentBlock[]): boolean {
   if (blocks.length !== 1) return false;
   const [block] = blocks;
   return (block.type === 'flip-cards' && !block.cardHeight)
-    || (block.type === 'carousel' && block.imageHeight === 'large');
+    || (block.type === 'carousel' && block.imageHeight === 'large')
+    || (block.type === 'picto-grid' && block.layout === 'stacked' && block.spread === true);
 }
 
 /** Page réduite à une image (ou un picto) accompagnée de son texte : l'activité est centrée au milieu de la page */
 export const pageCenters = (blocks: { type: string }[]) => blocks.length === 1 && blocks[0].type === 'image-text';
 
 /** Pages dont les blocs s'étirent sur toute la hauteur (cartes) ou se centrent (image + texte) : le conteneur doit être une colonne flex */
-export const pageStretches = (blocks: ContentBlock[]) => pageFills(blocks) || pageCenters(blocks);
+export const pageStretches = (page: ModulePage) => page.layout === 'spread' || pageFills(page.blocks) || pageCenters(page.blocks);

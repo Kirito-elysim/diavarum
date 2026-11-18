@@ -628,22 +628,25 @@ export function FlipCardsView({ block, fill: fillRequested }: { block: FlipCards
 }
 
 /* ─── 8. Categorize (drag items into categories) ───────────────────────── */
-export function CategorizeView({ block, onAnswer, disabled }: { block: CategorizeBlock; onAnswer: (isCorrect: boolean, score: number) => void; disabled?: boolean }) {
+export function CategorizeView({ block, onAnswer, previousResult }: {
+  block: CategorizeBlock;
+  onAnswer: (isCorrect: boolean, score: number | null, selected: string[]) => void;
+  previousResult?: { score: number | null; selected?: string[] };
+}) {
   const [shuffled] = useState(() => [...block.items].sort(() => Math.random() - 0.5));
-  const [assignments, setAssignments] = useState<Record<string, string | null>>({});
-  const [submitted, setSubmitted] = useState(false);
+  const [assignments, setAssignments] = useState<Record<string, string | null>>(() =>
+    Object.fromEntries(block.items.map((item, index) => [item.id, previousResult?.selected?.[index] ?? null])),
+  );
+  const [submitted, setSubmitted] = useState(previousResult?.score != null);
+  const [retryPending, setRetryPending] = useState(previousResult?.score === null);
+  const [attempted, setAttempted] = useState(!!previousResult);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [hoveredCat, setHoveredCat] = useState<string | null>(null);
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   const zoneRefs = useRef<Map<string, HTMLElement>>(new Map());
   const itemRefs = useRef<Map<string, HTMLElement>>(new Map());
 
-  // Assign initial null
-  useEffect(() => {
-    const init: Record<string, string | null> = {};
-    block.items.forEach((it) => { init[it.id] = null; });
-    setAssignments(init);
-  }, [block.items]);
+  const locked = submitted || retryPending;
 
   const unassigned = shuffled.filter((it) => assignments[it.id] === null || assignments[it.id] === undefined);
 
@@ -656,7 +659,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
   }, []);
 
   const onPointerDown = (id: string, e: React.PointerEvent) => {
-    if (submitted || disabled) return;
+    if (locked) return;
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
     setDraggingId(id);
     setPointer({ x: e.clientX, y: e.clientY });
@@ -682,8 +685,15 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
   const handleSubmit = () => {
     const correct = block.items.filter((it) => assignments[it.id] === it.category).length;
     const total = block.items.length;
+    const selected = block.items.map((it) => assignments[it.id] ?? '');
+    if (block.allowRetry && !attempted && correct < total) {
+      setAttempted(true);
+      setRetryPending(true);
+      onAnswer(false, null, selected);
+      return;
+    }
     setSubmitted(true);
-    onAnswer(correct === total, Math.round((correct / total) * 100));
+    onAnswer(correct === total, Math.round((correct / total) * 100), selected);
   };
 
   const allAssigned = block.items.every((it) => assignments[it.id] !== null && assignments[it.id] !== undefined);
@@ -692,7 +702,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
     <div className="space-y-5" onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
       <BlockHeader label="Glisser-déposer" text={block.question} />
 
-      {!submitted && (
+      {!locked && (
         <div className="flex items-center gap-2.5 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
           <span className="course-copy">👆</span>
           <p className="course-label text-[#A64314] font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.categorize}</p>
@@ -714,7 +724,7 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
                   draggingId === it.id ? 'border-[#E86825] bg-[#FFF4ED] opacity-50' :
                   'border-[#004138]/15 bg-white text-[#004138] active:scale-95 cursor-grab'
                 )}
-                style={{ touchAction: submitted || disabled ? 'auto' : 'none' }}
+                style={{ touchAction: locked ? 'auto' : 'none' }}
               >
                 {it.label}
               </div>
@@ -750,8 +760,8 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
                     <button
                       type="button"
                       key={it.id}
-                      disabled={submitted || disabled}
-                      title={submitted ? undefined : 'Toucher pour retirer'}
+                      disabled={locked}
+                      title={locked ? undefined : 'Toucher pour retirer'}
                       onClick={() => setAssignments((prev) => ({ ...prev, [it.id]: null }))}
                       className={cn(
                         'px-3 py-1.5 rounded-lg course-label font-medium border touch-manipulation',
@@ -779,7 +789,13 @@ export function CategorizeView({ block, onAnswer, disabled }: { block: Categoriz
         </div>
       )}
 
-      {!submitted && <SubmitButton onClick={handleSubmit} disabled={(disabled ?? false) || !allAssigned} label="Valider" />}
+      {!locked && <SubmitButton onClick={handleSubmit} disabled={!allAssigned} label="Valider" />}
+      {retryPending && (
+        <div className="space-y-3 text-center">
+          <p className="course-label" role="status">Il reste une tentative.</p>
+          <SubmitButton onClick={() => setRetryPending(false)} disabled={false} label="Réessayer" />
+        </div>
+      )}
       {submitted && block.explanation && <Explanation text={block.explanation} />}
     </div>
   );
