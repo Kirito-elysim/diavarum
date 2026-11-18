@@ -48,7 +48,7 @@ function QCUQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
   return (
     <div className="space-y-6">
       {/* Question */}
-      <QuestionHeader label="Question" text={block.question} />
+      <QuestionHeader text={block.question} />
 
       {/* Options */}
       <div className="space-y-3">
@@ -149,7 +149,7 @@ function QCMQuestion({ block, onAnswer, disabled, previousResult }: QuizProps) {
 
   return (
     <div className="space-y-6">
-      <QuestionHeader label="Plusieurs réponses" text={block.question} multi />
+      <QuestionHeader text={block.question} />
 
       <div className="space-y-3">
         {block.options?.map((opt: QuizOption) => {
@@ -286,7 +286,7 @@ function DragDropQuestion({ block, onAnswer, disabled, previousResult }: QuizPro
 
   return (
     <div className="space-y-6" onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
-      <QuestionHeader label="Relier" text={block.question} />
+      <QuestionHeader text={block.question} />
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/* Left — drop zones */}
@@ -406,12 +406,9 @@ function DragDropQuestion({ block, onAnswer, disabled, previousResult }: QuizPro
 }
 
 /* ─── Shared sub-components ──────────────────────────────────────────────── */
-function QuestionHeader({ text, multi }: { label?: string; text: string; multi?: boolean }) {
+function QuestionHeader({ text }: { text: string }) {
   return (
-    <div className="flex flex-wrap items-start gap-2">
-      <p className="flex-1 text-[25px] font-normal text-[#004138] leading-snug whitespace-pre-line [&_strong]:font-bold"><CourseText text={text} /></p>
-      {multi && <span className="mt-1 bg-[#E86825]/15 text-[#A64314] px-2 py-1 rounded-md course-label font-bold">Plusieurs réponses</span>}
-    </div>
+    <p className="text-[25px] font-normal text-[#004138] leading-snug whitespace-pre-line [&_strong]:font-bold"><CourseText text={text} /></p>
   );
 }
 

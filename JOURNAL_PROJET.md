@@ -508,3 +508,39 @@ Ajouter les nouvelles entrées à la suite. Utiliser un identifiant stable, une 
 
 - Demande utilisateur : créer un commit local des retours J-053 à J-059 sur le lancement, les consignes, les questions non notées, le zoom et les carrousels. Le commit regroupe le contenu S1, le gabarit, l'éditeur, les tests adaptés et le suivi de ces interventions.
 - Vérification avant commit : diff sans erreur et index initialement vide. Les vérifications fonctionnelles sont détaillées dans les entrées J-053 à J-059. La note de poussée J-034 déjà modifiée dans `HANDOFF.md` et les fichiers non suivis restent dans le dossier de travail. Poursuivre la relecture du cours 1. Aucun déploiement ni critère du lot 3 à cocher.
+
+## J-061 — 18 novembre 2026 — Carrousel de S1 page 5 sur l'espace disponible (lot 3)
+
+- Demande utilisateur : remplacer la simple augmentation de hauteur de J-059 par un carrousel qui occupe l'espace de la page, uniquement sur S1 p05.
+- Choix de mise en page : réutilisation de la variante `large` de J-059, renseignée uniquement sur S1 p05. Dans `courseVisuals.ts`, `TrainingSessionPage.tsx` et `CarouselView.tsx`, quand le carrousel est seul sur la page, il utilise la colonne extensible qu'emploient déjà les cartes. La zone d'image prend la hauteur restante après la question et la légende et l'illustration reste entière, avec ses coins arrondis. Les aperçus emploient le même gabarit.
+- Build et diff réussis. Lecteur en aperçu Chromium avec API simulée : à 800 × 1280 et 1280 × 800, la zone correspond exactement à l'espace restant après question, légende et marges, sans défilement vertical dans le scénario. Proportions, arrondi, précédent/suivant et hauteur standard de p08 à 330 px contrôlés. Le premier essai mesurait un seuil fixe inadapté aux retours à la ligne en portrait ; remplacé par la mesure de l'espace effectivement disponible. Pas de tablette physique, d'écriture en base ni de déploiement. Poursuivre la relecture de S1. Aucun critère complet du lot 3 à cocher.
+
+## J-062 — 18 novembre 2026 — Légendes du carrousel de S1 page 9 (lot 3)
+
+- Demande utilisateur : inclure le mot « choix » dans le passage en gras de la première légende et aligner à gauche toutes les légendes de la page 9 (« Directives anticipées 3/3 », identifiant p08).
+- Le contenu `api/content/S1.json` étend le gras à « faire connaître ses choix » et active l'alignement gauche sur `s1-da-role`. Le rendu partagé `CarouselView.tsx` lit l'option facultative déclarée dans `types/index.ts`. Mise à jour ciblée des deux champs dans la base Docker de développement `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chromium avec API simulée : alignement des quatre légendes et présence du passage en gras vérifiés dans l'aperçu apprenant à 800 × 1280 et 1280 × 800. Tablette physique à recetter. Aucun déploiement. Poursuivre la relecture de S1. Aucun critère complet du lot 3 à cocher.
+
+## J-063 — 18 novembre 2026 — Texte à côté de l'image en page 10 de S1 (lot 3)
+
+- Demande utilisateur : centrer verticalement le texte par rapport à l'image, le justifier et remplacer « la loi permet la sédation » par « elle permet la sédation » en gardant le gras.
+- `api/content/S1.json` applique le centrage et la justification au bloc `s1-sedation` (p09) et remplace le libellé dans le passage en gras. Le gabarit partagé `TrainingSessionPage.tsx` et `types/index.ts` prennent en charge le centrage vertical par bloc. `TextStyleFields.tsx` expose l'alignement justifié. Mise à jour ciblée de ce bloc en base Docker de développement `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chromium avec API simulée : centrage, justification et balise de gras vérifiés dans l'aperçu à 800 × 1280 et 1280 × 800, après correction du sélecteur de test du champ Alignement. Tablette physique à recetter. Aucun déploiement et aucun critère complet du lot 3 à cocher. Poursuivre la relecture de S1.
+
+## J-064 — 18 novembre 2026 — Conclusion de S1 page 11 (lot 3)
+
+- Demande utilisateur : choisir une composition image à gauche et texte à droite pour la page 11, même si le storyboard diffère. Centrer le texte en hauteur, l'aligner à gauche, utiliser des tirets et arrondir l'image.
+- Choix validé par l'utilisateur pour cette page : réutiliser le bloc image et texte de la page précédente. `api/content/S1.json` réunit l'image et le texte de la conclusion en un bloc `image-text`, aligné à gauche et centré en hauteur. La même illustration utilise les coins arrondis du gabarit et quatre tirets remplacent les puces rondes. Mise à jour ciblée de p10 en base Docker de développement `diaverum`, une ligne confirmée.
+- JSON et diff vérifiés. Chromium avec API simulée sur le build local : image à gauche, arrondi, quatre tirets, alignement du texte et centrage en hauteur vérifiés à 800 × 1280 et 1280 × 800. Tablette physique à recetter. Aucun déploiement ni critère complet du lot 3 à cocher. Poursuivre la relecture de S1.
+
+## J-065 — 18 novembre 2026 — Consigne commune des QCU et QCM (lot 3)
+
+- Demande utilisateur : employer par défaut « Touchez la ou les réponses qui vous paraissent exactes. » et retirer la mention « Plusieurs réponses ».
+- `front/src/lib/courseVisuals.ts` utilise le nouveau texte pour les deux types de choix lorsqu'aucune consigne de page n'est renseignée. `front/src/components/QuizComponent.tsx` retire la mention redondante du gabarit partagé. Les consignes explicites et celles des activités d'association restent prioritaires dans leur contexte.
+- Build et diff réussis. Chromium avec API simulée : texte exact sur QCU et QCM, suppression de la mention, consigne personnalisée et progression après validation contrôlées. Le rendu QCM a été vérifié en 800 × 1280 et 1280 × 800. Pas de tablette physique, d'écriture en base ou de déploiement. Poursuivre la relecture de S1. Aucun critère complet du lot 3 à cocher.
+
+## J-066 — 18 novembre 2026 — Validation éditoriale et commit de S1 (lot 3)
+
+- Validation explicite de l'utilisateur : le cours 1 est validé. Il demande un commit local des révisions J-061 à J-065, en complément de J-060.
+- Périmètre : contenu S1, rendu partagé et champ de justification de l'éditeur, avec la traçabilité associée. Le diff est sans erreur et les médias référencés par S1 sont suivis dans Git. Les vérifications navigateur et les limites sont consignées dans J-061 à J-065. La note J-034 et les fichiers non suivis restent locaux.
+- Suite : reprendre le lot 3 sur le cours suivant, avec la recette sur tablette physique et la publication comme étapes distinctes. Aucun critère global du lot 3 à cocher.

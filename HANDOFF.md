@@ -1,6 +1,6 @@
 # Reprise du projet Diaverum
 
-Dernière mise à jour : 18 novembre 2026 · entrée J-060 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
+Dernière mise à jour : 18 novembre 2026 · entrée J-066 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
 
 ## Point de départ
 
@@ -188,3 +188,27 @@ Les illustrations des carrousels utilisent le même rayon de 16 px que les autre
 ## S1 page 5 — Hauteur du carrousel (J-059)
 
 Le carrousel « Personne de confiance 2/3 » utilise une zone d'image plus haute dans le contenu versionné et la base de développement. Hauteur et proportions vérifiées en portrait et paysage, avec contrôle du carrousel standard de la page 8. Poursuivre la relecture de S1.
+
+## S1 page 5 — Carrousel extensible (J-061)
+
+La variante réservée à « Personne de confiance 2/3 » remplit l'espace restant sous le bandeau, après la question et la légende. Rendu et défilement vérifiés dans Chromium en portrait et paysage, avec contrôle de la page 8. Poursuivre la relecture de S1.
+
+## S1 page 9 — Légendes du carrousel (J-062)
+
+« Faire connaître ses choix » est en gras sur la première image et les quatre légendes sont alignées à gauche. Correction dans le contenu versionné et la base de développement, avec contrôle dans Chromium en portrait et paysage. Poursuivre la relecture de S1.
+
+## S1 page 10 — Texte et image (J-063)
+
+Le paragraphe justifié est centré en hauteur à côté de l'image et contient « elle permet la sédation » dans le passage en gras. Contenu versionné et base de développement mis à jour, avec contrôle dans Chromium en portrait et paysage. Poursuivre la relecture de S1.
+
+## S1 page 11 — Conclusion (J-064)
+
+Image aux coins arrondis à gauche et texte à droite, aligné à gauche et centré en hauteur. Quatre tirets remplacent les puces rondes. Contenu versionné et base de développement mis à jour. Rendu vérifié en portrait et paysage dans Chromium. Poursuivre la relecture de S1.
+
+## QCU et QCM — Consigne commune (J-065)
+
+Le bandeau utilise « Touchez la ou les réponses qui vous paraissent exactes. » par défaut. La mention « Plusieurs réponses » est retirée du gabarit. Rendu vérifié dans Chromium en portrait et paysage. Poursuivre la relecture de S1.
+
+## S1 validé par l'utilisateur — J-066
+
+La validation éditoriale du cours 1 est explicite. Les dernières retouches de S1 et du gabarit partagé sont regroupées pour le commit local. Reprendre l'intégration du cours suivant. La recette sur tablette physique et la publication restent à traiter.

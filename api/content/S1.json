@@ -301,11 +301,12 @@
                 {
                     "id": "s1-da-role",
                     "type": "carousel",
+                    "captionAlign": "left",
                     "slides": [
                         {
                             "id": "s1-da-role-1",
                             "alt": "Une personne face à ses choix",
-                            "text": "Les directives anticipées permettent à la personne de **faire connaître ses** choix sur les traitements de fin de vie, comme la nutrition artificielle, la ventilation artificielle, la réanimation, la sédation, etc.",
+                            "text": "Les directives anticipées permettent à la personne de **faire connaître ses choix** sur les traitements de fin de vie, comme la nutrition artificielle, la ventilation artificielle, la réanimation, la sédation, etc.",
                             "imageUrl": "/courses/S1/anticipees-1.png"
                         },
                         {
@@ -337,10 +338,12 @@
             "blocks": [
                 {
                     "id": "s1-sedation",
+                    "verticalAlign": "center",
+                    "textStyle": { "align": "justify" },
                     "alt": "Un patient endormi, un soleil couchant derrière lui",
                     "size": "image",
                     "type": "image-text",
-                    "content": "La loi française n’autorise pas l’euthanasie, mais **la loi permet la sédation profonde et continue jusqu’au décès**.\nCela signifie que si les traitements ne peuvent plus soulager le patient, il est possible de l’endormir profondément pour qu’il ne ressente plus la douleur, et ce jusqu’à la fin.",
+                    "content": "La loi française n’autorise pas l’euthanasie, mais **elle permet la sédation profonde et continue jusqu’au décès**.\nCela signifie que si les traitements ne peuvent plus soulager le patient, il est possible de l’endormir profondément pour qu’il ne ressente plus la douleur, et ce jusqu’à la fin.",
                     "imageUrl": "/courses/S1/sedation.png"
                 },
                 {
@@ -357,15 +360,14 @@
             "title": "Conclusion",
             "blocks": [
                 {
-                    "id": "s1-conclusion-image",
-                    "alt": "Un patient entouré de deux proches et d’une soignante qui arrosent une plante",
-                    "url": "/courses/S1/conclusion.png",
-                    "type": "image"
-                },
-                {
                     "id": "s1-conclusion",
-                    "type": "text",
-                    "content": "La désignation d’une personne de confiance ainsi que la rédaction de directives anticipées permettent :\n• **de faire respecter vos choix** ;\n• **d’anticiper certaines situations** médicales complexes ;\n• **de rassurer** vos proches ;\n• **d’aider les professionnels** de santé à prendre des décisions conformes à vos souhaits.",
+                    "type": "image-text",
+                    "size": "image",
+                    "imageSide": "left",
+                    "verticalAlign": "center",
+                    "alt": "Un patient entouré de deux proches et d’une soignante qui arrosent une plante",
+                    "imageUrl": "/courses/S1/conclusion.png",
+                    "content": "La désignation d’une personne de confiance ainsi que la rédaction de directives anticipées permettent :\n– **de faire respecter vos choix** ;\n– **d’anticiper certaines situations** médicales complexes ;\n– **de rassurer** vos proches ;\n– **d’aider les professionnels** de santé à prendre des décisions conformes à vos souhaits.",
                     "textStyle": {
                         "align": "left"
                     }

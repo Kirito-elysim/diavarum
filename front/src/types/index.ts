@@ -14,7 +14,7 @@ export interface CourseTextStyle {
   size?: 20 | 25 | 40;
   color?: '#004138' | '#1C5335' | '#E86825';
   weight?: 'regular' | 'bold';
-  align?: 'left' | 'center';
+  align?: 'left' | 'center' | 'justify';
 }
 
 export interface TextBlock {
@@ -59,6 +59,7 @@ export interface ImageTextBlock {
   /** picto : petite icône ; image : vignette plus grande */
   size: 'picto' | 'image';
   imageSide?: 'left' | 'right';
+  verticalAlign?: 'center';
 }
 
 export type QuestionType = 'qcu' | 'qcm' | 'drag-drop';
@@ -123,6 +124,7 @@ export interface CarouselBlock {
   id: string;
   question?: string;
   imageHeight?: 'large';
+  captionAlign?: 'left';
   slides: CarouselSlide[];
 }
 

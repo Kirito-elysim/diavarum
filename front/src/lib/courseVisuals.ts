@@ -2,7 +2,7 @@ import {
   Activity, AlertTriangle, Apple, Bed, BookOpen, CircleAlert, Clock, Droplet, Footprints, Hand, Heart, HeartPulse,
   Info, Lightbulb, Pill, ShieldCheck, Star, Stethoscope, Syringe, Target, Thermometer, Utensils, type LucideIcon,
 } from 'lucide-react';
-import type { InfoCardBlock, InfoCardVariant, ModulePage } from '../types';
+import type { ContentBlock, InfoCardBlock, InfoCardVariant, ModulePage } from '../types';
 
 /** Consignes de l'encadré au doigt, utilisées tant que l'auteur ne les a pas personnalisées */
 export const DEFAULT_INSTRUCTIONS = {
@@ -34,8 +34,9 @@ export function pageHeaderMeta(page: ModulePage): { icon: boolean; instruction?:
   for (const block of page.blocks) {
     switch (block.type) {
       case 'quiz':
-        if (block.questionType === 'qcu') return { icon, instruction: 'Choisissez la réponse qui vous paraît exacte.' };
-        if (block.questionType === 'qcm') return { icon, instruction: 'Choisissez toutes les réponses qui vous paraissent exactes.' };
+        if (block.questionType === 'qcu' || block.questionType === 'qcm') {
+          return { icon, instruction: 'Touchez la ou les réponses qui vous paraissent exactes.' };
+        }
         return { icon, instruction: 'Associez chaque élément à son origine.' };
       case 'true-false':
         return { icon, instruction: 'Indiquez si chaque affirmation est vraie ou fausse.' };
@@ -87,11 +88,16 @@ export const PICTOS: Record<string, { label: string; icon: LucideIcon }> = {
 /** Taille d'un repère, en proportion de la largeur de l'image : `size` est exprimée pour une image de 720 px, de sorte que l'éditeur et la tablette donnent le même rendu */
 export const markerWidth = (size = 48) => `${size / 720 * 100}%`;
 
-/** Page réduite à des cartes à retourner de hauteur automatique : elles occupent toute la place disponible */
-export const pageFills = (blocks: { type: string; cardHeight?: number }[]) => blocks.length === 1 && blocks[0].type === 'flip-cards' && !blocks[0].cardHeight;
+/** Activité seule qui occupe toute la hauteur disponible. */
+export function pageFills(blocks: ContentBlock[]): boolean {
+  if (blocks.length !== 1) return false;
+  const [block] = blocks;
+  return (block.type === 'flip-cards' && !block.cardHeight)
+    || (block.type === 'carousel' && block.imageHeight === 'large');
+}
 
 /** Page réduite à une image (ou un picto) accompagnée de son texte : l'activité est centrée au milieu de la page */
 export const pageCenters = (blocks: { type: string }[]) => blocks.length === 1 && blocks[0].type === 'image-text';
 
 /** Pages dont les blocs s'étirent sur toute la hauteur (cartes) ou se centrent (image + texte) : le conteneur doit être une colonne flex */
-export const pageStretches = (blocks: { type: string; cardHeight?: number }[]) => pageFills(blocks) || pageCenters(blocks);
+export const pageStretches = (blocks: ContentBlock[]) => pageFills(blocks) || pageCenters(blocks);

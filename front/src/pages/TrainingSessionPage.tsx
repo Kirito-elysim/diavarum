@@ -344,7 +344,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
 function ImageTextView({ block }: { block: ImageTextBlock }) {
   const picto = block.size === 'picto';
   return (
-    <div className={cn('course-image-text flex items-start gap-10', !picto && 'flex-col sm:flex-row', block.imageSide === 'right' && 'sm:flex-row-reverse')}>
+    <div className={cn('course-image-text flex gap-10', block.verticalAlign === 'center' ? 'items-center' : 'items-start', !picto && 'flex-col sm:flex-row', block.imageSide === 'right' && 'sm:flex-row-reverse')}>
       {block.imageUrl ? <img src={block.imageUrl} alt={block.alt} loading="lazy" className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full sm:w-[48%] rounded-3xl')} /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
       <p className="min-w-0 flex-1 text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
     </div>
@@ -1034,7 +1034,7 @@ export function BlockCard({
   if (block.type === 'word-search')
     return interactiveWrapper(<WordSearchView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
   if (block.type === 'carousel')
-    return interactiveWrapper(<CarouselView block={block} />);
+    return interactiveWrapper(<CarouselView block={block} fill={fill} />);
   if (block.type === 'yes-no-path')
     return interactiveWrapper(<YesNoPathView block={block} onAnswer={(isCorrect, score) => onQuizAnswer(block.id, isCorrect, score)} disabled={!!quizAnswers[block.id]} />);
 

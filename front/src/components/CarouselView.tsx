@@ -7,7 +7,7 @@ import { CourseText } from './CourseText';
  * Carrousel : images défilantes avec leur texte (interactivité prévue par le cahier des charges).
  * Glisser horizontalement fait défiler les images sans changer de page du cours.
  */
-export function CarouselView({ block }: { block: CarouselBlock }) {
+export function CarouselView({ block, fill = false }: { block: CarouselBlock; fill?: boolean }) {
   const [index, setIndex] = useState(0);
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
@@ -21,13 +21,13 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
   if (!slide) return null;
 
   return (
-    <div className="space-y-4">
+    <div className={fill ? 'flex flex-1 flex-col gap-4' : 'space-y-4'}>
       {block.question && <p className="course-copy font-normal text-[#004138] leading-snug whitespace-pre-line [&_strong]:font-bold"><CourseText text={block.question} /></p>}
 
       {/* Le geste horizontal reste dans le carrousel ; le défilement vertical reste disponible. */}
       <div
-        className="relative flex items-center justify-center overflow-hidden rounded-2xl"
-        style={{ height: imageHeight, touchAction: 'pan-y' }}
+        className={`relative flex items-center justify-center overflow-hidden rounded-2xl${fill ? ' min-h-36 flex-1' : ''}`}
+        style={{ height: fill ? undefined : imageHeight, touchAction: 'pan-y' }}
         data-course-gesture
         onTouchStart={(e) => { startX.current = e.touches[0].clientX; startY.current = e.touches[0].clientY; }}
         onTouchCancel={() => { startX.current = null; startY.current = null; }}
@@ -38,7 +38,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
           startX.current = null;
         }}
       >
-        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className="max-h-full max-w-full rounded-2xl fade-scale-in" draggable={false} />
+        <img key={slide.id} src={slide.imageUrl} alt={slide.alt} className={`max-h-full max-w-full rounded-2xl fade-scale-in${fill ? ' absolute inset-0 m-auto' : ''}`} draggable={false} />
         {index > 0 && (
           <button onClick={() => go(index - 1)} aria-label="Image précédente" className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 text-[#E86825] flex items-center justify-center touch-manipulation">
             <ChevronLeft className="w-11 h-11" />
@@ -51,7 +51,7 @@ export function CarouselView({ block }: { block: CarouselBlock }) {
         )}
       </div>
 
-      <p key={`t-${slide.id}`} className="rounded-2xl px-5 py-4 text-[25px] text-[#004138] leading-snug text-center min-h-[3.5rem] whitespace-pre-line fade-scale-in" style={{ border: '3px solid #1C5335' }}><CourseText text={slide.text} /></p>
+      <p key={`t-${slide.id}`} className={`rounded-2xl px-5 py-4 text-[25px] text-[#004138] leading-snug min-h-[3.5rem] whitespace-pre-line fade-scale-in ${block.captionAlign === 'left' ? 'text-left' : 'text-center'}`} style={{ border: '3px solid #1C5335' }}><CourseText text={slide.text} /></p>
 
     </div>
   );
