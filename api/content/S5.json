@@ -1,0 +1,631 @@
+{
+  "code": "S5",
+  "title": "Traitements de suppléance rénale : Hémodialyse à domicile - Dialyse péritonéale - Greffe",
+  "description": "Identifier les principales caractéristiques de l’hémodialyse à domicile, de la dialyse péritonéale et de la transplantation rénale.\nExprimer les avantages et les contraintes de chaque méthode en fonction de sa situation personnelle.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut citer les différences principales entre l’hémodialyse à domicile et dialyse péritonéale"
+  ],
+  "content": [
+    {
+      "id": "s5-p01",
+      "title": "Rappels",
+      "blocks": [
+        {
+          "id": "s5-p01-b1",
+          "alt": "Illustration sur la fonction rénale",
+          "size": "image",
+          "type": "image-text",
+          "content": "Lorsque les reins ne parviennent plus à assurer correctement leurs fonctions, **certains déchets, toxines et excès d’eau s’accumulent** dans l’organisme et **doivent être éliminés**.",
+          "imageUrl": "/courses/S5/p1.png",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageMaxHeight": 380
+        }
+      ]
+    },
+    {
+      "id": "s5-p02",
+      "title": "À quoi servent les traitements de suppléance rénale ?",
+      "blocks": [
+        {
+          "id": "s5-p02-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Maintenir une bonne qualité de vie",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Équilibrer les échanges électrolytiques de l’organisme (potassium, sodium…)",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Épurer le sang",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Éliminer l’excès de liquide",
+              "isCorrect": false
+            },
+            {
+              "id": "c4",
+              "label": "Limiter les infections",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Les traitements de suppléance rénale ont pour but de :**",
+          "questionType": "qcm"
+        }
+      ]
+    },
+    {
+      "id": "s5-p03",
+      "title": "Quelles sont les méthodes de suppléance rénale ?",
+      "blocks": [
+        {
+          "id": "s5-p03-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "L’hémodialyse en centre",
+              "text": "L’hémodialyse en centre",
+              "imageUrl": "/courses/S5/p3-carrousel-img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "L’hémodialyse à domicile",
+              "text": "L’hémodialyse à domicile",
+              "imageUrl": "/courses/S5/p3-carrousel-img2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "La dialyse péritonéale",
+              "text": "La dialyse péritonéale",
+              "imageUrl": "/courses/S5/p3-carrousel-img3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "La greffe, dite aussi transplantation rénale",
+              "text": "La greffe, dite aussi transplantation rénale",
+              "imageUrl": "/courses/S5/p3-carrousel-img4.png"
+            }
+          ],
+          "question": "**Les différentes méthodes de suppléance rénale sont :**",
+          "captionAlign": "left"
+        }
+      ]
+    },
+    {
+      "id": "s5-p04",
+      "title": "Que penser du choix d’un autre patient ?",
+      "blocks": [
+        {
+          "id": "s5-p04-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Il a sûrement raison, puisqu’il a testé les deux méthodes.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "C’est difficile d’en juger, car je ne connais pas parfaitement sa situation.",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Il a sûrement tort, car l’hémodialyse en centre est toujours mieux encadrée.",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Si un patient hémodialysé de mon centre part en dialyse péritonéale à domicile et me dit que c’est bien mieux que l’hémodialyse, que dois-je en penser ?**",
+          "questionType": "qcu"
+        }
+      ]
+    },
+    {
+      "id": "s5-p05",
+      "title": "Comment est choisie la technique de suppléance rénale ?",
+      "blocks": [
+        {
+          "id": "s5-p05-b1",
+          "alt": "Échange sur le choix du traitement",
+          "size": "image",
+          "type": "image-text",
+          "content": "L’équipe soignante accompagne chaque patient dans **le choix de la solution la plus adaptée** à :\n– son état de santé ;\n– son autonomie ;\n– ses habitudes de vie ;\n– son environnement familial ;\n– ses projets personnels et professionnels.",
+          "imageUrl": "/courses/S5/p5.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        },
+        {
+          "id": "s5-p05-info",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Il n’existe **ni de bonne ni de mauvaise méthode de suppléance rénale**, uniquement une méthode qui correspond le mieux à ma situation.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s5-p06",
+      "title": "Hémodialyse à domicile 1/3",
+      "blocks": [
+        {
+          "id": "s5-p06-b1",
+          "alt": "Patient en hémodialyse à domicile",
+          "size": "image",
+          "type": "image-text",
+          "content": "Le **sang est prélevé** à partir de l’abord vasculaire (fistule artério-veineuse le plus souvent), puis **passe dans le générateur** de dialyse qui élimine les déchets et l’excès de liquide avant de retourner dans l’organisme.\n\nUne **surveillance tensionnelle rigoureuse** est nécessaire.",
+          "imageUrl": "/courses/S5/p6.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        },
+        {
+          "id": "s5-p06-info",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Les séances sont réalisées à domicile après une période de formation.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s5-p07",
+      "title": "Hémodialyse à domicile 2/3",
+      "blocks": [
+        {
+          "id": "s5-p07-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Grande autonomie",
+              "front": "AVANTAGE 1"
+            },
+            {
+              "id": "c2",
+              "back": "Possibilité d’adapter les horaires, la durée et la fréquence des séances",
+              "front": "AVANTAGE 2"
+            },
+            {
+              "id": "c3",
+              "back": "Implication active dans la prise en charge",
+              "front": "AVANTAGE 3"
+            },
+            {
+              "id": "c4",
+              "back": "Réduction des déplacements au centre",
+              "front": "AVANTAGE 4"
+            }
+          ],
+          "question": "**Quels sont les avantages de l’hémodialyse à domicile ?**"
+        }
+      ]
+    },
+    {
+      "id": "s5-p08",
+      "title": "Hémodialyse à domicile 3/3",
+      "blocks": [
+        {
+          "id": "s5-p08-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Formation spécifique nécessaire",
+              "front": "INCONVÉNIENT 1"
+            },
+            {
+              "id": "c2",
+              "back": "Gestion du matériel à domicile et espace de stockage nécessaire",
+              "front": "INCONVÉNIENT 2"
+            },
+            {
+              "id": "c3",
+              "back": "Responsabilisation importante du patient et parfois de l’entourage",
+              "front": "INCONVÉNIENT 3"
+            },
+            {
+              "id": "c4",
+              "back": "Respect rigoureux des consignes d’hygiène et de sécurité (risque de malaise)",
+              "front": "INCONVÉNIENT 4"
+            }
+          ],
+          "question": "**Quels sont les inconvénients de l’hémodialyse à domicile ?**"
+        }
+      ]
+    },
+    {
+      "id": "s5-p09",
+      "title": "Dialyse péritonéale 1/3",
+      "blocks": [
+        {
+          "id": "s5-p09-b1",
+          "alt": "Illustration du fonctionnement de la dialyse péritonéale",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 59,
+              "y": 28,
+              "id": "r1",
+              "label": "1",
+              "description": "La dialyse péritonéale utilise le péritoine, une membrane naturelle située dans l’abdomen."
+            },
+            {
+              "x": 37,
+              "y": 61,
+              "id": "r2",
+              "label": "2",
+              "description": "Un liquide de dialyse est introduit à l’intérieur du péritoine grâce à un cathéter permanent."
+            },
+            {
+              "x": 71,
+              "y": 60,
+              "id": "r3",
+              "label": "3",
+              "description": "Ce liquide récupère les déchets et l’excès d’eau puis il est évacué régulièrement par le cathéter."
+            }
+          ],
+          "imageUrl": "/courses/S5/p8.png",
+          "question": "Comment fonctionne la dialyse péritonéale ?",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        },
+        {
+          "id": "s5-p09-b2",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Il existe deux méthodes de dialyse péritonéale : la DPA (dialyse péritonéale automatisée) et la DPCA (dialyse péritonéale continue ambulatoire).",
+          "variant": "important"
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s5-p10",
+      "title": "DPCA — Dialyse péritonéale continue ambulatoire",
+      "blocks": [
+        {
+          "id": "s5-p10-b1",
+          "alt": "Illustration de la dialyse péritonéale continue ambulatoire",
+          "size": "image",
+          "type": "image-text",
+          "content": "La **DPCA** présente les modalités suivantes :\n– elle est réalisée par des **échanges manuels** ;\n– ces échanges **ont lieu plusieurs fois par jour** ;\n– entre les échanges, le patient bénéficie d’**une grande liberté**.",
+          "imageUrl": "/courses/S5/p9.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        }
+      ]
+    },
+    {
+      "id": "s5-p11",
+      "title": "DPA — Dialyse péritonéale automatisée",
+      "blocks": [
+        {
+          "id": "s5-p11-b1",
+          "alt": "Illustration de la dialyse péritonéale automatisée",
+          "size": "image",
+          "type": "image-text",
+          "content": "La DPA présente les modalités suivantes :\n– la dialyse est **réalisée la nuit** grâce à un **cycleur** ;\n– le patient **dort pendant le traitement** ;\n– il peut généralement **profiter de ses journées**, sans avoir à réaliser de dialyse.",
+          "imageUrl": "/courses/S5/p10.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        }
+      ]
+    },
+    {
+      "id": "s5-p12",
+      "title": "Dialyse péritonéale 2/3",
+      "blocks": [
+        {
+          "id": "s5-p12-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Technique réalisée à domicile",
+              "front": "AVANTAGE 1"
+            },
+            {
+              "id": "c2",
+              "back": "Préservation de l’autonomie, maintien des activités professionnelles et sociales",
+              "front": "AVANTAGE 2"
+            },
+            {
+              "id": "c3",
+              "back": "Traitement continu et souvent bien toléré",
+              "front": "AVANTAGE 3"
+            },
+            {
+              "id": "c4",
+              "back": "Préservation plus longue de la fonction rénale résiduelle chez certains patients",
+              "front": "AVANTAGE 4"
+            }
+          ],
+          "question": "Quels sont les avantages de la dialyse péritonéale ?"
+        }
+      ]
+    },
+    {
+      "id": "s5-p13",
+      "title": "Dialyse péritonéale 3/3",
+      "blocks": [
+        {
+          "id": "s5-p13-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Soins et séances quotidiens",
+              "front": "INCONVÉNIENT 1"
+            },
+            {
+              "id": "c2",
+              "back": "Respect strict des règles d’hygiène : risque d’infection du péritoine (péritonite)",
+              "front": "INCONVÉNIENT 2"
+            },
+            {
+              "id": "c3",
+              "back": "Présence permanente d’un cathéter abdominal",
+              "front": "INCONVÉNIENT 3"
+            },
+            {
+              "id": "c4",
+              "back": "Nécessité d’un suivi médical régulier",
+              "front": "INCONVÉNIENT 4"
+            }
+          ],
+          "question": "Quels sont les inconvénients de la dialyse péritonéale ?"
+        }
+      ]
+    },
+    {
+      "id": "s5-p14",
+      "title": "Transplantation rénale 1/4",
+      "blocks": [
+        {
+          "id": "s5-p14-b1",
+          "alt": "Schéma du rein transplanté",
+          "size": "image",
+          "type": "image-text",
+          "content": "La transplantation consiste à **remplacer la fonction rénale défaillante par un rein sain** provenant :\n– d’un **donneur décédé** ;\n– ou d’un **donneur vivant**, lorsqu’il est compatible.",
+          "imageUrl": "/courses/S5/p13.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        },
+        {
+          "id": "s5-p14-b2",
+          "type": "info-card",
+          "title": "Important",
+          "content": "La greffe ne guérit pas la maladie rénale mais permet de remplacer la fonction des reins de façon plus physiologique.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s5-p15",
+      "title": "Évaluation avant une transplantation",
+      "blocks": [
+        {
+          "id": "s5-p15-b1",
+          "alt": "Évaluation médicale avant une transplantation",
+          "size": "image",
+          "type": "image-text",
+          "content": "Une évaluation médicale est réalisée pour vérifier :\n– l’**absence de contre-indication** majeure ;\n– l’état **cardiovasculaire** ;\n– l’**absence d’infection ou de cancer** évolutif ;\n– la **capacité à suivre le traitement** après la greffe.",
+          "imageUrl": "/courses/S5/p14.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        },
+        {
+          "id": "s5-p15-b2",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Tous les patients ne sont pas éligibles à la transplantation rénale et les délais d’attente pour une greffe peuvent être longs.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s5-p16",
+      "title": "Transplantation rénale 2/4",
+      "blocks": [
+        {
+          "id": "s5-p16-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Amélioration de la qualité de vie et possible réinsertion professionnelle",
+              "front": "AVANTAGE 1"
+            },
+            {
+              "id": "c2",
+              "back": "Suppression des séances de dialyse",
+              "front": "AVANTAGE 2"
+            },
+            {
+              "id": "c3",
+              "back": "Davantage de liberté dans l’organisation du quotidien",
+              "front": "AVANTAGE 3"
+            },
+            {
+              "id": "c4",
+              "back": "Amélioration fréquente de l’état nutritionnel, physique et mental",
+              "front": "AVANTAGE 4"
+            }
+          ],
+          "question": "Quels sont les avantages de la greffe rénale ?"
+        }
+      ]
+    },
+    {
+      "id": "s5-p17",
+      "title": "Transplantation rénale 3/4",
+      "blocks": [
+        {
+          "id": "s5-p17-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Délai d’attente variable",
+              "front": "INCONVÉNIENT 1"
+            },
+            {
+              "id": "c2",
+              "back": "Intervention chirurgicale lourde",
+              "front": "INCONVÉNIENT 2"
+            },
+            {
+              "id": "c3",
+              "back": "Traitement immunosuppresseur à vie et surveillance médicale régulière",
+              "front": "INCONVÉNIENT 3"
+            },
+            {
+              "id": "c4",
+              "back": "Risque de rejet du greffon",
+              "front": "INCONVÉNIENT 4"
+            }
+          ],
+          "question": "Quels sont les inconvénients de la greffe rénale ?"
+        }
+      ]
+    },
+    {
+      "id": "s5-p18",
+      "title": "Transplantation rénale 4/4",
+      "blocks": [
+        {
+          "id": "s5-p18-b1",
+          "alt": "Illustration de la transplantation rénale",
+          "size": "image",
+          "type": "image-text",
+          "content": "La greffe est souvent considérée comme le traitement **offrant les meilleurs résultats à long terme**, lorsqu’elle est possible.",
+          "imageUrl": "/courses/S5/p17.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        }
+      ]
+    },
+    {
+      "id": "s5-p20",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s5-p20-b1",
+          "type": "quiz",
+          "options": [
+            {
+              "id": "c0",
+              "label": "L’une nécessite une intervention chirurgicale et pas l’autre",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "L’une est réalisée à domicile et l’autre en centre de dialyse",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "L’une dialyse par le sang et l’autre par le péritoine",
+              "isCorrect": true
+            }
+          ],
+          "question": "Quelle est la principale différence entre l’hémodialyse à domicile et la dialyse péritonéale ?",
+          "questionType": "qcm"
+        }
+      ]
+    },
+    {
+      "id": "s5-p21",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s5-p21-b1",
+          "type": "categorize",
+          "items": [
+            {
+              "id": "e1",
+              "label": "Gestion du temps",
+              "category": "AVANTAGES"
+            },
+            {
+              "id": "e2",
+              "label": "Espace mobilisé pour les soins",
+              "category": "INCONVÉNIENTS"
+            },
+            {
+              "id": "e3",
+              "label": "Risque de malaise hors présence soignante",
+              "category": "INCONVÉNIENTS"
+            },
+            {
+              "id": "e4",
+              "label": "Moins de transports",
+              "category": "AVANTAGES"
+            },
+            {
+              "id": "e5",
+              "label": "Risque infectieux accru",
+              "category": "INCONVÉNIENTS"
+            },
+            {
+              "id": "e6",
+              "label": "Autonomie",
+              "category": "AVANTAGES"
+            },
+            {
+              "id": "e7",
+              "label": "Espace de stockage nécessaire",
+              "category": "INCONVÉNIENTS"
+            },
+            {
+              "id": "e8",
+              "label": "Maintien facilité des activités",
+              "category": "AVANTAGES"
+            }
+          ],
+          "question": "Quels sont les avantages et les inconvénients d’un traitement de dialyse à domicile ?",
+          "categories": [
+            "AVANTAGES",
+            "INCONVÉNIENTS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5-p22",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s5-p22-b1",
+          "type": "quiz",
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ],
+          "question": "Une infection du cathéter de dialyse péritonéale est potentiellement très grave.",
+          "questionType": "qcu"
+        }
+      ]
+    }
+  ]
+}

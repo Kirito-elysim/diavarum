@@ -101,4 +101,4 @@ export function pageFills(blocks: ContentBlock[]): boolean {
 export const pageCenters = (blocks: { type: string }[]) => blocks.length === 1 && blocks[0].type === 'image-text';
 
 /** Pages dont les blocs s'étirent sur toute la hauteur (cartes) ou se centrent (image + texte) : le conteneur doit être une colonne flex */
-export const pageStretches = (page: ModulePage) => page.layout === 'spread' || pageFills(page.blocks) || pageCenters(page.blocks);
+export const pageStretches = (page: ModulePage) => (page.layout === 'spread' || page.layout === 'center') || pageFills(page.blocks) || pageCenters(page.blocks);

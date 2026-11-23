@@ -554,6 +554,15 @@ Ajouter les nouvelles entrées à la suite. Utiliser un identifiant stable, une 
 - Vérifications : typecheck, build, tests unitaires front et 13 tests PHP de contenu (24 assertions) réussis. Chrome, API simulée : 17 écrans et médias contrôlés à 1280 × 800 et 800 × 1280, vidéo lue avec commandes natives et transcription, carrousels de quatre images parcourus, trois compétences affichées avant lancement, second essai du classement réussi et avance débloquée. Un premier mesurage relevait le débordement transitoire de l'animation de navigation, contrôle repris une fois le rendu stabilisé.
 - Import S2 uniquement en base Docker de développement `diaverum`, 17 pages confirmées et export final identique au fichier du dépôt. Pas de déploiement. Suite : relecture utilisateur page par page, en reprenant à partir de la page 3, avec validation éditoriale et recette sur tablette physique encore à obtenir. Aucun critère complet du lot 3 à cocher.
 
+## J-068 — 18 novembre 2026 — Intégration des cours S3, S4 et S5 (lot 3)
+
+- Demande utilisateur : intégrer également les cours 3, 4 et 5. Sources : storyboards et graphismes des trois séances dans `doc/integration/`. Reprendre le gabarit partagé et les règles de consigne et de notation déjà validées.
+- Avant import, inventaire et sauvegarde JSON locale des trois entrées. S3 et S5 n'avaient aucun écran. S4 contenait trois écrans génériques de démonstration, sauvegardés dans `/tmp/diaverum-before-J068-S4.json` avant remplacement. La requête d'inventaire initiale mal citée a été rejouée en lecture seule et a confirmé la base locale `diaverum`.
+- Ajout de `api/content/S3.json` (20 écrans, 3 compétences), `S4.json` (13 écrans, 3 compétences) et `S5.json` (24 écrans, 1 compétence) et de 45 médias sous `front/public/courses/S3`, `S4` et `S5`. Titres, descriptions, durées et statut du catalogue conservés. S3 précise la durée prescrite dans une compétence conformément au storyboard. Repères positionnés sur les images après inspection.
+- Choix à relire : les numéros contradictoires des storyboards S3 et S5 ont été normalisés dans l'ordre des diapositives en conservant les exercices distincts. La question orale Oui/Non de S5 est non notée, l'appréciation relève de l'IDE. Dans l'exercice S3 sur les symptômes, le classement porte sur les signes explicitement cités dans l'écran d'apprentissage. La catégorie complémentaire « Autres signes » évite de qualifier de bénins des symptômes et la grille du storyboard est à rapprocher du texte avant validation éditoriale, notamment pour les nausées. Les six illustrations d'« Après la dialyse : que surveiller ? » ne figurent pas parmi les graphismes S3 reçus. Les six textes sont intégrés en cartes à retourner, composition provisoire à revoir si les images sont fournies.
+- Vérifications : build front, présence des médias, diff et 16 tests PHP de contenu (36 assertions) réussis. Le premier aperçu utilisait un build antérieur qui ne contenait pas les nouvelles images. Après rebuild, 57 écrans parcourus dans chacune des deux orientations Chromium (1280 × 800 et 800 × 1280), carrousels parcourus, médias décodés et légendes ouvertes avec API simulée. Import uniquement des trois cours en base locale, puis export de contrôle identique aux trois JSON sources.
+- Suite : relecture utilisateur page par page de S2 à S5 et recette sur tablette physique avant publication. Aucun déploiement distant ni critère complet du lot 3 à cocher.
+
 ## J-069 — 18 novembre 2026 — Relecture de S2 pages 1 et 2 (lot 3)
 
 - Demande utilisateur : mettre l'affirmation de la page 1 en gras et faire tenir la page 2 sur un seul écran, avec des fenêtres pour les légendes si nécessaire.
@@ -620,3 +629,351 @@ Ajouter les nouvelles entrées à la suite. Utiliser un identifiant stable, une 
 
 - Demande utilisateur : créer le commit local du cours 2. Périmètre : contenu S2, vidéo, gabarit partagé, éditeur, validation et recette liées aux interventions J-067 et J-069 à J-078.
 - Vérifications : index initialement vide, diff sans erreur, 16 écrans et médias référencés présents. Les tests de rendu et de contenu sont détaillés dans les entrées précédentes. Les fichiers et notes d'intégration S3 à S5 (J-068) et la note J-034 restent dans le dossier de travail. Aucun déploiement.
+
+## J-080 — 18 novembre 2026 — Relecture de S3 pages 1 à 4 (lot 3)
+
+- Demande utilisateur : encadrés Important au-dessus des images aux pages 1 et 3, accompagnement de l'équipe déplacé dans le texte à droite à la page 1, mise en gras conforme au storyboard, introduction du carrousel en gras à la page 2, puces carrées à la page 3 et légendes en fenêtres à la page 4.
+- `api/content/S3.json` réutilise les blocs et variantes du lecteur : encadrés Important centrés au-dessus de l'image et texte à droite et centré verticalement en p01 et p03, gras de la diapositive 2 en p01, consigne en gras p02 et deux puces carrées p03. `legendDialog` est activé uniquement sur p04. Le texte sur l'accompagnement de l'équipe fait désormais partie du paragraphe de p01. Application ciblée des quatre pages dans la base Docker locale `diaverum` après comparaison de l'état existant, une ligne confirmée et 20 écrans conservés.
+- Diff et 7 tests PHP de contenu (27 assertions) réussis. Chrome avec API simulée : gras, puces et fenêtres vérifiés, p01 et p03 sans défilement en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Comportement en ligne de la légende de p05 également contrôlé. Aucun déploiement. Poursuivre la relecture de S3.
+
+## J-081 — 18 novembre 2026 — Largeur de l'image en S3 page 1 (lot 3)
+
+- Demande utilisateur : faire occuper au moins la moitié de la largeur de l'écran par l'image de la page 1, si le rendu le permet.
+- `api/content/S3.json` remplace le plafond de 340 px de p01 par l'option `imageWidth: half-screen`, déclarée dans `types/index.ts` et appliquée dans `TrainingSessionPage.tsx`. En aperçu, le plafond relatif de 60 % du bloc laisse de la place au texte si la fenêtre est plus étroite que l'écran. La correction a été appliquée uniquement à p01 dans la base Docker locale `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chrome avec API simulée : image mesurée à 640, 400, 512 et 600 px sur les quatre tailles, exactement la moitié de la largeur, texte à droite et centré en hauteur. Le premier test sans défilement a signalé un dépassement. Mesure finale : aucun en portrait, 21 à 53 px de défilement en paysage avec l'indication du premier écran. Page 3 vérifiée à sa largeur précédente de 320 px. Aucun déploiement. Poursuivre la relecture de S3.
+
+## J-082 — 18 novembre 2026 — Relecture de S3 pages 2 à 4 (lot 3)
+
+- Demande utilisateur : centrer et resserrer l'encadré p02, agrandir l'image de p03 jusqu'à la moitié de l'écran si possible, et mettre l'introduction de p04 en gras.
+- `api/content/S3.json` utilise les variantes existantes. P02 : encadré Objectif conservé conformément au storyboard, centré avec marges internes compactes et icône de 80 px, sans marge ajoutée après le dernier bloc. P03 : image à 50 % de la largeur de l'écran aux tailles testées. P04 : phrase intégralement en gras. Application ciblée des trois pages en base Docker de développement `diaverum` après comparaison de l'état initial, une ligne confirmée.
+- Diff et 7 tests PHP de contenu (27 assertions) réussis. Chrome avec API simulée : alignement et taille du pictogramme p02, largeur et centrage p03, gras et fenêtres p04 vérifiés en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. L'encadré utilise la largeur disponible en portrait lorsque le texte s'enroule. P03 tient en portrait et présente de 4 à 36 px de défilement selon le paysage testé. Aucun déploiement. Poursuivre la relecture de S3.
+
+## J-083 — 18 novembre 2026 — Image au-dessus de la navigation en S3 page 1 (lot 3)
+
+- Demande utilisateur : remonter légèrement l'image sur la page 1 pour qu'elle reste entièrement au-dessus de « Précédent » et « Page suivante ».
+- `api/content/S3.json` réduit la marge sous l'encadré et désactive l'indication de geste sur la seule p01 pour dégager la hauteur nécessaire. Le champ facultatif `showSwipeHint` dans `types/index.ts` et `TrainingSessionPage.tsx` laisse le geste et les boutons disponibles. Mise à jour ciblée en base Docker locale `diaverum` après comparaison de l'état existant, une ligne confirmée.
+- Build et diff réussis. Chrome avec API simulée : image toujours à 50 % de la largeur, au-dessus de la navigation et page sans défilement en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800. Pages 2 à 5 parcourues et conservées. Aucun déploiement. Poursuivre la relecture de S3.
+
+## J-084 — 20 novembre 2026 — Relecture de S3 pages 3 à 8 (lot 3)
+
+- Demande utilisateur : espacer les puces p03, rétablir les légendes sous l'image p04, modifier les encadrés et textes p05 à p07, et utiliser des fenêtres sans titre et des repères plus petits p08.
+- S3 p03 : ligne vide entre les deux puces. P04 : légendes intégrées rétablies, remplace J-080. P05 : introduction en gras, encadré Important en premier et fenêtres avec le texte seul. P06 : encadré en premier, phrases demandées rétablies et quatre puces carrées. P07 : encadré compact centré avec icône standard, illustration limitée à 170 px et texte à 20 px pour garder la ligne du coussin entière en portrait. P08 : repères ramenés de 48 à 32 px, fenêtres sans titre et passage demandé en gras.
+- Fichiers : `api/content/S3.json`, `types/index.ts` et `TrainingSessionPage.tsx` pour l'option facultative masquant le titre de fenêtre. Les autres fenêtres conservent leur titre.
+- Build et diff réussis. Chrome avec API simulée : six pages contrôlées à 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800, fenêtres ouvertes pour chaque repère p05/p08, absence du mot Repère, légende intégrée p04 et ligne du coussin sur une seule ligne p07. Le script initial avait perdu ses interceptions API, réparées avant reprise. Réduire seulement l'image à 110 px ne suffisait pas en portrait ; choix final image 170 px et texte 20 px. Import ciblé des six pages en base locale `diaverum`, une ligne confirmée, 20 pages conservées. Aucun déploiement. Poursuivre la relecture S3.
+
+## J-085 — 23 novembre 2026 — Retrait des puces dans les cours (lot 3)
+
+- Demande utilisateur : retrait de 10 px entre texte courant et lignes à puces, quel que soit le type de puce, avec contrôle de la page 1 de S3. Généralisation explicitement demandée. Les symboles existants sont conservés, notamment les carrés de S3 page 3.
+- `front/src/components/CourseText.tsx` reconnaît les lignes précédées d'une puce ronde, carrée ou d'un tiret et ajoute un padding gauche de 10 px, avec le gras et les sauts de ligne conservés. Rendu partagé par le lecteur et les aperçus.
+- Build et diff réussis. Chrome avec API simulée : quatre lignes à puces de S3 p01 mesurées à 10 px de padding en 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800, passages en gras conservés. Aucun changement de contenu ou de base. Recette physique à poursuivre. Aucun déploiement.
+
+## J-086 — 23 novembre 2026 — Puces carrées de S3 page 1 (lot 3)
+
+- Correction demandée par l'utilisateur : remplacer les tirets de p01 par des puces carrées en conservant le retrait de 10 px.
+- `api/content/S3.json` remplace les quatre tirets de s3-p01-b1 par « ▪ ». Autres pages comparées à l'état initial et identiques. Mise à jour ciblée de p01 en base Docker locale `diaverum`, une ligne confirmée.
+- Diff et contrôle Chromium avec API simulée réussis : quatre carrés, retrait de 10 px et gras conservés aux quatre dimensions tablette habituelles. Préparation du script reprise après une erreur de syntaxe sed. Aucun déploiement.
+
+## J-087 — 23 novembre 2026 — Fenêtres de S3 page 4 (lot 3)
+
+- Demande utilisateur : afficher les légendes de p04 en fenêtres au clic, sans texte sous l'image. Remplace le choix de légendes intégrées de J-084.
+- Activation de `legendDialog` uniquement sur `s3-p04-b1` dans `api/content/S3.json`. Application ciblée de la page en base Docker de développement `diaverum` après comparaison de l'état initial, une ligne confirmée.
+- Diff et recette Chromium avec API simulée réussis : ouverture et fermeture des deux fenêtres, texte absent sous l'image, aux quatre dimensions tablette habituelles. Aucun changement du gabarit. Aucun déploiement.
+
+## J-088 — 23 novembre 2026 — Légendes au clic sans titres de repère (lot 3)
+
+- Demande utilisateur : généraliser l'affichage du seul texte explicatif lors d'un clic, sans titre « Repère x », en fenêtre ou en légende intégrée. La généralisation est explicite.
+- `TrainingSessionPage.tsx` retire les titres et les numéros dans les explications ouvertes des images à légendes, en fenêtres et sous l'image. Les boutons auxiliaires nommés « Repère x » montrent leur numéro seul. `InteractiveBlocks.tsx` applique le texte seul au bloc historique reveal-legends, en conservant le libellé si la description est vide.
+- Build et diff réussis. Chromium avec API simulée sur S3 p04 : deux fenêtres sans titre ni « Repère », descriptions présentes, ouverture/fermeture vérifiée aux quatre tailles tablette habituelles. Aucun changement de base. Les contrôles en fenêtre ont été rejoués, la variante historique reveal-legends a été vérifiée par lecture du rendu modifié et compilation. Aucun déploiement.
+
+## J-089 — 23 novembre 2026 — Liste imbriquée de S3 page 6 (lot 3)
+
+- Demande utilisateur : agrandir l'image de p06, présenter les deux phrases en puces carrées et les quatre conseils en sous-liste à tirets sous la deuxième phrase.
+- `api/content/S3.json` ajoute à s3-p06-b1 une liste structurée, deux li de premier niveau carrés et quatre li imbriqués à tirets sous la seconde phrase. Image maximale portée de 320 à 430 px. `types/index.ts` et `TrainingSessionPage.tsx` prennent en charge cette option sur les blocs qui la renseignent. La liste utilise des éléments ul/li et le retrait de 10 px.
+- Build et diff réussis. Chrome avec API simulée : hiérarchie des six li, symboles, retrait et largeur agrandie contrôlés aux quatre tailles tablette. Largeur mesurée de 346 à 430 px, sans débordement horizontal. Le script a été corrigé pour viser le li imbriqué puis attendre la fin de l'animation d'entrée avant mesure. Pas de contrôle d'absence de défilement vertical acquis sur cette intervention. Application ciblée de p06 dans la base locale `diaverum`, une ligne confirmée. Aucun déploiement.
+
+## J-090 — 23 novembre 2026 — Convention des colonnes de cours (lot 3)
+
+- Décision utilisateur validée : répartir l'espace en colonnes égales pour homogénéiser les visuels. Une colonne image et une colonne texte correspondent à 50 % / 50 %. Une colonne image et deux colonnes texte correspondent à 1/3 / 2/3.
+- Convention durable ajoutée à `AGENTS.md`, sur la largeur disponible du contenu en tenant compte des marges et de la gouttière. Les demandes ciblées restent limitées aux pages citées selon J-069. Aucun changement d'écran demandé dans cette intervention.
+- Vérification : relecture de la convention et diff sans erreur. Aucun test fonctionnel nécessaire pour cette note, aucun changement de base ni déploiement. Appliquer ces ratios aux prochaines retouches demandées.
+
+## J-091 — 23 novembre 2026 — Clarification sur la page à répartir en colonnes (lot 3)
+
+- Demande utilisateur : p05, une colonne image et une colonne texte, typographie standard et espacement normal du texte à droite.
+- Inspection : p05 de S3 est une image à légendes en fenêtres. Le texte à droite avec la liste imbriquée est p06. Clarification demandée sur l'écran visé avant modification, pour respecter le périmètre des pages imposé par l'utilisateur.
+- Aucun changement fonctionnel ou de base. Branche et état du dépôt contrôlés, modifications antérieures préservées. Reprendre sur la page confirmée avec un ratio 50 % / 50 % et les espacements standards.
+
+## J-092 — 23 novembre 2026 — Deux colonnes et espacement standard en S3 page 6 (lot 3)
+
+- Clarification utilisateur : modifier uniquement la page 6. Une colonne image et une colonne texte, soit 50 % / 50 % de l'espace disponible, et réduire les espacements de la liste tout en conservant la typographie.
+- Réalisation J-092 : `api/content/S3.json` active uniquement sur p06 les variantes `imageWidth: half` et `listSpacing: normal`. `types/index.ts` et `TrainingSessionPage.tsx` conservent les rendus précédents pour les blocs sans ces options. Les autres pages du JSON ont été comparées et sont identiques. Mise à jour ciblée de p06 en base Docker locale `diaverum`, une ligne confirmée.
+- Build et diff réussis. Chromium avec API simulée : colonnes mesurées à largeur égale aux quatre formats tablette, police 25 px et interligne standard 34,375 px, marges supplémentaires des li ramenées à zéro. Les puces carrées, sous-listes à tirets et retrait 10 px sont conservés. Aucun déploiement.
+
+## J-093 — 23 novembre 2026 — Préservation des pages validées (lot 3)
+
+- Instruction explicite utilisateur : une retouche doit porter uniquement sur la page demandée, sans modifier les pages déjà reprises ou validées, ni introduire un changement partagé qui altère leur mise en page, sauf demande explicite.
+- Règle durable inscrite dans `AGENTS.md` et rappelée dans `HANDOFF.md`. Les adaptations du gabarit doivent être facultatives, désactivées par défaut, et activées seulement sur la page concernée. En cas de page ambiguë, clarifier avant modification. Cette règle complète J-069 et précise J-090.
+- Relecture et diff vérifiés. Aucun changement fonctionnel additionnel, de base ou de déploiement. Reprendre la relecture sur la prochaine page désignée.
+
+## J-094 — 23 novembre 2026 — Interligne de S3 page 6 (lot 3)
+
+- Demande utilisateur : vérifier l'écart apparent de police et d'interligne sur p06 uniquement.
+- Diagnostic : la règle globale `p, li { line-height: 1.65 }` s'applique directement aux li et remplace l'interligne hérité du bloc, alors que les paragraphes du gabarit portent `leading-snug` (1,375). Taille déclarée du bloc : 25 px, famille héritée du thème du cours.
+- Correction limitée aux listes portant `listSpacing: normal`, utilisé uniquement par S3 p06 : interligne 1,375 appliqué aux li via `TrainingSessionPage.tsx`.
+- Build et diff réussis. Chromium avec API simulée : taille de 25 px et interligne 34,375 px identiques pour le texte et les deux niveaux de li aux quatre dimensions tablette, famille CSS identique. Colonnes toujours égales. Euclid n'est pas disponible dans les fichiers de police locaux ; le navigateur utilise la police de repli commune. Aucun changement de contenu ou de base, aucun déploiement.
+
+## J-095 — 23 novembre 2026 — Homogénéité visuelle et typographique (lot 3)
+
+- Décision utilisateur : conserver une présentation homogène, sauf demande spécifique. La correction d'interligne J-094 motive cette précision.
+- Règle durable ajoutée à `AGENTS.md` : mêmes polices, tailles, graisses, interlignes et espacements pour les éléments de même rôle, listes alignées sur le texte courant. Adapter d'abord la disposition et conserver les exceptions explicitement validées. La règle guide les interventions futures, sans élargir le périmètre aux autres pages.
+- Relecture et diff vérifiés. Aucun changement fonctionnel, de base ou déploiement. Reprendre la page suivante demandée.
+
+## J-096 — 23 novembre 2026 — S3 pages 7 et 8 (lot 3)
+
+- Demande utilisateur : deux colonnes égales image/texte à p07, et passages « prise en charge rapide » et « corriger la situation » en gras à p08.
+- `api/content/S3.json` utilise la variante existante `imageWidth: half` sur p07, avec la taille de texte déjà demandée et validée de 20 px conservée. P08 ajoute le gras sur les deux passages de l'encadré. Les autres pages ont été comparées à l'état initial et sont identiques.
+- Diff et vérification Chromium avec API simulée réussis : colonnes égales à 1280 × 800, 800 × 1280, 1024 × 768 et 1200 × 800, taille 20 px conservée, deux passages en gras présents sur p08. Mise à jour ciblée des deux pages dans la base Docker locale `diaverum`, une ligne confirmée, 20 pages conservées. Aucun déploiement.
+
+## J-097 — 23 novembre 2026 — Taille standard du texte en S3 page 7 (lot 3)
+
+- Retour utilisateur : texte de p07 trop petit. Il utilisait encore l'exception de 20 px introduite en J-084 pour tenir une phrase sur une ligne. Rétablissement à la taille standard de 25 px sur cette page uniquement, avec les colonnes égales conservées.
+- Suppression de la taille spécifique de 20 px sur le seul bloc s3-p07-b1 dans `api/content/S3.json`. Le texte reprend 25 px, le standard du gabarit. Application ciblée en base Docker locale `diaverum` après comparaison de l'état initial, une ligne confirmée.
+- Diff et contrôle Chromium avec API simulée réussis : police calculée à 25 px, colonnes toujours égales aux quatre dimensions tablette habituelles. Les autres pages n'ont pas été modifiées. Pas de contrôle de maintien de la phrase sur une seule ligne acquis avec cette taille standard. Aucun déploiement.
+
+## J-098 — 23 novembre 2026 — S3 pages 9 et 10 (lot 3)
+
+- Demande utilisateur : phrase introductive p09 en gras. P10, une colonne image et deux colonnes texte, encadré à droite avec le texte et vérification de la formulation.
+- `api/content/S3.json` met l'introduction de p09 en gras et place l'encadré de p10 dans la colonne de texte. Options facultatives `imageWidth: third` et `infoCard` dans `types/index.ts` et `TrainingSessionPage.tsx`, activées uniquement sur p10. Texte et quatre gras de p10 rapprochés de la diapositive 24 du storyboard : formulation identique, notamment toxines, surcharge hydrique, fatigue et complications.
+- Build et diff réussis. Chromium avec API simulée : p09 en gras, rapport des colonnes exactement 1:2 aux quatre dimensions tablette habituelles, encadré dans la colonne de droite sous le texte, gras vérifiés et pas de débordement horizontal. Autres pages comparées au JSON initial et seuls p09/p10 modifiés. Application ciblée des deux pages en base locale `diaverum`, une ligne confirmée, 20 pages conservées. Aucun déploiement.
+
+## J-099 — 23 novembre 2026 — Encadré et gras de S3 page 11 (lot 3)
+
+- Demande utilisateur : introduction « Pour limiter ce risque, il faut : » en gras et ajout de la phrase sur le risque d'hémorragie dans un encadré Important sous le carrousel.
+- `api/content/S3.json` met la phrase introductive du carrousel en gras et ajoute l'encadré Important après le carrousel. Le paragraphe sur la désinsertion est conservé et la phrase ajoutée correspond au storyboard (diapositives 25, 27 et 29).
+- Diff et contrôle Chromium avec API simulée réussis : gras, texte de l'encadré, position sous les images aux quatre tailles tablette et changement d'image vérifiés. Pas de garantie d'absence de défilement vertical sur cette composition. Application ciblée de p11 en base locale `diaverum`, une ligne confirmée. Aucun déploiement.
+
+## J-100 — 23 novembre 2026 — Encadré introductif de S3 page 11 (lot 3)
+
+- Demande utilisateur : placer le paragraphe « En cas de désinsertion d’une aiguille… » dans un bloc Important sur p11.
+- `api/content/S3.json` convertit s3-p11-b1 en encadré Important, même texte et position avant le carrousel. Application ciblée de p11 en base Docker locale `diaverum`, une ligne confirmée.
+- Diff et contrôle Chromium avec API simulée réussis : les deux encadrés sont présents, le paragraphe demandé figure dans le premier et le second reste sous le carrousel aux quatre dimensions tablette. Aucun déploiement.
+
+## J-101 — 23 novembre 2026 — Suppression de S3 page 12 (lot 3)
+
+- Demande utilisateur : supprimer « Après la dialyse : que surveiller ? », écran s3-p12 intégré provisoirement en cartes à retourner en J-068.
+- Suppression uniquement de s3-p12 dans `api/content/S3.json` et en base Docker locale `diaverum`, après contrôle de l'identifiant, du contenu et du nombre initial d'écrans. Une ligne mise à jour, 19 pages confirmées. Les huit exercices restent numérotés de 1/8 à 8/8.
+- Diff et 7 tests PHP de contenu réussis (27 assertions). Aucun changement du gabarit ni déploiement. Reprendre la relecture sur les exercices, désormais à partir de la page 12.
+
+## J-102 — 23 novembre 2026 — Suppression de S3 pages 14 à 17 (lot 3)
+
+- Demande utilisateur : supprimer les pages 14, 15, 16 et 17 selon la numérotation actuelle après J-101.
+- Suppression des écrans s3-p15, s3-p16, s3-p17 et s3-p18 dans `api/content/S3.json`. Les quatre exercices restants (s3-p13, s3-p14, s3-p19 et s3-p20) sont renumérotés de 1/4 à 4/4. Leurs réponses sont conservées, les écrans d'apprentissage restent identiques.
+- Diff et 7 tests PHP de contenu réussis (27 assertions). Application en base Docker locale `diaverum` après comparaison complète du cours à l'état initial, une ligne confirmée et 15 écrans restants. Aucun déploiement.
+
+## J-103 — 23 novembre 2026 — Gras de S3 page 12 (lot 3)
+
+- Demande utilisateur : mettre en gras toute l'affirmation sur la tenue vestimentaire et la pesée à la page 12 actuelle.
+- `api/content/S3.json` encadre uniquement le texte de la question s3-p13 (position 12) par les marqueurs de gras du gabarit. Réponses conservées. JSON et diff vérifiés. Application ciblée en base Docker locale `diaverum`, une ligne confirmée. Le rendu en navigateur n'a pas été rejoué pour cette modification de balisage. Aucun déploiement.
+
+## J-104 — 23 novembre 2026 — Correspondance S3 page 13 avec la diapositive 42 (lot 3)
+
+- Correction utilisateur : la page 13 actuelle doit correspondre à la diapositive 42 du storyboard S3.
+- `api/content/S3.json` remplace le Vrai/Faux de s3-p14 (position 13) par la question sur le malaise en séance et ses quatre propositions de la diapositive 42. Type QCM conformément à la consigne DEV, même avec une seule réponse correcte : signaler la sensation de malaise à un soignant. « en priorité » reste en gras. Numéro 2/4 conservé.
+- Diff et 7 tests PHP de contenu réussis (27 assertions). Mise à jour ciblée de la page en base Docker locale `diaverum`, une ligne confirmée. Pas de recette navigateur rejouée sur cette intervention. Aucun déploiement.
+
+## J-105 — 23 novembre 2026 — Validation éditoriale du cours S3 (lot 3)
+
+- Validation explicite de l'utilisateur : « cours 3 validé ». Cette décision clôt la relecture éditoriale des 15 écrans actuels de S3 après les corrections J-080 à J-104.
+- État : contenu dans `api/content/S3.json`, médias sous `front/public/courses/S3/` et corrections chargées dans la base de développement locale. Les validations techniques réellement exécutées et leurs limites figurent dans les interventions correspondantes.
+- Vérification de cette intervention : branche et état du dépôt contrôlés, modifications existantes préservées, diff sans erreur. Aucun changement fonctionnel, commit, migration ou déploiement réalisé dans cette intervention.
+- Suite : reprendre la relecture du cours suivant. La recette sur tablette physique et la publication restent à traiter ; aucun critère global du lot 3 n'est coché sur la seule validation éditoriale de S3.
+
+## J-106 — 23 novembre 2026 — S4 page 1, repères et fenêtres (lot 3)
+
+- Demande utilisateur : repositionner les pictogrammes, retirer la mention « Repère » et ouvrir les textes en fenêtres sur p01 uniquement.
+- `api/content/S4.json` positionne cinq marqueurs de 40 px autour du rein après inspection du graphisme et des repères de la diapositive 2 du storyboard. Les étiquettes deviennent des chiffres simples et les légendes utilisent les fenêtres avec le texte seul, conformément à J-088. Les autres pages sont conservées.
+- Diff et vérification Chromium avec API simulée réussis : cinq repères, cinq descriptions, ouverture/fermeture des fenêtres sans titre « Repère » aux quatre tailles tablette habituelles. Le message de succès du script réutilisé mentionne deux légendes mais la boucle et l'assertion ont bien vérifié les cinq. Application ciblée de p01 en base locale `diaverum`, une ligne confirmée. Aucun déploiement.
+
+## J-107 — 23 novembre 2026 — S4 pages 2, 3, 4 et 6 (lot 3)
+
+- Demande utilisateur : affirmations en gras p02/p03, encadré en haut p04, encadré et légendes en fenêtres avec marqueurs repositionnés et sans « Repère » p06.
+- Correction limitée aux quatre pages dans `api/content/S4.json`. Le texte introductif existant de p06 devient un encadré Important, sans ajout de contenu médical. Quatre marqueurs de 40 px placés sur le circuit et le dialyseur après inspection du graphisme. Autres pages comparées à la sauvegarde et inchangées.
+- Vérifications : structure des contenus validée par les 7 tests PHP (27 assertions) ; les quatre fenêtres de p06 s'ouvrent et se ferment sans titre aux quatre formats tablette dans Chrome avec API simulée. Comparaison des autres pages inchangées et diff sans erreur. Mise à jour ciblée du contenu S4 dans la base locale `diaverum` avec garde d'égalité sur l'ancien contenu : une ligne modifiée. Pas de déploiement ni de commit.
+- Suite : poursuivre la relecture de S4 ; recette sur tablette physique restante.
+
+## J-108 — 23 novembre 2026 — Encadré Important S4 page 1 (lot 3)
+
+- Demande utilisateur : encadrer « Lorsque les reins fonctionnent normalement, ils filtrent le sang en permanence. » dans une box Important.
+- `api/content/S4.json` déplace l'introduction de p01 dans un encadré Important avant l'image. Marqueurs et fenêtres conservés, autres pages comparées et inchangées.
+- Correction appliquée à p01 en base locale `diaverum` avec garde sur l'ancien contenu : une ligne modifiée. Test Chrome avec API simulée réussi : encadré et phrase présents, cinq fenêtres sans titre ouvertes/fermées aux quatre formats tablette. Le premier essai attendait à tort un titre « Important » : le composant commun n'affiche que l'icône et le texte ; sélecteur corrigé sans changement du rendu commun. Diff sans erreur. Aucun commit ni déploiement. Suite : poursuivre la relecture S4.
+
+## J-109 — 23 novembre 2026 — Encadré sous l'image S4 page 1 (lot 3)
+
+- Précision utilisateur remplaçant la disposition J-108 : placer la phrase sur la filtration permanente sous l'image. L'encadré Important est conservé et déplacé après le bloc image à légendes dans `api/content/S4.json`, uniquement sur p01. Les autres pages sont comparées et inchangées.
+- Vérifications : ordre des deux blocs et conservation des autres pages contrôlés, diff sans erreur. Application ciblée en base locale `diaverum` avec garde sur l'ancienne page : une ligne modifiée. Pas de nouvelle recette navigateur pour cette inversion de blocs ; les composants restent ceux vérifiés en J-108. Aucun commit ni déploiement. Suite : poursuivre la relecture S4.
+- Rectification du résultat d'application ci-dessus : la première requête a modifié zéro ligne, la base ayant des positions de marqueurs différentes et encore une introduction simple. Lecture de contrôle puis mutation limitée à l'introduction et à l'ajout de l'encadré après l'image : une ligne modifiée, positions existantes en base préservées. Le JSON conserve ses positions antérieures ; cette divergence préexistante est signalée pour la reprise.
+
+## J-110 — 23 novembre 2026 — Alignement S4 p07 et disposition p08 (lot 3)
+
+- Demande : centrer les textes avec les pictogrammes p07 ; placer l'encadré à droite de l'image p08 et limiter la hauteur de l'image.
+- Options réversibles limitées aux pages concernées : `alignCaptions` supprime les marges automatiques des pictos en ligne et aligne les textes dans l'espace restant ; `imageMaxHeight` limite l'image à 380 px et à la hauteur disponible. P08 réutilise l'encadré imbriqué existant dans la colonne texte et un tiers de largeur image. Fichiers : S4.json, PictoGridView.tsx, TrainingSessionPage.tsx, types/index.ts, index.css. Les autres pages de contenu sont comparées et conservées ; aucune option nouvelle activée ailleurs.
+- Vérifications : build TypeScript/Vite réussi (avertissements connus sur polices Euclid absentes et taille de bundle). Chrome avec API simulée : cinq textes centrés verticalement avec leur picto, encadré à droite et image de p08 limitée à 380 px sans dépasser la zone de navigation aux quatre formats tablette (1280×800, 800×1280, 1024×768, 1200×800). Mise à jour ciblée en base locale `diaverum` : une ligne par page, gardes d'égalité satisfaites. Diff sans erreur. Aucun déploiement ni commit ; tablette physique non testée.
+- Suite : poursuivre la relecture S4.
+
+## J-111 — 23 novembre 2026 — Centrage S4 p07, gras p09, retrait p13 (lot 3)
+
+- Demande utilisateur : centrer horizontalement les ensembles picto/texte p07, introduction p09 en gras et suppression de p13.
+- S4.json active une option de centrage limitée à p07, met en gras l'introduction du carrousel p09 et retire s4-p13. Les trois exercices restants sont renumérotés 1/3 à 3/3. Autres pages comparées et conservées. Option `centerRows` dans types/index.ts, PictoGridView.tsx et index.css : chaque ensemble est centré dans la largeur et sa légende centrée, sans modification des pages où l'option est absente.
+- Vérifications : build TypeScript/Vite réussi (avertissements préexistants polices/bundle) ; Chrome avec API simulée confirme les cinq ensembles centrés horizontalement aux quatre formats tablette, l'introduction p09 en élément strong et les 12 pages sans s4-p13. Mise à jour locale `diaverum` en transaction avec gardes sur les pages d'origine : six mutations ciblées confirmées. Diff sans erreur. Aucun commit ni déploiement ; recette physique restante.
+- Suite : poursuivre la relecture du cours 4.
+
+## J-112 — 23 novembre 2026 — Bloc S4 p07 centré avec colonnes alignées (lot 3)
+
+- Correction utilisateur de J-111 : les cinq lignes doivent rester alignées entre elles, avec le bloc complet au centre. `front/src/index.css` centre le conteneur de largeur ajustée au contenu au lieu de centrer chaque ligne séparément. Les pictos partagent une colonne et les textes un départ commun, aligné à gauche. La variante reste activée uniquement sur S4 p07 ; aucun contenu ni autre page modifié.
+- Vérifications : build TypeScript/Vite réussi ; Chrome avec API simulée confirme aux quatre formats tablette le centrage du bloc, les cinq abscisses de pictos identiques, les cinq départs de texte identiques et le centrage vertical texte/picto. Diff sans erreur. Aucune modification de base, aucun commit ni déploiement ; tablette physique non testée. Suite : poursuivre la relecture S4.
+
+## J-113 — 23 novembre 2026 — Validation éditoriale du cours S4 (lot 3)
+
+- Décision validée explicitement par l'utilisateur : « cours 4 validé ». La relecture éditoriale des 12 pages actuelles est clôturée après J-106 à J-112.
+- Contenu dans `api/content/S4.json`, médias sous `front/public/courses/S4/`, corrections chargées localement et ajustements de rendu dans les composants communs avec options ciblées. Les vérifications et limites sont détaillées dans les entrées correspondantes, dont la divergence préexistante des positions des marqueurs p01 entre JSON et base signalée en J-109, sans arbitrage supplémentaire ici.
+- Vérifications de cette intervention : branche et état du dépôt contrôlés, 12 pages confirmées dans le JSON, modifications existantes préservées et diff sans erreur. Aucun changement fonctionnel, commit, migration ou déploiement. Aucun critère global du lot 3 coché sur la seule validation éditoriale.
+- Suite : reprendre la relecture du cours 5. Recette sur tablette physique et publication restent à traiter.
+
+## J-114 — 23 novembre 2026 — Relecture S5 pages 1 à 10 (lot 3)
+
+- Demandes utilisateur : limiter l'image p01, gras ciblés p02/p03/p04/p07/p08 et DPCA p10 ; encadrés Important sous image/texte p05 et p06 ; légendes en fenêtres sans repères sous l'image p09.
+- `api/content/S5.json` : limite de hauteur p01 à 380 px et hauteur disponible via l'option existante ; phrases introductives p05 et p06 déplacées dans un encadré final en conservant le gras sélectif ; p09 utilise les fenêtres communes et des étiquettes numériques. Autres textes conservés, pages 11 et suivantes comparées et inchangées. Aucun changement de composant partagé.
+- Vérifications : 7 tests PHP de contenu réussis (27 assertions). Chrome avec API simulée contrôle les dix pages aux quatre formats tablette : image p01 sous la navigation, gras demandés présents, encadrés p05/p06 après l'ensemble image/texte et trois fenêtres p09 sans « Repère ». Les limites des images existantes des autres pages ne font pas l'objet de changements hors demande. Mise à jour locale `diaverum` transactionnelle : dix pages, gardes sur les anciens contenus satisfaites. Diff sans erreur. Aucun commit ni déploiement ; recette sur tablette physique restante.
+- Suite : poursuivre la relecture du cours 5 à partir de p11.
+
+## J-115 — 23 novembre 2026 — Retrait S5 pages 19, 23 et 24 (lot 3)
+
+- Demande utilisateur : supprimer les pages 19, 23 et 24 selon la numérotation à 24 pages. Retrait de s5-p19, s5-p23 et s5-p24 dans `api/content/S5.json` ; les trois exercices conservés s5-p20 à s5-p22 deviennent 1/3 à 3/3. S5 compte désormais 21 pages. Les 18 premières pages sont comparées et inchangées, aucun rendu partagé modifié.
+- Vérifications : 21 pages et absence des trois identifiants contrôlées ; 7 tests PHP réussis (27 assertions), diff sans erreur. Modification locale `diaverum` avec gardes sur les pages retirées et conservation des autres pages en base : une ligne, 21 pages confirmées. Pas de recette navigateur rejouée pour ce retrait de contenu. Aucun commit ni déploiement. Suite : poursuivre la relecture S5.
+
+## J-116 — 23 novembre 2026 — Validation éditoriale du cours S5 (lot 3)
+
+- Décision utilisateur explicite : « cours 5 validé ». Validation éditoriale des 21 pages actuelles, après les corrections J-114 et suppressions J-115. Contenu dans `api/content/S5.json`, médias dans `front/public/courses/S5/`, corrections chargées dans la base locale.
+- Vérifications de cette intervention : branche et état du dépôt contrôlés, 21 pages confirmées, modifications existantes préservées, diff sans erreur. Aucune modification fonctionnelle, aucun commit ni déploiement. Les résultats de recette simulée figurent dans J-114/J-115 ; tablette physique et publication restent à traiter. Aucun critère global du lot 3 coché sur cette seule validation éditoriale.
+- Suite : les cours S1 à S5 ont reçu une validation éditoriale utilisateur ; poursuivre selon la prochaine demande et préparer la recette finale avant publication.
+
+## J-117 — 23 novembre 2026 — Intégration S6 et S7 depuis la matrice (lot 3)
+
+- Demande : intégrer les cours 6 et 7 avec `Diaverum_EHD_test-matrice.xlsx` fourni sous Desktop/edi, graphismes et storyboards de `doc/integration/`. Matrice réservée explicitement à S6/S7, sans extrapolation aux autres cours. Le lien Google initial ne permettait pas un export anonyme (401) ; l'export utilisateur remplace cette tentative. Aucun fichier distant modifié.
+- Inventaire local : S6 vide, S7 contient quatre pages de démonstration. Sauvegardes complètes dans `/tmp/diaverum-before-J117-S6.json` et `...S7.json` avant import. Titres, descriptions, durées et statut du catalogue conservés.
+- Extraction XML de l'Excel conservant les segments gras et couleurs de correction. Pages barrées écartées : S6 SB18/SB22 et S7 SB17/SB18. Les trois questions finales de chaque cours sont renumérotées 1/3 à 3/3 ; identifiants des pages source conservés. Les questions orales Oui/Non restent non notées, leur appréciation relevant de l'IDE ; les quiz formatifs ne révèlent pas de correction conformément à la consigne utilisateur générale déjà validée, même si la colonne I propose OUI. Réponses sommatives dérivées des couleurs vertes de la matrice.
+- Ajout de `api/content/S6.json`, `S7.json` et graphismes dans `front/public/courses/S6/`, `S7/`. Options et composants existants réutilisés, aucune modification des cours validés ni du rendu commun.
+- Ajustements pendant recette : les titres de cellules entièrement gras sont lus en texte simple pour éviter l'affichage littéral de `**` dans le bandeau ; gras de corps conservés. Des repères de compression trop proches interceptaient les clics à la première passe : espacement corrigé uniquement dans S7. Une sélection de dossier par suffixe ambigu avait copié des médias S16/S17 : ces seules copies créées pendant l'intervention ont été retirées puis les dossiers exacts S6/S7 sélectionnés, références vérifiées. Les compétences en cellules grasses, d'abord non détectées, ont été réextraites en texte simple : trois par cours.
+- P09 S7 conserve une grille de sept pictos avec textes, conformément à la matrice et au storyboard ; essai carrousel abandonné car il ajoutait une interaction absente de cette page. La formulation « éviter les sports » est mise sous forme d'action « pratiquer des sports… » dans la liste « je ne dois pas » afin de supprimer une double négation, sans changement de consigne médicale.
+- Vérifications finales : build TypeScript/Vite réussi (avertissements connus polices Euclid non fournies et taille de bundle), 9 tests PHP de contenu / 35 assertions réussis. Contrôle du calcul serveur : S6 évalue trois questions, huit réponses attendues au total ; S7 évalue deux questions, deux réponses attendues, la troisième question finale étant orale et non notée. Les questions formatives et orales sont exclues du score.
+- Chrome avec API simulée : 38 écrans sur quatre formats tablette (152 rendus), médias décodés dont les GIF, 24 cartes retournées, deux images du carrousel S6 parcourues et 15 légendes S7 ouvertes/fermées sans titre « Repère ». P09 S7 revue et rejouée aux quatre tailles après remplacement de l'essai carrousel par la grille conforme. Aucun débordement horizontal ; plusieurs pages denses défilent verticalement (jusqu'à 179 px hors grille p09 S7 ; cette grille nécessite jusqu'à 541 px à 1024×768). Typographie conservée, aucun correctif global pour comprimer les pages. Captures représentatives inspectées. Les 16 quiz sont également soumis dans Chrome : navigation déverrouillée et absence d'icônes de correction sur les questions non notées.
+- Import limité à S6/S7 dans la base Docker locale `diaverum`, puis export final identique aux fichiers JSON. Aucun rechargement de fixtures, aucune écriture dans les dossiers patients par la recette simulée. Médias référencés présents, diff sans erreur. Aucun commit ni déploiement distant.
+- Suite : relecture éditoriale utilisateur de S6 et S7, notamment disposition des pages denses et appréciation orale de S7 SB16. Recette sur tablette physique et publication restent à traiter. La matrice du 23 novembre fournie ne sert qu'à S6/S7 ; ne pas l'appliquer aux cours suivants.
+
+## J-118 — 23 novembre 2026 — Intégration des séances S8 à S16 (lot 3)
+
+- Demande utilisateur : intégrer uniquement les neuf séances 8 à 16 depuis les notes textuelles `Notes RDV conception ped. Diaverum EHD.docx` sous Desktop/edi, les graphismes et les storyboards dans `doc/integration/`. La matrice précédente reste réservée aux séances 6 et 7.
+- Sources lues en conservant les gras, couleurs de réponses et passages barrés. Remarques de réalisation et consignes destinées aux développeurs séparées des textes apprenants. Les séances optionnelles, autres séances et post-test contenus dans le même document sont hors périmètre.
+- Inventaire : neuf contenus locaux vides, exportés et sauvegardés dans `/tmp/diaverum-before-J118-S8.json` à `...S16.json` avant toute importation. Le dossier graphismes de S8 est absent ; question adressée à l'utilisateur, poursuite autonome des autres contenus et inventaire des réemplois possibles selon le storyboard.
+- Mise à jour utilisateur : le dossier des graphismes S8 a été ajouté pendant l'intervention. Il est désormais présent et utilisé ; le besoin de réemploi provisoire est levé, sans recours à une génération d'illustrations.
+- Production initiale : S8 21 écrans, S9 17, S10 14, S11 19, S12 14, S13 14, S14 18, S15 10, S16 18 (145 au total). Textes, encadrés, compétences et corrections des quiz issus des notes ; positions et choix des visuels rapprochés des storyboards. Titres et métadonnées du catalogue conservés. Les doublons de numérotation des notes sont normalisés sans supprimer d'activité distincte. Les questions finales orales ou de recueil de traitement personnel restent non notées, appréciées par l'IDE.
+- Ajout de `api/content/S8.json` à `S16.json` et médias sous `front/public/courses/S8/` à `S16/`. Réutilisation du gabarit commun. Seule extension de rendu : image facultative sur le recto d'une carte (`frontImageUrl` dans types/index.ts et InteractiveBlocks.tsx), activée uniquement pour les quatre pictos blancs fournis en S11 p06. Les cartes existantes sans cette propriété conservent leur rendu.
+- Ajustements de recette : paragraphes et listes resserrés sans changement de police ; limites de largeur calculées selon le ratio des illustrations pour conserver des coins visibles arrondis ; hauteur d'image réduite sur les pages à deux encadrés. Retrait des annotations « => IMG », « => QCM » et « Picto… » des textes apprenants. Préambules séparés des légendes S8 p09 et S15 p03 ; ordre des cinq symptômes S9 p11 repris d'après leurs numéros source.
+- Extension facultative supplémentaire : pictos dans une liste à droite d'une image (`imageUrl` par entrée de liste dans types/index.ts et TrainingSessionPage.tsx), utilisée uniquement pour les deux pictos S8 p03. La branche de rendu des listes sans image reste inchangée. Le validateur exige un contenu texte non vide même lorsque la liste sert au rendu ; le texte source est donc conservé dans `content` et dans les deux entrées structurées, sans double affichage.
+- Essais à conserver au diagnostic : une reconstruction du front pendant la première passe navigateur a invalidé un nom de chunk en cache (404) et interrompu la passe au début de S13 ; recette relancée sur un build stabilisé. Première validation après ajout des pictos S8 p03 refusée pour `content` vide ; texte source restauré, sans changement visuel.
+- Vérifications finales : build TypeScript/Vite réussi ; 18 tests PHP de contenu / 71 assertions réussis. Neuf imports limités à S8–S16 dans la base Docker locale `diaverum`, exports finaux identiques aux neuf JSON. Aucun rechargement de fixtures ni changement de séance patient.
+- Recette Chrome avec API simulée : 145 écrans sur quatre tailles tablette (580 rendus), aucune largeur débordante ; 66 cartes, 78 images de carrousels et 53 légendes exercées. Médias référencés vérifiés présents et images décodées ; captures représentatives inspectées. Certaines pages denses nécessitent un défilement vertical, jusqu’à 498 px dans les formats testés ; taille de texte commune conservée. La vidéo S11 p12 est intégrée avec son lecteur et sa transcription ; lecture audiovisuelle complète non certifiée. 42 QCU/QCM soumis dans Chrome, navigation déverrouillée et absence de correction visuelle sur les questions non notées. L’association par glisser-déposer S11 et les deux classements S8 sont validés structurellement mais leurs gestes complets ne sont pas recettés dans cette passe.
+- Points éditoriaux à relire : S12 question finale sur les chélateurs du phosphore reprend la correction verte « strictement au milieu du repas », tandis que l'écran explicatif dit « pendant le repas ou juste avant selon prescription » ; divergence de la source conservée et signalée, à arbitrer par le référent pédagogique. Les questions orales S13/S15 et le recueil des traitements personnels S12 restent non notés malgré leur présence au quiz final. Aucun contenu médical nouveau ajouté.
+- Diff sans erreur. Aucun commit ni déploiement distant. Suite : relecture utilisateur des séances 8 à 16, arbitrage des points éditoriaux, puis recette sur tablette physique avant publication. Les séances 1 à 7 ne sont pas retouchées par cette intégration ; seules options facultatives du gabarit ajoutées pour S8/S11.
+
+## J-119 — 23 novembre 2026 — S6 image en haut p01 et gras p03/p13 (lot 3)
+
+- Demande utilisateur : image au-dessus du texte et toute largeur p01 ; deux phrases citées en gras. Le texte « Il existe principalement… » identifie sans ambiguïté s6-p03 (carrousel, écran 3 actuel), malgré la mention page 2. Aucun changement à la question orale s6-p02.
+- S6.json active `imagePosition: top` uniquement sur p01 et les gras sur p03/p13. Option facultative dans types/index.ts et TrainingSessionPage.tsx, absente des autres pages : image sur toute la largeur disponible et texte en dessous, typographie conservée. Autres pages S6 comparées et inchangées.
+- Vérifications : build TypeScript/Vite réussi ; Chrome aux quatre formats tablette confirme l'image p01 de même largeur que le conteneur, texte entièrement en dessous et gras des deux phrases. Cartes p13 et carrousel p03 exercés. Base locale `diaverum` mise à jour par trois mutations ciblées avec gardes sur les pages d'origine, toutes confirmées. Diff sans erreur. Aucun commit ni déploiement. Suite : poursuivre la relecture S6.
+
+## J-120 — 23 novembre 2026 — Gras limité à « ligne de vie », S7 p01 (lot 3)
+
+- Demande utilisateur : seul « ligne de vie » doit être en gras, le reste du texte normal sur la page 1 du cours 7. `api/content/S7.json` retire les marqueurs de gras du corps et en conserve une paire autour de cette expression. Texte, image, encadré et disposition conservés ; autres pages comparées et inchangées.
+- Vérifications : exactement une expression en gras dans le corps, conservation des autres blocs/pages et diff sans erreur. Mise à jour d'un seul champ en base locale `diaverum`, garde sur l'ancien texte satisfaite : une ligne modifiée. Pas de nouvelle recette navigateur pour ce changement de balisage ; aucun changement du composant commun, commit ou déploiement. Suite : poursuivre la relecture S7.
+
+## J-121 — 23 novembre 2026 — Validation éditoriale des cours S6 et S7 (lot 3)
+
+- Décision explicite de l'utilisateur : « cours 6 et 7 validé ». Validation éditoriale des versions actuelles : S6 20 pages après J-119, S7 18 pages après J-120. Contenus et médias intégrés, corrections chargées localement lors des interventions correspondantes.
+- Vérifications de cette intervention : branche et état du dépôt contrôlés, nombres de pages confirmés, modifications existantes préservées, diff sans erreur. Aucun changement fonctionnel, commit ou déploiement. Les limites de recette sont conservées dans J-117/J-119/J-120 ; validation éditoriale distincte de la recette sur tablette physique et de la publication. Aucun critère global du lot 3 coché.
+- Suite : les cours S1 à S7 sont validés éditorialement par l'utilisateur. Reprendre la relecture S8 à S16 selon la prochaine demande ; ces derniers restent à valider.
+
+## J-122 — 23 novembre 2026 — Consigne secondaire retirée S8 p02 (lot 3)
+
+- Demande : enlever « Faites glisser chaque élément dans la bonne zone » uniquement sur S8 p02. Ajout d'une option facultative `hideInstruction` au classement (types/index.ts, InteractiveBlocks.tsx), activée uniquement sur `s8-p02-b1` dans S8.json. La consigne de page et le texte explicatif sont conservés. Autres classements inchangés par défaut.
+- Le bandeau secondaire complet est masqué, icône comprise, afin de ne pas laisser un encadré vide. Build TypeScript/Vite et diff réussis ; option ciblée chargée dans la base locale `diaverum` (une ligne). Pas de recette navigateur rejouée, aucun commit ni déploiement. Suite : poursuivre S8.
+
+## J-123 — 23 novembre 2026 — S8 pages 5 à 8 (lot 3)
+
+- Demandes : question p05 en gras avec davantage d'espace avant les pictos, introduction p06 en gras, dernier picto p07 centré sous la crème, image p08 au-dessus du texte. S8.json modifié uniquement sur ces quatre pages ; autres pages comparées et conservées.
+- Options facultatives `questionGap: large` (espacement adaptatif) et `centerLastItem` (colonne centrale) ajoutées dans types/index.ts et PictoGridView.tsx, activées uniquement sur p05/p07. P08 réutilise `imagePosition: top` et retire la limite de largeur pour occuper la largeur disponible ; hauteur limitée conservée. Aucun changement typographique partagé.
+- Recette : premier centrage refusé en portrait car la grille commune y change ses colonnes ; variante CSS ciblée `course-picto-center-last` ajoutée dans index.css pour conserver trois colonnes et positionner le quatrième ensemble sous le deuxième. Les essais intermédiaires à trois colonnes directes ne respectaient pas les spans de la grille commune à six pistes ; corrigés sans modifier ses règles par défaut.
+- Vérifications finales : build TypeScript/Vite et diff réussis. Chrome aux quatre formats tablette confirme les gras, l'espace avant les pictos, le dernier ensemble sur le même axe que la crème et plus bas, puis le texte sous l'image p08. Carrousel parcouru. Quatre pages chargées en base locale, gardes sur les anciennes pages satisfaites. Aucun commit ni déploiement ; recette physique restante. Suite : poursuivre S8.
+
+## J-124 — 23 novembre 2026 — Coins arrondis S8 p08 et règle durable (lot 3)
+
+- Demande : arrondir l'image de p08 et noter que les images doivent toujours avoir des bords arrondis. Convention ajoutée dans AGENTS.md pour les interventions suivantes sans retouche globale des pages validées.
+- L'image contenue était plus étroite que son élément à cause de la limite de hauteur : le rayon arrondissait les marges internes. Option facultative `imageAspectRatio` dans types/index.ts et TrainingSessionPage.tsx ajuste la largeur au ratio réel et à la hauteur disponible, activée uniquement sur S8 p08 dans S8.json. Le rayon existant s'applique ainsi aux coins réels du visuel.
+- Vérifications : build TypeScript/Vite et diff réussis ; Chrome aux quatre formats tablette confirme un élément image au ratio du fichier sans marge interne, rayon positif et texte en dessous. Base locale mise à jour sur le seul champ de p08, une ligne confirmée. Aucun commit ni déploiement. Suite : poursuivre S8 avec cette convention.
+
+## J-125 — 23 novembre 2026 — S8 pages 10 à 16, centrage et colonnes (lot 3)
+
+- Demande : centrer verticalement le contenu p10/p13/p15/p16 ; colonnes image/texte égales p11/p12 ; quatre symptômes en véritables li avec tirets p12. Modifications limitées aux six pages citées dans S8.json, autres pages comparées et conservées.
+- Option de page `layout: center` dans types/index.ts, courseVisuals.ts et TrainingSessionPage.tsx, activée uniquement sur ces quatre pages ; centrage de l'ensemble des blocs dans la zone disponible. P11/p12 retirent les limites de largeur/hauteur qui empêchaient le 50/50 et conservent l'image à son ratio naturel avec coins arrondis. Options de liste `listIntro` et `listMarker: dash` activées seulement p12, retrait de 10 px et typographie commune conservés.
+- Vérifications : build TypeScript/Vite et diff réussis ; Chrome aux quatre formats tablette confirme centrages lorsque le contenu tient, colonnes égales après gouttière et quatre li p12. Six mutations ciblées en base locale `diaverum` avec gardes sur les pages d'origine, toutes confirmées. Les contenus dépassant la zone disponible restent défilants. Aucun commit ni déploiement ; recette physique restante. Suite : poursuivre S8.
+
+## J-126 — 23 novembre 2026 — Consigne secondaire retirée S8 p21 (lot 3)
+
+- Demande utilisateur : supprimer « Faites glisser chaque élément dans la bonne zone » sur p21 du cours 8. `api/content/S8.json` active l'option existante `hideInstruction` uniquement sur le bloc de classement de cette page. Consigne de page, question, catégories et réponses conservées ; autres pages comparées et inchangées. Aucun changement du gabarit commun.
+- Vérifications : type du bloc et préservation des autres pages contrôlés, diff sans erreur. Un seul champ mis à jour en base locale `diaverum`, une ligne confirmée. Option de rendu existante réutilisée, sans nouveau build ni recette navigateur. Aucun commit ni déploiement. Suite : poursuivre la relecture S8.
+
+## J-127 — 23 novembre 2026 — Validation éditoriale du cours S8 (lot 3)
+
+- Décision explicite utilisateur : « cours 8 validé ». Validation éditoriale des 21 pages actuelles après les corrections J-122 à J-126. Contenu S8.json et médias intégrés, corrections chargées localement lors des interventions correspondantes.
+- Vérifications de cette intervention : branche et état du dépôt contrôlés, 21 pages confirmées, modifications existantes préservées et diff sans erreur. Aucun changement fonctionnel, commit ou déploiement. Les limites de recette physique et des gestes de classement restent celles des entrées précédentes. Aucun critère global du lot 3 coché sur la seule validation éditoriale.
+- Suite : S1 à S8 sont validés éditorialement ; reprendre la relecture S9 selon la prochaine demande. S9 à S16 sont intégrés et restent à valider.
+
+## J-128 — 23 novembre 2026 — S9 pages 1 et 9, liste et colonnes (lot 3)
+
+- Demande : quatre fonctions de l'eau en li à puces carrées p01 ; une colonne image et une colonne texte p09. S9.json réutilise la liste structurée standard p01, avec introduction et retrait de 10 px. P09 passe des légendes en fenêtres au bloc image/texte 50/50 : les quatre explications sont visibles à droite de l'image, encadré Important conservé dessous. Consigne de clic retirée puisqu'il n'y a plus de repère. Aucun texte supprimé ni composant commun modifié ; autres pages comparées et conservées.
+- Vérifications : Chrome aux quatre formats tablette confirme les quatre li à symbole carré p01 et la largeur 50/50 après gouttière p09 ; médias décodés. Deux pages chargées en base locale `diaverum` avec gardes satisfaites. Diff sans erreur, aucun commit ni déploiement. Suite : poursuivre S9.
+
+## J-129 — 23 novembre 2026 — S10 pages 1 et 2, tirets et pictos (lot 3)
+
+- Le texte cité identifie S10 p01 malgré la formulation « page 10 » ; p02 S10 possède la planche fournie `p2-pictos.png`. Deux pressions en li à tirets p01 via options existantes. Planche à quatre lignes et deux états activée p02, taille 64 px, consigne adaptée au clic sur pictogramme. S10.json seul modifié, autres pages comparées et conservées ; aucune retouche S9 ni composant commun.
+- Vérifications : Chrome aux quatre formats tablette confirme deux li à tirets p01, quatre marqueurs issus de la planche de pictos p02 ; quatre fenêtres ouvertes et fermées. Deux mutations ciblées en base locale `diaverum`, gardes satisfaites. Diff sans erreur. Aucun commit ni déploiement. Suite : poursuivre la relecture selon la prochaine demande.
+
+## J-130 — 23 novembre 2026 — Picto Alerte commun (lot 3)
+
+- Demande explicite de généralisation : utiliser le picto fourni `doc/integration/GRAPHISMES/Séance3/icon alerte.png` pour les encadrés Alerte. Remplacement de `front/public/pictos/warning.png`, ressource commune aux cours et aperçus. Ancienne image sauvegardée dans `/tmp/diaverum-warning-before-J130.png`. Aucun changement de taille, de texte, de disposition ni des autres catégories d'encadré.
+- Vérifications : correspondance binaire avec le fichier source confirmée, build TypeScript/Vite réussi et diff sans erreur. Le composant commun continue d'utiliser le même chemin d'icône. Pas de recette navigateur rejouée pour ce remplacement d'asset ; aucun changement de base, commit ni déploiement. Suite : poursuivre la relecture des cours.
+
+## J-131 — 23 novembre 2026 — S11 pages 1, 2, 5, 6, 7 et 9 (lot 3)
+
+- Demande : listes à tirets p01 (cinq éléments) et p05 (trois), contenu p02 centré verticalement, images des cartes p06 agrandies, dernier ensemble p07/p09 centré sous le deuxième. S11.json active les options existantes de liste, centrage vertical et centrage du dernier picto. Autres pages comparées et conservées.
+- Images des cartes portées de 80 à 120 px via propriété facultative `frontImageSize` dans types/index.ts et InteractiveBlocks.tsx, activée sur les quatre cartes S11 p06 uniquement. Les autres cartes restent à leur taille existante ; textes et typographie conservés.
+- Vérifications : build TypeScript/Vite et diff réussis ; Chrome aux quatre formats tablette confirme cinq/trois li à tirets, centrage p02, quatre images de cartes de 120 px et derniers ensembles p07/p09 alignés sous la deuxième colonne. Quatre cartes retournées. Premier essai interrompu par sélecteur de test ambigu (conteneur et indication de glissement) ; sélecteur précisé sans modification du produit. Six pages chargées en base locale avec gardes satisfaites. Aucun commit ni déploiement ; recette physique restante. Suite : poursuivre S11.
+
+## J-132 — 23 novembre 2026 — S12 pages 1 et 2, ordre et gras (lot 3)
+
+- Le texte cité identifie S12 p01 malgré la mention « page 11 ». Introduction conservée au-dessus du carrousel avec séparation de paragraphes ; phrase « Le traitement est adapté à chaque patient. » déplacée dans un bloc texte après le carrousel. Typographie standard réutilisée.
+- P02 : six textes de cartes rapprochés des segments gras des notes Word, rétablis dans S12.json. Option `formattedBack` dans types/index.ts et InteractiveBlocks.tsx active CourseText sur ces seuls versos pour afficher les gras, sans changer les cartes des autres pages. Autres pages S12 comparées et conservées.
+- Vérifications : build TypeScript/Vite réussi ; Chrome aux quatre formats tablette confirme introduction au-dessus et conclusion sous l'image/carrousel, cinq images parcourues et gras présents dans les six versos retournés. Un essai a échoué sur une assertion de test héritée d'une page image/texte, retirée sans modification du produit. Deux pages chargées localement avec gardes satisfaites, diff sans erreur. Aucun commit ni déploiement. Suite : poursuivre S12.
+
+## J-133 — 23 novembre 2026 — S13 pages 7 et 8, centrage (lot 3)
+
+- Demande : centrer les pictos verticalement p07 ; centrer « Légère fièvre » sous « Rougeur » p08. S13.json active les options existantes `layout: center` et `centerLastItem` sur les seules pages demandées. Textes, images et typographie conservés, autres pages comparées et inchangées. Aucun composant commun modifié.
+- Vérifications : Chrome aux quatre formats tablette confirme le centrage vertical p07 et le dernier ensemble p08 sur le même axe que « Rougeur », plus bas. Deux mutations ciblées en base locale avec gardes satisfaites ; diff sans erreur. Pas de nouveau build nécessaire (options existantes), aucun commit ni déploiement. Suite : poursuivre S13.
+
+## J-134 — 23 novembre 2026 — Validation jusqu'à S16 et commit (lot 3)
+
+- Décision utilisateur explicite : « valide jusqu'au cours 16 », puis demande « commit ». S9 à S16 rejoignent les cours déjà validés ; S1 à S16 sont validés éditorialement. La recette physique et la publication restent distinctes, aucun critère global du lot 3 coché sur cette validation.
+- Préparation du commit : intégrations S3 à S16 encore non versionnées, médias de lecture, corrections du gabarit et suivi projet regroupés. Sources de conception volumineuses, fichiers temporaires et configuration locale hors périmètre conservés non suivis.
+- Rapprochement avec les exports locaux avant commit : reprise des retouches existantes de l'éditeur sur S4 (positions des repères p01/p06 et catégorie Définition p06), S5 (repères p09), S7 (repères p06/p07/p10), S8 (question p02 sans titre répété et gras), S14 (positions K/t/V p03). Ces données proviennent des versions locales relues ; aucun nouvel import ni changement de base effectué ici. Résout notamment la divergence S4 signalée en J-109. Fichiers JSON désormais concordants avec la base locale pour S3–S16.
+- Vérifications : build TypeScript/Vite réussi (avertissements connus polices et bundle), 18 tests PHP de contenu / 71 assertions réussis ; 231 pages S3–S16 et 278 références médias contrôlées présentes. Les tests navigateur des modifications figurent dans les entrées précédentes ; aucune nouvelle recette physique ni audiovisuelle complète. Point de formulation S12 signalé en J-118 conservé dans l'historique malgré la validation éditoriale générale ; aucune réécriture médicale.
+- Contrôle final après rapprochement : 18 tests PHP / 71 assertions réussis à nouveau ; index préparé limité à 306 fichiers liés aux cours, au gabarit et au suivi, diff indexé sans erreur. Commit local demandé réalisé avec le titre « Intègre et valide les cours 3 à 16 ». Aucun push ni déploiement ; sources et configuration locales hors périmètre conservées.

@@ -1,6 +1,6 @@
 # Reprise du projet Diaverum
 
-Dernière mise à jour : 18 novembre 2026 · entrée J-079 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
+Dernière mise à jour : 23 novembre 2026 · entrée J-134 dans [JOURNAL_PROJET.md](JOURNAL_PROJET.md).
 
 ## Point de départ
 
@@ -161,6 +161,10 @@ Rejoué par un test d'API complet sur la base de test et par les scripts navigat
 
 Résultats : bouton Comparer, période B choisie comme A, écarts A − B sur la Vue d'ensemble, Séances, Centres, IDE ; sans export. Tests `e2e/compare-logic.mjs` et `e2e/results-compare.mjs`. Build de production réparé (import du profil supprimé dans `NewSessionPage`, cassé depuis e1cf37e) ; vérifier le front avec `npm run typecheck && npm run build`, pas avec `tsc -p .`. Non commité (depuis 4ff7e78).
 
+## Poussée sur main — J-034
+
+13 commits poussés (`2fb60dc..677d574`) : déploiement automatique Coolify déclenché, migration `Version20261112120000` incluse. Ne pas relancer de déploiement. Vérifier dans Coolify que le déploiement est terminé et `php` sain. Suivi de ce fichier non poussé (écrit après la poussée).
+
 ## Intégration S1 — Lancement de séance (J-053)
 
 Le bloc blanc de « Prêt à commencer ? » présente le titre complet et les compétences déjà configurées dans le cours. Les deux blocs sont élargis ; le rappel de sécurité tient sur deux lignes aux tailles tablette simulées, et le lancement de S1 ouvre bien sa première page. Typecheck et build réussis, vérification navigateur avec API simulée ; tablette physique et police Euclid encore à vérifier. Aucun import ni déploiement. Prochaine action : valider ce rendu et reprendre la relecture de S1 page par page. Les sources et le contexte d'intégration S1/S2 sont consignés en J-052.
@@ -217,6 +221,10 @@ La validation éditoriale du cours 1 est explicite. Les dernières retouches de 
 
 Les 17 écrans de « Hygiène au centre de dialyse » sont disponibles localement avec le MP4 fourni à la page 4, sa transcription et les deux tentatives de classement à la page 15. Les questions non notées suivent la règle commune. L'import S2 local correspond au JSON du dépôt. Contrôles Chrome réussis en portrait et paysage. Poursuivre la relecture utilisateur à partir de la page 3. La validation éditoriale et la recette sur tablette physique restent à faire.
 
+## S3, S4 et S5 intégrés en développement — J-068
+
+S3 (20 écrans), S4 (13) et S5 (24) sont importés localement et concordent avec leurs fichiers JSON. Les écrans et médias ont été contrôlés dans Chromium en portrait et paysage. S3 « Après la dialyse » utilise provisoirement des cartes faute des six images et son exercice sur les symptômes est à valider à la relecture. Reprendre la validation éditoriale page par page de S2 à S5 avant la recette physique et la publication.
+
 ## S2 pages 1 et 2 — Relecture (J-069)
 
 L'affirmation de la page 1 est en gras. La page 2 tient sur un écran aux dimensions tablette testées, avec trois légendes en fenêtres. Les autres pages à légendes conservent le rendu intégré. À la demande explicite de l'utilisateur, appliquer les retours suivants uniquement aux pages citées, sauf demande de généralisation.
@@ -260,3 +268,231 @@ La question sur les symptômes d'infection de l'abord a été retirée à la dem
 ## S2 — Commit demandé (J-079)
 
 Le contenu final de la relecture S2 comporte 16 écrans et ses médias sont présents. Les changements sont regroupés dans le commit local de S2. La suite du lot 3 porte sur les cours suivants et la recette sur tablette physique.
+
+## S3 pages 1 à 4 — Relecture (J-080)
+
+Encadrés Important au-dessus des images des pages 1 et 3, gras du storyboard sur la page 1 et l'introduction de la page 2, puces carrées page 3, légendes en fenêtres page 4. La page 5 garde ses légendes intégrées. Corrections chargées en développement et vérifiées dans Chrome. Poursuivre la relecture de S3.
+
+## S3 page 1 — Image élargie (J-081)
+
+Image à 50 % de la largeur d'écran dans le lecteur, texte centré à droite. Correction limitée à la page 1 et chargée en développement. Aucun défilement en portrait et jusqu'à 53 px en paysage dans les tailles simulées.
+
+## S3 pages 2 à 4 — Encadré, largeur et gras (J-082)
+
+L'encadré Objectif de p02 est compact, centré et conserve l'icône standard. L'image de p03 prend la moitié de la largeur de l'écran. L'introduction de p04 est en gras. Corrections chargées en développement et vérifiées dans Chrome. P03 peut demander jusqu'à 36 px de défilement en paysage aux tailles testées.
+
+## S3 page 1 — Image au-dessus des boutons (J-083)
+
+L'image conserve 50 % de la largeur et tient entièrement au-dessus de la navigation, sans défilement aux quatre formats tablette simulés. Correction chargée uniquement sur p01 en développement.
+
+## S3 pages 3 à 8 — Relecture (J-084)
+
+Puces espacées p03, légendes intégrées p04, encadrés en premier p05/p06, fenêtres sans titre p05/p08 et petits repères p08. Encadré compact p07, illustration 170 px et texte 20 px pour tenir la ligne du coussin. Corrections chargées localement, contrôlées sur quatre tailles tablette.
+
+## Retrait des listes à puces — J-085
+
+Le texte des cours applique un retrait gauche de 10 px aux lignes à puces rondes, carrées et aux tirets. Vérifié sur les quatre puces de S3 page 1 aux quatre dimensions tablette habituelles. Les symboles existants sont conservés.
+
+## S3 page 1 — Puces carrées (J-086)
+
+Les quatre tirets sont remplacés par des carrés, avec le retrait de 10 px. Correction appliquée en développement et contrôlée dans Chromium aux quatre tailles tablette.
+
+## S3 page 4 — Retour aux fenêtres (J-087)
+
+Les deux repères ouvrent leurs légendes en fenêtres. Les légendes sous l'image sont retirées. Correction chargée en développement et vérifiée aux quatre tailles tablette.
+
+## Légendes au clic — Texte seul (J-088)
+
+Les fenêtres et panneaux de légende affichent le texte explicatif seul, sans titre ni numéro « Repère x ». Règle générale demandée par l'utilisateur, appliquée au lecteur et aux aperçus partagés. Fenêtres testées sur S3 p04 aux quatre tailles tablette.
+
+## S3 page 6 — Liste imbriquée et image agrandie (J-089)
+
+Image maximale de 430 px, deux puces carrées et sous-liste de quatre tirets sous « Pour éviter les erreurs de pesée dues aux vêtements ». Correction chargée localement et structure vérifiée dans Chromium aux quatre tailles tablette.
+
+## Convention des colonnes — J-090
+
+Convention enregistrée dans AGENTS.md : 1 colonne image / 1 texte = 50 % / 50 % ; 1 colonne image / 2 texte = 1/3 / 2/3 de la largeur de contenu disponible. À appliquer aux prochaines pages demandées.
+
+## Répartition image/texte — Clarification en attente (J-091)
+
+L'utilisateur cite p05, mais décrit le texte à droite de la liste imbriquée de p06. Question posée pour choisir entre « Quelle tenue avec un cathéter ? » et « Comment limiter les variations de poids liées à ma tenue ? ». Appliquer ensuite le 50 % / 50 % et les espacements standards uniquement à la page confirmée.
+
+## S3 page 6 — Colonnes et espacement (J-092)
+
+Page 6 uniquement : image et texte occupent chacun 50 % de l'espace après gouttière. Police 25 px et interligne standard conservés, marges supplémentaires des listes retirées. Base locale mise à jour et contrôles Chromium réussis aux quatre tailles tablette.
+
+## Règle permanente — Préserver les pages validées (J-093)
+
+Modifier uniquement la page explicitement demandée dans le cours concerné. Préserver la mise en page et le comportement des pages déjà relues ou validées. Toute généralisation exige une demande explicite de l'utilisateur. Les adaptations du gabarit commun doivent être optionnelles et activées uniquement sur la page visée. Règle également inscrite dans AGENTS.md.
+
+## S3 page 6 — Interligne des listes corrigé (J-094)
+
+Les li héritaient d'une règle globale à 1,65. La variante de p06 utilise désormais le même interligne de 1,375 que son texte courant (34,375 px pour 25 px). Famille CSS identique et colonnes égales vérifiées dans Chromium aux quatre formats.
+
+## Homogénéité visuelle — J-095
+
+Conserver la typographie et les espacements communs aux cours pour les éléments de même rôle, y compris les listes imbriquées. Toute variation demande une instruction spécifique de l'utilisateur. Respecter les exceptions déjà validées et limiter les retouches aux pages demandées. Règle inscrite dans AGENTS.md.
+
+## S3 pages 7 et 8 — Colonnes et gras (J-096)
+
+P07 utilise deux colonnes égales image/texte avec la typographie existante conservée. P08 met « prise en charge rapide » et « corriger la situation » en gras dans l'encadré. Corrections chargées en développement et vérifiées dans Chromium.
+
+## S3 page 7 — Taille standard rétablie (J-097)
+
+L'exception de 20 px est retirée. Le texte est à 25 px avec les colonnes 50 % / 50 %. Correction chargée en développement et mesurée dans Chromium aux quatre tailles tablette.
+
+## S3 pages 9 et 10 — Gras et colonnes (J-098)
+
+P09 : introduction en gras. P10 : un tiers image, deux tiers texte, encadré dans la colonne droite et formulation/gras vérifiés au storyboard. Corrections chargées localement et contrôlées dans Chromium aux quatre tailles tablette.
+
+## S3 page 11 — Encadré sur le risque d'hémorragie (J-099)
+
+« Pour limiter ce risque, il faut : » est en gras. La phrase manquante sur le respect des mesures de prévention apparaît dans un encadré Important sous le carrousel. Correction chargée localement et contrôlée dans Chromium.
+
+## S3 page 11 — Paragraphe introductif encadré (J-100)
+
+Le paragraphe sur la désinsertion d'une aiguille figure désormais dans un encadré Important avant le carrousel. Le second encadré reste après le carrousel. Correction chargée en développement et vérifiée dans Chromium.
+
+## S3 — Page « Après la dialyse » supprimée (J-101)
+
+À la demande de l'utilisateur, s3-p12 est retirée. Le cours compte 19 pages et les huit exercices commencent désormais en position 12. Contenu et base locale mis à jour, validation de structure réussie.
+
+## S3 — Pages 14 à 17 retirées (J-102)
+
+Les quatre pages ont été supprimées selon la numérotation après J-101. S3 compte 15 écrans et quatre exercices finaux numérotés de 1/4 à 4/4. Contenu et base locale mis à jour, structure vérifiée.
+
+## S3 page 12 — Affirmation en gras (J-103)
+
+L'affirmation sur la tenue pendant la pesée est intégralement en gras. Correction limitée à la question s3-p13, chargée dans la base locale.
+
+## S3 page 13 — Exercice du storyboard diapositive 42 (J-104)
+
+Le deuxième exercice demande quoi faire en priorité lors d'un malaise. Les quatre propositions du storyboard et le type QCM sont intégrés ; la réponse attendue est de prévenir un soignant. Correction chargée en développement et structure validée.
+
+## S3 validé par l'utilisateur — J-105
+
+Validation éditoriale explicite du cours 3 le 23 novembre 2026. S3 comporte 15 écrans et ses dernières corrections sont présentes dans le contenu local et la base de développement. Reprendre la relecture du cours suivant. Recette sur tablette physique et publication à traiter.
+
+## S4 page 1 — Repères repositionnés (J-106)
+
+Cinq repères disposés autour du rein, libellés numériques simples et explications en fenêtres sans titre. Correction chargée localement et cinq fenêtres testées aux quatre formats tablette.
+
+## S4 pages 2, 3, 4 et 6 — Relecture (J-107)
+
+Affirmations p02/p03 en gras, encadré p04 en premier. P06 : introduction dans un encadré Important, quatre marqueurs repositionnés et explications en fenêtres sans mention « Repère ». Contenu chargé localement et fenêtres vérifiées aux quatre formats tablette ; autres pages conservées. Poursuivre la relecture de S4.
+
+## S4 page 1 — Encadré Important (J-108)
+
+La phrase sur la filtration permanente du sang est dans un encadré Important avant l’image. Correction chargée localement, encadré et cinq fenêtres vérifiés aux quatre tailles tablette. Autres pages conservées.
+
+## S4 page 1 — Encadré sous l’image (J-109)
+
+Précision utilisateur : l’encadré Important sur la filtration permanente se trouve désormais sous l’image, remplaçant la position J-108. Modification limitée à p01 et chargée en base locale. Ordre des blocs contrôlé ; navigateur non rejoué.
+
+## S4 pages 7 et 8 — Alignements (J-110)
+
+P07 : textes centrés en hauteur avec les pictos et départs de colonnes alignés. P08 : encadré dans la colonne droite, image limitée en hauteur. Options activées sur ces seules pages, chargées en base locale. Build et contrôles Chrome aux quatre formats tablette réussis. Poursuivre la relecture S4.
+
+## S4 pages 7, 9 et retrait page 13 (J-111)
+
+P07 : ensembles picto/texte centrés en largeur et hauteur. P09 : introduction en gras. Ancienne p13 supprimée : S4 compte 12 pages, exercices 1/3 à 3/3. Corrections chargées localement ; build et contrôles Chrome réussis. Autres pages conservées, hors renumérotation des exercices.
+
+## S4 page 7 — Bloc aligné et centré (J-112)
+
+Remplace le centrage ligne par ligne de J-111 : bloc complet centré en largeur, pictos dans une même colonne et textes alignés à gauche sur un même axe. Variante CSS limitée à p07. Build et mesures Chrome aux quatre formats tablette réussis.
+
+## S4 validé par l’utilisateur — J-113
+
+Validation éditoriale explicite du cours 4 le 23 novembre 2026, sur ses 12 pages actuelles. Aucun commit ni déploiement demandé. Reprendre la relecture du cours 5 ; recette sur tablette physique et publication restantes. Divergence préexistante des positions de marqueurs p01 entre JSON et base à conserver en attention (J-109).
+
+## S5 pages 1 à 10 — Relecture (J-114)
+
+Image p01 limitée en hauteur, gras demandés p02/p03/p04/p07/p08 et DPCA p10, introductions p05/p06 en encadrés Important sous image/texte, légendes p09 en fenêtres sans repères sous l’image. Corrections chargées localement ; 7 tests PHP et contrôles Chrome aux quatre tailles tablette réussis. Pages suivantes inchangées. Poursuivre à p11.
+
+## S5 pages 19, 23 et 24 supprimées (J-115)
+
+Retrait selon la numérotation précédente à 24 pages : s5-p19, s5-p23 et s5-p24. S5 compte 21 pages ; les trois exercices restants sont renumérotés 1/3 à 3/3. Contenu et base locale mis à jour, 7 tests PHP réussis. Autres pages conservées. Poursuivre la relecture S5.
+
+## S5 validé par l’utilisateur — J-116
+
+Validation éditoriale explicite du cours 5 le 23 novembre 2026 sur ses 21 pages. Les cours S1 à S5 sont désormais validés éditorialement par l’utilisateur. Aucun commit ni déploiement dans cette intervention ; recette sur tablette physique et publication restent à traiter. Attendre la prochaine demande.
+
+## S6 et S7 intégrés — J-117
+
+Matrice source : `/Users/mahdjoub/Desktop/edi/Diaverum_EHD_test-matrice.xlsx`, onglets COURS 6 / COURS 7 uniquement ; ne pas extrapoler aux autres cours. Storyboards et graphismes dans `doc/integration/`. S6 comporte 20 pages et S7 18, trois compétences chacun. Pages barrées écartées (S6 SB18/SB22, S7 SB17/SB18), trois exercices finaux renumérotés par cours. Question finale orale S7 SB16 non notée, appréciée par l’IDE. Quiz formatifs sans correction ni score conformément à la règle utilisateur.
+
+Fichiers `api/content/S6.json`, `S7.json`, médias sous `front/public/courses/S6/` et `S7/`, importés en base locale ; exports finaux concordants. Anciens contenus sauvegardés sous `/tmp/diaverum-before-J117-S6.json` et `...S7.json`. Aucun autre cours ni composant commun modifié lors de cette intégration.
+
+Build, 9 tests PHP, dénominateurs de notation, 152 rendus Chrome aux quatre tailles tablette, cartes/carrousel/légendes et 16 quiz vérifiés. Plusieurs pages denses défilent ; grille S7 p09 jusqu’à 541 px en paysage 1024×768, sans réduction typographique. Prochaine action : relecture utilisateur S6/S7 puis recette physique. Aucun commit ni déploiement distant.
+
+## Séances 8 à 16 intégrées — J-118
+
+Source : notes Word `/Users/mahdjoub/Desktop/edi/Notes RDV conception ped. Diaverum EHD.docx`, sections 8 à 16 uniquement, storyboards et graphismes de `doc/integration/`. Le dossier S8 ajouté par l’utilisateur est utilisé. Matrice S6/S7 non utilisée. Contenus JSON et médias intégrés/importés localement : S8 21 pages, S9 17, S10 14, S11 19, S12 14, S13 14, S14 18, S15 10, S16 18 (145 écrans).
+
+Exports locaux concordants ; sauvegardes initiales sous `/tmp/diaverum-before-J118-S8.json` à `...S16.json`. Build, 18 tests PHP, 580 rendus Chrome aux quatre tailles, cartes/carrousels/légendes et QCU/QCM vérifiés. Certaines pages défilent verticalement jusqu’à 498 px. Recette physique, gestes complets des classements/associations et lecture intégrale de la vidéo S11 restent à faire. Aucune modification des contenus S1–S7 ; extensions facultatives du gabarit pour recto illustré S11 et liste à pictos S8. Aucun commit ni déploiement.
+
+Reprendre la relecture utilisateur S8–S16. Point éditorial ouvert S12 : contradiction de la source entre la correction « strictement au milieu du repas » et le texte sur les chélateurs du phosphore (« pendant le repas ou juste avant selon prescription »). Questions orales/personnelles non notées conformément à la convention existante.
+
+## S6 pages 1, 3 et 13 — Relecture J-119
+
+P01 : image pleine largeur au-dessus du texte via option ciblée. Introduction du carrousel « Il existe principalement… » (p03 actuelle, citée p02) et question des bonnes pratiques p13 en gras. Autres pages conservées. Build et Chrome aux quatre formats tablette réussis, corrections chargées localement. Poursuivre S6.
+
+## S7 page 1 — Gras sélectif J-120
+
+Seule l’expression « ligne de vie » reste en gras dans le corps du texte. Image, disposition, encadré et autres pages conservés. Champ ciblé chargé localement ; balisage et diff vérifiés, navigateur non rejoué. Poursuivre S7.
+
+## S6 et S7 validés par l’utilisateur — J-121
+
+Validation éditoriale explicite le 23 novembre 2026 : S6 20 pages et S7 18 pages, corrections J-119/J-120 incluses. S1 à S7 sont désormais validés éditorialement. S8 à S16 sont intégrés mais restent à relire/valider ; reprendre selon la prochaine demande. Aucun commit ni déploiement dans cette intervention. Recette physique et publication restent à traiter.
+
+## S8 page 2 — Consigne secondaire masquée J-122
+
+Le bandeau « Faites glisser chaque élément dans la bonne zone » est masqué uniquement sur s8-p02-b1 via option facultative. Consigne de page et texte conservés. Base locale mise à jour, build et diff réussis ; navigateur non rejoué. Poursuivre S8.
+
+## S8 pages 5 à 8 — Relecture J-123
+
+P05 : question en gras et espace adaptatif avant pictos. P06 : introduction en gras. P07 : quatrième ensemble centré sous la crème, trois colonnes conservées via variante ciblée. P08 : image au-dessus du texte. Autres pages préservées, base locale chargée, build et Chrome aux quatre formats tablette réussis. Poursuivre S8.
+
+## S8 page 8 — Coins arrondis visibles J-124
+
+Largeur ajustée au ratio réel de l’image et à sa limite de hauteur, option activée uniquement sur p08. Coins arrondis réels vérifiés aux quatre formats tablette. Convention durable inscrite dans AGENTS.md : illustrations toujours à bords arrondis, sans reprise globale des pages validées. Base locale mise à jour.
+
+## S8 pages 10 à 16 — Relecture J-125
+
+Centrage vertical ciblé p10/p13/p15/p16. Colonnes 50/50 p11/p12, quatre symptômes en liste à tirets p12. Options facultatives conservant les autres pages. Base locale chargée, build et contrôles Chrome aux quatre formats tablette réussis. Contenus trop hauts défilants. Poursuivre S8.
+
+## S8 page 21 — Consigne secondaire masquée J-126
+
+Le bandeau « Faites glisser chaque élément dans la bonne zone » est retiré sur p21 uniquement via `hideInstruction`. Question, classement et consigne de page conservés. Champ ciblé chargé localement ; autres pages inchangées, diff vérifié. Poursuivre S8.
+
+## S8 validé par l’utilisateur — J-127
+
+Validation éditoriale explicite le 23 novembre 2026 sur les 21 pages actuelles, corrections J-122 à J-126 incluses. S1 à S8 sont désormais validés éditorialement. Reprendre S9 à la prochaine demande ; S9–S16 restent à relire/valider. Aucun commit ni déploiement ; recette physique et publication restantes.
+
+## S9 pages 1 et 9 — Relecture J-128
+
+P01 : quatre fonctions de l’eau en liste à puces carrées. P09 : image à gauche et quatre explications visibles à droite en colonnes 50/50, encadré conservé, consigne de clic retirée. Autres pages conservées. Base locale mise à jour, Chrome aux quatre formats tablette et diff réussis. Poursuivre S9.
+
+## S10 pages 1 et 2 — Relecture J-129
+
+Pressions systolique/diastolique en liste à tirets p01 ; quatre chiffres p02 remplacés par la planche de pictos fournie et consigne adaptée. Identification par le texte cité, S9 conservé. Base locale mise à jour, Chrome aux quatre formats tablette et diff réussis.
+
+## Picto Alerte commun — J-130
+
+À la demande utilisateur, `front/public/pictos/warning.png` reprend le gyrophare fourni dans les graphismes S3. Applicable à tous les encadrés Alerte, lecteur et aperçus ; dimensions du composant conservées. Source identique et build vérifiés, aucune modification de contenu ou de base.
+
+## S11 pages 1, 2, 5, 6, 7 et 9 — Relecture J-131
+
+Listes à tirets p01/p05, contenu centré verticalement p02, images des cartes p06 portées à 120 px, derniers ensembles p07/p09 centrés sous la deuxième colonne. Autres pages conservées. Base locale mise à jour ; build, Chrome aux quatre formats tablette et diff réussis. Poursuivre S11.
+
+## S12 pages 1 et 2 — Relecture J-132
+
+P01 (identifiée par le texte cité malgré « page 11 ») : introduction avant carrousel, phrase sur le traitement adapté après. P02 : gras des notes rétablis dans les six versos via option facultative de texte formaté. Autres pages conservées. Base locale chargée, build et Chrome aux quatre formats tablette réussis. Poursuivre S12.
+
+## S13 pages 7 et 8 — Relecture J-133
+
+P07 : pictos et textes centrés verticalement. P08 : « Légère fièvre » centré sous « Rougeur ». Options existantes activées sur ces seules pages, base locale chargée, Chrome aux quatre formats tablette et diff réussis. Poursuivre S13.
+
+## S1 à S16 validés éditorialement — J-134
+
+Validation explicite jusqu’au cours 16 le 23 novembre 2026, puis commit demandé. Intégrations S3–S16, médias, corrections du gabarit et notes de suivi regroupés. Retouches existantes de l’éditeur reprises dans S4/S5/S7/S8/S14 pour conserver les versions locales relues ; exports et JSON concordants. Divergence S4 J-109 résolue. Build, 18 tests PHP et références médias vérifiés. Aucun déploiement ; recette physique et publication restent à traiter. Prochaine action : poursuivre selon la demande utilisateur.

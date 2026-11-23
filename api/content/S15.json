@@ -1,0 +1,455 @@
+{
+  "code": "S15",
+  "title": "Complications inter et intra dialytiques",
+  "description": "Identifier les principales complications pouvant survenir pendant une séance de dialyse (complications intradialytiques).\nReconnaître les signes d’alerte pouvant apparaître entre les séances (complications interdialytiques) et savoir quand prévenir l’équipe soignante.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut citer les principales complications inter et intra dialytiques.",
+    "Le patient est capable d’identifier les principaux signes d’alerte.",
+    "Le patient peut citer les situations nécessitant une prise de contact rapide avec l’équipe soignante."
+  ],
+  "content": [
+    {
+      "id": "s15-p01",
+      "title": "POURQUOI CONNAÎTRE LES COMPLICATIONS DE LA DIALYSE ?",
+      "blocks": [
+        {
+          "id": "s15-p01-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S15/p1.png",
+          "alt": "POURQUOI CONNAÎTRE LES COMPLICATIONS DE LA DIALYSE ?",
+          "content": "L'hémodialyse est un traitement efficace et sécurisé, mais comme tout traitement médical, certaines complications peuvent survenir.\nLes connaître permet :\nde les repérer rapidement ;\nd'**alerter l'équipe** soignante sans attendre ;\nd'**éviter l'aggravation **de certaines situations ;\nd'améliorer sa sécurité et son confort.",
+          "imageMaxWidth": 493
+        },
+        {
+          "id": "s15-p01-b1-box1657",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La majorité des complications peuvent être prises en charge efficacement lorsqu'elles sont signalées précocement."
+        }
+      ]
+    },
+    {
+      "id": "s15-p02",
+      "title": "QUE SONT LES COMPLICATIONS INTRA-DIALYTIQUES ?",
+      "blocks": [
+        {
+          "id": "s15-p02-b1-box1660",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Une complication intra dialytique est un événement qui survient **pendant la séance de dialyse. **Tout signe de complication pendant la séance **doit être immédiatement signalé** à l’équipe."
+        },
+        {
+          "id": "s15-p02-b1",
+          "type": "carousel",
+          "question": "Les plus fréquentes sont :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S15/p2-carrousel-img1.png",
+              "alt": "Hypotension artérielle et malaise : il s'agit d'une baisse excessive de la tension artérielle qui peut aller jusqu’à entraîner une perte de connaissance. Les signes possibles sont ",
+              "text": "**Hypotension artérielle et malaise **: il s'agit d'une baisse excessive de la tension artérielle qui peut aller jusqu’à entraîner une perte de connaissance. Les signes possibles sont une sensation de malaise, **sueurs, nausées, vision trouble**… Mais chaque patient peut présenter ses propres signes d’hypotension. Elle peut être favorisée par un volume d’eau trop important retiré, suite à une prise de poids importante entre deux séances."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S15/p2-carrousel-img2.png",
+              "alt": "Les nausées et vomissements : ils peuvent accompagner une hypotension ou une mauvaise tolérance de la séance. Ils doivent être signalés rapidement.",
+              "text": "**Les nausées et vomissements** : ils peuvent accompagner une **hypotension** ou une mauvaise tolérance de la séance. Ils doivent être signalés rapidement."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S15/p2-carrousel-img3.png",
+              "alt": "Les maux de tête : ils peuvent être dûs à des variations de tension artérielle, à certains déséquilibres biologiques, entre autres. L’équipe soignante peut vous proposer un traitem",
+              "text": "**Les maux de tête** : ils peuvent être dûs à des **variations de tension artérielle**, à certains déséquilibres biologiques, entre autres. L’équipe soignante peut vous proposer un traitement pendant la séance pour les soulager."
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S15/p2-carrousel-img4.png",
+              "alt": "Les démangeaisons : elles perturbent votre confort et entraînent des lésions de grattage qui peuvent abîmer la peau, notamment sur la FAV. Elles peuvent être dues à une réaction al",
+              "text": "**Les démangeaisons** : elles perturbent votre confort et entraînent des **lésions de grattage** qui peuvent abîmer la peau, **notamment sur la FAV**. Elles peuvent être dues à une **réaction allergique **au patch anesthésiant, au sparadrap, au pansement de fin de séance, voire au rein artificiel. Un **excès de phosphore** dans le sang peut également provoquer ces démangeaisons."
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S15/p2-carrousel-img5.png",
+              "alt": "Les crampes musculaires : elles surviennent souvent au niveau des jambes, des pieds et parfois des mains. Elles peuvent être liées à un trop grand volume d’eau retiré, ou bien à de",
+              "text": "**Les crampes musculaires : **elles surviennent souvent au niveau des jambes, des pieds et parfois des mains. Elles peuvent être liées à un trop grand volume d’eau retiré, ou bien à des déséquilibres biologiques. Pour les éviter, il faut donc **limiter la prise de poids entre deux séances**. Dans certains cas, il est possible d’augmenter la teneur en sel du dialysat ou d’injecter du sel pendant la séance. Attention, cela peut stimuler la sensation de soif."
+            },
+            {
+              "id": "i6",
+              "imageUrl": "/courses/S15/p2-carrousel-img6.png",
+              "alt": "Les douleurs thoraciques et/ou l'essoufflement : ces symptômes peuvent être provoqués par un problème cardiaque et doivent toujours être signalés immédiatement aux soignants. Ils n",
+              "text": "**Les douleurs thoraciques et/ou l'essoufflement** : ces symptômes peuvent être provoqués par un **problème cardiaque** et doivent toujours être signalés immédiatement aux soignants. Ils nécessitent une évaluation urgente par l'équipe médicale."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s15-p03",
+      "title": "QUELS INCIDENTS POSSIBLES LORS DES SÉANCES DE DIALYSE  ?",
+      "blocks": [
+        {
+          "id": "s15-p03-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S15/p3.png",
+          "alt": "QUELS INCIDENTS POSSIBLES LORS DES SÉANCES DE DIALYSE  ?",
+          "question": "Il s’agit principalement des problèmes d’abord vasculaire en cours de dialyse.\nIls peuvent être d’ordre différents.",
+          "legendDialog": true,
+          "hideLegendTitle": true,
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 25,
+              "y": 30,
+              "size": 36,
+              "label": "1",
+              "description": "**Difficultés de ponctions de la FAV** : certaines FAV présentent des caractéristiques qui peuvent rendre leur ponction plus compliquée. Dans cette situation, une relais entre IDE peut s’organiser et votre aide peut être sollicitée pour comprimer une ponction manquée en début de séance. N’hésitez pas à parler de vos appréhensions à ce sujet avec l’équipe soignante."
+            },
+            {
+              "id": "r2",
+              "x": 72,
+              "y": 30,
+              "size": 36,
+              "label": "2",
+              "description": "**Problème de débit de la FAV** entraînant des diminutions de débit, voire des arrêts de la machine et donc une moins bonne qualité de dialyse : un doppler peut être demandé afin de vérifier le bon fonctionnement de votre fistule."
+            },
+            {
+              "id": "r3",
+              "x": 28,
+              "y": 74,
+              "size": 36,
+              "label": "3",
+              "description": "**Problème de débit du CVC **: le médecin peut prescrire un médicament permettant la désobstruction du cathéter. Il s’administre directement dans ses branches. La séance de dialyse est alors interrompue pendant 30 minutes."
+            },
+            {
+              "id": "r4",
+              "x": 73,
+              "y": 74,
+              "size": 36,
+              "label": "4",
+              "description": "**Diffusion** au niveau de la fistule entraînant un** hématome**, qui peut être traité par l’application de froid ou d’une pommade spécifique."
+            }
+          ]
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s15-p04",
+      "title": "POURQUOI PARLE-T-ON DE RISQUE HÉMORRAGIQUE EN SÉANCE ?",
+      "blocks": [
+        {
+          "id": "s15-p04-b1-box1678",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "En cas de désinsertion d’une aiguille ou d’une déconnexion des lignes du cathéter pendant la séance, il existe un risque d’exsanguination (perte de sang) massive, de type hémorragique, qui exige le respect de toutes les mesures préconisées pour l’éviter."
+        },
+        {
+          "id": "s15-p04-b1",
+          "type": "carousel",
+          "question": "",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S15/p4-carrousel-img1.png",
+              "alt": "Délogement de l’aiguille : lorsque l’aiguille bouge et se désinsère de la peau pendant la dialyse. Des procédures de fixation des aiguilles précises s’imposent aux IDE et doivent ê",
+              "text": "**Délogement de l’aiguille** : lorsque l’aiguille bouge et se désinsère de la peau pendant la dialyse. Des procédures de fixation des aiguilles précises s’imposent aux IDE et doivent être strictement appliquées. Tout patient doit coopérer pour limiter ce risque."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S15/p4-carrousel-img2.png",
+              "alt": "Déconnexion d’une ligne du circuit (sur FAV comme CVC) : lorsqu’une ligne se désadapte du circuit de dialyse.  Des procédures de fixation des lignes s’imposent aux IDE et au patien",
+              "text": "**Déconnexion d’une ligne du circuit** (sur FAV comme CVC) : lorsqu’une ligne se désadapte du circuit de dialyse.  Des procédures de fixation des lignes s’imposent aux IDE et au patient, notamment la fixation des lignes sur le vêtement du patient au niveau de l’épaule. À l’inverse, il ne faut jamais fixer les lignes sur le draps du fauteuil ou du matelas."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S15/p4-carrousel-img3.png",
+              "alt": "Délogement du cathéter : lorsqu’une traction importante est exercée sur les lignes d’un cathéter qui s’extériorise complètement. La fixation des lignes permet de limiter ce risque",
+              "text": "**Délogement du cathéter **: lorsqu’une traction importante est exercée sur les lignes d’un cathéter qui s’extériorise complètement. La fixation des lignes permet de limiter ce risque"
+            }
+          ]
+        },
+        {
+          "id": "s15-p04-b1-box1682",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Pendant la séance, le patient doit limiter ses mobilisations pour éviter de tirer sur ses lignes ou ses aiguilles. De même, la voie d’abord, cathéter comme FAV, doit rester bien visible pendant toute la séance pour que les IDE puissent vérifier leur fixation à tout moment."
+        }
+      ]
+    },
+    {
+      "id": "s15-p05",
+      "title": "QUE SONT LES COMPLICATIONS INTER DIALYTIQUES ?",
+      "blocks": [
+        {
+          "id": "s15-p05-b1-box1685",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Une complication inter dialytique survient entre deux séances de dialyse. Certaines d’entre elles peuvent entraîner des troubles cardiaques particulièrement dangereux, c’est pourquoi vous devez les connaître."
+        },
+        {
+          "id": "s15-p05-b1",
+          "type": "carousel",
+          "question": "",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S15/p5-carrousel-img1.gif",
+              "alt": "La surcharge hydrique : elle correspond à une accumulation excessive d'eau dans l'organisme. Les signes peuvent être : prise de poids importante, oedèmes des jambes (voire du visag",
+              "text": "**La surcharge hydrique **: elle correspond à une accumulation excessive d'eau dans l'organisme. Les signes peuvent être : prise de poids importante, oedèmes des jambes (voire du visage), hypertension artérielle… Le respect des consignes hydriques permet de limiter ce risque."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S15/p5-carrousel-img2.png",
+              "alt": "L’OAP ou œdème aigu du poumon : si la surcharge hydrique est trop importante et qu’il existe une insuffisance cardiaque concomitante, le cœur ne parvient plus à pomper tout ce liqu",
+              "text": "**L’OAP** ou œdème aigu du poumon : si la surcharge hydrique est trop importante et qu’il existe une insuffisance cardiaque concomitante, le cœur ne parvient plus à pomper tout ce liquide qui va envahir les poumons. Il s’agit alors **d’une urgence qui nécessite d’appeler le 15 (le SAMU). **Les signes sont : difficulté à respirer en position allongée, essoufflement entraînant des difficultés (voire une impossibilité) de parler, HTA importante…"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S15/p5-carrousel-img3.png",
+              "alt": "L'hyperkaliémie : le potassium peut s'accumuler dans le sang entre les séances. Un taux élevé peut provoquer une faiblesse musculaire, des fourmillements des mains/pieds et, si le ",
+              "text": "**L'hyperkaliémie **: le potassium peut s'accumuler dans le sang entre les séances. Un taux élevé peut provoquer une faiblesse musculaire, des fourmillements des mains/pieds et, si le taux de potassium est trop haut, des malaises voire des troubles du rythme cardiaque potentiellement grave. Le respect des recommandations alimentaires et des prescriptions médicales est essentiel."
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S15/p5-carrousel-img4.png",
+              "alt": "Autres complications inter dialytiques : thrombose et/ou infection de FAV ou du CVC, fièvre, resaignement de la FAV à domicile, malaises, douleur thoracique, etc.",
+              "text": "**Autres complications inter dialytiques** : thrombose et/ou infection de FAV ou du CVC, fièvre, resaignement de la FAV à domicile, malaises, douleur thoracique, etc."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s15-p06",
+      "title": "QUELS SIGNES DOIVENT CONDUIRE À CONTACTER RAPIDEMENT LE CENTRE ?",
+      "blocks": [
+        {
+          "id": "s15-p06-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "Prévenez rapidement le centre de dialyse en cas de :",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S15/p6-picto1.png",
+              "alt": "Fièvre et frissons",
+              "text": "Fièvre et frissons"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S15/p6-picto2.png",
+              "alt": "Douleur thoracique",
+              "text": "Douleur thoracique"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S15/p6-picto3.png",
+              "alt": "Essoufflement plus ou moins important",
+              "text": "Essoufflement plus ou moins important"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S15/p6-picto4.png",
+              "alt": "Saignement prolongé de la fistule",
+              "text": "Saignement prolongé de la fistule"
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S15/p6-picto5.png",
+              "alt": "Absence de thrill",
+              "text": "Absence de thrill"
+            },
+            {
+              "id": "i6",
+              "imageUrl": "/courses/S15/p6-picto6.png",
+              "alt": "Prise de poids importante",
+              "text": "Prise de poids importante"
+            },
+            {
+              "id": "i7",
+              "imageUrl": "/courses/S15/p6-picto7.png",
+              "alt": "Œdèmes importants",
+              "text": "Œdèmes importants"
+            },
+            {
+              "id": "i8",
+              "imageUrl": "/courses/S15/p6-picto8.png",
+              "alt": "Malaise ou perte de connaissance",
+              "text": "Malaise ou perte de connaissance"
+            },
+            {
+              "id": "i9",
+              "imageUrl": "/courses/S15/p6-picto9.png",
+              "alt": "Symptômes inhabituels persistants",
+              "text": "Symptômes inhabituels persistants"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s15-p07",
+      "title": "QUEL EST MON RÔLE DANS LA SURVEILLANCE DE MA SANTÉ ?",
+      "blocks": [
+        {
+          "id": "s15-p07-b1",
+          "type": "carousel",
+          "question": "Le patient est souvent le premier à détecter une anomalie.\n\nC’est pourquoi il est important de :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S15/p7-carrousel-img1.png",
+              "alt": "Connaître les signes d'alerte des complications",
+              "text": "Connaître les signes d'alerte des complications"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S15/p7-carrousel-img2.png",
+              "alt": "Identifier et signaler à l’équipe tout changements de mon état de santé",
+              "text": "Identifier et signaler à l’équipe tout changements de mon état de santé"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S15/p7-carrousel-img3.png",
+              "alt": "Respecter les prescriptions et recommandations des soignants",
+              "text": "Respecter les prescriptions et recommandations des soignants"
+            }
+          ]
+        },
+        {
+          "id": "s15-p07-b1-box1709",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "Ne jamais minimiser un symptôme inhabituel. Une alerte précoce permet souvent d'éviter une complication plus grave."
+        }
+      ]
+    },
+    {
+      "id": "s15-p08",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s15-p08-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Que devez-vous faire en priorité si vous ressentez un malaise pendant la séance de dialyse ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Arrêter le générateur de dialyse",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Lancer une prise de tension",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Signaler cette sensation de malaise à un soignant",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Mesurer mon taux de sucre",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s15-p09",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s15-p09-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Si je suis essoufflé au point d’avoir du mal à parler :**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Je dois m’allonger pour aller me reposer",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Je dois immédiatement appeler le SAMU",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Je dois impérativement le signaler lors de ma prochaine séance de dialyse",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Il peut s’agir d’une hyperkaliémie",
+              "isCorrect": false
+            },
+            {
+              "id": "c4",
+              "label": "Il peut s’agir d’un OAP",
+              "isCorrect": true
+            },
+            {
+              "id": "c5",
+              "label": "C’est certainement dû à une surcharge hydrique trop importante",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s15-p10",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s15-p10-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Je peux citer 4 signes cliniques qui imposent d’appeler le centre de dialyse immédiatement**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "OUI (je peux)",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "NON",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

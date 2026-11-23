@@ -69,8 +69,17 @@ export interface ImageTextBlock {
   /** picto : petite icône ; image : vignette plus grande */
   size: 'picto' | 'image';
   imageSide?: 'left' | 'right';
+  imagePosition?: 'top';
   verticalAlign?: 'center';
   imageMaxWidth?: number;
+  imageMaxHeight?: number;
+  imageAspectRatio?: number;
+  imageWidth?: 'half-screen' | 'half' | 'third';
+  infoCard?: InfoCardBlock;
+  listSpacing?: 'normal';
+  listMarker?: 'dash';
+  listIntro?: string;
+  list?: { text: string; imageUrl?: string; children?: string[] }[];
 }
 
 export type QuestionType = 'qcu' | 'qcm' | 'drag-drop';
@@ -116,6 +125,10 @@ export type ContentBlock =
 export interface PictoGridBlock {
   type: 'picto-grid';
   layout?: 'grid' | 'stacked';
+  alignCaptions?: boolean;
+  centerRows?: boolean;
+  questionGap?: 'large';
+  centerLastItem?: boolean;
   comparison?: boolean;
   spread?: boolean;
   id: string;
@@ -235,9 +248,12 @@ export interface FlipCard {
   id: string;
   front: string;
   back: string;
+  frontImageUrl?: string;
+  frontImageSize?: number;
 }
 
 export interface FlipCardsBlock {
+  formattedBack?: boolean;
   type: 'flip-cards';
   id: string;
   question: string;
@@ -256,6 +272,7 @@ export interface CategorizeItem {
 }
 
 export interface CategorizeBlock {
+  hideInstruction?: boolean;
   type: 'categorize';
   id: string;
   question: string;
@@ -449,6 +466,7 @@ export interface HotspotBlock {
   imageUrl: string;
   alt: string;
   legendDialog?: boolean;
+  hideLegendTitle?: boolean;
   caption?: string;
   /** Question affichée en gras au-dessus de l'image */
   question?: string;
@@ -461,6 +479,7 @@ export interface ModulePage {
   id: string;
   title: string;
   instruction?: string;
-  layout?: 'spread';
+  layout?: 'spread' | 'center';
+  showSwipeHint?: boolean;
   blocks: ContentBlock[];
 }

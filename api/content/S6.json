@@ -1,0 +1,593 @@
+{
+  "code": "S6",
+  "title": "Voies d’abord en hémodialyse : fistule artérioveineuse (FAV) et cathéter veineux central (CVC)",
+  "description": "Identifier les différents types de voies d’abord utilisées en hémodialyse et comprendre leur rôle.\nReconnaître les règles de surveillance et les signes d’alerte nécessitant de prévenir l’équipe soignante.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient sait expliquer la différence entre FAV et CVC.",
+    "Le patient peut expliquer les avantages et les limites de chaque voie d’abord.",
+    "Le patient explique l’importance de participer activement à la surveillance et à la préservation de sa voie d’abord."
+  ],
+  "content": [
+    {
+      "id": "s6-p01",
+      "title": "QU'EST-CE QU'UNE VOIE D'ABORD ?",
+      "blocks": [
+        {
+          "id": "s6-p01-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageMaxHeight": 500,
+          "imageUrl": "/courses/S6/p1.png",
+          "alt": "QU'EST-CE QU'UNE VOIE D'ABORD ?",
+          "content": "Pour réaliser l'hémodialyse, il est nécessaire de disposer d'un accès permettant de **prélever et de restituer le sang **en toute sécurité.\nCet accès est appelé **voie d'abord vasculaire.**",
+          "imagePosition": "top"
+        }
+      ]
+    },
+    {
+      "id": "s6-p02",
+      "title": "QUELS TYPES DE VOIX D’ABORD ? 1/2",
+      "blocks": [
+        {
+          "id": "s6-p02-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Pouvez-vous citer une ou deux voies d’abord que vous connaissez ? (Dites-les à haute voix à l’infirmier/ère)**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "OUI (je peux en citer une ou deux)",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "NON",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p03",
+      "title": "QUELS TYPES DE VOIX D’ABORD ? 2/2",
+      "blocks": [
+        {
+          "id": "s6-p03-b1",
+          "type": "carousel",
+          "question": "**Il existe principalement deux types de voies d'abord :**",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S6/p3-carrousel-img1.png",
+              "alt": "La fistule artérioveineuse (FAV)",
+              "text": "La fistule artérioveineuse (FAV)"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S6/p3-carrousel-img2.png",
+              "alt": "Le cathéter veineux central (CVC)",
+              "text": "Le cathéter veineux central (CVC)"
+            }
+          ]
+        },
+        {
+          "id": "s6-p03-info",
+          "type": "info-card",
+          "variant": "important",
+          "title": "IMPORTANT",
+          "content": "La qualité de la voie d'abord influence directement l'efficacité et la sécurité du traitement."
+        }
+      ]
+    },
+    {
+      "id": "s6-p04",
+      "title": "FISTULE, ARTÈRES ET VEINES 1/5",
+      "blocks": [
+        {
+          "id": "s6-p04-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Pouvez-vous dire ce que signifient les lettres de l'acronyme FAV ? (Si oui, dites-le à voix haute à l’infirmière/infirmier)**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "OUI",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "NON",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p05",
+      "title": "FISTULE, ARTÈRES ET VEINES 2/5",
+      "blocks": [
+        {
+          "id": "s6-p05-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Selon vous, pour réaliser une hémodialyse, le flux sanguin doit être :**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Trés important",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Plutôt normal",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p06",
+      "title": "FISTULE, ARTÈRES ET VEINES 3/5",
+      "blocks": [
+        {
+          "id": "s6-p06-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Dans quel type de vaisseaux le flux sanguin est-il le plus abondant ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Artère",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Veine",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p07",
+      "title": "FISTULE, ARTÈRES ET VEINES 4/5",
+      "blocks": [
+        {
+          "id": "s6-p07-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Selon vous, pour réaliser une hémodialyse, le vaisseau à ponctionner doit être :**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Le plus en surface possible de la peau",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Le plus en profondeur possible dans le bras",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p08",
+      "title": "FISTULE, ARTÈRES ET VEINES 5/5",
+      "blocks": [
+        {
+          "id": "s6-p08-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Quel type de vaisseau affleure le plus souvent à la surface de la peau ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Artère",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Veine",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p09",
+      "title": "QU'EST-CE QU'UNE FISTULE ARTÉRIO-VEINEUSE (FAV) ? 1/2",
+      "blocks": [
+        {
+          "id": "s6-p09-info",
+          "type": "info-card",
+          "variant": "important",
+          "title": "IMPORTANT",
+          "content": "La fistule artério-veineuse est créée chirurgicalement en reliant une artère à une veine."
+        },
+        {
+          "id": "s6-p09-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 360,
+          "imageUrl": "/courses/S6/p9.png",
+          "alt": "QU'EST-CE QU'UNE FISTULE ARTÉRIO-VEINEUSE (FAV) ? 1/2",
+          "content": "La création de la FAV permet d’**obtenir un flux sanguin trés important**, puisqu’il est artériel, tout en étant **proche de la surface de la peau**, puisqu’il s’agit d’une veine, facilitant ainsi les ponctions."
+        }
+      ]
+    },
+    {
+      "id": "s6-p10",
+      "title": "QU'EST-CE QU'UNE FISTULE ARTÉRIO-VEINEUSE (FAV) ? 2/2",
+      "blocks": [
+        {
+          "id": "s6-p10-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 360,
+          "imageUrl": "/courses/S6/p10.png",
+          "alt": "QU'EST-CE QU'UNE FISTULE ARTÉRIO-VEINEUSE (FAV) ? 2/2",
+          "content": "La création de la FAV permet donc :\n- d'**augmenter le débit** sanguin dans la veine ;\n- de rendre possible les **ponctions répétées** pour la dialyse ;\n- de disposer d'un **accès vasculaire durable**."
+        },
+        {
+          "id": "s6-p10-info",
+          "type": "info-card",
+          "variant": "important",
+          "title": "IMPORTANT",
+          "content": "La fistule est considérée comme la voie d'abord de référence pour l'hémodialyse lorsqu'elle est possible."
+        }
+      ]
+    },
+    {
+      "id": "s6-p11",
+      "title": "QUELS SONT LES AVANTAGES DE LA FAV ?",
+      "blocks": [
+        {
+          "id": "s6-p11-b1",
+          "type": "flip-cards",
+          "question": "La fistule présente plusieurs avantages :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Meilleure longévité"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Moins de risque d'infection"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Moins de risque de thrombose et d’hospitalisations"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Meilleure efficacité de la dialyse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p12",
+      "title": "COMMENT SE PASSENT LES PONCTIONS DE LA FAV ?",
+      "blocks": [
+        {
+          "id": "s6-p12-info",
+          "type": "info-card",
+          "variant": "important",
+          "title": "IMPORTANT",
+          "content": "La FAV va être ponctionnée au moins 3 fois par semaine avec 2 aiguilles de gros calibre. La longévité de la FAV dépend également du respect des bonnes pratiques de ses ponctions."
+        },
+        {
+          "id": "s6-p12-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 360,
+          "imageUrl": "/courses/S6/p12.png",
+          "alt": "COMMENT SE PASSENT LES PONCTIONS DE LA FAV ?",
+          "content": "- Le choix des zones où positionner les aiguilles **relève de la responsabilité de l'infirmier/ère. **\n- Il/elle peut répondre à une éventuelle demande du patient à ce sujet, **tant qu’il/elle estime que les sites choisis ne présentent pas d’effet délétère** pour la FAV, à court ou moyen terme. Si besoin, l’avis du médecin peut être sollicité."
+        }
+      ]
+    },
+    {
+      "id": "s6-p13",
+      "title": "COMMENT L’INFIRMIÈRE/INFIRMIER VA RÉALISER LES PONCTIONS ?",
+      "blocks": [
+        {
+          "id": "s6-p13-b1",
+          "type": "flip-cards",
+          "question": "**Quelles sont les bonnes pratiques que l’infirmier/ère doit appliquer pour ponctionner la fistule ?**",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Les 2 points de ponction doivent être changés à chaque séance de dialyse."
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Les 2 points de ponction doivent être espacés de 6 cm au moins."
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Une peau lésée ne doit jamais être ponctionnée."
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "La fixation des aiguilles est primordiale, notamment par l’ajout d’une pince à clamper sur la manche du vêtement."
+            }
+          ]
+        },
+        {
+          "id": "s6-p13-info",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "FUN FACT",
+          "content": "Pour limiter les douleurs de ponction, le médecin peut prescrire une crème anesthésiante. Vous devez suivre les recommandations de l’équipe à ce sujet."
+        }
+      ]
+    },
+    {
+      "id": "s6-p14",
+      "title": "QU'EST-CE QU'UN CATHÉTER VEINEUX CENTRAL (CVC) ? 1/2",
+      "blocks": [
+        {
+          "id": "s6-p14-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 360,
+          "imageUrl": "/courses/S6/p14.png",
+          "alt": "QU'EST-CE QU'UN CATHÉTER VEINEUX CENTRAL (CVC) ? 1/2",
+          "content": "Le cathéter veineux central est un tube souple **placé dans une veine de gros calibre.** Son extrémité **arrive à l’entrée du cœur. **Il possède deux branches qui permettent de ponctionner et de restituer le sang pendant la dialyse."
+        },
+        {
+          "id": "s6-p14-info",
+          "type": "info-card",
+          "variant": "important",
+          "title": "IMPORTANT",
+          "content": "Le cathéter permet de débuter rapidement une dialyse, d'assurer le traitement lorsqu'une fistule n'est pas encore disponible."
+        }
+      ]
+    },
+    {
+      "id": "s6-p15",
+      "title": "QU'EST-CE QU'UN CATHÉTER VEINEUX CENTRAL (CVC) ? 2/2",
+      "blocks": [
+        {
+          "id": "s6-p15-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 360,
+          "imageUrl": "/courses/S6/p15.png",
+          "alt": "QU'EST-CE QU'UN CATHÉTER VEINEUX CENTRAL (CVC) ? 2/2",
+          "content": "Il peut être implanté :\n- dans une **veine jugulaire** ;\n- plus rarement dans une v**eine fémorale** ou **sous-clavière**."
+        },
+        {
+          "id": "s6-p15-info",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "FUN FACT",
+          "content": "Le cathéter est généralement posé au bloc opératoire, en chirurgie ambulatoire, sous anesthésie locale. Selon leur durée d’utilisation, il existe différents types de cathéters centraux de dialyse."
+        }
+      ]
+    },
+    {
+      "id": "s6-p16",
+      "title": "QUELS SONT LES AVANTAGES DU CATHÉTER ?",
+      "blocks": [
+        {
+          "id": "s6-p16-b1",
+          "type": "flip-cards",
+          "question": "Les avantages du cathéter sont :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Utilisable immédiatement aprés la pose"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Absence de ponctions à chaque séance"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Solution temporaire ou parfois prolongée selon la situation"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Pas de compression ni temps d’attente en fin de séance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p17",
+      "title": "QUELS SONT LES INCONVÉNIENTS DU CATHÉTER ?",
+      "blocks": [
+        {
+          "id": "s6-p17-b1",
+          "type": "flip-cards",
+          "question": "Les inconvénients du cathéter sont :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Risque infectieux plus élevé"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Risque plus fréquent de thrombose et de dysfonctionnements"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Surveillance rigoureuse indispensable"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Dispositif externe potentiellement gênant pour le patient"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p19",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s6-p19-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Pourquoi la fistule doit être privilégiée sur le cathéter ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Elle présente moins de risque infectieux.",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Elle est utilisable dès sa création.",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Elle présente moins de contraintes pour le patient.",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Elle permet souvent une meilleure qualité de dialyse.",
+              "isCorrect": true
+            },
+            {
+              "id": "c4",
+              "label": "Elle présente une meilleure longévité.",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p20",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s6-p20-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**La fistule est constituée de :**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "un tube en plastique inséré dans une veine de gros calibre qui arrive à l’entrée du coeur.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "une veine abouchée à une artère.",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "un cathéter inséré dans l’abdomen.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s6-p21",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s6-p21-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Le fait d’aboucher chirurgicalement une artère à une veine permet de :**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "obtenir un débit sanguin trés important dans la veine.",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "limiter l'insuffisance veineuse.",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "pouvoir ponctionner un gros vaisseau avec un bon débit sanguin plus facilement.",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "obtenir un vaisseau avec un gros débit sanguin plus en surface de la peau.",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

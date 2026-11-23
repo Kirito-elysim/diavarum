@@ -299,9 +299,9 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
       )}
 
       {block.legendDialog ? (
-        <dialog ref={legendDialog} aria-label={active?.label ?? 'Légende'} onClose={() => setActiveId(null)} className="m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto rounded-3xl border border-[#004138]/15 bg-white p-6 text-[#004138] shadow-lg backdrop:bg-black/45">
+        <dialog ref={legendDialog} aria-label="Informations" onClose={() => setActiveId(null)} className="m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto rounded-3xl border border-[#004138]/15 bg-white p-6 text-[#004138] shadow-lg backdrop:bg-black/45">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="course-copy font-bold">{active?.label}</h2>
+            <span />
             <button type="button" aria-label="Fermer la légende" onClick={() => legendDialog.current?.close()} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#ECF5E9]">
               <X className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -314,17 +314,12 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
         {active && !labelsOnly && (
           <div className="mx-4 mb-4 mt-2 rounded-2xl p-4" style={{ backgroundColor: '#FFF4ED', border: '1.5px solid #FCC6A8' }}>
             <div className="flex items-start justify-between gap-3 mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
-                  <span className="flex h-full w-full items-center justify-center text-white course-caption font-black"><HotspotMarker point={active} index={block.hotspots.findIndex((h) => h.id === active.id)} /></span>
-                </div>
-                <p className="font-bold text-[#004138] course-label">{active.label}</p>
-              </div>
+              <span />
               <button aria-label="Fermer la légende" onClick={() => setActiveId(null)} className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors flex-shrink-0 touch-manipulation">
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
-            <p className="text-[#004138] course-copy leading-relaxed pl-9">{active.description}</p>
+            <p className="text-[#004138] course-copy leading-relaxed"><CourseText text={active.description} /></p>
           </div>
         )}
       </div>
@@ -349,7 +344,7 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
           >
             <span className={cn('w-5 h-5 rounded-lg flex items-center justify-center course-caption font-black flex-shrink-0',
               hs.id === activeId ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-600')}><HotspotMarker point={hs} index={i} className="h-3.5 w-3.5" /></span>
-            <span className="course-label font-semibold break-words min-w-0">{hs.label}</span>
+            <span className="course-label font-semibold break-words min-w-0">{/^repère\s*\d+$/i.test(hs.label.trim()) ? i + 1 : hs.label}</span>
           </button>
         ))}
       </div>
@@ -363,9 +358,28 @@ function HotspotBlockView({ block }: { block: HotspotBlock }) {
 function ImageTextView({ block }: { block: ImageTextBlock }) {
   const picto = block.size === 'picto';
   return (
-    <div className={cn('course-image-text flex gap-10', block.verticalAlign === 'center' ? 'items-center' : 'items-start', !picto && 'flex-col sm:flex-row', block.imageSide === 'right' && 'sm:flex-row-reverse')}>
-      {block.imageUrl ? <img src={block.imageUrl} alt={block.alt} loading="lazy" className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full sm:w-[48%] rounded-3xl')} style={!picto && block.imageMaxWidth ? { maxWidth: block.imageMaxWidth } : undefined} /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
-      <p className="min-w-0 flex-1 text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
+    <div className={cn('course-image-text flex gap-10', block.verticalAlign === 'center' ? 'items-center' : 'items-start', !picto && (block.imagePosition === 'top' ? 'flex-col gap-5' : 'flex-col sm:flex-row'), block.imageSide === 'right' && block.imagePosition !== 'top' && 'sm:flex-row-reverse')}>
+      {block.imageUrl ? <img
+        src={block.imageUrl}
+        alt={block.alt}
+        loading="lazy"
+        className={cn('object-contain', picto ? 'h-24 w-24 shrink-0' : 'w-full rounded-3xl', !picto && block.imagePosition !== 'top' && (block.imageWidth === 'third' ? 'sm:w-[calc((100%-40px)/3)] sm:shrink-0' : block.imageWidth === 'half' ? 'sm:w-[calc(50%-20px)] sm:shrink-0' : block.imageWidth === 'half-screen' ? 'sm:w-[50vw] sm:max-w-[60%] sm:shrink-0' : 'sm:w-[48%]'))}
+        style={!picto ? { maxWidth: block.imageAspectRatio && block.imageMaxHeight ? `min(100%, ${block.imageMaxHeight * block.imageAspectRatio}px, calc((100dvh - 330px) * ${block.imageAspectRatio}))` : block.imageMaxWidth, maxHeight: block.imageMaxHeight ? `min(${block.imageMaxHeight}px, calc(100dvh - 330px))` : undefined } : undefined}
+      /> : <div className="h-64 w-full sm:w-[48%] shrink-0 rounded-3xl bg-[#FFE0D0]" aria-label="Image à ajouter" />}
+      {block.infoCard ? <div className="min-w-0 flex-1 space-y-5">
+        <p className="text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>
+        <InfoCardView block={block.infoCard} />
+      </div> : block.list ? <div className="min-w-0 flex-1 text-[25px] leading-snug text-[#004138] break-words" style={courseTextStyle(block.textStyle)}>
+        {block.listIntro && <p className="mb-3"><CourseText text={block.listIntro} /></p>}
+        <ul className={cn('list-none pl-[10px]', block.listSpacing === 'normal' ? 'space-y-0 [&_li]:leading-[1.375]' : 'space-y-4')}>
+          {block.list.map((item, index) => <li key={index} className={item.imageUrl ? 'flex items-center gap-3' : (block.listMarker === 'dash' ? "relative pl-5 before:absolute before:left-0 before:content-['–']" : "relative pl-5 before:absolute before:left-0 before:content-['▪']")}>
+            {item.imageUrl ? <><img src={item.imageUrl} alt="" className="h-16 w-16 shrink-0 object-contain" /><span className="min-w-0 flex-1"><CourseText text={item.text} /></span></> : <CourseText text={item.text} />}
+            {item.children && <ul className={cn('list-none pl-[10px]', block.listSpacing === 'normal' ? 'mt-0 space-y-0' : 'mt-3 space-y-2')}>
+              {item.children.map((text, childIndex) => <li key={childIndex} className="relative pl-5 before:absolute before:left-0 before:content-['–']"><CourseText text={text} /></li>)}
+            </ul>}
+          </li>)}
+        </ul>
+      </div> : <p className="min-w-0 flex-1 text-[25px] leading-snug text-[#004138] whitespace-pre-line break-words" style={courseTextStyle(block.textStyle)}><CourseText text={block.content} /></p>}
     </div>
   );
 }
@@ -1075,7 +1089,7 @@ export function PageBlocks({ page, keyPrefix, quizAnswers, onQuizAnswer }: {
   const { blocks } = page;
   const fill = pageFills(blocks);
   const center = pageCenters(blocks);
-  return <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0', center && 'flex flex-1 flex-col justify-center space-y-0', page.layout === 'spread' && 'flex flex-1 flex-col justify-evenly gap-5 space-y-0')}>
+  return <div className={cn('space-y-5', fill && 'flex flex-1 flex-col space-y-0', center && 'flex flex-1 flex-col justify-center space-y-0', page.layout === 'spread' && 'flex flex-1 flex-col justify-evenly gap-5 space-y-0', page.layout === 'center' && 'flex flex-1 flex-col justify-center')}>
     {blocks.map((block) => <div
       key={`${keyPrefix}:${block.id}`}
       className={cn(fill && 'flex flex-1 flex-col', block.type === 'info-card' && block.compact && 'pb-5')}
@@ -1472,7 +1486,7 @@ function SessionRunner({
         <div className={cn('mx-4 sm:mx-10 py-5 [@media(max-height:820px)]:py-3', fillPage && 'flex min-h-full flex-col', slideClass)}>
           <PageBlocks page={currentPage} keyPrefix={currentPage.id} quizAnswers={quizAnswers} onQuizAnswer={handleQuizAnswer} />
 
-          {pageIndex === 0 && totalPages > 1 && (
+          {pageIndex === 0 && totalPages > 1 && currentPage.showSwipeHint !== false && (
             <div className="flex items-center justify-center gap-3 pt-4 text-[#004138]/35">
               <ChevronLeft className="w-4 h-4" />
               <p className="course-caption font-medium">Glissez pour naviguer</p>

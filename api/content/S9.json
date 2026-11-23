@@ -1,0 +1,572 @@
+{
+  "code": "S9",
+  "title": "Notion de poids sec et équilibre hydrique",
+  "description": "Définir la notion de poids sec et comprendre son importance dans le traitement par hémodialyse.\nIdentifier les comportements permettant de maintenir un bon équilibre hydrique entre les séances de dialyse.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient définit correctement la notion de poids sec",
+    "Le patient identifie les signes de surcharge hydrique et de déshydratation",
+    "Le patient connait son poids sec."
+  ],
+  "content": [
+    {
+      "id": "s9-p01",
+      "title": "Pourquoi l'eau est-elle importante dans mon organisme ?",
+      "blocks": [
+        {
+          "id": "s9-p01-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S9/p1.png",
+          "alt": "Pourquoi l'eau est-elle importante dans mon organisme ?",
+          "content": "L'eau représente une grande partie du corps humain et participe à de nombreuses fonctions :\ntransport de l'oxygène et des nutriments ;\nélimination des déchets ;\nrégulation de la température corporelle ;\nbon fonctionnement des organes.",
+          "imageMaxWidth": 155,
+          "listIntro": "L'eau représente une grande partie du corps humain et participe à de nombreuses fonctions :",
+          "list": [
+            {
+              "text": "transport de l'oxygène et des nutriments ;"
+            },
+            {
+              "text": "élimination des déchets ;"
+            },
+            {
+              "text": "régulation de la température corporelle ;"
+            },
+            {
+              "text": "bon fonctionnement des organes."
+            }
+          ],
+          "listSpacing": "normal"
+        }
+      ]
+    },
+    {
+      "id": "s9-p02",
+      "title": "Rappels sur l’IRCT",
+      "blocks": [
+        {
+          "id": "s9-p02-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S9/p2.png",
+          "alt": "Rappels sur l’IRCT",
+          "content": "Chez une personne dont les reins fonctionnent normalement, l'excès d'eau est éliminé par les urines.\nEn insuffisance rénale terminale, cette élimination devient insuffisante ou inexistante. La séance de dialyse sert à retirer cette eau excédentaire, entre autres.",
+          "imageMaxWidth": 359
+        }
+      ]
+    },
+    {
+      "id": "s9-p03",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s9-p03-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**D’une façon générale, quel poids est-ce que je prends entre 2 séances ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Moins de 1 kg",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Entre 1 et 3 kg",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Plus de 3 kg",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9-p04",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s9-p04-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Ce poids est constitué de :**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Gras",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Eau",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Un peu des deux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9-p05",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s9-p05-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Pouvez-vous expliquer ce qu’est le poids sec à votre infirmière d’entraînement ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "OUI",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "NON",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9-p06",
+      "title": "Qu'est-ce que le poids sec ?",
+      "blocks": [
+        {
+          "id": "s9-p06-b1",
+          "type": "flip-cards",
+          "question": "Le poids sec correspond au poids que vous avez lorsque :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "l'excès d'eau a été retiré ;"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "vous n'êtes ni en surcharge ni en déshydratation ;"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "votre tension artérielle est équilibrée;"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "vous ne présentez pas d'œdèmes ni d'essoufflement liés à une rétention d'eau."
+            }
+          ]
+        },
+        {
+          "id": "s9-p06-b1-box1020",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Le poids sec est déterminé et prescrit par le médecin. Il sert de référence à l'équipe soignante pour programmer le poids à perdre pendant la dialyse."
+        }
+      ]
+    },
+    {
+      "id": "s9-p07",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s9-p07-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Si je grossis en prenant du gras, est-ce que mon poids sec change ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Oui",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Non",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9-p08",
+      "title": "Evolution du poids sec",
+      "blocks": [
+        {
+          "id": "s9-p08-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S9/p8.png",
+          "alt": "Evolution du poids sec",
+          "content": "Le poids sec peut évoluer au cours du temps, vous pouvez prendre ou perdre de la masse musculaire ou graisseuse, comme tout le monde.\nIl faut bien distinguer, dans une prise ou perte de poids sur la balance, le volume d’eau pris entre les dialyses et la perte ou la prise de masse grasse (ou musculaire).\nL’équipe soignante, et notamment le médecin, vont régulièrement réévaluer votre poids sec en fonction de ces fluctuations, en se basant sur vos résultats sanguins et vos paramètres de dialyse.",
+          "imageMaxWidth": 359
+        }
+      ]
+    },
+    {
+      "id": "s9-p09",
+      "title": "Pourquoi le poids est-il contrôlé à chaque séance ?",
+      "blocks": [
+        {
+          "id": "s9-p09-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageUrl": "/courses/S9/p9.png",
+          "alt": "Pourquoi le poids est-il contrôlé à chaque séance ?",
+          "content": "La pesée avant et après la dialyse permet de :\névaluer la prise de poids entre les séances ;\ncalculer la quantité de liquide à retirer (UF pour ultrafiltration);\nvérifier l'atteinte du poids sec ;\nprévenir les complications liées à une surcharge ou une déshydratation."
+        },
+        {
+          "id": "s9-p09-b1-box1037",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La pesée doit être réalisée dans les mêmes conditions à chaque séance."
+        }
+      ]
+    },
+    {
+      "id": "s9-p10",
+      "title": "Quels sont les risques d'une surcharge hydrique ?",
+      "blocks": [
+        {
+          "id": "s9-p10-b1",
+          "type": "flip-cards",
+          "question": "Lorsque trop d'eau s'accumule dans l'organisme entre deux séances, plusieurs complications peuvent apparaître :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "œdèmes des jambes ou des chevilles ;"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "prise de poids rapide ;"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "hypertension artérielle et/ou surcharge cardiaque."
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "essoufflement ;"
+            }
+          ]
+        },
+        {
+          "id": "s9-p10-b1-box1045",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "Dans les situations sévères, une surcharge hydrique peut nécessiter une dialyse en urgence et/ou une prise en charge médicale rapide."
+        }
+      ]
+    },
+    {
+      "id": "s9-p11",
+      "title": "Quels sont les signes d'une déshydratation ?",
+      "blocks": [
+        {
+          "id": "s9-p11-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S9/p11.png",
+          "alt": "Quels sont les signes d'une déshydratation ?",
+          "question": "Si trop de liquide est retiré pendant la séance ou si les apports sont insuffisants, certains signes peuvent apparaître :",
+          "legendDialog": true,
+          "hideLegendTitle": true,
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 25,
+              "y": 20,
+              "size": 36,
+              "label": "1",
+              "description": "vertiges et malaise ;"
+            },
+            {
+              "id": "r2",
+              "x": 73,
+              "y": 20,
+              "size": 36,
+              "label": "2",
+              "description": "sensation de soif intense ;"
+            },
+            {
+              "id": "r3",
+              "x": 26,
+              "y": 53,
+              "size": 36,
+              "label": "3",
+              "description": "fatigue importante ;"
+            },
+            {
+              "id": "r4",
+              "x": 73,
+              "y": 53,
+              "size": 36,
+              "label": "4",
+              "description": "hypotension ;"
+            },
+            {
+              "id": "r5",
+              "x": 50,
+              "y": 82,
+              "size": 36,
+              "label": "5",
+              "description": "crampes ;"
+            }
+          ]
+        },
+        {
+          "id": "s9-p11-b1-box1054",
+          "type": "info-card",
+          "variant": "objective",
+          "title": "Objectif",
+          "content": "L'objectif du médecin, lorsqu’il détermine le poids sec, est de trouver le meilleur équilibre possible entre surcharge hydrique et déshydratation."
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s9-p12",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s9-p12-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Si en fin de séance, j’atteins un poids inférieur au poids sec déterminé par le médecin, c’est mieux pour ma santé et cela me laisse de la marge sur la boisson.**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9-p13",
+      "title": "Comment limiter ma prise de poids entre deux séances ?",
+      "blocks": [
+        {
+          "id": "s9-p13-b1",
+          "type": "carousel",
+          "question": "Pour maintenir un bon équilibre hydrique, il est conseillé :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S9/p13-carrousel1-img1.png",
+              "alt": "de respecter la quantité de boissons recommandée et les répartir dans la journée ;",
+              "text": "de respecter la quantité de boissons recommandée et les répartir dans la journée ;"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S9/p13-carrousel1-img2.png",
+              "alt": "de limiter les aliments très salés qui augmentent la soif et suivre les conseils de l'équipe diététique.",
+              "text": "de limiter les aliments très salés qui augmentent la soif et suivre les conseils de l'équipe diététique."
+            }
+          ]
+        },
+        {
+          "id": "s9-p13-b1-box1064",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "En règle générale, une prise de poids excessive entre les dialyses rend la séance plus fatigante et augmente le risque de complications."
+        }
+      ]
+    },
+    {
+      "id": "s9-p14",
+      "title": "Quel est mon rôle dans la gestion de mon équilibre hydrique ?",
+      "blocks": [
+        {
+          "id": "s9-p14-b1",
+          "type": "flip-cards",
+          "question": "Vous pouvez participer activement en :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "connaissant votre poids sec ;"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "signalant un essoufflement"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "signalant des œdèmes ;"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "échangeant avec l'équipe soignante en cas de difficulté à respecter les recommandations."
+            }
+          ]
+        },
+        {
+          "id": "s9-p14-b1-box1073",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La gestion de l'équilibre hydrique est un élément essentiel de la réussite de votre traitement."
+        }
+      ]
+    },
+    {
+      "id": "s9-p15",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s9-p15-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Le poids sec est le poids mesuré avant la séance de dialyse.**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9-p16",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s9-p16-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Le poids sec correspond au poids que vous avez lorsque :**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "l'excès d'eau a été totalement retiré",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "vous avez bu trop d’eau",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "vous n'êtes ni en surcharge hydrique ni en déshydratation",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9-p17",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s9-p17-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Quels sont les signes pouvant évoquer une surcharge hydrique**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Hypertension",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Hypotension",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Crampes",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Essoufflement",
+              "isCorrect": true
+            },
+            {
+              "id": "c4",
+              "label": "Oedèmes",
+              "isCorrect": true
+            },
+            {
+              "id": "c5",
+              "label": "Soif importante",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

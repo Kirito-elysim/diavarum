@@ -1,0 +1,466 @@
+{
+  "code": "S4",
+  "title": "Insuffisance rénale chronique terminale (IRCT) et hémodialyse",
+  "description": "Expliquer ce qu’est l’insuffisance rénale chronique terminale et ses conséquences sur l’organisme.\nDécrire le rôle de l’hémodialyse et comprendre l’importance du respect de son traitement.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut expliquer les principales fonctions du rein",
+    "Le patient décrit le principe de l’hémodialyse",
+    "Le patient reconnaît et explique son rôle dans la réussite de son traitement"
+  ],
+  "content": [
+    {
+      "id": "s4-p01",
+      "title": "Quel est le rôle des reins ?",
+      "blocks": [
+        {
+          "id": "s4-p01-b1",
+          "alt": "Schéma anatomique d’un rein",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 41,
+              "y": 18,
+              "id": "r1",
+              "size": 40,
+              "label": "1",
+              "description": "Éliminer les déchets produits par l’organisme."
+            },
+            {
+              "x": 57,
+              "y": 25,
+              "id": "r2",
+              "size": 40,
+              "label": "2",
+              "description": "Éliminer l’excès d’eau."
+            },
+            {
+              "x": 46,
+              "y": 46,
+              "id": "r3",
+              "size": 40,
+              "label": "3",
+              "description": "Maintenir l’équilibre des sels minéraux (sodium, potassium, phosphore)."
+            },
+            {
+              "x": 42,
+              "y": 76,
+              "id": "r4",
+              "size": 40,
+              "label": "4",
+              "description": "Participer à la régulation de la tension artérielle."
+            },
+            {
+              "x": 54,
+              "y": 83,
+              "id": "r5",
+              "size": 40,
+              "label": "5",
+              "description": "Produire certaines hormones utiles à la fabrication des globules rouges et à la santé des os."
+            }
+          ],
+          "imageUrl": "/courses/S4/p1.png",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        },
+        {
+          "id": "s4-p01-info",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Lorsque les reins fonctionnent normalement, ils filtrent le sang en permanence.",
+          "variant": "important"
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s4-p02",
+      "title": "Qu’est-ce que l’insuffisance rénale chronique terminale ? 1/3",
+      "blocks": [
+        {
+          "id": "s4-p02-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Lors d’une IRCT, les déchets de l’organisme et l’eau s’accumulent dans le corps.**",
+          "questionType": "qcu"
+        }
+      ]
+    },
+    {
+      "id": "s4-p03",
+      "title": "Qu’est-ce que l’insuffisance rénale chronique terminale ? 2/3",
+      "blocks": [
+        {
+          "id": "s4-p03-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Lorsqu’un patient est atteint d’IRCT, ses reins ne sont plus capables d’assurer correctement leurs fonctions vitales.**",
+          "questionType": "qcu"
+        }
+      ]
+    },
+    {
+      "id": "s4-p04",
+      "title": "Qu’est-ce que l’insuffisance rénale chronique terminale ? 3/3",
+      "blocks": [
+        {
+          "id": "s4-p04-b2",
+          "type": "info-card",
+          "title": "Définition",
+          "content": "L’insuffisance rénale chronique terminale est une diminution progressive et irréversible de la fonction rénale.",
+          "variant": "definition"
+        },
+        {
+          "id": "s4-p04-b1",
+          "alt": "Illustration d’un patient",
+          "size": "image",
+          "type": "image-text",
+          "content": "L’IRCT peut entraîner :\n– fatigue importante ;\n– perte d’appétit ;\n– démangeaisons ;\n– essoufflement ;\n– hypertension artérielle ;\n– œdèmes ;\n– troubles biologiques (potassium, phosphore, hémoglobine).",
+          "imageUrl": "/courses/S4/p4.png",
+          "imageSide": "left",
+          "verticalAlign": "center"
+        }
+      ]
+    },
+    {
+      "id": "s4-p05",
+      "title": "Quels sont les traitements possibles contre l’IRCT ?",
+      "blocks": [
+        {
+          "id": "s4-p05-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "L’hémodialyse (en centre ou à domicile)",
+              "text": "L’hémodialyse (en centre ou à domicile)",
+              "imageUrl": "/courses/S4/p5-carrousel-img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "La dialyse péritonéale",
+              "text": "La dialyse péritonéale",
+              "imageUrl": "/courses/S4/p5-carrousel-img2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "La transplantation rénale",
+              "text": "La transplantation rénale",
+              "imageUrl": "/courses/S4/p5-carrousel-img3.png"
+            }
+          ],
+          "question": "Au stade de l’IRCT, un traitement de suppléance rénale devient nécessaire. Plusieurs traitements sont possibles :",
+          "captionAlign": "left"
+        }
+      ]
+    },
+    {
+      "id": "s4-p06",
+      "title": "Qu’est-ce que l’hémodialyse ?",
+      "blocks": [
+        {
+          "id": "s4-p06-info",
+          "type": "info-card",
+          "title": "Définition",
+          "content": "L’hémodialyse permet de **nettoyer le sang** grâce à une machine et à un **filtre appelé dialyseur**. Elle remplace une partie du travail des reins mais ne guérit pas l’IRCT.",
+          "variant": "definition"
+        },
+        {
+          "id": "s4-p06-b1",
+          "alt": "Patient relié à une machine d’hémodialyse",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 62,
+              "y": 25,
+              "id": "r1",
+              "size": 40,
+              "label": "1",
+              "description": "En séance, le sang passe dans le dialyseur."
+            },
+            {
+              "x": 55,
+              "y": 17,
+              "id": "r2",
+              "size": 40,
+              "label": "2",
+              "description": "Les déchets sont éliminés."
+            },
+            {
+              "x": 55,
+              "y": 40,
+              "id": "r3",
+              "size": 40,
+              "label": "3",
+              "description": "L’excès d’eau est retiré."
+            },
+            {
+              "x": 62,
+              "y": 68,
+              "id": "r4",
+              "size": 40,
+              "label": "4",
+              "description": "Le sang épuré est réinjecté dans l’organisme."
+            }
+          ],
+          "imageUrl": "/courses/S4/p6.png",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s4-p07",
+      "title": "Comment se déroule une séance d’hémodialyse ?",
+      "blocks": [
+        {
+          "id": "s4-p07-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "e1",
+              "alt": "",
+              "text": "Accueil et contrôle du poids",
+              "imageUrl": "/courses/S4/p7-picto1.png"
+            },
+            {
+              "id": "e2",
+              "alt": "",
+              "text": "Installation et branchement sur l’abord vasculaire",
+              "imageUrl": "/courses/S4/p7-picto2.png"
+            },
+            {
+              "id": "e3",
+              "alt": "",
+              "text": "Réalisation du traitement pendant plusieurs heures",
+              "imageUrl": "/courses/S4/p7-picto3.png"
+            },
+            {
+              "id": "e4",
+              "alt": "",
+              "text": "Surveillance régulière par l’équipe soignante",
+              "imageUrl": "/courses/S4/p7-picto4.png"
+            },
+            {
+              "id": "e5",
+              "alt": "",
+              "text": "Débranchement et contrôles de fin de séance",
+              "imageUrl": "/courses/S4/p7-picto5.png"
+            }
+          ],
+          "layout": "stacked",
+          "question": "Une séance comprend plusieurs étapes :",
+          "centerRows": true,
+          "alignCaptions": true
+        },
+        {
+          "id": "s4-p07-b2",
+          "type": "info-card",
+          "title": "Important",
+          "content": "La fréquence est généralement de trois séances par semaine mais peut varier selon la prescription médicale.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s4-p08",
+      "title": "Pourquoi est-il important de respecter le traitement ?",
+      "blocks": [
+        {
+          "id": "s4-p08-b1",
+          "alt": "Machine de dialyse et sablier",
+          "size": "image",
+          "type": "image-text",
+          "content": "Le respect des séances permet :\n– d’**éliminer les toxines** ;\n– d’**éviter l’accumulation d’eau** ;\n– de limiter les complications ;\n– d’améliorer la qualité de vie ;\n– de **préserver l’état de santé général**.",
+          "imageUrl": "/courses/S4/p8.png",
+          "infoCard": {
+            "id": "s4-p08-b2",
+            "type": "info-card",
+            "title": "Alerte",
+            "content": "Un raccourcissement ou une absence de séance peuvent avoir des conséquences très néfastes sur la santé.",
+            "variant": "warning"
+          },
+          "imageSide": "left",
+          "imageWidth": "third",
+          "verticalAlign": "center",
+          "imageMaxHeight": 380
+        }
+      ]
+    },
+    {
+      "id": "s4-p09",
+      "title": "Quel est mon rôle dans la réussite de mon traitement ?",
+      "blocks": [
+        {
+          "id": "s4-p09-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "Respecter les rendez-vous.",
+              "text": "Respecter les rendez-vous.",
+              "imageUrl": "/courses/S4/p9-carrousel-img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Suivre les conseils diététiques.",
+              "text": "Suivre les conseils diététiques.",
+              "imageUrl": "/courses/S4/p9-carrousel-img2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Respecter les restrictions hydriques.",
+              "text": "Respecter les restrictions hydriques.",
+              "imageUrl": "/courses/S4/p9-carrousel-img3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Prendre les traitements médicamenteux.",
+              "text": "Prendre les traitements médicamenteux.",
+              "imageUrl": "/courses/S4/p9-carrousel-img4.png"
+            },
+            {
+              "id": "i5",
+              "alt": "Surveiller mon abord vasculaire.",
+              "text": "Surveiller mon abord vasculaire.",
+              "imageUrl": "/courses/S4/p9-carrousel-img5.png"
+            },
+            {
+              "id": "i6",
+              "alt": "Signaler tout symptôme inhabituel.",
+              "text": "Signaler tout symptôme inhabituel.",
+              "imageUrl": "/courses/S4/p9-carrousel-img6.png"
+            }
+          ],
+          "question": "**En tant que patient, acteur essentiel de ma prise en charge, je dois :**",
+          "captionAlign": "left"
+        },
+        {
+          "id": "s4-p09-b2",
+          "type": "info-card",
+          "title": "Important",
+          "content": "La collaboration entre le patient et l’équipe soignante favorise l’efficacité du traitement.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s4-p10",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s4-p10-b1",
+          "type": "quiz",
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": true
+            }
+          ],
+          "question": "Le rôle des reins est uniquement de produire l’urine.",
+          "questionType": "qcu"
+        }
+      ]
+    },
+    {
+      "id": "s4-p11",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s4-p11-b1",
+          "type": "quiz",
+          "options": [
+            {
+              "id": "c0",
+              "label": "Maintenir l’équilibre de l’organisme",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Réguler uniquement la glycémie",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Éliminer les déchets de l’organisme",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Éliminer l’eau excédentaire dans le corps",
+              "isCorrect": true
+            }
+          ],
+          "question": "Quel est le rôle principal des reins ?",
+          "questionType": "qcm"
+        }
+      ]
+    },
+    {
+      "id": "s4-p12",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s4-p12-b1",
+          "type": "quiz",
+          "options": [
+            {
+              "id": "c0",
+              "label": "Réguler le stockage des graisses",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Réguler la tension artérielle",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Produire des globules rouges",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Préserver la santé des os",
+              "isCorrect": true
+            }
+          ],
+          "question": "Les reins produisent ou activent des hormones qui permettent de :",
+          "questionType": "qcm"
+        }
+      ]
+    }
+  ]
+}

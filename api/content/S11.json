@@ -1,0 +1,637 @@
+{
+  "code": "S11",
+  "title": "Surveillance biologique",
+  "description": "Identifier les principaux examens biologiques réalisés en dialyse et comprendre leur utilité.\nComprendre l’importance de la surveillance biologique dans l’adaptation du traitement et de son hygiène de vie.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut citer et expliquer les principaux examens biologiques réalisés en dialyse : surveillance de l’hémoglobine, surveillance de la kaliémie et surveillance de l’urée-créatinine.",
+    "Le patient peut expliquer que l’hyper ou l’hypokaliémie peuvent provoquer des troubles cardiaques potentiellement graves, et qu’une hémoglobine basse signe une anémie.",
+    "Le patient peut expliquer le lien entre les résultats biologiques et les traitements, notamment EPO et fer pour corriger l’anémie, chélateurs du potassium pour limiter l’hyperkaliémie."
+  ],
+  "content": [
+    {
+      "id": "s11-p01",
+      "title": "POURQUOI RÉALISE-T-ON DES PRISES DE SANG RÉGULIÈRES ?",
+      "blocks": [
+        {
+          "id": "s11-p01-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S11/p1.png",
+          "alt": "POURQUOI RÉALISE-T-ON DES PRISES DE SANG RÉGULIÈRES ?",
+          "content": "La dialyse remplace une partie du travail des reins mais ne permet pas à elle seule de surveiller l'ensemble de votre état de santé.\nLes analyses biologiques permettent de :\nvérifier l'efficacité de la dialyse ;\névaluer votre état nutritionnel ;\nsurveiller votre équilibre minéral ;\ndépister certaines complications ;\nadapter les traitements prescrits.",
+          "imageMaxWidth": 493,
+          "listIntro": "La dialyse remplace une partie du travail des reins mais ne permet pas à elle seule de surveiller l'ensemble de votre état de santé.\nLes analyses biologiques permettent de :",
+          "list": [
+            {
+              "text": "vérifier l'efficacité de la dialyse ;"
+            },
+            {
+              "text": "évaluer votre état nutritionnel ;"
+            },
+            {
+              "text": "surveiller votre équilibre minéral ;"
+            },
+            {
+              "text": "dépister certaines complications ;"
+            },
+            {
+              "text": "adapter les traitements prescrits."
+            }
+          ],
+          "listMarker": "dash",
+          "listSpacing": "normal"
+        },
+        {
+          "id": "s11-p01-b1-box1211",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun Fact",
+          "content": "Ces résultats sont analysés régulièrement par le médecin néphrologue et l'équipe soignante."
+        }
+      ]
+    },
+    {
+      "id": "s11-p02",
+      "title": "QUAND CES PRÉLÈVEMENTS SONT-ILS RÉALISÉS ?",
+      "blocks": [
+        {
+          "id": "s11-p02-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S11/p2-picto1.png",
+              "alt": "Chaque début de mois, en milieu de semaine, un bilan complet est réalisé avant et après la séance de dialyse.",
+              "text": "Chaque début de mois, en milieu de semaine, un bilan complet est réalisé avant et après la séance de dialyse."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S11/p2-picto2.png",
+              "alt": "Un bilan intermédiaire est également réalisé en milieu de mois.",
+              "text": "Un bilan intermédiaire est également réalisé en milieu de mois."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S11/p2-picto3.png",
+              "alt": "Dans certains cas particuliers, une surveillance hebdomadaire est recommandée, dans le cas d’un traitement anticoagulant par voie orale notamment.",
+              "text": "Dans certains cas particuliers, une surveillance hebdomadaire est recommandée, dans le cas d’un traitement anticoagulant par voie orale notamment."
+            }
+          ]
+        }
+      ],
+      "layout": "center"
+    },
+    {
+      "id": "s11-p03",
+      "title": "COMMENT CES PRÉLÈVEMENTS SONT-ILS RÉALISÉS ?",
+      "blocks": [
+        {
+          "id": "s11-p03-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S11/p3.png",
+          "alt": "COMMENT CES PRÉLÈVEMENTS SONT-ILS RÉALISÉS ?",
+          "content": "Le bilan est prélevé sur une des deux aiguilles, ou directement sur les lignes du circuit si vous portez un cathéter.\nVous n’êtes pas piqué en plus de vos aiguilles de dialyse pour ce bilan.\nVous pouvez notamment demander à votre équipe de dialyse de prélever des bilans sanguins prescrits par d’autres professionnels que votre équipe de dialyse.",
+          "imageMaxWidth": 493
+        }
+      ]
+    },
+    {
+      "id": "s11-p04",
+      "title": "QUELS SONT LES MARQUEURS BIOLOGIQUES À SURVEILLER ?",
+      "blocks": [
+        {
+          "id": "s11-p04-b1",
+          "type": "flip-cards",
+          "question": "",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "L'urée et la créatinine : des marqueurs de l'épuration"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Le potassium : un équilibre à préserver"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Le phosphore et le calcium : protéger ses os et ses vaisseaux"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "L'hémoglobine : surveiller l'anémie"
+            },
+            {
+              "id": "c5",
+              "front": "CARTE 5",
+              "back": "L'albumine : un indicateur de l'état nutritionnel"
+            },
+            {
+              "id": "c6",
+              "front": "CARTE 6",
+              "back": "Autres marqueurs biologiques"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s11-p05",
+      "title": "L'URÉE ET LA CRÉATININE : DES MARQUEURS DE L'ÉPURATION RÉNALE",
+      "blocks": [
+        {
+          "id": "s11-p05-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S11/p5.png",
+          "alt": "L'URÉE ET LA CRÉATININE : DES MARQUEURS DE L'ÉPURATION RÉNALE",
+          "content": "Les reins éliminent habituellement les déchets produits par l'organisme. L'urée et la créatinine sont **des substances qui s'accumulent lorsque les reins ne fonctionnent plus **correctement.\nLeur surveillance permet de :\névaluer l'accumulation des déchets ;\napprécier l'efficacité du traitement de dialyse ;\nadapter la prescription des paramètres de dialyse si nécessaire.",
+          "imageMaxWidth": 493,
+          "listIntro": "Les reins éliminent habituellement les déchets produits par l'organisme. L'urée et la créatinine sont **des substances qui s'accumulent lorsque les reins ne fonctionnent plus **correctement.\nLeur surveillance permet de :",
+          "list": [
+            {
+              "text": "évaluer l'accumulation des déchets ;"
+            },
+            {
+              "text": "apprécier l'efficacité du traitement de dialyse ;"
+            },
+            {
+              "text": "adapter la prescription des paramètres de dialyse si nécessaire."
+            }
+          ],
+          "listMarker": "dash",
+          "listSpacing": "normal"
+        }
+      ]
+    },
+    {
+      "id": "s11-p06",
+      "title": "LE POTASSIUM : UN ÉQUILIBRE À PRÉSERVER",
+      "blocks": [
+        {
+          "id": "s11-p06-intro",
+          "type": "text",
+          "content": "Le potassium est indispensable au bon fonctionnement des muscles et du cœur."
+        },
+        {
+          "id": "s11-p06-b1",
+          "type": "flip-cards",
+          "question": "Un taux trop élevé peut entraîner :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Des troubles du rythme cardiaque, potentiellement graves pour certains",
+              "frontImageUrl": "/courses/S11/p6-carte1.png",
+              "frontImageSize": 120
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Une faiblesse musculaire",
+              "frontImageUrl": "/courses/S11/p6-carte2.png",
+              "frontImageSize": 120
+            }
+          ]
+        },
+        {
+          "id": "s11-p06-b2",
+          "type": "flip-cards",
+          "question": "Pour contrôler le potassium, il est important de :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Respecter les recommandations alimentaires",
+              "frontImageUrl": "/courses/S11/p6-carte3.png",
+              "frontImageSize": 120
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Suivre les prescriptions médicales (chélateurs du potassium)",
+              "frontImageUrl": "/courses/S11/p6-carte4.png",
+              "frontImageSize": 120
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s11-p07",
+      "title": "LE PHOSPHORE ET LE CALCIUM : PROTÉGER SES OS ET SES VAISSEAUX 1/2",
+      "blocks": [
+        {
+          "id": "s11-p07-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "Le calcium et le phosphore sont indispensables :\n\nÀ la solidité des os et des dents",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S11/p7-picto1.png",
+              "alt": "Au fonctionnement des muscles",
+              "text": "Au fonctionnement des muscles"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S11/p7-picto2.png",
+              "alt": "À la transmission nerveuse",
+              "text": "À la transmission nerveuse"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S11/p7-picto3.png",
+              "alt": "Au bon fonctionnement du cœur",
+              "text": "Au bon fonctionnement du cœur"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S11/p7-picto4.png",
+              "alt": "Chez une personne en bonne santé, les reins participent au maintien de leur équilibre.",
+              "text": "Chez une personne en bonne santé, les reins participent au maintien de leur équilibre."
+            }
+          ],
+          "centerLastItem": true
+        }
+      ]
+    },
+    {
+      "id": "s11-p08",
+      "title": "LE PHOSPHORE ET LE CALCIUM : PROTÉGER SES OS ET SES VAISSEAUX 2/2",
+      "blocks": [
+        {
+          "id": "s11-p08-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S11/p8.png",
+          "alt": "LE PHOSPHORE ET LE CALCIUM : PROTÉGER SES OS ET SES VAISSEAUX 2/2",
+          "content": "Pourquoi l’équilibre phospho-calcique est-il perturbé lors d’une insuffisance rénale ?\nLorsque les reins fonctionnent mal, **le phosphore s'accumule **dans le sang et par effet domino, **les os deviennent plus fragiles.**\nCette situation est appelée **maladie minérale et osseuse liée à l'insuffisance rénale chronique.**",
+          "imageMaxWidth": 494
+        },
+        {
+          "id": "s11-p08-b1-box1259",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "L’hormone PTH est également importante dans l'équilibre phosphocalcique, car elle peut provoquer une fragilisation osseuse si elle est trop élevée. Or elle a tendance à augmenter en cas d'hyperphosphorémie."
+        }
+      ]
+    },
+    {
+      "id": "s11-p09",
+      "title": "QUELS SONT LES RISQUES D'UN EXCÈS DE PHOSPHORE ?",
+      "blocks": [
+        {
+          "id": "s11-p09-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "Souvent, l'excès de phosphore ne provoque aucun symptôme au début, mais par la suite, cela peut provoquer divers symptômes, d'où l'importance de la surveillance biologique régulière. Ces symptômes sont :",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S11/p9-picto1.png",
+              "alt": "Démangeaisons",
+              "text": "Démangeaisons"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S11/p9-picto2.png",
+              "alt": "Douleurs osseuses et fragilité osseuse",
+              "text": "Douleurs osseuses et fragilité osseuse"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S11/p9-picto3.png",
+              "alt": "Calcifications des artères",
+              "text": "Calcifications des artères"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S11/p9-picto4.png",
+              "alt": "Augmentation du risque cardiovasculaire",
+              "text": "Augmentation du risque cardiovasculaire"
+            }
+          ],
+          "centerLastItem": true
+        }
+      ]
+    },
+    {
+      "id": "s11-p10",
+      "title": "QUEL EST LE RÔLE DE LA DIALYSE ?",
+      "blocks": [
+        {
+          "id": "s11-p10-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S11/p10.png",
+          "alt": "QUEL EST LE RÔLE DE LA DIALYSE ?",
+          "content": "La dialyse permet :\nd'éliminer une partie du phosphore ;\nd'améliorer l'équilibre biologique.\nCependant, la dialyse seule ne suffit généralement pas à contrôler totalement le phosphore.",
+          "imageMaxWidth": 493
+        },
+        {
+          "id": "s11-p10-b1-box1273",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Le suivi biologique permet d'adapter l'alimentation, les traitements chélateurs du phosphore."
+        }
+      ]
+    },
+    {
+      "id": "s11-p11",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s11-p11-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Une anémie implique :**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "une manque de globules blancs",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "un manque de globules rouges",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "un taux de sucre trop bas",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s11-p12",
+      "title": "GLOBULES ROUGES, HÉMOGLOBINE ET FER",
+      "blocks": [
+        {
+          "id": "s11-p12-b1",
+          "type": "video",
+          "url": "/courses/S11/s11p12-animation.mp4",
+          "title": "GLOBULES ROUGES, HÉMOGLOBINE ET FER",
+          "transcript": "Les globules rouges sont représentés par des camions, l’hémoglobine par des conteneurs transportant l’oxygène. Le fer permet de fixer l’oxygène."
+        }
+      ]
+    },
+    {
+      "id": "s11-p13",
+      "title": "L'HÉMOGLOBINE : SURVEILLER L'ANÉMIE 1/2",
+      "blocks": [
+        {
+          "id": "s11-p13-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S11/p13.png",
+          "alt": "L'HÉMOGLOBINE : SURVEILLER L'ANÉMIE 1/2",
+          "content": "En insuffisance rénale, **la production de globules rouges est altérée, de même que celle du fer,** et une anémie peut apparaître.\nDes données biologiques sur le fer vont également être surveillées par les prises de sang, et **une supplémentation en fer peut également être nécessaire** par des injections de fer pendant la dialyse.",
+          "imageMaxWidth": 493
+        }
+      ]
+    },
+    {
+      "id": "s11-p14",
+      "title": "L'HÉMOGLOBINE : SURVEILLER L'ANÉMIE 2/2",
+      "blocks": [
+        {
+          "id": "s11-p14-b1",
+          "type": "flip-cards",
+          "question": "Les principaux signes de l’anémie sont :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Fatigue et baisse de résistance à l’effort"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Essoufflement"
+            }
+          ]
+        },
+        {
+          "id": "s11-p14-b2",
+          "type": "flip-cards",
+          "question": "La surveillance de l'hémoglobine permet d'adapter :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Le traitement par agents stimulant la production de GR"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "La supplémentation en fer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s11-p15",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s11-p15-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**La principale conséquence délétère de la dénutrition chez les seniors est :**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "la perte d’énergie et de force",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "le risque de complications infectieuses, entre autres",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s11-p16",
+      "title": "L'ALBUMINE : SURVEILLER LE RISQUE DE DÉNUTRITION",
+      "blocks": [
+        {
+          "id": "s11-p16-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S11/p16.png",
+          "alt": "L'ALBUMINE : SURVEILLER LE RISQUE DE DÉNUTRITION",
+          "content": "**La dénutrition est un fléau souvent sous-estimé chez tout patient senior, **qui présente beaucoup de répercussions potentiellement graves.\n**L'albumine est une protéine qui permet de refléter l’état nutritionnel. **Un faible taux peut permettre d’identifier la présence d’une dénutrition potentiellement grave.",
+          "imageMaxWidth": 494
+        },
+        {
+          "id": "s11-p16-b1-box1303",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun Fact",
+          "content": "Un régime alimentaire riche en protéines contribue au maintien d'un bon taux d'albumine."
+        }
+      ]
+    },
+    {
+      "id": "s11-p17",
+      "title": "QUEL EST MON RÔLE DANS CETTE SURVEILLANCE ?",
+      "blocks": [
+        {
+          "id": "s11-p17-b1",
+          "type": "carousel",
+          "question": "Vous participez activement à votre suivi en :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S11/p17-carrousel-img1.png",
+              "alt": "Respectant les prescriptions médicales des traitements",
+              "text": "Respectant les prescriptions médicales des traitements"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S11/p17-carrousel-img2.png",
+              "alt": "Appliquant les conseils diététiques",
+              "text": "Appliquant les conseils diététiques"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S11/p17-carrousel-img3.png",
+              "alt": "Signalant tout symptôme inhabituel",
+              "text": "Signalant tout symptôme inhabituel"
+            }
+          ]
+        },
+        {
+          "id": "s11-p17-b1-box1310",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "N’hésitez pas à demander des explications sur vos résultats, si vous vous posez des questions. Comprendre ses résultats aide à devenir acteur de sa santé."
+        }
+      ]
+    },
+    {
+      "id": "s11-p18",
+      "title": "Exercices de fin de module — 1/2",
+      "instruction": "Associez chaque analyse à son rôle.",
+      "blocks": [
+        {
+          "id": "s11-p18-b1",
+          "type": "quiz",
+          "questionType": "drag-drop",
+          "question": "À quoi servent les différentes analyses de sang ? Placez les étiquettes pour faire les bonnes associations.",
+          "pairs": [
+            {
+              "id": "r0",
+              "left": "Hémoglobine",
+              "right": "Surveillance de l’anémie"
+            },
+            {
+              "id": "r1",
+              "left": "Urée et créatinine",
+              "right": "Qualité de l’épuration rénale"
+            },
+            {
+              "id": "r2",
+              "left": "Potassium",
+              "right": "Risque de troubles cardiaques"
+            },
+            {
+              "id": "r3",
+              "left": "Albumine",
+              "right": "Risque de dénutrition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s11-p19",
+      "title": "Exercices de fin de module — 2/2",
+      "blocks": [
+        {
+          "id": "s11-p19-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**À quoi servent la phosphorémie et la calcémie (analyse du phosphore et du calcium dans le sang)**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Évaluer la préservation des os et des vaisseaux",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Évaluer le risque de thrombose de la FAV",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Évaluer le taux de sucre dans le sang",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

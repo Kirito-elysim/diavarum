@@ -1,0 +1,509 @@
+{
+  "code": "S13",
+  "title": "Vaccination et dialyse",
+  "description": "Comprendre l’intérêt de la vaccination dans le contexte de l’insuffisance rénale chronique et de l’hémodialyse.\nIdentifier les vaccinations recommandées et participer activement au suivi de son calendrier vaccinal.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut expliquer l’intérêt de la vaccination chez un patient dialysé.",
+    "Le patient peut citer les principales vaccinations recommandées (au moins 4 sur 5)."
+  ],
+  "content": [
+    {
+      "id": "s13-p01",
+      "title": "POURQUOI LA VACCINATION EST IMPORTANTE CHEZ LES PATIENTS DIALYSÉS ?",
+      "blocks": [
+        {
+          "id": "s13-p01-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 2,
+          "imageWidth": 100,
+          "question": "La vaccination est particulièrement importante chez un patient dialysé.",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S13/p1-picto1.png",
+              "alt": "Déficit immunitaire : l’insuffisance rénale chronique altère les défenses immunitaires, rendant l’organisme plus sensible aux infections.",
+              "text": "Déficit immunitaire : l’insuffisance rénale chronique altère les défenses immunitaires, rendant l’organisme plus sensible aux infections."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S13/p1-picto2.png",
+              "alt": "Contacts fréquents avec le milieu médical : les séances de dialyse vous exposent à des germes (bactéries et virus) augmentant le risque de transmission.",
+              "text": "Contacts fréquents avec le milieu médical : les séances de dialyse vous exposent à des germes (bactéries et virus) augmentant le risque de transmission."
+            }
+          ]
+        },
+        {
+          "id": "s13-p01-b1-box1440",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La vaccination permet de réduire le risque de maladie grave, éviter des hospitalisations et de protéger la santé à long terme."
+        }
+      ]
+    },
+    {
+      "id": "s13-p02",
+      "title": "COMMENT FONCTIONNE UN VACCIN ?",
+      "blocks": [
+        {
+          "id": "s13-p02-b1-box1443",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Un vaccin stimule les défenses naturelles de l'organisme."
+        },
+        {
+          "id": "s13-p02-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S13/p2.png",
+          "alt": "COMMENT FONCTIONNE UN VACCIN ?",
+          "question": "Il permet au système immunitaire :",
+          "legendDialog": true,
+          "hideLegendTitle": true,
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 24,
+              "y": 40,
+              "size": 36,
+              "label": "1",
+              "description": "d'apprendre à l’organisme à reconnaître certains microbes ;"
+            },
+            {
+              "id": "r2",
+              "x": 50,
+              "y": 40,
+              "size": 36,
+              "label": "2",
+              "description": "de fabriquer des anticorps ;"
+            },
+            {
+              "id": "r3",
+              "x": 76,
+              "y": 40,
+              "size": 36,
+              "label": "3",
+              "description": "de réagir plus rapidement en cas de contact avec la maladie."
+            }
+          ]
+        },
+        {
+          "id": "s13-p02-b1-box1448",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun Fact",
+          "content": "La vaccination ne remplace pas les mesures d'hygiène, elle les complète."
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s13-p03",
+      "title": "QUELLES SONT LES VACCINATIONS PARTICULIÈREMENT RECOMMANDÉES EN DIALYSE ?",
+      "blocks": [
+        {
+          "id": "s13-p03-b1",
+          "type": "flip-cards",
+          "question": "Les vaccinations recommandées pour les patients dialysés sont :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Grippe/Covid 19"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Pneumocoque"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Hépatite B"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Zona"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s13-p04",
+      "title": "VACCINATIONS CONTRE LA GRIPPE, LE COVID 19 ET LE PNEUMOCOQUE",
+      "blocks": [
+        {
+          "id": "s13-p04-b1",
+          "type": "carousel",
+          "question": "",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S13/p4-carrousel-img1.png",
+              "alt": "La grippe peut entraîner des complications importantes, notamment chez les patients dialysés. La vaccination antigrippale annuelle contribue à diminuer le risque de formes graves, ",
+              "text": "**La grippe** peut entraîner des complications importantes, notamment chez les patients dialysés. La vaccination antigrippale annuelle contribue à diminuer le risque de formes graves, et donc celui d’hospitalisations ainsi que de limiter la transmission du virus."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S13/p4-carrousel-img2.png",
+              "alt": "L’infection par SARS-COV-2 (Covid 19) peut, elle aussi, être plus grave chez le patient dialysé. La vaccination initiale, ainsi que des vaccinations de rappel, sont recommandées po",
+              "text": "**L’infection par SARS-COV-2 (Covid 19)** peut, elle aussi, être plus grave chez le patient dialysé. La vaccination initiale, ainsi que des vaccinations de rappel, sont recommandées pour réduire le risque de complications."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S13/p4-carrousel-img3.png",
+              "alt": "Le pneumocoque est une bactérie pouvant provoquer des infections respiratoires plus ou moins sévères, voire une dissémination de l’infection dans le sang. La vaccination permet de ",
+              "text": "**Le pneumocoque** est une bactérie pouvant provoquer des infections respiratoires plus ou moins sévères, voire une dissémination de l’infection dans le sang. La vaccination permet de diminuer ces risques."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s13-p05",
+      "title": "VACCINATION CONTRE L’HÉPATITE B",
+      "blocks": [
+        {
+          "id": "s13-p05-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S13/p5.png",
+          "alt": "VACCINATION CONTRE L’HÉPATITE B",
+          "content": "Elle est **fortement recommandée chez les patients dialysés **en raison du **risque d'accident d’exposition au sang.**\nCette vaccination permet de prévenir une infection chronique du foie, voire une insuffisance hépatique (cirrhose) liées à l'hépatite B.\nL’immunité conférée par cette vaccination peut s’amenuiser avec le temps. **Un contrôle régulier des anticorps **présents dans le sang contre l’hépatite B peut être réalisé afin de vérifier l'efficacité de la vaccination.",
+          "imageMaxWidth": 494
+        },
+        {
+          "id": "s13-p05-b1-box1466",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun Fact",
+          "content": "En dialyse, diverses sérologies de dépistage de certaines maladies infectieuses, dont l’hépatite B,sont contrôlées deux fois par an."
+        }
+      ]
+    },
+    {
+      "id": "s13-p06",
+      "title": "VACCINATION CONTRE LE ZONA",
+      "blocks": [
+        {
+          "id": "s13-p06-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S13/p6.png",
+          "alt": "VACCINATION CONTRE LE ZONA",
+          "content": "Après une **infection par la varicelle dans l’enfance**, le virus peut **rester « en sommeil »** dans l’organisme.\nSous l’effet de l’âge, de la fatigue, d’une maladie ou sans raison apparente, il **peut se réactiver sous la forme d’un zona. **\nLes **personnes de plus de 50 ans** sont les plus touchées. **Plus l’âge avance, plus le zona est fréquent et sévère**, car le système immunitaire devient moins efficace pour garder ce virus « sous contrôle ».\nLe zona se manifeste par des **éruptions cutanées spécifiques** mais également par des **douleurs parfois violentes** sur certaines parties du corps, voire dans l'œil (zona ophtalmique).",
+          "imageMaxWidth": 494
+        },
+        {
+          "id": "s13-p06-b1-box1473",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "Des douleurs parfois très invalidantes peuvent persister, même après guérison de l’infection (douleurs post-zostériennes), et cette complication est plus fréquente chez les seniors. Ceci est le principal “danger” du zona."
+        }
+      ]
+    },
+    {
+      "id": "s13-p07",
+      "title": "QUELS SONT LES BÉNÉFICES DE LA VACCINATION ?",
+      "blocks": [
+        {
+          "id": "s13-p07-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S13/p7-picto1.png",
+              "alt": "**Réduction des infections sévères** : moins de complications pulmonaires, cardio-vasculaires et septicémique.",
+              "text": "**Réduction des infections sévères** : moins de complications pulmonaires, cardio-vasculaires et septicémique."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S13/p7-picto2.png",
+              "alt": "**Moins d’hospitalisation** : les infections chez les patients dialysés peuvent nécessiter des séjours prolongés à l’hôpital.",
+              "text": "**Moins d’hospitalisation** : les infections chez les patients dialysés peuvent nécessiter des séjours prolongés à l’hôpital."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S13/p7-picto3.png",
+              "alt": "**Protection collective** : en étant vacciné, vous protégez aussi les autres patients et les soignants.",
+              "text": "**Protection collective** : en étant vacciné, vous protégez aussi les autres patients et les soignants."
+            }
+          ]
+        }
+      ],
+      "layout": "center"
+    },
+    {
+      "id": "s13-p08",
+      "title": "LES VACCINS SONT-ILS SÛRS ?",
+      "blocks": [
+        {
+          "id": "s13-p08-b1-box1481",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Les vaccins utilisés font l'objet d'une surveillance rigoureuse par les autorités de santé et les bénéfices de la vaccination sont largement supérieurs aux risques potentiels."
+        },
+        {
+          "id": "s13-p08-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "Comme tout médicament, ils peuvent provoquer certains effets indésirables généralement bénins :",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S13/p8-picto1.png",
+              "alt": "Douleur au point d'injection",
+              "text": "Douleur au point d'injection"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S13/p8-picto2.png",
+              "alt": "Rougeur",
+              "text": "Rougeur"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S13/p8-picto3.png",
+              "alt": "Fatigue passagère",
+              "text": "Fatigue passagère"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S13/p8-picto4.png",
+              "alt": "Légère fièvre",
+              "text": "Légère fièvre"
+            }
+          ],
+          "centerLastItem": true
+        }
+      ]
+    },
+    {
+      "id": "s13-p09",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s13-p09-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Le néphrologue vous questionne sur votre dernière vaccination contre l’hépatite B et vous ne disposez pas de support (papier ou informatique) sur vos vaccinations passées.**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Pouvez-vous citer de mémoire : le nom du vaccin qui vous a été injecté et la date de l’injection (au moins mois/année) ?",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Oui",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Non",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s13-p10",
+      "title": "QUELS SONT LES SUPPORTS DE TRAÇABILITÉ POUR MES VACCINS",
+      "blocks": [
+        {
+          "id": "s13-p10-b1-box1494",
+          "type": "info-card",
+          "variant": "objective",
+          "title": "Objectif",
+          "content": "Il est nécessaire de conserver les supports papier ou informatique qui renseignent tout l’historique de vos vaccinations."
+        },
+        {
+          "id": "s13-p10-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 240,
+          "imageUrl": "/courses/S13/p10.png",
+          "alt": "QUELS SONT LES SUPPORTS DE TRAÇABILITÉ POUR MES VACCINS",
+          "content": "Les supports principaux existants sont :\ncarnet de santé et/ou de vaccination format papier ;\nmon espace santé format informatique. Il s’agit d’un espace personnel sécurisé auquel vous avez accès ainsi que les professionnels de santé qui vous prennent en charge et qui recensent toutes les informations relatives à votre santé, **y compris vos vaccinations.**",
+          "imageMaxWidth": 348
+        },
+        {
+          "id": "s13-p10-b1-box1498",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun Fact",
+          "content": "Si vous ne disposez pas d’un carnet de vaccination au format papier et que vous souhaitez en obtenir un, l’équipe de dialyse peut vous le fournir."
+        }
+      ]
+    },
+    {
+      "id": "s13-p11",
+      "title": "QUEL EST MON RÔLE DANS LA VACCINATION ?",
+      "blocks": [
+        {
+          "id": "s13-p11-b1",
+          "type": "flip-cards",
+          "question": "Je peux m’investir dans la démarche de prévention vaccinale en :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Respectant les recommandations de l’équipe par rapport aux vaccins"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Conservant précieusement mon carnet de santé/vaccination"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Et/ou en alimentant “mon espace santé” numérique avec mes vaccinations"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Échangeant avec l'équipe soignante sur mes vaccinations si j’ai des questions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s13-p12",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s13-p12-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Pourquoi la vaccination est-elle importante chez les patients dialysés ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Parce qu’elle remplace les traitements",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Parce qu’elle réduit le risque d’infections et de complications",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Parce qu’elle améliore la fonction rénale",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Parce que les patients dialysés ont une immunité plus faible",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s13-p13",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s13-p13-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Combien pouvez-vous citer de vaccinations recommandées chez les patients dialysés ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Aucun",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "vaccin",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "vaccins",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "vaccins",
+              "isCorrect": false
+            },
+            {
+              "id": "c4",
+              "label": "vaccins",
+              "isCorrect": false
+            },
+            {
+              "id": "c5",
+              "label": "vaccins",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s13-p14",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s13-p14-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Pouvez-vous citer au moins un support de traçabilité des vaccinations ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Oui",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Non",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

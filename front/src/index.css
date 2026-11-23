@@ -258,6 +258,11 @@ html { scroll-behavior: smooth; }
 .course-picto-stack figure { display: flex; align-items: center; gap: 20px; text-align: left; }
 .course-picto-stack figure > :first-child { flex-shrink: 0; margin: 0; }
 .course-picto-stack figcaption { margin-top: 0; }
+.course-picto-stack.course-picto-aligned figure > img { margin: 0; }
+.course-picto-stack.course-picto-aligned figcaption { flex: 1; align-self: center; }
+.course-picto-stack.course-picto-centered { width: fit-content; max-width: 100%; margin-inline: auto; }
+.course-picto-stack.course-picto-centered figure { width: 100%; }
+.course-picto-stack.course-picto-centered figcaption { flex: 1; text-align: left; }
 @media (max-width: 639px) {
   .course-picto-stack figure { gap: 12px; }
   .course-picto-stack figure > :first-child { width: 64px; height: 64px; }
@@ -276,3 +281,7 @@ html { scroll-behavior: smooth; }
   background: white;
   box-shadow: none;
 }
+
+.course-picto-grid.course-picto-center-last { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.course-picto-grid.course-picto-center-last > figure { grid-column: span 2 !important; }
+.course-picto-grid.course-picto-center-last > figure:last-child { grid-column: 3 / span 2 !important; }

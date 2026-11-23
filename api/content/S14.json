@@ -1,0 +1,706 @@
+{
+  "code": "S14",
+  "title": "Qualité du traitement de dialyse et ses critères de surveillance",
+  "description": "Comprendre la notion d’adéquation en dialyse et son importance pour sa santé.\nIdentifier les principaux critères de surveillance permettant d’évaluer l’efficacité du traitement.\nConnaître les indicateurs suivis dans le cadre des IPPS.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut expliquer ce qu’est le Kt/V et à quoi il sert.",
+    "Le patient peut expliquer ce qu’est le score IPPS et à quoi il sert.",
+    "Le patient peut citer les comportements qui permettent d’optimiser l’efficacité des dialyses."
+  ],
+  "content": [
+    {
+      "id": "s14-p01",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s14-p01-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Éliminer les déchets de l'organisme",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Éliminer l'excès d'eau",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Éviter les complications de l’IRCT",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Un traitement de dialyse est efficace s'il permet de :**",
+          "questionType": "qcm",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s14-p02",
+      "title": "COMMENT SURVEILLER L’EFFICACITÉ DU TRAITEMENT DE DIALYSE ?",
+      "blocks": [
+        {
+          "id": "s14-p02-b1-box1534",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Un traitement de dialyse efficace permet de préserver la santé du patient en IRCT au long cours.",
+          "variant": "important"
+        },
+        {
+          "id": "s14-p02-b1",
+          "alt": "COMMENT SURVEILLER L’EFFICACITÉ DU TRAITEMENT DE DIALYSE ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "Différents paramètres permettent de mesurer cette efficacité :\nle Kt/V ;\nles analyses biologiques ;\nl’état de santé général du patient ;\nle score IPPS.",
+          "imageUrl": "/courses/S14/p2.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "imageMaxWidth": 493,
+          "verticalAlign": "center",
+          "imageMaxHeight": 340
+        }
+      ]
+    },
+    {
+      "id": "s14-p03",
+      "title": "QU’EST-CE QUE LE Kt/V ?",
+      "blocks": [
+        {
+          "id": "s14-p03-b1-box1542",
+          "type": "info-card",
+          "title": "Définition",
+          "content": "Le Kt/V est un indicateur utilisé pour mesurer l'efficacité de l'épuration de l'urée pendant une séance de dialyse. Un Kt/V adapté est associé à une meilleure efficacité du traitement.",
+          "variant": "definition"
+        },
+        {
+          "id": "s14-p03-b1",
+          "alt": "QU’EST-CE QUE LE Kt/V ?",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 54,
+              "y": 33,
+              "id": "r1",
+              "size": 36,
+              "label": "1",
+              "description": "**Le « K » **représente l’efficacité de la machine pour éliminer les déchets. C’est la performance du rein artificiel."
+            },
+            {
+              "x": 63,
+              "y": 35,
+              "id": "r2",
+              "size": 36,
+              "label": "2",
+              "description": "**Le « t » **est le temps total de votre dialyse, c’est-à-dire combien de temps la machine travaille."
+            },
+            {
+              "x": 80,
+              "y": 37,
+              "id": "r3",
+              "size": 36,
+              "label": "3",
+              "description": "**Le « V »** correspond au volume d’eau totale (en litres) contenu dans votre organisme, appelé aussi **volume de distribution**. Il est proportionnel à votre poids."
+            }
+          ],
+          "imageUrl": "/courses/S14/p3.png",
+          "question": "",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s14-p04",
+      "title": "POURQUOI LE KT/V EST IMPORTANT ?",
+      "blocks": [
+        {
+          "id": "s14-p04-b1",
+          "alt": "POURQUOI LE KT/V EST IMPORTANT ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "On considère qu’une dialyse est efficace lorsque le KT/V est supérieur à** 1,20** et il est satisfaisant à **1,40 **et plus.",
+          "imageUrl": "/courses/S14/p4.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "imageMaxWidth": 493,
+          "verticalAlign": "center",
+          "imageMaxHeight": 340
+        },
+        {
+          "id": "s14-p04-b1-box1549",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Un bon Kt/V signifie que votre corps est bien débarrassé des toxines comme l’urée et le potassium qui s’accumulent entre 2 séances.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s14-p05",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s14-p05-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "la durée de la dialyse",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "mon poids",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "ma tension artérielle",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Qu’est-ce qui influence directement le Kt/V ?**",
+          "questionType": "qcm",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s14-p06",
+      "title": "QU’EST-CE QUI INFLUENCE LE KT/V ?",
+      "blocks": [
+        {
+          "id": "s14-p06-b1",
+          "alt": "QU’EST-CE QUI INFLUENCE LE KT/V ?",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 24,
+              "y": 40,
+              "id": "r1",
+              "size": 36,
+              "label": "1",
+              "description": "La durée de la dialyse : plus la séance est longue, mieux on nettoie le sang."
+            },
+            {
+              "x": 50,
+              "y": 40,
+              "id": "r2",
+              "size": 36,
+              "label": "2",
+              "description": "Le débit sanguin : plus la quantité de sang qui passe par la machine est importante, plus la filtration sera efficace."
+            },
+            {
+              "x": 76,
+              "y": 40,
+              "id": "r3",
+              "size": 36,
+              "label": "3",
+              "description": "Votre poids (ou volume corporel) : si votre poids change, le volume de votre sang change aussi, ce qui peut influencer le Kt/V."
+            }
+          ],
+          "imageUrl": "/courses/S14/p6.png",
+          "question": "",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s14-p07",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s14-p07-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Aucune incidence",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Amélioration du Kt/V",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Diminution du Kt/V",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Si vous écourtez votre séance de dialyse, quelle en sera l’incidence sur votre Kt/V ?**",
+          "questionType": "qcu",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s14-p08",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s14-p08-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Aucune incidence",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Amélioration du Kt/V",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Diminution du Kt/V",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Si votre abord vasculaire fonctionne mal (cathéter ou fistule), quelle en sera l’incidence sur votre Kt/V ?**",
+          "questionType": "qcu",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s14-p09",
+      "title": "COMMENT PUIS-JE AMÉLIORER MON KT/V ?",
+      "blocks": [
+        {
+          "id": "s14-p09-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "Le respect de la durée prescrite : chaque minute de dialyse compte. Retirer 5 mn à chaque séance enlève une douzaine d’heures de dialyse au bout d’une année. La durée de la dialyse",
+              "text": "**Le respect de la durée prescrite **: chaque minute de dialyse compte. Retirer 5 mn à chaque séance enlève une douzaine d’heures de dialyse au bout d’une année. La durée de la dialyse est une prescription médicale, elle doit être respectée.",
+              "imageUrl": "/courses/S14/p9-carrousel-img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Le bon fonctionnement de l'abord vasculaire : une FAV ou un CVC performant permet un débit sanguin optimal. De plus, si la machine s’arrête trop souvent, il existe un risque de coa",
+              "text": "**Le bon fonctionnement de l'abord vasculaire** : une FAV ou un CVC performant permet un débit sanguin optimal. De plus, si la machine s’arrête trop souvent, il existe un risque de coagulation du circuit, avec une possible perte de sang, voire une durée de séance écourtée.",
+              "imageUrl": "/courses/S14/p9-carrousel-img2.gif"
+            },
+            {
+              "id": "i3",
+              "alt": "Le poids interdialytique : si vous prenez trop de poids entre 2 séances, il ne sera pas possible d’atteindre votre poids sec à la fin de la dialyse, ce qui en diminue l’efficacité ",
+              "text": "**Le poids interdialytique** : si vous prenez trop de poids entre 2 séances, il ne sera pas possible d’atteindre votre poids sec à la fin de la dialyse, ce qui en diminue l’efficacité et majore les risques de complications. Le maintien d'un poids proche du poids sec participe à l'efficacité de la dialyse.",
+              "imageUrl": "/courses/S14/p9-carrousel-img3.png"
+            }
+          ],
+          "question": "",
+          "captionAlign": "left"
+        },
+        {
+          "id": "s14-p09-b1-box1575",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Concernant la voie d’abord, vous pouvez aider à son bon fonctionnement en signalant toute anomalie à l’équipe de soin. De même, les infirmier/ères procèdent à une surveillance régulière dédiée à votre FAV ou cathéter.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s14-p10",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s14-p10-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Mon traitement de dialyse est efficace.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Mon traitement de dialyse n’est pas assez efficace.",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Si mes taux d’urée et de créatinine sont élevés sur mon analyse de sang, qu’est-ce que cela peut signifier ?**",
+          "questionType": "qcu",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s14-p11",
+      "title": "QUELS PARAMÈTRES BIOLOGIQUES SONT SURVEILLÉS ?",
+      "blocks": [
+        {
+          "id": "s14-p11-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Urée et créatinine",
+              "front": "CARTE 1"
+            },
+            {
+              "id": "c2",
+              "back": "Potassium",
+              "front": "CARTE 2"
+            },
+            {
+              "id": "c3",
+              "back": "Phosphore",
+              "front": "CARTE 3"
+            },
+            {
+              "id": "c4",
+              "back": "Bicarbonates",
+              "front": "CARTE 4"
+            }
+          ],
+          "question": "**Les analyses de sang permettent également d'évaluer l'efficacité de la dialyse.** La mesure de certaines données permet de vérifier la qualité de l’épuration et de réévaluer les paramètres de dialyse. Des résultats satisfaisants traduisent généralement une certaine efficacité des séances.\n\nLes données mesurées sont :"
+        }
+      ]
+    },
+    {
+      "id": "s14-p12",
+      "title": "QUELS SYMPTÔMES PEUVENT ÉVOQUER UNE DIALYSE MOINS EFFICACE ?",
+      "blocks": [
+        {
+          "id": "s14-p12-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "Fatigue persistante",
+              "text": "Fatigue persistante",
+              "imageUrl": "/courses/S14/p12-picto1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Perte d'appétit",
+              "text": "Perte d'appétit",
+              "imageUrl": "/courses/S14/p12-picto2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Démangeaisons",
+              "text": "Démangeaisons",
+              "imageUrl": "/courses/S14/p12-picto3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Essoufflement",
+              "text": "Essoufflement",
+              "imageUrl": "/courses/S14/p12-picto4.png"
+            },
+            {
+              "id": "i5",
+              "alt": "Œdèmes",
+              "text": "Œdèmes",
+              "imageUrl": "/courses/S14/p12-picto5.png"
+            }
+          ],
+          "spread": true,
+          "columns": 3,
+          "question": "Certains symptômes doivent être signalés tels que :",
+          "imageWidth": 100
+        },
+        {
+          "id": "s14-p12-b1-box1596",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Ces signes ne signifient pas toujours que la dialyse est insuffisante mais ils doivent être évoqués avec l'équipe soignante.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s14-p13",
+      "title": "QU’EST-CE QUE L’IPPS SCORE ?",
+      "blocks": [
+        {
+          "id": "s14-p13-b1-box1599",
+          "type": "info-card",
+          "title": "Définition",
+          "content": "L'Individual Patient Performance Score (IPPS) est un indicateur individuel et personnalisé qui permet d'évaluer la qualité de la prise en charge globale du patient dialysé, et notamment de la qualité de sa dialyse.",
+          "variant": "definition"
+        },
+        {
+          "id": "s14-p13-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Évaluer la qualité de la prise en charge de chaque patient de façon globale, plutôt que par indicateurs isolés",
+              "front": "CARTE 1"
+            },
+            {
+              "id": "c2",
+              "back": "Suivre les progrès au fil du temps",
+              "front": "CARTE 2"
+            },
+            {
+              "id": "c3",
+              "back": "Identifier précocement les patients à risque",
+              "front": "CARTE 3"
+            },
+            {
+              "id": "c4",
+              "back": "Mesurer l'impact des programmes d'amélioration des soins",
+              "front": "CARTE 4"
+            }
+          ],
+          "question": "L'IPPS permet de :"
+        }
+      ]
+    },
+    {
+      "id": "s14-p14",
+      "title": "QUELS SONT LES DOMAINES ÉVALUÉS PAR L’IPPS ?",
+      "blocks": [
+        {
+          "id": "s14-p14-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "Caractéristiques de l’abord vasculaire (FAV, thromboses, infections)",
+              "text": "Caractéristiques de l’abord vasculaire (FAV, thromboses, infections)",
+              "imageUrl": "/courses/S14/p14-picto1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Efficacité de la dialyse (Kt/V, débit sanguin, durée de séance)",
+              "text": "Efficacité de la dialyse (Kt/V, débit sanguin, durée de séance)",
+              "imageUrl": "/courses/S14/p14-picto2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Résultats biologiques liés à l’anémie",
+              "text": "Résultats biologiques liés à l’anémie",
+              "imageUrl": "/courses/S14/p14-picto3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Tension artérielle",
+              "text": "Tension artérielle",
+              "imageUrl": "/courses/S14/p14-picto4.png"
+            },
+            {
+              "id": "i5",
+              "alt": "Résultats biologiques liés aux troubles phosphocalciques",
+              "text": "Résultats biologiques liés aux troubles phosphocalciques",
+              "imageUrl": "/courses/S14/p14-picto5.png"
+            },
+            {
+              "id": "i6",
+              "alt": "Évaluation de la prise de poids entre 2 séances",
+              "text": "Évaluation de la prise de poids entre 2 séances",
+              "imageUrl": "/courses/S14/p14-picto6.png"
+            },
+            {
+              "id": "i7",
+              "alt": "Évaluation de l’état nutritionnel",
+              "text": "Évaluation de l’état nutritionnel",
+              "imageUrl": "/courses/S14/p14-picto7.png"
+            },
+            {
+              "id": "i8",
+              "alt": "Autres critères de santé et de suivi (hospitalisations, vaccination, statut de transplantation)",
+              "text": "Autres critères de santé et de suivi (hospitalisations, vaccination, statut de transplantation)",
+              "imageUrl": "/courses/S14/p14-picto8.png"
+            }
+          ],
+          "spread": true,
+          "columns": 3,
+          "question": "L'IPPS intègre notamment :",
+          "imageWidth": 100
+        }
+      ]
+    },
+    {
+      "id": "s14-p15",
+      "title": "QUEL EST MON RÔLE DANS L'EFFICACITÉ DE MA DIALYSE ?",
+      "blocks": [
+        {
+          "id": "s14-p15-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "Respectant la durée complète des séances",
+              "text": "Respectant la durée complète des séances",
+              "imageUrl": "/courses/S14/p15-carrousel-img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Arrivant à l'heure aux séances de dialyse",
+              "text": "Arrivant à l'heure aux séances de dialyse",
+              "imageUrl": "/courses/S14/p15-carrousel-img2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Limiter la prise de poids entre 2 séances",
+              "text": "Limiter la prise de poids entre 2 séances",
+              "imageUrl": "/courses/S14/p15-carrousel-img3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Préservant et surveillant votre abord vasculaire",
+              "text": "Préservant et surveillant votre abord vasculaire",
+              "imageUrl": "/courses/S14/p15-carrousel-img4.png"
+            },
+            {
+              "id": "i5",
+              "alt": "Respectant les conseils alimentaires et hydriques",
+              "text": "Respectant les conseils alimentaires et hydriques",
+              "imageUrl": "/courses/S14/p15-carrousel-img5.png"
+            },
+            {
+              "id": "i6",
+              "alt": "Prenant vos traitements selon les recommandations de l’équipe",
+              "text": "Prenant vos traitements selon les recommandations de l’équipe",
+              "imageUrl": "/courses/S14/p15-carrousel-img6.png"
+            }
+          ],
+          "question": "Je contribue à la qualité de mon traitement de dialyse en :",
+          "captionAlign": "left"
+        },
+        {
+          "id": "s14-p15-b1-box1625",
+          "type": "info-card",
+          "title": "Important",
+          "content": "L'efficacité de la dialyse est le résultat d'une collaboration efficace entre le patient et l'équipe soignante.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s14-p16",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s14-p16-b1",
+          "type": "quiz",
+          "graded": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "La durée de la dialyse",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Le volume de liquide de l'organisme",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "La Potassium dans le sang",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Le débit de sang pendant la séance",
+              "isCorrect": true
+            },
+            {
+              "id": "c4",
+              "label": "La glycémie",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Quelles données impactent le Kt/V ?**",
+          "questionType": "qcm",
+          "showCorrection": true
+        }
+      ]
+    },
+    {
+      "id": "s14-p17",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s14-p17-b1",
+          "type": "quiz",
+          "graded": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "La prise en charge global du patient dialysé",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Uniquement la qualité et l’efficacité des séances de dialyse",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Notamment la qualité et l’efficacité des séances de dialyse",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Le risque cardio-vasculaire",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Qu’est-ce que le score IPPS évalue ?**",
+          "questionType": "qcm",
+          "showCorrection": true
+        }
+      ]
+    },
+    {
+      "id": "s14-p18",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s14-p18-b1",
+          "type": "quiz",
+          "graded": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Protéger et surveiller ma voie d’abord",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Limiter ma prise de poids entre les séances",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Écourter  ma séance lorsque j’ai pris peu de poids entre 2 dialyses",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Surveiller rigoureusement mes glycémies",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Quels comportements peuvent améliorer l'efficacité de mon traitement de dialyse ?**",
+          "questionType": "qcm",
+          "showCorrection": true
+        }
+      ]
+    }
+  ]
+}

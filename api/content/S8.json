@@ -1,0 +1,842 @@
+{
+  "code": "S8",
+  "title": "Complications des voies d’abord (FAV et CVC) et leurs conduites à tenir",
+  "description": "Identifier les principales complications pouvant survenir sur une FAV ou un CVC.\nAdopter la conduite à tenir adaptée et savoir quand contacter rapidement l’équipe de dialyse.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut citer les complications liés à son abord vasculaire.",
+    "Le patient connaît les signes d’alerte nécessitant une prise en charge rapide.",
+    "Le patient participe activement à la surveillance de sa voie d’abord.",
+    "Le patient comprend que la préservation de son accès vasculaire contribue à la qualité et à la continuité de son traitement de dialyse."
+  ],
+  "content": [
+    {
+      "id": "s8-p01",
+      "title": "POURQUOI SURVEILLER MA VOIE D'ABORD ?",
+      "blocks": [
+        {
+          "id": "s8-p01-b1",
+          "alt": "POURQUOI SURVEILLER MA VOIE D'ABORD ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "Le bon fonctionnement de la voie d'abord est indispensable à la réalisation des séances de dialyse.\nUne complication non détectée peut entraîner :\nune interruption du traitement ;\nune hospitalisation ;\nune intervention chirurgicale ;\nune perte définitive de l'abord vasculaire.",
+          "imageUrl": "/courses/S8/p1.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "imageMaxWidth": 321,
+          "verticalAlign": "center",
+          "imageMaxHeight": 340
+        },
+        {
+          "id": "s8-p01-b1-box832",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Une surveillance régulière permet de détecter précocement les anomalies.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s8-p02",
+      "title": "QUELLES SONT LES COMPLICATIONS URGENTES ET RELATIVES DE LA FAV ?",
+      "blocks": [
+        {
+          "id": "s8-p02-b1",
+          "type": "categorize",
+          "items": [
+            {
+              "id": "i1",
+              "label": "Thrombose/Fistule bouchée",
+              "category": "URGENCES"
+            },
+            {
+              "id": "i2",
+              "label": "Infection de la FAV",
+              "category": "URGENCES"
+            },
+            {
+              "id": "i3",
+              "label": "Saignement incontrôlable de la FAV",
+              "category": "URGENCES"
+            },
+            {
+              "id": "i4",
+              "label": "Saignement post dialyse à domicile",
+              "category": "COMPLICATIONS RELATIVES"
+            },
+            {
+              "id": "i5",
+              "label": "Hématome",
+              "category": "COMPLICATIONS RELATIVES"
+            }
+          ],
+          "question": "**Il faut distinguer les complications qui relèvent de l’urgence, c’est-à-dire qui nécessitent de faire intervenir l’équipe soignante le plus vite possible, des complications plus relatives. Placez les étiquettes de chaque complication en fonction de son degré d'urgence**.",
+          "categories": [
+            "URGENCES",
+            "COMPLICATIONS RELATIVES"
+          ],
+          "instruction": "",
+          "hideInstruction": true
+        }
+      ],
+      "instruction": "Déplacez chaque étiquette dans la catégorie correspondante."
+    },
+    {
+      "id": "s8-p03",
+      "title": "QU'EST CE QU'UNE THROMBOSE DE LA FISTULE ?",
+      "blocks": [
+        {
+          "id": "s8-p03-b1-box845",
+          "type": "info-card",
+          "title": "Définition",
+          "content": "La thrombose correspond à l'obstruction de la fistule par un caillot sanguin : il s’agit d’une urgence.",
+          "variant": "definition"
+        },
+        {
+          "id": "s8-p03-b1",
+          "alt": "QU'EST CE QU'UNE THROMBOSE DE LA FISTULE ?",
+          "list": [
+            {
+              "text": "Signes d'alerte : disparition du thrill.",
+              "imageUrl": "/courses/S8/p3-picto-loupe.png"
+            },
+            {
+              "text": "Contacter immédiatement le centre de dialyse **sans attendre la séance suivante.** Une prise en charge rapide peut limiter les dommages sur la fistule.",
+              "imageUrl": "/courses/S8/p3-picto-tel.png"
+            }
+          ],
+          "size": "image",
+          "type": "image-text",
+          "content": "Signes d'alerte : disparition du thrill.\nContacter immédiatement le centre de dialyse **sans attendre la séance suivante.** Une prise en charge rapide peut limiter les dommages sur la fistule.",
+          "imageUrl": "/courses/S8/p3.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "listSpacing": "normal",
+          "imageMaxWidth": 348,
+          "verticalAlign": "center",
+          "imageMaxHeight": 240
+        },
+        {
+          "id": "s8-p03-b1-box848",
+          "type": "info-card",
+          "title": "Warning",
+          "content": "La thrombose de la FAV rend toute dialyse impossible.",
+          "variant": "warning"
+        }
+      ]
+    },
+    {
+      "id": "s8-p04",
+      "title": "INFECTION DE LA FISTULE : QUELS SIGNES D’ALERTE ?",
+      "blocks": [
+        {
+          "id": "s8-p04-b1-box851",
+          "type": "info-card",
+          "title": "Important",
+          "content": "L'infection peut toucher les points de ponction ou les tissus environnants. Dans tous les cas, il s'agit d’une urgence.",
+          "variant": "important"
+        },
+        {
+          "id": "s8-p04-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "Rougeur et/ou oedème et/ou chaleur inhabituelle de la FAV",
+              "text": "Rougeur et/ou oedème et/ou chaleur inhabituelle de la FAV",
+              "imageUrl": "/courses/S8/p4-carrousel-img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Douleur sur la FAV",
+              "text": "Douleur sur la FAV",
+              "imageUrl": "/courses/S8/p4-carrousel-img2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Écoulement des points de ponction",
+              "text": "Écoulement des points de ponction",
+              "imageUrl": "/courses/S8/p4-carrousel-img3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Fièvre et/ou frissons",
+              "text": "Fièvre et/ou frissons",
+              "imageUrl": "/courses/S8/p4-carrousel-img4.png"
+            }
+          ],
+          "question": "Les signes d'alerte sont :",
+          "captionAlign": "left"
+        }
+      ]
+    },
+    {
+      "id": "s8-p05",
+      "title": "INFECTION DE LA FISTULE : QUELLE CONDUITE À TENIR ?",
+      "blocks": [
+        {
+          "id": "s8-p05-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "Prévenir au plus vite l'équipe soignante.",
+              "text": "Prévenir au plus vite l'équipe soignante.",
+              "imageUrl": "/courses/S8/p5-picto1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Ne pas appliquer de produit sans avis médical.",
+              "text": "Ne pas appliquer de produit sans avis médical.",
+              "imageUrl": "/courses/S8/p5-picto2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Prendre ma température",
+              "text": "Prendre ma température",
+              "imageUrl": "/courses/S8/p5-picto3.png"
+            }
+          ],
+          "spread": true,
+          "columns": 3,
+          "question": "**Si je suspecte une infection de ma fistule, que faire ?**",
+          "imageWidth": 100,
+          "questionGap": "large"
+        }
+      ]
+    },
+    {
+      "id": "s8-p06",
+      "title": "QUE FAIRE EN CAS DE SAIGNEMENT À DOMICILE ?",
+      "blocks": [
+        {
+          "id": "s8-p06-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "S'asseoir ou s'allonger.",
+              "text": "S'asseoir ou s'allonger.",
+              "imageUrl": "/courses/S8/p6_carrousel_img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Comprimer immédiatement le point de saignement avec une compresse propre.",
+              "text": "Comprimer immédiatement le point de saignement avec une compresse propre.",
+              "imageUrl": "/courses/S8/p6_carrousel_img2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Maintenir la compression pendant 10 mn, plus 10 mn supplémentaires si nécessaire.",
+              "text": "Maintenir la compression pendant 10 mn, plus 10 mn supplémentaires si nécessaire.",
+              "imageUrl": "/courses/S8/p6_carrousel_img3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Ne pas hésiter à demander de l'aide à un accompagnant pour comprimer ou aller chercher du matériel.",
+              "text": "Ne pas hésiter à demander de l'aide à un accompagnant pour comprimer ou aller chercher du matériel.",
+              "imageUrl": "/courses/S8/p6_carrousel_img4.png"
+            }
+          ],
+          "question": "**Si un saignement survient :**",
+          "captionAlign": "left"
+        }
+      ]
+    },
+    {
+      "id": "s8-p07",
+      "title": "HÉMATOME SUR FAV",
+      "blocks": [
+        {
+          "id": "s8-p07-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "Appliquer du froid : utilisez une poche de froid sur la zone.",
+              "text": "Appliquer du froid : utilisez une poche de froid sur la zone.",
+              "imageUrl": "/courses/S8/p7-picto1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Appliquer une crème de type HémoclarⓇ.",
+              "text": "Appliquer une crème de type HémoclarⓇ.",
+              "imageUrl": "/courses/S8/p7-picto2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Signaler l'apparition de l'hématome.",
+              "text": "Signaler l'apparition de l'hématome.",
+              "imageUrl": "/courses/S8/p7-picto3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Éviter les traumatismes sur la zone.",
+              "text": "Éviter les traumatismes sur la zone.",
+              "imageUrl": "/courses/S8/p7-picto4.png"
+            }
+          ],
+          "spread": true,
+          "columns": 3,
+          "question": "L'hématome est une **collection de sang **se formant dans une cavité naturelle ou à l’intérieur des tissus, souvent causé par un traumatisme ou, **dans le cas de la dialyse, par un échec de ponction ou encore par une compression insuffisante** au retrait de l’aiguille. Les symptômes typiques associés à un hématome incluent chaleur, inflammation, induration et douleur.\n\nRecommandations en cas d’hématomes :",
+          "imageWidth": 100,
+          "centerLastItem": true
+        },
+        {
+          "id": "s8-p07-b1-box878",
+          "type": "info-card",
+          "title": "Fun Fact",
+          "content": "Sur votre FAV, les zones touchées par l’hématome ne seront pas ponctionnées.",
+          "variant": "funfact"
+        }
+      ]
+    },
+    {
+      "id": "s8-p08",
+      "title": "QUAND ET QUI APPELER EN CAS DE SAIGNEMENT À DOMICILE ?",
+      "blocks": [
+        {
+          "id": "s8-p08-b1",
+          "alt": "QUAND ET QUI APPELER EN CAS DE SAIGNEMENT À DOMICILE ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "Si le saignement persiste, malgré 3 temps de compression (3 fois 10 mn), ou si la perte de sang vous paraît trop importante :\nContacter immédiatement le centre de dialyse ;\nAppeler les secours en composant le 15 en cas de malaise ou de sensation de malaise concomitante au saignement.",
+          "imageUrl": "/courses/S8/p8.png",
+          "imageSide": "left",
+          "imagePosition": "top",
+          "verticalAlign": "center",
+          "imageMaxHeight": 340,
+          "imageAspectRatio": 2.9950124688279303
+        }
+      ]
+    },
+    {
+      "id": "s8-p09",
+      "title": "QU’EST-CE QU’UN VOL VASCULAIRE ?",
+      "blocks": [
+        {
+          "id": "s8-p09-b1",
+          "alt": "QU’EST-CE QU’UN VOL VASCULAIRE ?",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 25,
+              "y": 20,
+              "id": "r1",
+              "size": 36,
+              "label": "1",
+              "description": "Main froide ou pâle"
+            },
+            {
+              "x": 73,
+              "y": 20,
+              "id": "r2",
+              "size": 36,
+              "label": "2",
+              "description": "Fourmillements ou engourdissement des doigts"
+            },
+            {
+              "x": 26,
+              "y": 53,
+              "id": "r3",
+              "size": 36,
+              "label": "3",
+              "description": "Douleur de la main, notamment pendant la dialyse ou à l'effort"
+            },
+            {
+              "x": 73,
+              "y": 53,
+              "id": "r4",
+              "size": 36,
+              "label": "4",
+              "description": "Diminution de la force de préhension"
+            },
+            {
+              "x": 50,
+              "y": 82,
+              "id": "r5",
+              "size": 36,
+              "label": "5",
+              "description": "Dans les cas sévères : apparition de plaies ou de nécroses des doigts"
+            }
+          ],
+          "imageUrl": "/courses/S8/p9.png",
+          "question": "La fistule artérioveineuse peut parfois détourner une partie trop importante du sang vers la veine, diminuant ainsi l'irrigation de la main : c’est** le vol vasculaire.**\nQuels sont les** signes d'alerte **d’un vol vasculaire ?",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        },
+        {
+          "id": "s8-p09-b1-box893",
+          "type": "info-card",
+          "title": "Fun Fact",
+          "content": "Le vol vasculaire est plus fréquent chez les personnes diabétiques ou présentant une maladie des artères.",
+          "variant": "funfact"
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s8-p10",
+      "title": "VOL VASCULAIRE : QUELLE CONDUITE À TENIR ?",
+      "blocks": [
+        {
+          "id": "s8-p10-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "Signaler rapidement tout symptôme de douleur persistante, de froid ou de changement de couleur ou de plaie de la main.",
+              "text": "Signaler rapidement tout symptôme de douleur persistante, de froid ou de changement de couleur ou de plaie de la main.",
+              "imageUrl": "/courses/S8/p10-picto1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Comparer régulièrement la température et la coloration des deux mains.",
+              "text": "Comparer régulièrement la température et la coloration des deux mains.",
+              "imageUrl": "/courses/S8/p10-picto2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Respecter les examens et consultations de suivi vasculaire recommandés, afin de détecter précocement toute complication.",
+              "text": "Respecter les examens et consultations de suivi vasculaire recommandés, afin de détecter précocement toute complication.",
+              "imageUrl": "/courses/S8/p10-picto3.png"
+            }
+          ],
+          "spread": true,
+          "columns": 3,
+          "question": "",
+          "imageWidth": 100
+        }
+      ],
+      "layout": "center"
+    },
+    {
+      "id": "s8-p11",
+      "title": "QUELLES SONT LES COMPLICATIONS DU CATHÉTER VEINEUX CENTRAL (CVC) :",
+      "blocks": [
+        {
+          "id": "s8-p11-b1",
+          "alt": "QUELLES SONT LES COMPLICATIONS DU CATHÉTER VEINEUX CENTRAL (CVC) :",
+          "size": "image",
+          "type": "image-text",
+          "content": "Les complications principales du cathéter sont :\ninfection ;\ndécollement du pansement ;\ndysfonctionnement/thrombose.",
+          "imageUrl": "/courses/S8/p11.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "verticalAlign": "center"
+        }
+      ]
+    },
+    {
+      "id": "s8-p12",
+      "title": "QUELS SONT LES SIGNES D’ALERTE DE L’INFECTION DU CATHÉTER ?",
+      "blocks": [
+        {
+          "id": "s8-p12-b1-box907",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Il s'agit de la complication la plus fréquente et la plus redoutée. Elle est dangereuse, car l’extrémité du cathéter se situe à l’entrée du cœur, facilitant ainsi la possible dissémination des germes dans tout l’organisme, via la pompe cardiaque.",
+          "variant": "important"
+        },
+        {
+          "id": "s8-p12-b1",
+          "alt": "QUELS SONT LES SIGNES D’ALERTE DE L’INFECTION DU CATHÉTER ?",
+          "list": [
+            {
+              "text": "fièvre et/ou frissons ;"
+            },
+            {
+              "text": "rougeur autour du cathéter ;"
+            },
+            {
+              "text": "oedème et/ou douleur de la zone du cathéter ;"
+            },
+            {
+              "text": "écoulement au point d'insertion."
+            }
+          ],
+          "size": "image",
+          "type": "image-text",
+          "content": "Signes d'alerte de l’infection du cathéter :\nfièvre et/ou frissons ;\nrougeur autour du cathéter ;\noedème et/ou douleur de la zone du cathéter ;\nécoulement au point d'insertion.",
+          "imageUrl": "/courses/S8/p12.png",
+          "imageSide": "left",
+          "listIntro": "Signes d'alerte de l’infection du cathéter :",
+          "imageWidth": "half",
+          "listMarker": "dash",
+          "listSpacing": "normal",
+          "verticalAlign": "center"
+        }
+      ]
+    },
+    {
+      "id": "s8-p13",
+      "title": "INFECTION DU CATHÉTER : QUELLE CONDUITE À TENIR ?",
+      "blocks": [
+        {
+          "id": "s8-p13-b1-box915",
+          "type": "info-card",
+          "title": "Warning",
+          "content": "L’infection du cathéter de dialyse constitue une urgence.",
+          "variant": "warning"
+        },
+        {
+          "id": "s8-p13-b1",
+          "alt": "INFECTION DU CATHÉTER : QUELLE CONDUITE À TENIR ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "-       Prévenir immédiatement le centre de dialyse.\n-       **Ne jamais retirer le pansement **soi-même (sauf consigne particulière).",
+          "imageUrl": "/courses/S8/p13.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "imageMaxWidth": 580,
+          "verticalAlign": "center",
+          "imageMaxHeight": 240
+        },
+        {
+          "id": "s8-p13-b1-box918",
+          "type": "info-card",
+          "title": "Important",
+          "content": "D’une façon générale, toute fièvre chez un patient porteur de cathéter doit l’amener à appeler rapidement l’équipe de dialyse.",
+          "variant": "important"
+        }
+      ],
+      "layout": "center"
+    },
+    {
+      "id": "s8-p14",
+      "title": "DÉCOLLEMENT DU PANSEMENT 1/2",
+      "blocks": [
+        {
+          "id": "s8-p14-b1-box921",
+          "type": "info-card",
+          "title": "Important",
+          "content": "Le pansement du CVC constitue avant tout u**ne protection contre les infections du cathéte**r. S’il est altéré, le risque d’infection du cathéter est démultiplié.",
+          "variant": "important"
+        },
+        {
+          "id": "s8-p14-b1",
+          "alt": "DÉCOLLEMENT DU PANSEMENT 1/2",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 24,
+              "y": 40,
+              "id": "r1",
+              "size": 36,
+              "label": "1",
+              "description": "Pansement **humide **"
+            },
+            {
+              "x": 50,
+              "y": 40,
+              "id": "r2",
+              "size": 36,
+              "label": "2",
+              "description": "Pansement partiellement ou totalement **décollé **"
+            },
+            {
+              "x": 76,
+              "y": 40,
+              "id": "r3",
+              "size": 36,
+              "label": "3",
+              "description": "**Souillure visible** sur le pansement"
+            }
+          ],
+          "imageUrl": "/courses/S8/p14.png",
+          "question": "Signes d'alerte :",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s8-p15",
+      "title": "DÉCOLLEMENT DU PANSEMENT 2/2",
+      "blocks": [
+        {
+          "id": "s8-p15-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "**Informer rapidement le centre** qui va vous donner la conduite à tenir (sauf consigne contraire).",
+              "text": "**Informer rapidement le centre** qui va vous donner la conduite à tenir (sauf consigne contraire).",
+              "imageUrl": "/courses/S8/p15-picto-tel.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Protéger le pansement décollé de toute souillure ou humidité",
+              "text": "Protéger le pansement décollé de toute souillure ou humidité",
+              "imageUrl": "/courses/S8/p15-picto-bouclier.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Ne pas réaliser seul un changement de pansement (sauf protocole validé).",
+              "text": "Ne pas réaliser seul un changement de pansement (sauf protocole validé).",
+              "imageUrl": "/courses/S8/p15-picto-main-baree.png"
+            }
+          ],
+          "spread": true,
+          "columns": 3,
+          "question": "Quelle conduite à tenir en cas de décollement du pansement ?",
+          "imageWidth": 100
+        }
+      ],
+      "layout": "center"
+    },
+    {
+      "id": "s8-p16",
+      "title": "QU’EST CE QU’UN DYSFONCTIONNEMENT DU CATHÉTER ?",
+      "blocks": [
+        {
+          "id": "s8-p16-b1",
+          "alt": "QU’EST CE QU’UN DYSFONCTIONNEMENT DU CATHÉTER ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "Le cathéter **peut parfois s’obstruer**, partiellement ou totalement, notamment **à cause d’un caillot de sang. **\nEn conséquence, cette obstruction **gêne ou empêche totalement l’utilisation du cathéter** pour la dialyse. La pompe du générateur tourne mal, sonne et/ou s’arrête souvent, rendant **la dialyse beaucoup moins efficace.**\nPour y remédier, l’équipe de dialyse applique un protocole comprenant diverses étapes. Elle peut notamment employer des médicaments qui vont détruire l’éventuel caillot.",
+          "imageUrl": "/courses/S8/p16.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "imageMaxWidth": 493,
+          "verticalAlign": "center",
+          "imageMaxHeight": 340
+        },
+        {
+          "id": "s8-p16-b1-box937",
+          "type": "info-card",
+          "title": "Fun Fact",
+          "content": "Une obstruction totale se nomme : thrombose du cathéter.",
+          "variant": "funfact"
+        }
+      ],
+      "layout": "center"
+    },
+    {
+      "id": "s8-p17",
+      "title": "QUAND DOIS-JE CONTACTER IMMÉDIATEMENT L'ÉQUIPE DE DIALYSE CONCERNANT MA FAV ?",
+      "blocks": [
+        {
+          "id": "s8-p17-b1",
+          "alt": "QUAND DOIS-JE CONTACTER IMMÉDIATEMENT L'ÉQUIPE DE DIALYSE CONCERNANT MA FAV ?",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 25,
+              "y": 20,
+              "id": "r1",
+              "size": 36,
+              "label": "1",
+              "description": "Disparition du thrill"
+            },
+            {
+              "x": 73,
+              "y": 20,
+              "id": "r2",
+              "size": 36,
+              "label": "2",
+              "description": "Saignement prolongé (+ de 30 mn)"
+            },
+            {
+              "x": 26,
+              "y": 53,
+              "id": "r3",
+              "size": 36,
+              "label": "3",
+              "description": "Rougeur ou douleur importante"
+            },
+            {
+              "x": 73,
+              "y": 53,
+              "id": "r4",
+              "size": 36,
+              "label": "4",
+              "description": "Gonflement inhabituel"
+            },
+            {
+              "x": 50,
+              "y": 82,
+              "id": "r5",
+              "size": 36,
+              "label": "5",
+              "description": "Hématome important sur l’avant-bras"
+            }
+          ],
+          "imageUrl": "/courses/S8/p17.png",
+          "question": "Vous devez prévenir rapidement votre centre en cas de :",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s8-p18",
+      "title": "QUAND DOIS-JE CONTACTER IMMÉDIATEMENT L'ÉQUIPE DE DIALYSE CONCERNANT MON CVC ?",
+      "blocks": [
+        {
+          "id": "s8-p18-b1",
+          "alt": "QUAND DOIS-JE CONTACTER IMMÉDIATEMENT L'ÉQUIPE DE DIALYSE CONCERNANT MON CVC ?",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 24,
+              "y": 40,
+              "id": "r1",
+              "size": 36,
+              "label": "1",
+              "description": "Fièvre et/ou frissons"
+            },
+            {
+              "x": 50,
+              "y": 40,
+              "id": "r2",
+              "size": 36,
+              "label": "2",
+              "description": "Rougeur, écoulement ou douleur du CVC"
+            },
+            {
+              "x": 76,
+              "y": 40,
+              "id": "r3",
+              "size": 36,
+              "label": "3",
+              "description": "Pansement décollé"
+            }
+          ],
+          "imageUrl": "/courses/S8/p18-img-légendée.png",
+          "question": "Vous devez p**révenir rapidement votre centre **de dialyse en cas de :",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s8-p19",
+      "title": "QUEL EST MON RÔLE DANS LA PRÉVENTION DES COMPLICATIONS ?",
+      "blocks": [
+        {
+          "id": "s8-p19-b1",
+          "type": "carousel",
+          "slides": [
+            {
+              "id": "i1",
+              "alt": "Surveillant quotidiennement ma voie d'abord.",
+              "text": "Surveillant quotidiennement ma voie d'abord.",
+              "imageUrl": "/courses/S8/p19-carrousel-img1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Respectant les règles d'hygiène.",
+              "text": "Respectant les règles d'hygiène.",
+              "imageUrl": "/courses/S8/p19-carrousel-img2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Signalant rapidement toute anomalie.",
+              "text": "Signalant rapidement toute anomalie.",
+              "imageUrl": "/courses/S8/p19-carrousel-img3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Protégeant mon abord vasculaire des traumatismes.",
+              "text": "Protégeant mon abord vasculaire des traumatismes.",
+              "imageUrl": "/courses/S8/p19-carrousel-img4.png"
+            },
+            {
+              "id": "i5",
+              "alt": "Participant aux contrôles et examens de surveillance.",
+              "text": "Participant aux contrôles et examens de surveillance.",
+              "imageUrl": "/courses/S8/p19-carrousel-img5.png"
+            }
+          ],
+          "question": "Je participe à la protection de mon accès vasculaire en :",
+          "captionAlign": "left"
+        }
+      ]
+    },
+    {
+      "id": "s8-p20",
+      "title": "Exercices de fin de module — 1/2",
+      "blocks": [
+        {
+          "id": "s8-p20-b1",
+          "type": "quiz",
+          "graded": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Appeler immédiatement l’équipe du centre de dialyse.",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Prévenir l’équipe lors de ma prochaine séance de dialyse.",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Ne rien faire, c’est normal.",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Je ne sens plus le thrill sur ma FAV lorsque je suis à la maison.**\n**Que dois-je faire ?**",
+          "questionType": "qcu",
+          "showCorrection": true
+        }
+      ]
+    },
+    {
+      "id": "s8-p21",
+      "title": "Exercices de fin de module — 2/2",
+      "blocks": [
+        {
+          "id": "s8-p21-b1",
+          "type": "categorize",
+          "items": [
+            {
+              "id": "i1",
+              "label": "Ma FAV re-saigne à la maison pendant 35 mn.",
+              "category": "IMMÉDIATEMENT"
+            },
+            {
+              "id": "i2",
+              "label": "Je suis porteur de cathéter et j’ai de la fièvre.",
+              "category": "IMMÉDIATEMENT"
+            },
+            {
+              "id": "i3",
+              "label": "Le pansement de mon cathéter est à moitié décollé.",
+              "category": "IMMÉDIATEMENT"
+            },
+            {
+              "id": "i4",
+              "label": "La main côté FAV devient froide et pâle.",
+              "category": "IMMÉDIATEMENT"
+            },
+            {
+              "id": "i5",
+              "label": "J’ai un petit hématome sur ma FAV.",
+              "category": "ATTENDRE LA PROCHAINE SÉANCE"
+            },
+            {
+              "id": "i6",
+              "label": "Ma FAV re-saigne à la maison pendant 15 mn.",
+              "category": "ATTENDRE LA PROCHAINE SÉANCE"
+            }
+          ],
+          "question": "Dans quel cas dois-je immédiatement appeler l’équipe de dialyse, sans attendre la prochaine séance",
+          "categories": [
+            "IMMÉDIATEMENT",
+            "ATTENDRE LA PROCHAINE SÉANCE"
+          ],
+          "hideInstruction": true
+        }
+      ],
+      "instruction": "Déplacez chaque étiquette dans la catégorie correspondante."
+    }
+  ]
+}

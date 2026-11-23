@@ -1,0 +1,569 @@
+{
+  "code": "S3",
+  "title": "Confort et sécurité en séance de dialyse",
+  "description": "Identifier les mesures favorisant son confort et son bien-être pendant la séance de dialyse.\nReconnaître les signes d’alerte nécessitant de prévenir l’équipe soignante pendant ou après la séance.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient identifie les comportements favorisant son confort",
+    "Le patient peut expliquer pourquoi il est indispensable d’avoir une tenue adaptée",
+    "Le patient peut expliquer l’importance du respect de la prescription de dialyse, notamment la durée"
+  ],
+  "content": [
+    {
+      "id": "s3-p01",
+      "title": "Ma participation en séance",
+      "showSwipeHint": false,
+      "blocks": [
+        {
+          "id": "s3-p01-b2",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La séance de dialyse dure plusieurs heures et constitue un traitement indispensable à ma santé.",
+          "compact": true,
+          "spaceAfter": 0
+        },
+        {
+          "id": "s3-p01-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageUrl": "/courses/S3/p1.png",
+          "alt": "Patient accompagné pendant la séance de dialyse",
+          "content": "Ma participation contribue à :\n▪ améliorer mon confort ;\n▪ **prévenir les complications** ;\n▪ favoriser le bon déroulement du traitement ;\n▪ **renforcer ma sécurité** pendant la séance.\n\nL’équipe soignante est présente pour m’accompagner tout au long du traitement.",
+          "imageWidth": "half-screen"
+        }
+      ],
+      "layout": "spread"
+    },
+    {
+      "id": "s3-p02",
+      "title": "Avant la séance : comment bien se préparer ?",
+      "blocks": [
+        {
+          "id": "s3-p02-b1",
+          "type": "carousel",
+          "question": "**Avant de venir au centre, il est conseillé de :**",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S3/p2-carrousel1-img1.png",
+              "alt": "Alimentation",
+              "text": "Respecter les consignes de régime alimentaire et de limitation hydrique."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S3/p2-carrousel1-img2.png",
+              "alt": "Médicaments",
+              "text": "Prendre mes médicaments selon les recommandations de l’équipe."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S3/p2-carrousel-img3.png",
+              "alt": "Échange avec l’équipe",
+              "text": "Signaler tout changement de mon état de santé."
+            }
+          ]
+        },
+        {
+          "id": "s3-p02-b2",
+          "type": "info-card",
+          "variant": "objective",
+          "title": "Objectif",
+          "content": "Une bonne préparation contribue à une séance plus confortable.",
+          "compact": true,
+          "spaceAfter": 0
+        }
+      ]
+    },
+    {
+      "id": "s3-p03",
+      "title": "Quelle tenue vestimentaire choisir pour ma séance ?",
+      "blocks": [
+        {
+          "id": "s3-p03-important",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "compact": true,
+          "content": "Des vêtements mal ajustés ou inappropriés peuvent causer de l’inconfort, affectant le bien-être physique et mental pendant les séances de dialyse."
+        },
+        {
+          "id": "s3-p03-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageUrl": "/courses/S3/p3.png",
+          "alt": "Patient en tenue de séance",
+          "content": "Il est donc conseillé de :\n▪ privilégier **les tissus respirants, propres et confortables**. Des tissus non respirants ou sales peuvent favoriser la prolifération bactérienne et augmenter le risque d’infection de l’abord vasculaire (fistule ou cathéter) ;\n\n▪ choisir des **vêtements faciles à enfiler et à retirer**, surtout en cas de fatigue ou d’inconfort.",
+          "imageWidth": "half-screen"
+        }
+      ],
+      "layout": "spread"
+    },
+    {
+      "id": "s3-p04",
+      "title": "Quelle tenue avec une fistule artério-veineuse ?",
+      "blocks": [
+        {
+          "id": "s3-p04-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S3/p4.png",
+          "alt": "Patient avec une fistule artério-veineuse",
+          "question": "**Si je dialyse sur une fistule artério-veineuse (FAV), pour ma séance, je dois :**",
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 44,
+              "y": 40,
+              "label": "Repère 1",
+              "description": "Opter pour un haut à manches courtes, ou longues et amples, afin de faciliter l’accès et la visualisation de la FAV. Des vêtements serrés peuvent entraver la circulation sanguine sur le bras porteur de la FAV."
+            },
+            {
+              "id": "r2",
+              "x": 55,
+              "y": 87,
+              "label": "Repère 2",
+              "description": "Éviter le port de bijoux (montres, bracelets) sur le bras porteur de la FAV pour limiter le risque de compression et d’infections."
+            }
+          ],
+          "legendDialog": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s3-p05",
+      "title": "Quelle tenue avec un cathéter ?",
+      "blocks": [
+        {
+          "id": "s3-p05-b2",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Le personnel doit avoir un accès visuel au CVC pendant toute la durée de votre séance. Il s’agit d’une mesure de sécurité vitale.",
+          "compact": true,
+          "spaceAfter": 0
+        },
+        {
+          "id": "s3-p05-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S3/p5.png",
+          "alt": "Patiente avec un cathéter veineux central",
+          "question": "**Si je dialyse sur cathéter veineux central (CVC), pour ma séance, je dois :**",
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 60,
+              "y": 57,
+              "label": "Repère 1",
+              "description": "Choisir des chemises ou des T-shirts amples pour faciliter l’accès au CVC et le garder visible pendant la séance."
+            },
+            {
+              "id": "r2",
+              "x": 49,
+              "y": 50,
+              "label": "Repère 2",
+              "description": "Pour les femmes, éviter les vêtements ou accessoires qui pourraient gêner l’accès au CVC : colliers, décolletés serrés, soutiens-gorges passant sur le cathéter ou exerçant une pression dessus."
+            }
+          ],
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s3-p06",
+      "title": "Comment limiter les variations de poids liées à ma tenue ?",
+      "blocks": [
+        {
+          "id": "s3-p06-b2",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Alerte",
+          "content": "Il est primordial que la pesée soit la plus juste possible. Une mauvaise pesée peut entraîner de graves complications pendant la séance de dialyse.",
+          "compact": true,
+          "spaceAfter": 0
+        },
+        {
+          "id": "s3-p06-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageUrl": "/courses/S3/p6.png",
+          "alt": "Patient sur une balance",
+          "content": "Des vêtements lourds ou encombrants peuvent fausser les pesées. Cela rend difficile l’évaluation précise du poids à perdre pour le patient.\n\nPour éviter les erreurs de pesée dues aux vêtements :\n▪ enlevez les manteaux et chapeaux ;\n▪ videz vos poches de vos objets personnels avant la pesée ;\n▪ portez des vêtements légers et confortables qui n’ajoutent pas de poids supplémentaire ;\n▪ pesez-vous toujours avec le même type de tenue vestimentaire.",
+          "list": [
+            {
+              "text": "Des vêtements lourds ou encombrants peuvent fausser les pesées. Cela rend difficile l’évaluation précise du poids à perdre pour le patient."
+            },
+            {
+              "text": "Pour éviter les erreurs de pesée dues aux vêtements :",
+              "children": [
+                "enlevez les manteaux et chapeaux ;",
+                "videz vos poches de vos objets personnels avant la pesée ;",
+                "portez des vêtements légers et confortables qui n’ajoutent pas de poids supplémentaire ;",
+                "pesez-vous toujours avec le même type de tenue vestimentaire."
+              ]
+            }
+          ],
+          "imageWidth": "half",
+          "listSpacing": "normal"
+        }
+      ]
+    },
+    {
+      "id": "s3-p07",
+      "title": "Comment améliorer mon confort pendant la dialyse ?",
+      "blocks": [
+        {
+          "id": "s3-p07-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageUrl": "/courses/S3/p7.png",
+          "alt": "Patient installé pour la séance",
+          "content": "Pendant la séance, je peux :\n– **ajuster mon fauteuil** ou ma position ;\n– utiliser un **coussin ou une couverture** si nécessaire ;\n– prévoir des **activités adaptées** (lecture, tablette, musique, mots croisés) ;\n– **signaler** rapidement **toute gêne ou douleur**.",
+          "imageWidth": "half"
+        },
+        {
+          "id": "s3-p07-b2",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun fact",
+          "content": "Il est important de rester le plus détendu possible pendant la dialyse.",
+          "compact": true,
+          "spaceAfter": 0
+        }
+      ]
+    },
+    {
+      "id": "s3-p08",
+      "title": "Quels symptômes signaler rapidement ?",
+      "blocks": [
+        {
+          "id": "s3-p08-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S3/p8.png",
+          "alt": "Patient en dialyse",
+          "question": "Certains signes ou symptômes peuvent survenir au cours de la dialyse et **nécessitent d’en informer immédiatement l’équipe**.",
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 44,
+              "y": 21,
+              "label": "Repère 1",
+              "description": "Sensation de malaise, vertiges, sueurs, maux de tête importants…",
+              "size": 32
+            },
+            {
+              "id": "r2",
+              "x": 46,
+              "y": 66,
+              "label": "Repère 2",
+              "description": "Nausées et/ou vomissements",
+              "size": 32
+            },
+            {
+              "id": "r3",
+              "x": 43,
+              "y": 88,
+              "label": "Repère 3",
+              "description": "Crampes musculaires",
+              "size": 32
+            },
+            {
+              "id": "r4",
+              "x": 40,
+              "y": 48,
+              "label": "Repère 4",
+              "description": "Douleurs thoraciques, essoufflement",
+              "size": 32
+            },
+            {
+              "id": "r5",
+              "x": 51,
+              "y": 77,
+              "label": "Repère 5",
+              "description": "Saignement au niveau de l’abord vasculaire",
+              "size": 32
+            }
+          ],
+          "legendDialog": true,
+          "hideLegendTitle": true
+        },
+        {
+          "id": "s3-p08-b2",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Une **prise en charge rapide** permet généralement de **corriger la situation** rapidement."
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s3-p09",
+      "title": "Comment participer à ma sécurité ?",
+      "blocks": [
+        {
+          "id": "s3-p09-b1",
+          "type": "flip-cards",
+          "question": "**Vous êtes un acteur essentiel de votre traitement.**",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "TRAITEMENT",
+              "back": "Signalez toute modification de votre traitement médical."
+            },
+            {
+              "id": "c2",
+              "front": "HOSPITALISATION",
+              "back": "Informez l’équipe d’une hospitalisation récente."
+            },
+            {
+              "id": "c3",
+              "front": "POIDS",
+              "back": "Communiquez votre poids réel avant la séance."
+            },
+            {
+              "id": "c4",
+              "front": "DOULEUR",
+              "back": "Signalez toute douleur ou tout inconfort."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3-p10",
+      "title": "Pourquoi respecter la durée prescrite de dialyse ?",
+      "blocks": [
+        {
+          "id": "s3-p10-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageUrl": "/courses/S3/p10.png",
+          "alt": "Générateur de dialyse et sablier",
+          "content": "Réduire une séance ou demander un arrêt prématuré peut entraîner :\n– une élimination insuffisante des **toxines** ;\n– une **surcharge hydrique** ;\n– une **fatigue** accrue ;\n– un risque important de **complications**.",
+          "imageWidth": "third",
+          "infoCard": {
+            "id": "s3-p10-b2",
+            "type": "info-card",
+            "variant": "important",
+            "title": "Important",
+            "content": "La durée de dialyse est adaptée à vos besoins : il s’agit d’une prescription médicale."
+          }
+        }
+      ]
+    },
+    {
+      "id": "s3-p11",
+      "title": "Risque de déconnexion en séance",
+      "blocks": [
+        {
+          "id": "s3-p11-b1",
+          "type": "info-card",
+          "content": "En cas de désinsertion d’une aiguille ou d’une déconnexion des lignes du circuit de dialyse pendant la séance, il existe un risque de perte de sang massive, de type hémorragique.",
+          "variant": "important",
+          "title": "Important",
+          "compact": true,
+          "spaceAfter": 0
+        },
+        {
+          "id": "s3-p11-b2",
+          "type": "carousel",
+          "question": "**Pour limiter ce risque, il faut :**",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S3/p11-carrousel-img1.png",
+              "alt": "Fixation des lignes de dialyse",
+              "text": "Accepter les recommandations et démarches de l’équipe pour la fixation des lignes et des aiguilles."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S3/p11-carrousel-img2.png",
+              "alt": "Lignes de dialyse fixées",
+              "text": "Éviter de manipuler les lignes ou les aiguilles pendant la séance."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S3/p11-carrousel-img3.png",
+              "alt": "Bras branché pendant la séance",
+              "text": "Éviter de mobiliser le bras ponctionné ou de bouger brutalement dans le lit avec un cathéter branché."
+            }
+          ]
+        },
+        {
+          "id": "s3-p11-important",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Le risque d’hémorragie inhérent à la déconnexion des lignes exige le respect de toutes les mesures préconisées pour l’éviter.",
+          "compact": true,
+          "spaceAfter": 0
+        }
+      ]
+    },
+    {
+      "id": "s3-p13",
+      "title": "Exercices de fin de module — 1/4",
+      "blocks": [
+        {
+          "id": "s3-p13-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Une tenue vestimentaire inadaptée pendant la pesée peut fausser la mesure du poids et entraîner des complications pendant la séance.**",
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3-p14",
+      "title": "Exercices de fin de module — 2/4",
+      "blocks": [
+        {
+          "id": "s3-p14-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Que dois-je faire **en priorité** si je ressens un malaise pendant la séance de dialyse ?",
+          "options": [
+            {
+              "id": "c0",
+              "label": "Lancer une prise de tension.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Signaler cette sensation de malaise à un soignant.",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Mesurer mon taux de sucre.",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Arrêter le générateur de dialyse.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3-p19",
+      "title": "Exercices de fin de module — 3/4",
+      "blocks": [
+        {
+          "id": "s3-p19-b1",
+          "type": "categorize",
+          "question": "Quels symptômes sont cités dans ce cours parmi les signes à signaler immédiatement ?",
+          "categories": [
+            "AUTRES SIGNES",
+            "À SIGNALER IMMÉDIATEMENT"
+          ],
+          "items": [
+            {
+              "id": "e1",
+              "label": "Sensation de soif",
+              "category": "AUTRES SIGNES"
+            },
+            {
+              "id": "e2",
+              "label": "Sensations de raideur (dos ou membres)",
+              "category": "AUTRES SIGNES"
+            },
+            {
+              "id": "e3",
+              "label": "Fatigue",
+              "category": "AUTRES SIGNES"
+            },
+            {
+              "id": "e4",
+              "label": "Douleur dans la poitrine",
+              "category": "À SIGNALER IMMÉDIATEMENT"
+            },
+            {
+              "id": "e5",
+              "label": "Essoufflement",
+              "category": "À SIGNALER IMMÉDIATEMENT"
+            },
+            {
+              "id": "e6",
+              "label": "Vertiges et sueurs",
+              "category": "À SIGNALER IMMÉDIATEMENT"
+            },
+            {
+              "id": "e7",
+              "label": "Nausées",
+              "category": "À SIGNALER IMMÉDIATEMENT"
+            },
+            {
+              "id": "e8",
+              "label": "Crampes",
+              "category": "À SIGNALER IMMÉDIATEMENT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3-p20",
+      "title": "Exercices de fin de module — 4/4",
+      "blocks": [
+        {
+          "id": "s3-p20-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "Pourquoi est-il important de respecter la durée prescrite de dialyse ?",
+          "options": [
+            {
+              "id": "c0",
+              "label": "Pour protéger ma santé au long cours.",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Pour que ma séance de dialyse soit la plus efficace possible.",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Pour éviter des complications.",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Pour faire plaisir au médecin ou à l’infirmier ou l’infirmière.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -612,11 +612,12 @@ export function FlipCardsView({ block, fill: fillRequested }: { block: FlipCards
               )}
             >
               <div>
+                {!isFlipped && card.frontImageUrl && <img src={card.frontImageUrl} alt="" className="mx-auto mb-3 h-20 w-20 object-contain" style={card.frontImageSize ? { width: card.frontImageSize, height: card.frontImageSize } : undefined} />}
                 <p className={cn(
                   'leading-snug whitespace-pre-line',
                   isFlipped ? 'text-[25px] font-normal text-[#FAFAFA]' : 'text-[25px] font-bold text-[#FAFAFA]'
                 )}>
-                  {isFlipped ? card.back : card.front}
+                  {isFlipped ? (block.formattedBack ? <CourseText text={card.back} /> : card.back) : card.front}
                 </p>
               </div>
             </button>
@@ -702,7 +703,7 @@ export function CategorizeView({ block, onAnswer, previousResult }: {
     <div className="space-y-5" onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
       <BlockHeader label="Glisser-déposer" text={block.question} />
 
-      {!locked && (
+      {!locked && !block.hideInstruction && (
         <div className="flex items-center gap-2.5 px-4 py-3 bg-[#FFE0D0]/50 rounded-2xl border border-[#E86825]/25">
           <span className="course-copy">👆</span>
           <p className="course-label text-[#A64314] font-medium">{block.instruction?.trim() || DEFAULT_INSTRUCTIONS.categorize}</p>
@@ -1106,15 +1107,7 @@ export function RevealLegendsView({ block, onAnswer, disabled }: {
         <div className={cn('transition-all duration-300 overflow-hidden', active ? 'max-h-none opacity-100' : 'max-h-0 opacity-0')}>
           {active && (
             <div className="mx-4 mb-4 mt-2 rounded-2xl p-4 bg-white" style={{ border: '1.5px solid rgba(0,65,56,0.14)' }}>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#E86825] flex items-center justify-center flex-shrink-0">
-                  <span className="text-white course-label font-black">{block.points.findIndex((p) => p.id === active.id) + 1}</span>
-                </div>
-                <div>
-                  <p className="font-bold text-[#004138] course-label mb-1">{active.label}</p>
-                  <p className="text-[#004138]/70 course-label leading-relaxed">{active.description}</p>
-                </div>
-              </div>
+              <p className="text-[#004138]/70 course-label leading-relaxed">{active.description || active.label}</p>
             </div>
           )}
         </div>

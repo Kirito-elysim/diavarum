@@ -1,0 +1,517 @@
+{
+  "code": "S12",
+  "title": "Médicaments et dialyse : comprendre et maintenir son équilibre phosphocalcique",
+  "description": "Identifier les principales catégories de médicaments prescrits en dialyse et comprendre leur rôle.\nAppliquer les bonnes pratiques pour prendre ses traitements en toute sécurité.\nExpliquer le rôle du phosphore et du calcium dans l’organisme et les conséquences de leur déséquilibre.\nIdentifier les moyens de maintenir un bon équilibre phosphocalcique grâce à l’alimentation, à la dialyse et aux traitements prescrits.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut expliquer le rôle et les modalités de prise des chélateurs du phosphore et du potassium.",
+    "Le patient peut citer les principales catégories de médicaments qui lui sont prescrites.",
+    "Le patient peut expliquer les règles de bonne observance de ses propres traitements.",
+    "Le patient peut expliquer les risques de l’automédication."
+  ],
+  "content": [
+    {
+      "id": "s12-p01",
+      "title": "POURQUOI PRENDRE DES MÉDICAMENTS LORSQUE L'ON EST DIALYSÉ ?",
+      "blocks": [
+        {
+          "id": "s12-p01-b1",
+          "type": "carousel",
+          "question": "La dialyse remplace une partie du travail des reins, mais elle ne remplace pas toutes leurs fonctions.\n\nLes médicaments permettent notamment de :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S12/p1-carrousel-img1.png",
+              "alt": "Contrôler la tension artérielle",
+              "text": "Contrôler la tension artérielle"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S12/p1-carrousel-img2.png",
+              "alt": "Prévenir l'anémie",
+              "text": "Prévenir l'anémie"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S12/p1-carrousel-img3.gif",
+              "alt": "Maintenir l'équilibre phosphocalcique",
+              "text": "Maintenir l'équilibre phosphocalcique"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S12/p1-carrousel-img4.png",
+              "alt": "Protéger le cœur et les vaisseaux",
+              "text": "Protéger le cœur et les vaisseaux"
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S12/p1-carrousel-img5.png",
+              "alt": "Traiter certaines complications liées à l'insuffisance rénale",
+              "text": "Traiter certaines complications liées à l'insuffisance rénale"
+            }
+          ]
+        },
+        {
+          "id": "s12-p01-conclusion",
+          "type": "text",
+          "content": "Le traitement est adapté à chaque patient."
+        }
+      ]
+    },
+    {
+      "id": "s12-p02",
+      "title": "QUELS SONT LES PRINCIPAUX MÉDICAMENTS PRESCRITS ?",
+      "blocks": [
+        {
+          "id": "s12-p02-b1",
+          "type": "flip-cards",
+          "question": "",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Les** antihypertenseurs** permettent de contrôler la tension artérielle, protéger le cœur et diminuer les risques cardiovasculaires."
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Les** traitements de l'anémie** comprennent les suppléments en fer et l'érythropoïétine (EPO), entre autres. Ils favorisent la production des globules rouges et limitent la fatigue liée à l'anémie."
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Les** chélateurs du phosphore** permettent de diminuer l'absorption du phosphore contenu dans les aliments et par conséquence, de protéger les os et les vaisseaux sanguins.Ils doivent généralement **être pris pendant les repas.**"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "La** vitamine D et les traitements du métabolisme osseux** : les reins en IRCT synthétisent moins de vitamine D i**ndispensable à la solidité osseuse, à l'équilibre calcium-phosphore** et à la prévention des complications osseuses."
+            },
+            {
+              "id": "c5",
+              "front": "CARTE 5",
+              "back": "Les **chélateurs du potassium** : les reins en IRCT excrètent mal le potassium, qui peut donc s’accumuler dans le sang et provoquer des troubles cardiaques. Les chélateurs du potassium **permettent de diminuer l'absorption du potassium** contenu dans les aliments."
+            },
+            {
+              "id": "c6",
+              "front": "CARTE 6",
+              "back": "Les **autres traitements** : selon la situation peuvent être prescrits des anticoagulants, des traitements contre le diabète, des traitements cardiaques, des vitamines, des traitements symptomatiques…"
+            }
+          ],
+          "formattedBack": true
+        }
+      ]
+    },
+    {
+      "id": "s12-p03",
+      "title": "QUEL EST LE RÔLE DES CHÉLATEURS DU PHOSPHORE ?",
+      "blocks": [
+        {
+          "id": "s12-p03-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S12/p3.png",
+          "alt": "QUEL EST LE RÔLE DES CHÉLATEURS DU PHOSPHORE ?",
+          "content": "Ces médicaments **captent une partie du phosphore contenu dans les aliments.**\nPour être efficaces, ils doivent souvent être pris :\n**pendant le repas ;**\nou juste avant selon la prescription.\nUne prise irrégulière réduit leur efficacité.",
+          "imageMaxWidth": 494
+        }
+      ]
+    },
+    {
+      "id": "s12-p04",
+      "title": "QUEL EST LE RÔLE DES CHÉLATEURS DU POTASSIUM ?",
+      "blocks": [
+        {
+          "id": "s12-p04-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S12/p4.png",
+          "alt": "QUEL EST LE RÔLE DES CHÉLATEURS DU POTASSIUM ?",
+          "content": "Ces médicaments **captent une partie du potassium contenu dans les aliments.**\nPour être efficaces, ils doivent souvent être pris :\n**jusqu’à une heure avant le repas ;**\n**et jusqu’à 3 heures après le repas.**",
+          "imageMaxWidth": 494
+        }
+      ]
+    },
+    {
+      "id": "s12-p05",
+      "title": "COMMENT PRENDRE CORRECTEMENT SES MÉDICAMENTS ?",
+      "blocks": [
+        {
+          "id": "s12-p05-b1",
+          "type": "flip-cards",
+          "question": "Quelques règles simples sont à respecter. Il faut :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Suivre les conseils alimentaires pour phosphore et potassium"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Respecter les horaires et modalités prescrits (heure précise ou en fonction du repas)"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Certaines prises médicamenteuses peuvent différer les jours de dialyse, il faut les respecter"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Respecter les doses prescrites"
+            },
+            {
+              "id": "c5",
+              "front": "CARTE 5",
+              "back": "Éviter de modifier un traitement sans avis médical"
+            },
+            {
+              "id": "c6",
+              "front": "CARTE 6",
+              "back": "Signaler tout oubli ou tout effet indésirable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s12-p06",
+      "title": "QUELS BÉNÉFICES SI JE PRENDS CORRECTEMENT MES TRAITEMENTS ?",
+      "blocks": [
+        {
+          "id": "s12-p06-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S12/p6.png",
+          "alt": "QUELS BÉNÉFICES SI JE PRENDS CORRECTEMENT MES TRAITEMENTS ?",
+          "content": "Respecter rigoureusement les consignes de prise des médicament permet de :\nmieux contrôler la TA ;\nlimiter l’anémie ;\néviter les troubles osseux ;\néviter des complications cardiovasculaires.",
+          "imageMaxWidth": 494
+        },
+        {
+          "id": "s12-p06-b1-box1375",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Pour une personne dialysée, une mauvaise observance des traitements présente plus d’effets délétères et peut conduire plus facilement à une hospitalisation."
+        }
+      ]
+    },
+    {
+      "id": "s12-p07",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s12-p07-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**J’ai mal à la tête et je souhaite prendre un traitement qui ne m’est plus prescrit mais que j’ai conservé dans ma pharmacie d’une ancienne ordonnance. Puis-je prendre ce traitement sans risque ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Oui, si ce n’est pas un médicament trop fort.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Oui, car ça m’a déjà été prescrit",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Non, je dois d’abord demander l’aval de mon centre de dialyse",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s12-p08",
+      "title": "QUELS RISQUE SI JE M’AUTOMÉDIQUE ?",
+      "blocks": [
+        {
+          "id": "s12-p08-b1",
+          "type": "carousel",
+          "question": "",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S12/p8-carrousel-img1.png",
+              "alt": "Lorsque certains traitements sont pris ensemble, ils peuvent provoquer des effets inattendus et parfois délétères, qui ne surviennent pas s’ils sont pris isolément : c'est ce qu’on",
+              "text": "Lorsque certains traitements sont pris ensemble, ils peuvent provoquer des effets inattendus et parfois délétères, qui ne surviennent pas s’ils sont pris isolément : c'est ce qu’on appelle les interactions médicamenteuses."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S12/p8-carrousel-img2.png",
+              "alt": "Une personne dialysée prend très souvent de nombreux traitements différents, par voie orale mais aussi pendant la dialyse.",
+              "text": "Une personne dialysée prend très souvent de nombreux traitements différents, par voie orale mais aussi pendant la dialyse."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S12/p8-carrousel-img3.png",
+              "alt": "Le néphrologue connaît vos traitements et sait comment éviter ces interactions délétères, contrairement à vous.",
+              "text": "Le néphrologue connaît vos traitements et sait comment éviter ces interactions délétères, contrairement à vous."
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S12/p8-carrousel-img4.png",
+              "alt": "En vous automédiquant, vous risquez de provoquer une interaction médicamenteuse potentiellement délétère.",
+              "text": "En vous automédiquant, vous risquez de provoquer une interaction médicamenteuse potentiellement délétère."
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S12/p8-carrousel-img5.png",
+              "alt": "De plus, une personne en insuffisance rénale présente de nombreuses contre-indications à divers médicaments, et elle ne doit pas dépasser certains dosages avec certaines molécules.",
+              "text": "De plus, une personne en insuffisance rénale présente de nombreuses contre-indications à divers médicaments, et elle ne doit pas dépasser certains dosages avec certaines molécules. L’équipe soignante connaît ces contraintes, contrairement à vous."
+            }
+          ]
+        },
+        {
+          "id": "s12-p08-b1-box1388",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "Si vous souhaitez prendre un traitement non prescrit, il faut prévenir le centre de dialyse avant, pour avoir l’aval de l’équipe médicale."
+        }
+      ]
+    },
+    {
+      "id": "s12-p09",
+      "title": "QUELS EFFETS INDÉSIRABLES DES MÉDICAMENTS DOIS-JE SIGNALER ?",
+      "blocks": [
+        {
+          "id": "s12-p09-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "Prévenez l'équipe en cas de :",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S12/p9_picto1-tourbillon.png",
+              "alt": "Vertiges, malaise",
+              "text": "Vertiges, malaise"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S12/p9_picto2-goutte-de-sang.png",
+              "alt": "Saignement",
+              "text": "Saignement"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S12/p9_picto3-main-gratte.png",
+              "alt": "Éruption cutanée",
+              "text": "Éruption cutanée"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S12/p9_picto4-WC.png",
+              "alt": "Diarrhée ou constipation importante",
+              "text": "Diarrhée ou constipation importante"
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S12/p9-picto5.png",
+              "alt": "Nausées persistantes",
+              "text": "Nausées persistantes"
+            },
+            {
+              "id": "i6",
+              "imageUrl": "/courses/S12/p9-picto6.png",
+              "alt": "Tout symptôme nouveau après l'introduction d'un médicament",
+              "text": "Tout symptôme nouveau après l'introduction d'un médicament"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s12-p10",
+      "title": "QUEL EST MON RÔLE ?",
+      "blocks": [
+        {
+          "id": "s12-p10-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S12/p10.png",
+          "alt": "QUEL EST MON RÔLE ?",
+          "content": "Vous êtes acteur de votre traitement en :\nconnaissant les médicaments que vous prenez ;\napportant votre ordonnance la plus récente lors de toute consultation ;\névitant toute automédication ;\nposant des questions lorsque vous ne comprenez pas une prescription.",
+          "imageMaxWidth": 493
+        }
+      ]
+    },
+    {
+      "id": "s12-p11",
+      "title": "Exercices de fin de module — 1/4",
+      "blocks": [
+        {
+          "id": "s12-p11-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Pourquoi les médicaments restent nécessaires malgré la dialyse ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Parce qu’ils remplacent la dialyse.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Parce qu’ils évitent des complications de l'insuffisance rénale que la dialyse ne peut pas corriger.",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Parce qu’ils permettent de mieux dormir.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s12-p12",
+      "title": "Exercices de fin de module — 2/4",
+      "blocks": [
+        {
+          "id": "s12-p12-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**À quel moment doivent être pris les chélateurs du phosphore ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Strictement au milieu du repas",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Strictement en dehors du repas",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Jusqu’à une heure avant le repas et jusqu'à 3h après",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s12-p13",
+      "title": "Exercices de fin de module — 3/4",
+      "blocks": [
+        {
+          "id": "s12-p13-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Le néphrologue vous a prescrit un nouveau traitement depuis vendredi matin, nous sommes le WE et vous avez des nausées importantes depuis, avec même des vomissements aujourd’hui.**\n**Que faut-il faire ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Prendre un comprimé de Vogalène qui est dans votre pharmacie pour arrêter les vomissements.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Arrêter le traitement jusqu’à la prochaine séance de dialyse et prévenir l’équipe soignante à ce moment-là.",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Appeler le centre de dialyse pour que le néphrologue soit informé et puisse réévaluer ce nouveau traitement.",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s12-p14",
+      "title": "Exercices de fin de module — 4/4",
+      "blocks": [
+        {
+          "id": "s12-p14-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Cochez les grandes catégories des médicaments que vous prenez par voie orale.**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Chélateurs du potassium",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Chélateurs du phosphore",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Anti- hypertenseurs",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Autres traitements cardiaques",
+              "isCorrect": false
+            },
+            {
+              "id": "c4",
+              "label": "Anti-coagulants",
+              "isCorrect": false
+            },
+            {
+              "id": "c5",
+              "label": "Vitamine D",
+              "isCorrect": false
+            },
+            {
+              "id": "c6",
+              "label": "Traitements anti-diabétiques",
+              "isCorrect": false
+            },
+            {
+              "id": "c7",
+              "label": "Psychotropes",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

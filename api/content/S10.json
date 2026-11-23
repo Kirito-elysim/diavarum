@@ -1,0 +1,612 @@
+{
+  "code": "S10",
+  "title": "Gestion de la tension artérielle et de l’automesure",
+  "description": "Expliquer l’importance de la surveillance de la tension artérielle dans le cadre de l’IRC et de l’hémodialyse.\nRéaliser correctement une automesure tensionnelle et transmettre des résultats fiables à l’équipe soignante.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut expliquer l’importance de la surveillance tensionnelle.",
+    "Le patient peut réaliser correctement une mesure de tension.",
+    "Le patient connaît les risques liés à une tension trop élevée ou trop basse.",
+    "Le patient identifie les situations nécessitant de contacter l’équipe soignante."
+  ],
+  "content": [
+    {
+      "id": "s10-p01",
+      "title": "QU'EST-CE QUE LA TENSION ARTÉRIELLE ? 1/2",
+      "blocks": [
+        {
+          "id": "s10-p01-b1-box1097",
+          "type": "info-card",
+          "variant": "definition",
+          "title": "Définition",
+          "content": "La tension artérielle correspond à la pression exercée par le sang sur les parois des artères."
+        },
+        {
+          "id": "s10-p01-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 240,
+          "imageUrl": "/courses/S10/p1.png",
+          "alt": "QU'EST-CE QUE LA TENSION ARTÉRIELLE ? 1/2",
+          "content": "Elle est exprimée par deux chiffres :\nla pression systolique (lorsque le cœur se contracte) ;\nla pression diastolique (lorsque le cœur se relâche).",
+          "imageMaxWidth": 253,
+          "listIntro": "Elle est exprimée par deux chiffres :",
+          "list": [
+            {
+              "text": "la pression systolique (lorsque le cœur se contracte) ;"
+            },
+            {
+              "text": "la pression diastolique (lorsque le cœur se relâche)."
+            }
+          ],
+          "listMarker": "dash",
+          "listSpacing": "normal"
+        },
+        {
+          "id": "s10-p01-b1-box1101",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun Fact",
+          "content": "Exemple de tension artérielle : 130/80 mmHg, qui se dit souvent 13/8 à l’oral."
+        }
+      ]
+    },
+    {
+      "id": "s10-p02",
+      "title": "QU'EST-CE QUE LA TENSION ARTÉRIELLE ? 2/2",
+      "blocks": [
+        {
+          "id": "s10-p02-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S10/p2.png",
+          "alt": "QU'EST-CE QUE LA TENSION ARTÉRIELLE ? 2/2",
+          "question": "La tension artérielle varie au cours de la journée selon :",
+          "legendDialog": true,
+          "hideLegendTitle": true,
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 25,
+              "y": 30,
+              "size": 64,
+              "label": "L'activité physique",
+              "description": "L'activité physique",
+              "sheetRow": 0
+            },
+            {
+              "id": "r2",
+              "x": 72,
+              "y": 30,
+              "size": 64,
+              "label": "Le stress et les émotions",
+              "description": "Le stress et les émotions",
+              "sheetRow": 1
+            },
+            {
+              "id": "r3",
+              "x": 28,
+              "y": 74,
+              "size": 64,
+              "label": "L'alimentation",
+              "description": "L'alimentation",
+              "sheetRow": 2
+            },
+            {
+              "id": "r4",
+              "x": 73,
+              "y": 74,
+              "size": 64,
+              "label": "L'état d'hydratation",
+              "description": "L'état d'hydratation",
+              "sheetRow": 3
+            }
+          ],
+          "sheet": {
+            "url": "/courses/S10/p2-pictos.png",
+            "cols": 2,
+            "rows": 4
+          }
+        }
+      ],
+      "instruction": "Touchez un pictogramme pour dévoiler les informations associées."
+    },
+    {
+      "id": "s10-p03",
+      "title": "POURQUOI SURVEILLER SA TENSION LORSQUE L'ON EST DIALYSÉ ? 1/2",
+      "blocks": [
+        {
+          "id": "s10-p03-b1-box1110",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "L'hypertension artérielle est fréquente chez les patients atteints d'insuffisance rénale."
+        },
+        {
+          "id": "s10-p03-b1",
+          "type": "flip-cards",
+          "question": "Une tension trop élevée peut favoriser :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Les maladies cardiovasculaires"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "L'insuffisance cardiaque"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "L'accident vasculaire cérébral (AVC)"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "L'aggravation de certaines complications rénales"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s10-p04",
+      "title": "POURQUOI SURVEILLER SA TENSION LORSQUE L'ON EST DIALYSÉ ? 2/2",
+      "blocks": [
+        {
+          "id": "s10-p04-b1",
+          "type": "flip-cards",
+          "question": "Une tension trop basse peut entraîner :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Des vertiges"
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Des malaises"
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Des chutes"
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Une mauvaise tolérance des séances de dialyse"
+            }
+          ]
+        },
+        {
+          "id": "s10-p04-b1-box1124",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La surveillance tensionnelle permet d'adapter le traitement et le poids sec. Par exemple, si trop d’eau est retirée en dialyse et que l’on passe en dessous du poids sec, la tension peut chuter."
+        }
+      ]
+    },
+    {
+      "id": "s10-p05",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s10-p05-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Physiologiquement, une personne en insuffisance rénale terminale (et non dialysée) a de fortes de chances de développer une :**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Hypertension artérielle",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Hypotension artérielle",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s10-p06",
+      "title": "QUELS SONT LES FACTEURS POUVANT FAVORISER L’HYPERTENSION ARTÉRIELLE ?",
+      "blocks": [
+        {
+          "id": "s10-p06-b1",
+          "type": "carousel",
+          "question": "Parmi les principaux facteurs pouvant favoriser l’hypertension :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S10/p6-carrousel-img1.png",
+              "alt": "Excès de consommation de sel",
+              "text": "Excès de consommation de sel"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S10/p6-carrousel-img2.png",
+              "alt": "Surcharge hydrique",
+              "text": "Surcharge hydrique"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S10/p6-carrousel-img3.png",
+              "alt": "Non-respect des traitements antihypertenseurs",
+              "text": "Non-respect des traitements antihypertenseurs"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S10/p6-carrousel-img4.png",
+              "alt": "Stress ou anxiété",
+              "text": "Stress ou anxiété"
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S10/p6-carrousel-img5.png",
+              "alt": "Sédentarité et manque d'activité physique",
+              "text": "Sédentarité et manque d'activité physique"
+            },
+            {
+              "id": "i6",
+              "imageUrl": "/courses/S10/p6-carrousel-img6.png",
+              "alt": "Certaines maladies cardiovasculaires.",
+              "text": "Certaines maladies cardiovasculaires."
+            }
+          ]
+        },
+        {
+          "id": "s10-p06-b1-box1138",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La gestion de la tension artérielle fait partie intégrante du traitement de l'insuffisance rénale."
+        }
+      ]
+    },
+    {
+      "id": "s10-p07",
+      "title": "QU'EST-CE QUE L'AUTOMESURE TENSIONNELLE ?",
+      "blocks": [
+        {
+          "id": "s10-p07-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S10/p7.png",
+          "alt": "QU'EST-CE QUE L'AUTOMESURE TENSIONNELLE ?",
+          "content": "L'automesure consiste à **mesurer soi-même sa tension artérielle à domicile** à l'aide d'un tensiomètre électronique (acheté en pharmacie).\nElle permet de :\nobtenir des mesures dans les conditions de vie habituelles ;\nsuivre l'évolution de la tension ;\naider le médecin à adapter les traitements ;\nde participer activement à ma prise en charge.",
+          "imageMaxWidth": 493
+        }
+      ]
+    },
+    {
+      "id": "s10-p08",
+      "title": "COMMENT RÉALISER CORRECTEMENT UNE AUTOMESURE ? 1/2",
+      "blocks": [
+        {
+          "id": "s10-p08-b1",
+          "type": "flip-cards",
+          "question": "Avant de réaliser une automesure, il est conseillé de :",
+          "cards": [
+            {
+              "id": "c1",
+              "front": "CARTE 1",
+              "back": "Rester au repos pendant 5 minutes."
+            },
+            {
+              "id": "c2",
+              "front": "CARTE 2",
+              "back": "Éviter le café, le tabac dans les 30 minutes précédentes."
+            },
+            {
+              "id": "c3",
+              "front": "CARTE 3",
+              "back": "Un effort physique dans les 30 minutes précédentes."
+            },
+            {
+              "id": "c4",
+              "front": "CARTE 4",
+              "back": "Vider sa vessie si nécessaire."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s10-p09",
+      "title": "COMMENT RÉALISER CORRECTEMENT UNE AUTOMESURE ? 2/2",
+      "blocks": [
+        {
+          "id": "s10-p09-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S10/p9.png",
+          "alt": "COMMENT RÉALISER CORRECTEMENT UNE AUTOMESURE ? 2/2",
+          "question": "Pendant la mesure :",
+          "legendDialog": true,
+          "hideLegendTitle": true,
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 20,
+              "y": 20,
+              "size": 36,
+              "label": "1",
+              "description": "S'asseoir confortablement"
+            },
+            {
+              "id": "r2",
+              "x": 50,
+              "y": 20,
+              "size": 36,
+              "label": "2",
+              "description": "Garder le dos appuyé"
+            },
+            {
+              "id": "r3",
+              "x": 80,
+              "y": 20,
+              "size": 36,
+              "label": "3",
+              "description": "Poser les pieds au sol"
+            },
+            {
+              "id": "r4",
+              "x": 20,
+              "y": 73,
+              "size": 36,
+              "label": "4",
+              "description": "Placer le brassard sur le bras nu"
+            },
+            {
+              "id": "r5",
+              "x": 50,
+              "y": 73,
+              "size": 36,
+              "label": "5",
+              "description": "Maintenir le bras au niveau du cœur"
+            },
+            {
+              "id": "r6",
+              "x": 80,
+              "y": 73,
+              "size": 36,
+              "label": "6",
+              "description": "Rester silencieux pendant la mesure"
+            },
+            {
+              "id": "r7",
+              "x": 50,
+              "y": 47,
+              "size": 36,
+              "label": "7",
+              "description": "Éviter le fumer ou de boire du café 30 mn avant l’automesure"
+            }
+          ]
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s10-p10",
+      "title": "QU’EST-CE QUE LA RÈGLE DES 3 ?",
+      "blocks": [
+        {
+          "id": "s10-p10-b1",
+          "type": "carousel",
+          "question": "Pour obtenir des **résultats fiables avec l’automesure de la TA**, il existe la règle des 3 :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S10/p10-carrosel-img1.png",
+              "alt": "mesures le matin",
+              "text": "mesures le matin"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S10/p10-carrosel-img2.png",
+              "alt": "mesures le soir",
+              "text": "mesures le soir"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S10/p10-carrosel-img3.png",
+              "alt": "Pendant 3 jours consécutifs",
+              "text": "Pendant 3 jours consécutifs"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S10/p10-carrosel-img4.png",
+              "alt": "De préférence avant une consultation (ou selon les recommandations de l'équipe soignante).",
+              "text": "De préférence avant une consultation (ou selon les recommandations de l'équipe soignante)."
+            }
+          ]
+        },
+        {
+          "id": "s10-p10-b1-box1171",
+          "type": "info-card",
+          "variant": "funfact",
+          "title": "Fun Fact",
+          "content": "Il est recommandé de noter les résultats dans un carnet ou une application dédiée."
+        }
+      ]
+    },
+    {
+      "id": "s10-p11",
+      "title": "QUAND FAUT-IL PRÉVENIR L'ÉQUIPE SOIGNANTE ?",
+      "blocks": [
+        {
+          "id": "s10-p11-b1",
+          "type": "hotspot",
+          "imageUrl": "/courses/S10/p11.png",
+          "alt": "QUAND FAUT-IL PRÉVENIR L'ÉQUIPE SOIGNANTE ?",
+          "question": "Contactez votre équipe de dialyse si vous observez :",
+          "legendDialog": true,
+          "hideLegendTitle": true,
+          "hotspots": [
+            {
+              "id": "r1",
+              "x": 25,
+              "y": 30,
+              "size": 36,
+              "label": "1",
+              "description": "Des chiffres régulièrement plus élevés ou plus bas que vos valeurs habituelles"
+            },
+            {
+              "id": "r2",
+              "x": 72,
+              "y": 30,
+              "size": 36,
+              "label": "2",
+              "description": "Des malaise(s) et/ou des vertiges répétés"
+            },
+            {
+              "id": "r3",
+              "x": 28,
+              "y": 74,
+              "size": 36,
+              "label": "3",
+              "description": "Des maux de tête inhabituels"
+            },
+            {
+              "id": "r4",
+              "x": 73,
+              "y": 74,
+              "size": 36,
+              "label": "4",
+              "description": "Un essoufflement et/ou des douleurs thoraciques"
+            }
+          ]
+        },
+        {
+          "id": "s10-p11-b1-box1179",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "Ne modifiez jamais votre traitement sans avis médical."
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s10-p12",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s10-p12-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Pourquoi est-il important de surveiller sa tension artérielle lorsqu’on est dialysé ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Pour surveiller si j’ai de l'arythmie",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Pour prévenir les complications cardiovasculaires",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Pour adapter le traitement",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Pour étayer l’évaluation du poids sec",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s10-p13",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s10-p13-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Cochez les règles à respecter pour réaliser correctement une automesure de tensionnelle.**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Maintenir le bras au niveau du cœur",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Rester assis, voire couché, au moins 5 minutes avant la mesure",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Ne pas boire de café, ni fumer dans les 30 minutes avant la mesure",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Ne pas boire plus de 300 ml d’eau avant la mesure",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s10-p14",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s10-p14-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Que signifie la règle des « 3 » ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "mesures le matin, 3 mesures le soir, pendant 3 jours consécutifs",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "cm au dessus du coude, à 3 mn d'intervalle, 3 fois dans la journée",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "mn aprés le réveil, dans 3 position différente (assis, debout, couché), 3 jours par semaine",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

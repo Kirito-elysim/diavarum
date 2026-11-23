@@ -1,0 +1,671 @@
+{
+  "code": "S7",
+  "title": "Bonnes pratiques et préservation de la FAV",
+  "description": "Appliquer les mesures d’hygiène et de surveillance nécessaires au bon fonctionnement de sa fistule artérioveineuse.\nRéaliser correctement les gestes pratiques de protection et de compression de la fistule après une séance de dialyse.",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient sait expliquer la surveillance quotidienne de sa fistule",
+    "Le patient peut citer les règles d’hygiène avant et après sa séance.",
+    "Le patient peut appliquer correctement les techniques de compression de la FAV."
+  ],
+  "content": [
+    {
+      "id": "s7-p01",
+      "title": "POURQUOI PRENDRE SOIN DE MA FISTULE ?",
+      "blocks": [
+        {
+          "id": "s7-p01-b1",
+          "alt": "POURQUOI PRENDRE SOIN DE MA FISTULE ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "La fistule artérioveineuse est l'accès vasculaire privilégié pour l'hémodialyse.\nElle est souvent appelée la \"**ligne de vie**\" du patient dialysé car elle permet :\n - un débit sanguin efficace ;\n - une meilleure qualité de dialyse ;\n - un risque infectieux plus faible qu'un cathéter ;\n - une meilleure durée de vie de l'accès vasculaire.",
+          "imageUrl": "/courses/S7/p1.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "verticalAlign": "center",
+          "imageMaxHeight": 360
+        },
+        {
+          "id": "s7-p01-info",
+          "type": "info-card",
+          "title": "IMPORTANT",
+          "content": "La préservation de la FAV est essentielle pour la réussite du traitement de dialyse.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s7-p02",
+      "title": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? LE THRILL 1/4",
+      "blocks": [
+        {
+          "id": "s7-p02-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "OUI",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "NON",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Savez-vous ce qu’est le thrill ? Si oui, expliquez-le à l’infirmier/ère**",
+          "questionType": "qcu",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s7-p03",
+      "title": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? LE THRILL 2/4",
+      "blocks": [
+        {
+          "id": "s7-p03-b1",
+          "alt": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? LE THRILL 2/4",
+          "size": "image",
+          "type": "image-text",
+          "content": "Le thrill correspond au passage du sang dans la fistule. Il s’agit d’une vibration ressentie en posant les doigts sur la fistule.\n\n**La vibration du thrill est provoquée par le passage du sang dans la fistule.**",
+          "imageUrl": "/courses/S7/p3-gif.gif",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "verticalAlign": "center",
+          "imageMaxHeight": 360
+        }
+      ]
+    },
+    {
+      "id": "s7-p04",
+      "title": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? LE THRILL 3/4",
+      "blocks": [
+        {
+          "id": "s7-p04-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Ça n’est pas très important, je le dirai à l’infirmier/ère à la prochaine séance pour qu’il/elle regarde.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Cela peut signifier que le sang ne circule plus dans la fistule.",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Cela arrive parfois, il n’y a pas à s’en inquiéter.",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "Il faut que je le signale sans délai à l’équipe de dialyse.",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Selon vous, si vous vous réveillez un matin et que vous ne sentez plus le thrill de votre fistule, qu’est-ce que cela implique ?**",
+          "questionType": "qcm",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s7-p05",
+      "title": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? LE THRILL 4/4",
+      "blocks": [
+        {
+          "id": "s7-p05-b1",
+          "alt": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? LE THRILL 4/4",
+          "size": "image",
+          "type": "image-text",
+          "content": "**La vibration du thrill** indique que **le sang circule correctement.**\nJe dois donc : \n- **Contrôler la présence du thrill **de ma FAV chaque jour.\n- **Signaler immédiatement** toute diminution ou disparition du thrill.",
+          "imageUrl": "/courses/S7/p5-gif-av-loupe.gif",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "verticalAlign": "center",
+          "imageMaxHeight": 360
+        }
+      ]
+    },
+    {
+      "id": "s7-p06",
+      "title": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? L'ASPECT DE LA FAV",
+      "blocks": [
+        {
+          "id": "s7-p06-b1",
+          "alt": "COMMENT SURVEILLER MA FISTULE AU QUOTIDIEN ? L'ASPECT DE LA FAV",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 69,
+              "y": 25,
+              "id": "r1",
+              "size": 40,
+              "label": "1",
+              "description": "Une rougeur et/ou chaleur sur ma FAV"
+            },
+            {
+              "x": 77,
+              "y": 25,
+              "id": "r2",
+              "size": 40,
+              "label": "2",
+              "description": "Un gonflement inhabituel"
+            },
+            {
+              "x": 66,
+              "y": 46,
+              "id": "r3",
+              "size": 40,
+              "label": "3",
+              "description": "Une douleur"
+            },
+            {
+              "x": 76,
+              "y": 42,
+              "id": "r4",
+              "size": 40,
+              "label": "4",
+              "description": "Une plaie ou un écoulement"
+            },
+            {
+              "x": 70,
+              "y": 67,
+              "id": "r5",
+              "size": 40,
+              "label": "5",
+              "description": "Une modification de la couleur de la peau"
+            }
+          ],
+          "imageUrl": "/courses/S7/p6.png",
+          "question": "Pour surveiller ma fistule, je dois identifier :",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        },
+        {
+          "id": "s7-p06-info",
+          "type": "info-card",
+          "title": "WARNING",
+          "content": "Chacune de ces anomalies doit être signalée à l'équipe soignante.",
+          "variant": "warning"
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s7-p07",
+      "title": "LES ANÉVRISMES DE LA FAV",
+      "blocks": [
+        {
+          "id": "s7-p07-b1",
+          "alt": "LES ANÉVRISMES DE LA FAV",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 65,
+              "y": 20,
+              "id": "r1",
+              "size": 40,
+              "label": "1",
+              "description": "Certains patients peuvent ressentir une gêne esthétique si leurs anévrismes grossissent trop. Dans ce cas, une chirurgie de réduction de l’anévrisme peut être réalisée."
+            },
+            {
+              "x": 74,
+              "y": 43,
+              "id": "r2",
+              "size": 40,
+              "label": "2",
+              "description": "Sur certains anévrismes, la peau peut s’affiner et devenir très fragile, majorant les risques de saignement, voire de brèche sur la FAV."
+            },
+            {
+              "x": 70,
+              "y": 73,
+              "id": "r3",
+              "size": 40,
+              "label": "3",
+              "description": "Des anévrismes trop volumineux peuvent générer les problèmes de débit sanguin, qui peuvent également nécessiter une chirurgie."
+            }
+          ],
+          "imageUrl": "/courses/S7/p7.png",
+          "question": "Certaines zones de la FAV **peuvent se dilater et grossir pour constituer des anévrismes,** parfois très volumineux.",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        },
+        {
+          "id": "s7-p07-info",
+          "type": "info-card",
+          "title": "WARNING",
+          "content": "Pour limiter l’apparition de certains anévrismes, il faut changer les points de ponction à chaque séance de dialyse.",
+          "variant": "warning"
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s7-p08",
+      "title": "QUELLES MESURES D'HYGIÈNE DOIS-JE RESPECTER AVANT CHAQUE SÉANCE ?",
+      "blocks": [
+        {
+          "id": "s7-p08-b1",
+          "alt": "QUELLES MESURES D'HYGIÈNE DOIS-JE RESPECTER AVANT CHAQUE SÉANCE ?",
+          "size": "image",
+          "type": "image-text",
+          "content": "Une bonne hygiène permet de limiter le risque infectieux.\n\nJe dois :\n- retirer mon patch ou ma crème anesthésiante (si j’en utilise) et le jeter dans la poubelle noire\n- laver soigneusement le bras porteur de la fistule ;\n- utiliser un savon doux ;\n- sécher correctement la peau ;\n- porter des vêtements propres.",
+          "imageUrl": "/courses/S7/p8.png",
+          "imageSide": "left",
+          "imageWidth": "half",
+          "verticalAlign": "center",
+          "imageMaxHeight": 360
+        },
+        {
+          "id": "s7-p08-info",
+          "type": "info-card",
+          "title": "IMPORTANT",
+          "content": "Le jour de la séance, il est important d'éviter d'appliquer une crème sur la zone de ponction, à l'exception de la crème anesthésiante prescrite par le médecin.",
+          "variant": "important"
+        }
+      ]
+    },
+    {
+      "id": "s7-p09",
+      "title": "QUELS GESTES DOIS-JE ÉVITER ?",
+      "blocks": [
+        {
+          "id": "s7-p09-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "Porter de charges lourdes de façon répétée avec le bras concerné.",
+              "text": "Porter de charges lourdes de façon répétée avec le bras concerné.",
+              "imageUrl": "/courses/S7/p9-picto1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Porter une montre, un bracelet ou un vêtement trop serré.",
+              "text": "Porter une montre, un bracelet ou un vêtement trop serré.",
+              "imageUrl": "/courses/S7/p9-picto2.png"
+            },
+            {
+              "id": "i3",
+              "alt": "Dormir en comprimant le bras de la fistule.",
+              "text": "Dormir en comprimant le bras de la fistule.",
+              "imageUrl": "/courses/S7/p9-picto3.png"
+            },
+            {
+              "id": "i4",
+              "alt": "Faire prendre ma tension artérielle sur ce bras.",
+              "text": "Faire prendre ma tension artérielle sur ce bras.",
+              "imageUrl": "/courses/S7/p9-picto4.png"
+            },
+            {
+              "id": "i5",
+              "alt": "Gratter ou manipuler les sites de ponction.",
+              "text": "Gratter ou manipuler les sites de ponction.",
+              "imageUrl": "/courses/S7/p9-picto5.png"
+            },
+            {
+              "id": "i6",
+              "alt": "Pratiquer des sports de combat ou d’autres activités pouvant provoquer des coups ou des blessures sur le bras de la FAV.",
+              "text": "Pratiquer des sports de combat ou d’autres activités pouvant provoquer des coups ou des blessures sur le bras de la FAV.",
+              "imageUrl": "/courses/S7/p9-picto6.png"
+            },
+            {
+              "id": "i7",
+              "alt": "Autoriser une prise de sang ou une perfusion sur ce bras (sauf indication médicale exceptionnelle).",
+              "text": "Autoriser une prise de sang ou une perfusion sur ce bras (sauf indication médicale exceptionnelle).",
+              "imageUrl": "/courses/S7/p9-picto7.png"
+            }
+          ],
+          "columns": 3,
+          "question": "Afin de protéger ma fistule, je ne dois pas :",
+          "imageWidth": 80
+        },
+        {
+          "id": "s7-p09-info",
+          "type": "info-card",
+          "title": "FUN FACT",
+          "content": "Pour rappel, tous vos bilans sanguins peuvent être réalisés en dialyse, il suffit de donner l’ordonnance de la prise de sang à votre infirmier/ère de dialyse à votre arrivée.",
+          "variant": "funfact"
+        }
+      ]
+    },
+    {
+      "id": "s7-p10",
+      "title": "COMMENT RÉALISER LA COMPRESSION DE MA FAV ?",
+      "blocks": [
+        {
+          "id": "s7-p10-b1",
+          "alt": "COMMENT RÉALISER LA COMPRESSION DE MA FAV ?",
+          "type": "hotspot",
+          "hotspots": [
+            {
+              "x": 32,
+              "y": 37,
+              "id": "r1",
+              "size": 40,
+              "label": "1",
+              "description": "**Installation :** Je choisis la position la plus adéquate pour la compression. En position assise, je m'assure que mes deux pieds sont au sol, et l’adaptable à la bonne hauteur."
+            },
+            {
+              "x": 61,
+              "y": 42,
+              "id": "r2",
+              "size": 40,
+              "label": "2",
+              "description": "**Port du gant **: Un soignant va m'aider à enfiler un gant avant de positionner mes doigts sur les compresses. Le port du gant permet d’éviter le transport manuporté de germes."
+            },
+            {
+              "x": 50,
+              "y": 62,
+              "id": "r3",
+              "size": 40,
+              "label": "3",
+              "description": "**Placement des doigts :** Je positionne mes doigts de manière à être dans une position confortable pour maintenir la compression."
+            },
+            {
+              "x": 60,
+              "y": 64,
+              "id": "r4",
+              "size": 40,
+              "label": "4",
+              "description": "**Stabilité :** Je reste immobile pendant la compression pour éviter tout risque de saignement."
+            },
+            {
+              "x": 82,
+              "y": 18,
+              "id": "r5",
+              "size": 40,
+              "label": "5",
+              "description": "**Durée de la compression **: La compression dure au moins 10 mn, sauf lors des premières ponctions (20 mn). La compression doit être maintenue jusqu’à l’arrêt complet du saignement."
+            },
+            {
+              "x": 67,
+              "y": 58,
+              "id": "r6",
+              "size": 40,
+              "label": "6",
+              "description": "**Fin de la compression **: Les compresses sont alors retirées afin de permettre au soignant de vérifier que le saignement s’est bien arrêté."
+            },
+            {
+              "x": 73,
+              "y": 78,
+              "id": "r7",
+              "size": 40,
+              "label": "7",
+              "description": "**Pose du pansement **: Le pansement des points de ponction est réalisé par l’infirmier/ère ou moi-même après la vérification de l’arrêt du saignement. Je garde le pansement pendant toute la durée recommandée par l'équipe."
+            }
+          ],
+          "imageUrl": "/courses/S7/p10.png",
+          "question": "",
+          "legendDialog": true,
+          "hideLegendTitle": true
+        }
+      ],
+      "instruction": "Touchez un chiffre pour dévoiler les informations associées."
+    },
+    {
+      "id": "s7-p11",
+      "title": "HYGIÈNE APRÉS LA COMPRESSION 1/3",
+      "blocks": [
+        {
+          "id": "s7-p11-b1",
+          "type": "picto-grid",
+          "items": [
+            {
+              "id": "i1",
+              "alt": "Jetez le gant dans le sac de déchets noir.",
+              "text": "Jetez le gant dans le sac de déchets noir.",
+              "imageUrl": "/courses/S7/p11-picto1.png"
+            },
+            {
+              "id": "i2",
+              "alt": "Réaliser impérativement une hygiène des mains adaptée après avoir jeté le gant.",
+              "text": "Réaliser impérativement une hygiène des mains adaptée après avoir jeté le gant.",
+              "imageUrl": "/courses/S7/p11-picto2.png"
+            }
+          ],
+          "columns": 2,
+          "question": "Avant de quitter la salle de dialyse :",
+          "imageWidth": 180
+        }
+      ]
+    },
+    {
+      "id": "s7-p12",
+      "title": "HYGIÈNE APRÉS LA COMPRESSION 2/3",
+      "blocks": [
+        {
+          "id": "s7-p12-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Friction des mains avec gel hydro-alcoolique",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Lavage des mains à l’eau et au savon",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "L’un ou l’autre, c’est pareil",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Si j’ai du sang sur les mains après la compression, je dois réaliser une hygiène des mains avec :**",
+          "questionType": "qcu",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s7-p13",
+      "title": "HYGIÈNE APRÉS LA COMPRESSION 3/3",
+      "blocks": [
+        {
+          "id": "s7-p13-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Friction des mains avec gel hydro-alcoolique",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Lavage des mains à l’eau et au savon",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "L’un ou l’autre, c’est pareil",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Aprés la compression et le retrait du gant, si mes mains sont visuellement propres (sans sang), je dois réaliser une hygiène des mains avec :**",
+          "questionType": "qcu",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s7-p14",
+      "title": "QUELLES SONT LES PRATIQUES RECOMMANDÉES POUR LA COMPRESSION DE LA FAV ?",
+      "blocks": [
+        {
+          "id": "s7-p14-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Comprimer directement le point de ponction.",
+              "front": "CARTE 1"
+            },
+            {
+              "id": "c2",
+              "back": "Maintenir une pression suffisante pour arrêter le saignement.",
+              "front": "CARTE 2"
+            },
+            {
+              "id": "c3",
+              "back": "Faire durer la compression pendant le temps recommandé.",
+              "front": "CARTE 3"
+            },
+            {
+              "id": "c4",
+              "back": "Moduler la force de la pression sur les points de ponction afin de sentir le thrill pendant la compression.",
+              "front": "CARTE 4"
+            }
+          ],
+          "question": "Pour la compression de la FAV, il est recommandé de :"
+        },
+        {
+          "id": "s7-p14-info",
+          "type": "info-card",
+          "title": "WARNING",
+          "content": "Une compression de moins de 10 mn, peut favoriser l’apparition d’hématomes douloureux qui vont gêner les ponctions suivantes.",
+          "variant": "warning"
+        }
+      ]
+    },
+    {
+      "id": "s7-p15",
+      "title": "QUELLES SONT LES ERREURS POUR LA COMPRESSION DE LA FAV ?",
+      "blocks": [
+        {
+          "id": "s7-p15-b1",
+          "type": "flip-cards",
+          "cards": [
+            {
+              "id": "c1",
+              "back": "Appuyer trop fort en interrompant totalement la circulation sanguine.",
+              "front": "CARTE 1"
+            },
+            {
+              "id": "c2",
+              "back": "Utiliser un garrot compressif.",
+              "front": "CARTE 2"
+            },
+            {
+              "id": "c3",
+              "back": "Frotter le point de ponction avec la compresse après l'arrêt du saignement.",
+              "front": "CARTE 3"
+            },
+            {
+              "id": "c4",
+              "back": "Retirer le pansement trop précocement.",
+              "front": "CARTE 4"
+            }
+          ],
+          "question": "Pour la compression de la FAV, je dois éviter de :"
+        },
+        {
+          "id": "s7-p15-info",
+          "type": "info-card",
+          "title": "WARNING",
+          "content": "Une compression trop forte peut favoriser une thrombose de la fistule.",
+          "variant": "warning"
+        }
+      ]
+    },
+    {
+      "id": "s7-p16",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s7-p16-b1",
+          "type": "quiz",
+          "graded": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "OUI",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "NON",
+              "isCorrect": false
+            }
+          ],
+          "question": "**Pouvez-vous citer deux gestes à éviter pour protéger votre fistule ? Dites-les à haute voix à l’infirmière/l’infirmier.**",
+          "questionType": "qcu",
+          "showCorrection": false
+        }
+      ]
+    },
+    {
+      "id": "s7-p19",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s7-p19-b1",
+          "type": "quiz",
+          "graded": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "5 mn",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "10 mn",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "15 mn",
+              "isCorrect": false
+            },
+            {
+              "id": "c3",
+              "label": "20 mn",
+              "isCorrect": false
+            }
+          ],
+          "question": "**La durée de compression minimum après une séance de dialyse sur une fistule mature est de :**",
+          "questionType": "qcu",
+          "showCorrection": true
+        }
+      ]
+    },
+    {
+      "id": "s7-p20",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s7-p20-b1",
+          "type": "quiz",
+          "graded": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Oui",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Non",
+              "isCorrect": true
+            }
+          ],
+          "question": "**Si le saignement de ma fistule s’arrête totalement au bout de 5 mn de compression, puis-je arrêter de comprimer et faire mon pansement ?**",
+          "questionType": "qcu",
+          "showCorrection": true
+        }
+      ]
+    }
+  ]
+}

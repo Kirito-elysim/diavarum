@@ -1,0 +1,611 @@
+{
+  "code": "S16",
+  "title": "Gestion de la douleur en hémodialyse",
+  "description": "",
+  "estimatedDuration": 30,
+  "published": true,
+  "competencies": [
+    "Le patient peut évaluer et communiquer l’intensité de sa douleur.",
+    "Le patient sait identifier et mettre en œuvre une stratégie adaptée pour la soulager."
+  ],
+  "content": [
+    {
+      "id": "s16-p01",
+      "title": "DOULEUR ET SOINS",
+      "blocks": [
+        {
+          "id": "s16-p01-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S16/p1.png",
+          "alt": "DOULEUR ET SOINS",
+          "content": "La douleur est une **expérience sensorielle et émotionnelle désagréable**, qui est **avant tout subjective**, qui vous est propre. À blessure identique, deux personnes ne vont pas ressentir la même douleur : ni de la même façon, ni avec la même intensité. Cela est lié à votre expérience personnelle, à votre état d’esprit du moment, à des caractéristiques organiques qui vous sont propres également, etc.\nQuoiqu’il en soit, **une douleur doit être signalée à l’équipe** qui va la prendre en compte telle que vous la décrivez et la ressentez, il n’y a **pas d’interprétation à en faire**, cette douleur est telle que vous la vivez. C’est pourquoi il est important d’en parler à l’équipe et de bien décrire ce que vous ressentez.",
+          "imageMaxWidth": 492
+        }
+      ]
+    },
+    {
+      "id": "s16-p02",
+      "title": "POURQUOI PARLER DE LA DOULEUR ?",
+      "blocks": [
+        {
+          "id": "s16-p02-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "La douleur n'est pas une fatalité.\n\nLorsqu'elle est reconnue et évaluée, des solutions peuvent être proposées pour :",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S16/p2-picto1.png",
+              "alt": "Favoriser le confort et le bon déroulement de vos séances",
+              "text": "Favoriser le confort et le bon déroulement de vos séances"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S16/p2-picto2.png",
+              "alt": "Préserver votre qualité de vie",
+              "text": "Préserver votre qualité de vie"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S16/p2-picto3.png",
+              "alt": "Améliorer le sommeil et les activités quotidiennes",
+              "text": "Améliorer le sommeil et les activités quotidiennes"
+            }
+          ]
+        },
+        {
+          "id": "s16-p02-b1-box1744",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Chaque douleur mérite d'être signalée."
+        }
+      ]
+    },
+    {
+      "id": "s16-p03",
+      "title": "QUELS TYPES DE DOULEURS PEUVENT ÊTRE RENCONTRÉS EN DIALYSE ?",
+      "blocks": [
+        {
+          "id": "s16-p03-b1",
+          "type": "carousel",
+          "question": "Les patients peuvent ressentir différents types de douleurs :",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S16/p3-carrousel-img1.png",
+              "alt": "Douleurs liées à la ponction de la fistule : douleur au moment de l'insertion des aiguilles, douleur parfois persistante après la ponction (lorsque l’aiguille touche un nerf) et do",
+              "text": "**Douleurs liées à la ponction de la fistule** : douleur au moment de l'insertion des aiguilles, douleur parfois persistante après la ponction (lorsque l’aiguille touche un nerf) et douleur d’hématomes."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S16/p3-carrousel-img2.png",
+              "alt": "Douleurs musculaires : crampes pendant ou après la séance, douleurs spécifiques liées à la fatigue musculaire.",
+              "text": "**Douleurs musculaires** : crampes pendant ou après la séance, douleurs spécifiques liées à la fatigue musculaire."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S16/p3-carrousel-img3.png",
+              "alt": "3/ Douleurs articulaires et/ou osseuses : la dialyse peut favoriser l’inflammation des tissus, qui peut engendrer des douleurs articulaires inflammatoires. L'immobilité requise pen",
+              "text": "**3/ Douleurs articulaires et/ou osseuses **: la dialyse peut favoriser l’inflammation des tissus, qui peut engendrer des douleurs articulaires inflammatoires. L'immobilité requise pendant les heures de dialyse favorise également ce type de douleurs."
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S16/p3-carrousel-img4.png",
+              "alt": "Douleurs neuropathiques : ce type de douleur est très particulier et se traite différemment des douleurs habituelles. Le ressenti de ces douleurs est différent, avec des sensations",
+              "text": "**Douleurs neuropathiques** : ce type de douleur est très particulier et se traite différemment des douleurs habituelles. Le ressenti de ces douleurs est différent, avec des **sensations de brûlures**, **fourmillements**, **décharges** électriques, ou d'engourdissement. Ce sont souvent des douleurs qui **irradient sur un trajet** précis."
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S16/p3-carrousel-img5.png",
+              "alt": "Certaines autres douleurs peuvent être le signe d'un problème nécessitant une évaluation médicale rapide, notamment les douleurs thoraciques.",
+              "text": "Certaines autres douleurs peuvent être le signe d'un problème nécessitant une évaluation médicale rapide, notamment les **douleurs thoraciques.**"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p04",
+      "title": "POURQUOI EST-IL IMPORTANT DE SIGNALER UNE DOULEUR ?",
+      "blocks": [
+        {
+          "id": "s16-p04-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S16/p4.png",
+          "alt": "POURQUOI EST-IL IMPORTANT DE SIGNALER UNE DOULEUR ?",
+          "content": "L'équipe soignante ne peut soulager efficacement une douleur que si elle en a connaissance.\nSignaler une douleur permet de :\nen** identifier la cause** ;\nproposer un **traitement adapté** ;\n**prévenir** certaines **complications** ;\n**améliorer le confort** pendant les séances.",
+          "imageMaxWidth": 493
+        },
+        {
+          "id": "s16-p04-b1-box1761",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Parler de sa douleur est un élément important de sa prise en charge."
+        }
+      ]
+    },
+    {
+      "id": "s16-p05",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s16-p05-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Si je ressens une douleur, la seule information importante pour l’infirmier/ère est de la savoir.**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p06",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s16-p06-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Pouvez-vous citer un ou plusieurs moments, lors de la semaine passée, où il vous a été demandé d'évaluer votre douleur ?**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Oui (je le peux)",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Non",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p07",
+      "title": "QUAND EST ÉVALUÉE MA DOULEUR EN SÉANCE ?",
+      "blocks": [
+        {
+          "id": "s16-p07-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S16/p7-picto1.png",
+              "alt": "Au **début de chaque séance **de dialyse : **le soignant demande au patient** **s'il a des douleurs** si oui, de les caractériser.",
+              "text": "Au **début de chaque séance **de dialyse : **le soignant demande au patient** **s'il a des douleurs** si oui, de les caractériser."
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S16/p7-picto2.png",
+              "alt": "**Pendant la séance** : en cas de douleurs, le patient doit **alerter les soignants.**",
+              "text": "**Pendant la séance** : en cas de douleurs, le patient doit **alerter les soignants.**"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S16/p7-picto3.png",
+              "alt": "En cas de douleur, **après l'administration d'un antalgique, le soignant demande au patient de réévaluer** sa douleur pour vérifier l'efficacité du médicament.",
+              "text": "En cas de douleur, **après l'administration d'un antalgique, le soignant demande au patient de réévaluer** sa douleur pour vérifier l'efficacité du médicament."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p08",
+      "title": "COMMENT ÉVALUER UNE DOULEUR ?",
+      "blocks": [
+        {
+          "id": "s16-p08-b1-box1777",
+          "type": "info-card",
+          "variant": "objective",
+          "title": "Obj",
+          "content": "Pour traiter efficacement une douleur, l’équipe a besoin que le patient lui donne des informations précises sur ce qu’il ressent."
+        },
+        {
+          "id": "s16-p08-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 240,
+          "imageUrl": "/courses/S16/p8.png",
+          "alt": "COMMENT ÉVALUER UNE DOULEUR ?",
+          "content": "L'échelle numérique : il s’agit de **donner une note sur 10 à la douleur,** pour préciser son intensité.\nSachant que **10 est la douleur maximale imaginable**, et que zéro cote une absence de douleur. Si vous hésitez entre deux notes, entre 6 et 7 sur 10 par exemple, privilégiez la note la plus haute.Cette évaluation aide à **adapter les traitements et à vérifier leur efficacité.**",
+          "imageMaxWidth": 348
+        },
+        {
+          "id": "s16-p08-b1-box1780",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Il existe d’autres outils d'évaluation de la douleur, et notamment pour les patients qui ne sont pas en capacité de communiquer (échelle des visages et grille algoplus)."
+        }
+      ]
+    },
+    {
+      "id": "s16-p09",
+      "title": "COMMENT CARACTÉRISER UNE DOULEUR ?",
+      "blocks": [
+        {
+          "id": "s16-p09-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "Pour aider l'équipe soignante à traiter une douleur, il est important de la lui décrire avec le plus précisions possibles :",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S16/p9-picto1.png",
+              "alt": "Où se situe la douleur",
+              "text": "Où se situe la douleur"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S16/p9-picto2.png",
+              "alt": "Quand elle apparaît",
+              "text": "Quand elle apparaît"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S16/p9-picto3.png",
+              "alt": "Combien de temps elle dure",
+              "text": "Combien de temps elle dure"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S16/p9-picto4.png",
+              "alt": "Ce qui l'aggrave ou la soulage",
+              "text": "Ce qui l'aggrave ou la soulage"
+            },
+            {
+              "id": "i5",
+              "imageUrl": "/courses/S16/p9-picto5.png",
+              "alt": "Son intensité",
+              "text": "Son intensité"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p10",
+      "title": "Exercice de réflexion",
+      "blocks": [
+        {
+          "id": "s16-p10-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Si j’enlève mon patch d’EmlaⓇ, et que je nettoie mon bras trop tôt en arrivant à mon poste de dialyse, il ne fera plus effet au moment de la ponction.**",
+          "graded": false,
+          "showCorrection": false,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Vrai",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Faux",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p11",
+      "title": "QUELS MOYENS MÉDICAMENTEUX PEUVENT SOULAGER LA DOULEUR ?",
+      "blocks": [
+        {
+          "id": "s16-p11-b1",
+          "type": "carousel",
+          "question": "",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S16/p10-carrousel-img1.png",
+              "alt": "1/Le patch ou crème anesthésiante (Emla®) 1/2 : il s’agit d’une crème anesthésiante, qui s’appliquent directement sur la peau 1h30 à 2h avant la séance de dialyse",
+              "text": "**1/Le patch ou crème anesthésiante (Emla®) 1/2 : **il s’agit d’une crème anesthésiante, qui s’appliquent directement sur la peau **1h30 à 2h** **avant la séance de dialyse**"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S16/p10-carrousel-img2.png",
+              "alt": "2/Le patch ou crème anesthésiante (Emla®) 2/2 : retirer l’anesthésiant avant le branchement et procéder au lavage de la fistule. L’action de l’anesthésiant persiste jusqu’à 75 minu",
+              "text": "**2/Le patch ou crème anesthésiante (Emla®) 2/2 : **retirer l’anesthésiant avant le branchement et procéder au lavage de la fistule. L’action de l’anesthésiant persiste jusqu’à 75 minutes après le retrait."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S16/p10-carrousel-img3.png",
+              "alt": "Les médicaments prescrits : le médecin peut prescrire des médicaments antalgiques à la demande. Si les douleurs sont fluctuantes, une prescription en “si besoin” est tout à fait po",
+              "text": "**Les médicaments prescrits** : le médecin peut prescrire des médicaments antalgiques à la demande. Si les douleurs sont fluctuantes, **une prescription en “si besoin” **est tout à fait possible."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p12",
+      "title": "ATTENTION À L'AUTOMÉDICATION",
+      "blocks": [
+        {
+          "id": "s16-p12-b1-box1800",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "Seul le médecin connaît les traitements antalgiques qui ne présentent ni contre-indications, ni d’interactions médicamenteuses à votre cas."
+        },
+        {
+          "id": "s16-p12-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S16/p11.png",
+          "alt": "ATTENTION À L'AUTOMÉDICATION",
+          "content": "Pour un patient dialysé, il est important de **ne jamais prendre un médicament sans avis médical, **même pour traiter une douleur. Les **médicaments anti-inflammatoires, notamment, peuvent être délétères**. Vous pouvez appeler le centre de dialyse à tout moment pour avoir un avis sur le traitement à prendre.",
+          "imageMaxWidth": 493
+        }
+      ]
+    },
+    {
+      "id": "s16-p13",
+      "title": "QUELS MOYENS NON-MÉDICAMENTEUX PEUVENT SOULAGER LA DOULEUR ?",
+      "blocks": [
+        {
+          "id": "s16-p13-b1",
+          "type": "carousel",
+          "question": "",
+          "captionAlign": "left",
+          "slides": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S16/p12-carrousel-img1.png",
+              "alt": "1/La bombe de froid : il s’agit d’un spray réfrigérant permettant d’anesthésier localement afin de réduire les douleurs que l’équipe va utiliser pour insensibiliser la zone de ponc",
+              "text": "**1/La bombe de froid **: il s’agit d’un spray réfrigérant permettant d’anesthésier localement afin de réduire les douleurs que l’équipe va utiliser pour insensibiliser la zone de ponction"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S16/p12-carrousel-img2.png",
+              "alt": "2/ La poche de gel : il s’agit d’une poche de gel qui permet de soulager certains types de douleurs par le principe de thermothérapie (chaud ou froid). Le froid permet de réduire l",
+              "text": "**2/ La poche de gel **: il s’agit d’une poche de gel qui permet de soulager certains types de douleurs par le principe de thermothérapie (chaud ou froid). Le froid permet de réduire les œdèmes, l’inflammation et la douleur en cas d’hématome, d’ecchymose, de douleur musculaire ou d’entorse. Le chaud permet de soulager les douleurs musculaires, les maux de dos, etc. Pour leur utilisation, il faut se référer aux instructions du fabricant pour chaque type de poche.Cependant avant toute application, il faut glisser la poche dans un tissu, car elle ne doit jamais être en contact direct avec la peau (risque de brûlure, par le chaud comme le froid)."
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S16/p12-carrousel-img3.png",
+              "alt": "3/ Coussins de confort : outre le changement de position, des coussins de confort peuvent vous soulager pour adapter votre posture lors des séances de dialyse.",
+              "text": "**3/ Coussins de confort **: outre le changement de position, des coussins de confort peuvent vous soulager pour adapter votre posture lors des séances de dialyse."
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S16/p12-carrousel-img4.png",
+              "alt": "Techniques spécifiques comme la relaxation, l’hypnose, la respiration contrôlée, etc.",
+              "text": "Techniques spécifiques comme la **relaxation, l’hypnose, la respiration contrôlée**, etc."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p14",
+      "title": "QUELS SIGNES DOIVENT M'ALERTER ?",
+      "blocks": [
+        {
+          "id": "s16-p14-b1",
+          "type": "picto-grid",
+          "spread": true,
+          "columns": 3,
+          "imageWidth": 100,
+          "question": "Certaines douleurs nécessitent une prise en charge rapide :",
+          "items": [
+            {
+              "id": "i1",
+              "imageUrl": "/courses/S16/p13-picto1.png",
+              "alt": "Douleur thoracique +/- associée à un essoufflement",
+              "text": "Douleur thoracique +/- associée à un essoufflement"
+            },
+            {
+              "id": "i2",
+              "imageUrl": "/courses/S16/p13-picto2.png",
+              "alt": "Douleur accompagnée de fièvre",
+              "text": "Douleur accompagnée de fièvre"
+            },
+            {
+              "id": "i3",
+              "imageUrl": "/courses/S16/p13-picto3.png",
+              "alt": "Douleur importante au niveau de la fistule (hors hématome)",
+              "text": "Douleur importante au niveau de la fistule (hors hématome)"
+            },
+            {
+              "id": "i4",
+              "imageUrl": "/courses/S16/p13-picto4.png",
+              "alt": "Douleur d’apparition brutale, de forte intensité et inhabituelle",
+              "text": "Douleur d’apparition brutale, de forte intensité et inhabituelle"
+            }
+          ]
+        },
+        {
+          "id": "s16-p14-b1-box1815",
+          "type": "info-card",
+          "variant": "warning",
+          "title": "Warning",
+          "content": "Ces situations doivent être signalées immédiatement au centre de dialyse."
+        }
+      ]
+    },
+    {
+      "id": "s16-p15",
+      "title": "QUEL EST MON RÔLE DANS LA GESTION DE LA DOULEUR ?",
+      "blocks": [
+        {
+          "id": "s16-p15-b1",
+          "type": "image-text",
+          "size": "image",
+          "imageSide": "left",
+          "verticalAlign": "center",
+          "imageWidth": "half",
+          "imageMaxHeight": 340,
+          "imageUrl": "/courses/S16/p14.png",
+          "alt": "QUEL EST MON RÔLE DANS LA GESTION DE LA DOULEUR ?",
+          "content": "Je participe à ma prise en charge en :\nsignalant rapidement toute douleur ;\ndécrivant précisément les symptômes ;\nrespectant les traitements prescrits ;\ncollaborant avec l’équipe et en répondant précisément à ses questions.",
+          "imageMaxWidth": 493
+        },
+        {
+          "id": "s16-p15-b1-box1823",
+          "type": "info-card",
+          "variant": "important",
+          "title": "Important",
+          "content": "La douleur est une information importante qui aide l'équipe à adapter les soins."
+        }
+      ]
+    },
+    {
+      "id": "s16-p16",
+      "title": "Exercices de fin de module — 1/3",
+      "blocks": [
+        {
+          "id": "s16-p16-b1",
+          "type": "quiz",
+          "questionType": "qcu",
+          "question": "**Que devez-vous faire quand vous ressentez une douleur inhabituelle et de forte intensité ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Attendre plusieurs jours pour voir si ça passe.",
+              "isCorrect": false
+            },
+            {
+              "id": "c1",
+              "label": "Le signaler à l’équipe dès que possible.",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Prendre des médicaments prescrits dans une autre situation.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p17",
+      "title": "Exercices de fin de module — 2/3",
+      "blocks": [
+        {
+          "id": "s16-p17-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Dans cette situation, quelle(s) information(s) dois-je transmettre à l’équipe que je vais appeler**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Intensité de la douleur sur 10",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Localisation de la douleur",
+              "isCorrect": true
+            },
+            {
+              "id": "c2",
+              "label": "Contexte et durée d’apparition de la douleur",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Description du ressenti de la douleur (irradiante ? fourmillements ?...)",
+              "isCorrect": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s16-p18",
+      "title": "Exercices de fin de module — 3/3",
+      "blocks": [
+        {
+          "id": "s16-p18-b1",
+          "type": "quiz",
+          "questionType": "qcm",
+          "question": "**Quel(s) type(s) de douleur nécessite(nt) que j’appelle rapidement le centre de dialyse ?**",
+          "graded": true,
+          "showCorrection": true,
+          "options": [
+            {
+              "id": "c0",
+              "label": "Douleur qui serre dans la poitrine",
+              "isCorrect": true
+            },
+            {
+              "id": "c1",
+              "label": "Douleurs articulaires",
+              "isCorrect": false
+            },
+            {
+              "id": "c2",
+              "label": "Douleurs au ventre avec fièvre",
+              "isCorrect": true
+            },
+            {
+              "id": "c3",
+              "label": "Douleur importante sur la fistule",
+              "isCorrect": true
+            },
+            {
+              "id": "c4",
+              "label": "Maux de gorge",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
